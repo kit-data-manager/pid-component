@@ -6,56 +6,72 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
-    interface MyComponent {
+    /**
+     * This component highlights a handle and links to the FAIR DO Scope.
+     * It automatically generates colors for the parts of the handle (prefix and suffix) to make them easily distinguishable.
+     */
+    interface HandleHighlight {
         /**
-          * The first name
+          * Whether the component should use the filled or the outlined design.
          */
-        "first": string;
+        "filled": boolean;
         /**
-          * The last name
+          * The Handle to highlight and link in this component.
          */
-        "last": string;
+        "handle": string;
         /**
-          * The middle name
+          * An optional custom link to use instead of the default one which links to the FAIR DO Scope.
          */
-        "middle": string;
+        "linkTo": "disable" | "fairdoscope" | "resolveRef";
     }
 }
 declare global {
-    interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {
+    /**
+     * This component highlights a handle and links to the FAIR DO Scope.
+     * It automatically generates colors for the parts of the handle (prefix and suffix) to make them easily distinguishable.
+     */
+    interface HTMLHandleHighlightElement extends Components.HandleHighlight, HTMLStencilElement {
     }
-    var HTMLMyComponentElement: {
-        prototype: HTMLMyComponentElement;
-        new (): HTMLMyComponentElement;
+    var HTMLHandleHighlightElement: {
+        prototype: HTMLHandleHighlightElement;
+        new (): HTMLHandleHighlightElement;
     };
     interface HTMLElementTagNameMap {
-        "my-component": HTMLMyComponentElement;
+        "handle-highlight": HTMLHandleHighlightElement;
     }
 }
 declare namespace LocalJSX {
-    interface MyComponent {
+    /**
+     * This component highlights a handle and links to the FAIR DO Scope.
+     * It automatically generates colors for the parts of the handle (prefix and suffix) to make them easily distinguishable.
+     */
+    interface HandleHighlight {
         /**
-          * The first name
+          * Whether the component should use the filled or the outlined design.
          */
-        "first"?: string;
+        "filled"?: boolean;
         /**
-          * The last name
+          * The Handle to highlight and link in this component.
          */
-        "last"?: string;
+        "handle": string;
         /**
-          * The middle name
+          * An optional custom link to use instead of the default one which links to the FAIR DO Scope.
          */
-        "middle"?: string;
+        "linkTo"?: "disable" | "fairdoscope" | "resolveRef";
     }
     interface IntrinsicElements {
-        "my-component": MyComponent;
+        "handle-highlight": HandleHighlight;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
+            /**
+             * This component highlights a handle and links to the FAIR DO Scope.
+             * It automatically generates colors for the parts of the handle (prefix and suffix) to make them easily distinguishable.
+             */
+            "handle-highlight": LocalJSX.HandleHighlight & JSXBase.HTMLAttributes<HTMLHandleHighlightElement>;
         }
     }
 }

@@ -1,0 +1,37 @@
+{
+  "version": 1.1,
+  "tags": [
+    {
+      "name": "handle-highlight",
+      "description": {
+        "kind": "markdown",
+        "value": "This component highlights a handle and links to the FAIR DO Scope.\nIt automatically generates colors for the parts of the handle (prefix and suffix) to make them easily distinguishable."
+      },
+      "attributes": [
+        {
+          "name": "filled",
+          "description": "Whether the component should use the filled or the outlined design."
+        },
+        {
+          "name": "handle",
+          "description": "The Handle to highlight and link in this component."
+        },
+        {
+          "name": "link-to",
+          "description": "An optional custom link to use instead of the default one which links to the FAIR DO Scope.",
+          "values": [
+            {
+              "name": "disable"
+            },
+            {
+              "name": "fairdoscope"
+            },
+            {
+              "name": "resolveRef"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
