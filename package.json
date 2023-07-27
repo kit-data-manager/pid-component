@@ -47,7 +47,7 @@
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.11",
     "jest": "^27.5.1",
-    "jest-cli": "^27.5.1",
+    "jest-cli": "^29.6.2",
     "puppeteer": "^20.7.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
