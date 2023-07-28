@@ -32,6 +32,38 @@
           ]
         }
       ]
+    },
+    {
+      "name": "intelligent-handle",
+      "description": {
+        "kind": "markdown",
+        "value": ""
+      },
+      "attributes": [
+        {
+          "name": "filled",
+          "description": "Whether the component should use the filled or the outlined design."
+        },
+        {
+          "name": "handle",
+          "description": "The Handle to highlight and link in this component."
+        },
+        {
+          "name": "link-to",
+          "description": "An optional custom link to use instead of the default one which links to the FAIR DO Scope.",
+          "values": [
+            {
+              "name": "disable"
+            },
+            {
+              "name": "fairdoscope"
+            },
+            {
+              "name": "resolveRef"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

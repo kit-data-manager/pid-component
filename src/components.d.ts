@@ -24,6 +24,20 @@ export namespace Components {
          */
         "linkTo": "disable" | "fairdoscope" | "resolveRef";
     }
+    interface IntelligentHandle {
+        /**
+          * Whether the component should use the filled or the outlined design.
+         */
+        "filled": boolean;
+        /**
+          * The Handle to highlight and link in this component.
+         */
+        "handle": string;
+        /**
+          * An optional custom link to use instead of the default one which links to the FAIR DO Scope.
+         */
+        "linkTo": "disable" | "fairdoscope" | "resolveRef";
+    }
 }
 declare global {
     /**
@@ -36,8 +50,15 @@ declare global {
         prototype: HTMLHandleHighlightElement;
         new (): HTMLHandleHighlightElement;
     };
+    interface HTMLIntelligentHandleElement extends Components.IntelligentHandle, HTMLStencilElement {
+    }
+    var HTMLIntelligentHandleElement: {
+        prototype: HTMLIntelligentHandleElement;
+        new (): HTMLIntelligentHandleElement;
+    };
     interface HTMLElementTagNameMap {
         "handle-highlight": HTMLHandleHighlightElement;
+        "intelligent-handle": HTMLIntelligentHandleElement;
     }
 }
 declare namespace LocalJSX {
@@ -59,8 +80,23 @@ declare namespace LocalJSX {
          */
         "linkTo"?: "disable" | "fairdoscope" | "resolveRef";
     }
+    interface IntelligentHandle {
+        /**
+          * Whether the component should use the filled or the outlined design.
+         */
+        "filled"?: boolean;
+        /**
+          * The Handle to highlight and link in this component.
+         */
+        "handle": string;
+        /**
+          * An optional custom link to use instead of the default one which links to the FAIR DO Scope.
+         */
+        "linkTo"?: "disable" | "fairdoscope" | "resolveRef";
+    }
     interface IntrinsicElements {
         "handle-highlight": HandleHighlight;
+        "intelligent-handle": IntelligentHandle;
     }
 }
 export { LocalJSX as JSX };
@@ -72,6 +108,7 @@ declare module "@stencil/core" {
              * It automatically generates colors for the parts of the handle (prefix and suffix) to make them easily distinguishable.
              */
             "handle-highlight": LocalJSX.HandleHighlight & JSXBase.HTMLAttributes<HTMLHandleHighlightElement>;
+            "intelligent-handle": LocalJSX.IntelligentHandle & JSXBase.HTMLAttributes<HTMLIntelligentHandleElement>;
         }
     }
 }
