@@ -41,27 +41,16 @@
       },
       "attributes": [
         {
-          "name": "filled",
-          "description": "Whether the component should use the filled or the outlined design."
+          "name": "changing-colors",
+          "description": "Should the table inside the component change colors every other line?"
         },
         {
           "name": "handle",
           "description": "The Handle to highlight and link in this component."
         },
         {
-          "name": "link-to",
-          "description": "An optional custom link to use instead of the default one which links to the FAIR DO Scope.",
-          "values": [
-            {
-              "name": "disable"
-            },
-            {
-              "name": "fairdoscope"
-            },
-            {
-              "name": "resolveRef"
-            }
-          ]
+          "name": "open-status",
+          "description": "Should the details element be open by default?"
         }
       ]
     }

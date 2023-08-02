@@ -1,0 +1,1072 @@
+{
+  "handle": {
+    "prefix": "21.11152",
+    "suffix": "B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343"
+  },
+  "values": [
+    {
+      "type": {
+        "handle": {
+          "prefix": "21.T11148",
+          "suffix": "397d831aa3a9d18eb52c"
+        },
+        "values": [
+          {
+            "index": 1,
+            "type": "10320/loc",
+            "data": {
+              "format": "string",
+              "value": {
+                "locations": [
+                  {
+                    "href": "http://dtr-test.pidconsortium.eu/objects/21.T11148/397d831aa3a9d18eb52c",
+                    "weight": 1,
+                    "view": "json",
+                    "resolvedData": {
+                      "identifier": "21.T11148/397d831aa3a9d18eb52c",
+                      "name": "dateModified",
+                      "description": "Last date/time of object modification. Mandatory if applicable. (context : KernelInformation)\n",
+                      "standards": [
+                        {
+                          "natureOfApplicability": "depends",
+                          "name": "21.T11148/3bfb2839a6967114bc3e",
+                          "issuer": "DTR"
+                        }
+                      ],
+                      "provenance": {
+                        "contributors": [
+                          {
+                            "identifiedUsing": "Text",
+                            "name": "Ulrich Schwardmann",
+                            "details": "GWDG"
+                          }
+                        ],
+                        "creationDate": "2019-04-01T11:44:59.978Z",
+                        "lastModificationDate": "2019-11-14T12:28:20.522Z"
+                      },
+                      "representationsAndSemantics": [
+                        {
+                          "expression": "",
+                          "value": "",
+                          "subSchemaRelation": "denyAdditionalProperties",
+                          "allowAbbreviatedForm": "Yes"
+                        }
+                      ],
+                      "properties": [
+                        {
+                          "name": "dateModified",
+                          "identifier": "21.T11148/3bfb2839a6967114bc3e",
+                          "representationsAndSemantics": [
+                            {
+                              "expression": "",
+                              "value": "",
+                              "obligation": "Mandatory",
+                              "repeatable": "No",
+                              "allowOmitSubsidiaries": "Yes"
+                            }
+                          ]
+                        }
+                      ],
+                      "validationSchema": "{\"definitions\": {\"21.T11148_3bfb2839a6967114bc3e\": {\"pattern\": \"^([0-9]{4})-([0]?[1-9]|1[0-2])-([0-2][0-9]|3[0-1])(T([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9](.[0-9]*)?(Z|([+|-]([0-1][0-9]|2[0-3]):[0-5][0-9])){1}))$\", \"type\": \"string\", \"description\": \"date-time-rfc3339@21.T11148/3bfb2839a6967114bc3e\"}}, \"$schema\": \"http://json-schema.org/draft-04/schema#\", \"description\": \"dateModified@21.T11148/397d831aa3a9d18eb52c\", \"$ref\": \"#/definitions/21.T11148_3bfb2839a6967114bc3e\"}"
+                    }
+                  },
+                  {
+                    "href": "http://dtr-test.pidconsortium.eu/#objects/21.T11148/397d831aa3a9d18eb52c",
+                    "weight": 0,
+                    "view": "ui"
+                  }
+                ]
+              }
+            },
+            "ttl": 86400,
+            "timestamp": 1554119100000
+          },
+          {
+            "index": 100,
+            "type": "HS_ADMIN",
+            "data": {
+              "format": "admin",
+              "value": {
+                "handle": "21.T11148/repo",
+                "index": 300,
+                "permissions": "111111111111"
+              }
+            },
+            "ttl": 86400,
+            "timestamp": 1554119100000
+          }
+        ]
+      }
+    },
+    {
+      "type": {
+        "handle": {
+          "prefix": "21.T11148",
+          "suffix": "dc54ae4b6807f5887fda"
+        },
+        "values": [
+          {
+            "index": 1,
+            "type": "10320/loc",
+            "data": {
+              "format": "string",
+              "value": {
+                "locations": [
+                  {
+                    "href": "http://dtr-test.pidconsortium.eu/objects/21.T11148/dc54ae4b6807f5887fda",
+                    "weight": 1,
+                    "view": "json",
+                    "resolvedData": {
+                      "name": "license",
+                      "provenance": {
+                        "creationDate": "2017-06-28T12:48:25.057Z",
+                        "lastModificationDate": "2017-06-28T13:15:02.140Z",
+                        "contributors": [
+                          {
+                            "identifiedUsing": "Text",
+                            "name": "Ulrich Schwardmann",
+                            "details": "GWDG"
+                          }
+                        ]
+                      },
+                      "validationSchema": "{\"definitions\": {}, \"$schema\": \"http://json-schema.org/draft-04/schema#\", \"type\": \"string\", \"description\": \"license@21.T11148/dc54ae4b6807f5887fda\"}",
+                      "identifier": "21.T11148/dc54ae4b6807f5887fda",
+                      "properties": [
+                        {
+                          "dataType": "string",
+                          "flavour": "ecma-262-RegExp"
+                        }
+                      ],
+                      "description": "names license requirement of the collection (type : string, currently, but could be also given as a controlled vocabulary, like '[\"CC0\", \"CC-BY\", \"CC-BY-SA\", \"CC-by-NC\", \"CC-BY-ND\", \"CC-BY-NC-SA\", \"CC-BY-NC-ND\"]', context : collection)."
+                    }
+                  },
+                  {
+                    "href": "http://dtr-test.pidconsortium.eu/#objects/21.T11148/dc54ae4b6807f5887fda",
+                    "weight": 0,
+                    "view": "ui"
+                  }
+                ]
+              }
+            },
+            "ttl": 86400,
+            "timestamp": 1498654114000
+          },
+          {
+            "index": 2,
+            "type": "10320/registry",
+            "data": {
+              "format": "string",
+              "value": "21.T11148/repo"
+            },
+            "ttl": 86400,
+            "timestamp": 1498654114000
+          },
+          {
+            "index": 3,
+            "type": "CNRI.OBJECT_SERVER",
+            "data": {
+              "format": "string",
+              "value": "21.T11148/repo"
+            },
+            "ttl": 86400,
+            "timestamp": 1498654114000
+          },
+          {
+            "index": 100,
+            "type": "HS_ADMIN",
+            "data": {
+              "format": "admin",
+              "value": {
+                "handle": "21.T11148/repo",
+                "index": 300,
+                "permissions": "111111111111"
+              }
+            },
+            "ttl": 86400,
+            "timestamp": 1498654114000
+          }
+        ]
+      }
+    },
+    {
+      "type": {
+        "handle": {
+          "prefix": "21.T11148",
+          "suffix": "aafd5fb4c7222e2d950a"
+        },
+        "values": [
+          {
+            "index": 1,
+            "type": "10320/loc",
+            "data": {
+              "format": "string",
+              "value": {
+                "locations": [
+                  {
+                    "href": "http://dtr-test.pidconsortium.eu/objects/21.T11148/aafd5fb4c7222e2d950a",
+                    "weight": 1,
+                    "view": "json",
+                    "resolvedData": {
+                      "identifier": "21.T11148/aafd5fb4c7222e2d950a",
+                      "name": "dateCreatedRfc3339",
+                      "description": "This datatype uses the same format as dateModified for a creation date. This makes implementation for clients easier, especially since this format is well supported by libraries.",
+                      "standards": [
+                        {
+                          "natureOfApplicability": "depends",
+                          "name": "21.T11148/3bfb2839a6967114bc3e",
+                          "issuer": "DTR",
+                          "details": "Format representing date and time, which is well supported by libraries."
+                        },
+                        {
+                          "natureOfApplicability": "is_semantically_similar",
+                          "name": "21.T11148/397d831aa3a9d18eb52c",
+                          "issuer": "DTR",
+                          "details": "dateModified. The semantix is similar, the syntax is even the same, which is the reason for this type."
+                        }
+                      ],
+                      "provenance": {
+                        "contributors": [
+                          {
+                            "identifiedUsing": "Text",
+                            "name": "Andreas Pfeil",
+                            "details": "Andreas Pfeil, Karlsruhe Institute of Technology"
+                          }
+                        ],
+                        "creationDate": "2020-07-31T11:33:01.010Z",
+                        "lastModificationDate": "2020-10-06T14:42:56.013Z"
+                      },
+                      "expectedUses": [
+                        "Use this to have the same date-time-format in your schemes for dateModified and dateCreated."
+                      ],
+                      "representationsAndSemantics": [
+                        {
+                          "subSchemaRelation": "denyAdditionalProperties",
+                          "allowAbbreviatedForm": "Yes"
+                        }
+                      ],
+                      "properties": [
+                        {
+                          "name": "dateCreated",
+                          "identifier": "21.T11148/3bfb2839a6967114bc3e",
+                          "representationsAndSemantics": [
+                            {
+                              "obligation": "Mandatory",
+                              "repeatable": "No",
+                              "allowOmitSubsidiaries": "Yes"
+                            }
+                          ]
+                        }
+                      ],
+                      "validationSchema": "{\"definitions\": {\"21.T11148_3bfb2839a6967114bc3e\": {\"pattern\": \"^([0-9]{4})-([0]?[1-9]|1[0-2])-([0-2][0-9]|3[0-1])(T([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9](.[0-9]*)?(Z|([+|-]([0-1][0-9]|2[0-3]):[0-5][0-9])){1}))$\", \"type\": \"string\", \"description\": \"date-time-rfc3339@21.T11148/3bfb2839a6967114bc3e\"}}, \"$schema\": \"http://json-schema.org/draft-04/schema#\", \"description\": \"dateCreatedRfc3339@21.T11148/aafd5fb4c7222e2d950a\", \"$ref\": \"#/definitions/21.T11148_3bfb2839a6967114bc3e\"}"
+                    }
+                  },
+                  {
+                    "href": "http://dtr-test.pidconsortium.eu/#objects/21.T11148/aafd5fb4c7222e2d950a",
+                    "weight": 0,
+                    "view": "ui"
+                  }
+                ]
+              }
+            },
+            "ttl": 86400,
+            "timestamp": 1596195181000
+          },
+          {
+            "index": 100,
+            "type": "HS_ADMIN",
+            "data": {
+              "format": "admin",
+              "value": {
+                "handle": "21.T11148/repo",
+                "index": 300,
+                "permissions": "111111111111"
+              }
+            },
+            "ttl": 86400,
+            "timestamp": 1596195181000
+          }
+        ]
+      }
+    },
+    {
+      "type": {
+        "handle": {
+          "prefix": "21.T11148",
+          "suffix": "c692273deb2772da307f"
+        },
+        "values": [
+          {
+            "index": 1,
+            "type": "10320/loc",
+            "data": {
+              "format": "string",
+              "value": {
+                "locations": [
+                  {
+                    "href": "http://dtr-test.pidconsortium.eu/objects/21.T11148/c692273deb2772da307f",
+                    "weight": 1,
+                    "view": "json",
+                    "resolvedData": {
+                      "identifier": "21.T11148/c692273deb2772da307f",
+                      "name": "version",
+                      "description": "If tracked, a version for the object, which must follow a total order. Mandatory for all objects with at least one predecessor version. (context : PID_Kernel_Information)\n",
+                      "standards": [
+                        {
+                          "natureOfApplicability": "depends",
+                          "name": "21.T11148/ac9849005793b63ac780",
+                          "issuer": "DTR"
+                        }
+                      ],
+                      "provenance": {
+                        "contributors": [
+                          {
+                            "identifiedUsing": "ORCID",
+                            "name": "0000-0001-6337-8674",
+                            "details": "Ulrich Schwardmann, GWDG"
+                          }
+                        ],
+                        "creationDate": "2019-04-01T11:31:04.951Z",
+                        "lastModificationDate": "2020-08-04T14:29:13.440Z"
+                      },
+                      "representationsAndSemantics": [
+                        {
+                          "subSchemaRelation": "denyAdditionalProperties",
+                          "allowAbbreviatedForm": "Yes"
+                        }
+                      ],
+                      "properties": [
+                        {
+                          "name": "version",
+                          "identifier": "21.T11148/ac9849005793b63ac780",
+                          "representationsAndSemantics": [
+                            {
+                              "obligation": "Mandatory",
+                              "repeatable": "No",
+                              "allowOmitSubsidiaries": "Yes"
+                            }
+                          ]
+                        }
+                      ],
+                      "validationSchema": "{\"definitions\": {\"21.T11148_ac9849005793b63ac780\": {\"pattern\": \"^(v|V|r|R)?(([0-9]+)\\\\.)*([0-9]+)( |-)?((a|b|rc)([0-9]*))*$\", \"type\": \"string\", \"description\": \"version-number@21.T11148/ac9849005793b63ac780\"}}, \"$schema\": \"http://json-schema.org/draft-04/schema#\", \"description\": \"version@21.T11148/c692273deb2772da307f\", \"$ref\": \"#/definitions/21.T11148_ac9849005793b63ac780\"}"
+                    }
+                  },
+                  {
+                    "href": "http://dtr-test.pidconsortium.eu/#objects/21.T11148/c692273deb2772da307f",
+                    "weight": 0,
+                    "view": "ui"
+                  }
+                ]
+              }
+            },
+            "ttl": 86400,
+            "timestamp": 1554118264000
+          },
+          {
+            "index": 100,
+            "type": "HS_ADMIN",
+            "data": {
+              "format": "admin",
+              "value": {
+                "handle": "21.T11148/repo",
+                "index": 300,
+                "permissions": "111111111111"
+              }
+            },
+            "ttl": 86400,
+            "timestamp": 1554118264000
+          }
+        ]
+      }
+    },
+    {
+      "type": {
+        "handle": {
+          "prefix": "21.T11148",
+          "suffix": "92e200311a56800b3e47"
+        },
+        "values": [
+          {
+            "index": 1,
+            "type": "10320/loc",
+            "data": {
+              "format": "string",
+              "value": {
+                "locations": [
+                  {
+                    "href": "http://dtr-test.pidconsortium.eu/objects/21.T11148/92e200311a56800b3e47",
+                    "weight": 1,
+                    "view": "json",
+                    "resolvedData": {
+                      "identifier": "21.T11148/92e200311a56800b3e47",
+                      "name": "etag",
+                      "description": "Checksum of object contents. Checksum format determined via attribute type referenced in a Kernel Information record. (context : KernelInformation)\n",
+                      "standards": [
+                        {
+                          "natureOfApplicability": "depends",
+                          "name": "21.T11148/82e2503c49209e987740",
+                          "issuer": "DTR"
+                        }
+                      ],
+                      "provenance": {
+                        "contributors": [
+                          {
+                            "identifiedUsing": "Text",
+                            "name": "Ulrich Schwardmann",
+                            "details": "GWDG"
+                          }
+                        ],
+                        "creationDate": "2019-04-01T11:26:27.739Z",
+                        "lastModificationDate": "2019-11-14T12:28:20.744Z"
+                      },
+                      "representationsAndSemantics": [
+                        {
+                          "expression": "",
+                          "value": "",
+                          "subSchemaRelation": "denyAdditionalProperties",
+                          "allowAbbreviatedForm": "Yes"
+                        }
+                      ],
+                      "properties": [
+                        {
+                          "name": "etag",
+                          "identifier": "21.T11148/82e2503c49209e987740",
+                          "representationsAndSemantics": [
+                            {
+                              "expression": "",
+                              "value": "",
+                              "obligation": "Mandatory",
+                              "repeatable": "No",
+                              "allowOmitSubsidiaries": "Yes"
+                            }
+                          ]
+                        }
+                      ],
+                      "validationSchema": "{\"definitions\": {\"21.T11148_8fe94dfe8d852b486b3b\": {\"pattern\": \"^((sha|SHA)224( |:|=))?( )*([0-9]|[a-f]){56}$\", \"type\": \"string\", \"description\": \"sha224sum-string@21.T11148/8fe94dfe8d852b486b3b\"}, \"21.T11148_bf6a6b86cb0481572b13\": {\"pattern\": \"^((sha|SHA)256( |:|=))?( )*([0-9]|[a-f]){64}$\", \"type\": \"string\", \"description\": \"sha256sum-string@21.T11148/bf6a6b86cb0481572b13\"}, \"21.T11148_ef277087753e8ba2e606\": {\"pattern\": \"^((md|MD)5( |:|=))?( )*([0-9]|[a-f]){32}$\", \"type\": \"string\", \"description\": \"md5sum-string@21.T11148/ef277087753e8ba2e606\"}, \"21.T11148_538d60da429f234d6f53\": {\"pattern\": \"^((sha|SHA)160( |:|=))?( )*([0-9]|[a-f]){40}$\", \"type\": \"string\", \"description\": \"sha160sum-string@21.T11148/538d60da429f234d6f53\"}, \"21.T11148_e944e035caf3ec24192c\": {\"pattern\": \"^((sha|SHA)384( |:|=))?( )*([0-9]|[a-f]){96}$\", \"type\": \"string\", \"description\": \"sha384sum-string@21.T11148/e944e035caf3ec24192c\"}, \"21.T11148_82e2503c49209e987740\": {\"oneOf\": [{\"required\": [\"sha160sum\"], \"type\": \"object\", \"properties\": {\"sha160sum\": {\"$ref\": \"#/definitions/21.T11148_538d60da429f234d6f53\"}}}, {\"required\": [\"sha224sum\"], \"type\": \"object\", \"properties\": {\"sha224sum\": {\"$ref\": \"#/definitions/21.T11148_8fe94dfe8d852b486b3b\"}}}, {\"required\": [\"sha256sum\"], \"type\": \"object\", \"properties\": {\"sha256sum\": {\"$ref\": \"#/definitions/21.T11148_bf6a6b86cb0481572b13\"}}}, {\"required\": [\"sha384sum\"], \"type\": \"object\", \"properties\": {\"sha384sum\": {\"$ref\": \"#/definitions/21.T11148_e944e035caf3ec24192c\"}}}, {\"required\": [\"sha512sum\"], \"type\": \"object\", \"properties\": {\"sha512sum\": {\"$ref\": \"#/definitions/21.T11148_89d2e4d1e93625060cf0\"}}}, {\"required\": [\"md5sum\"], \"type\": \"object\", \"properties\": {\"md5sum\": {\"$ref\": \"#/definitions/21.T11148_ef277087753e8ba2e606\"}}}], \"description\": \"checksum@21.T11148/82e2503c49209e987740\"}, \"21.T11148_89d2e4d1e93625060cf0\": {\"pattern\": \"^((sha|SHA)512( |:|=))?( )*([0-9]|[a-f]){128}$\", \"type\": \"string\", \"description\": \"sha512sum-string@21.T11148/89d2e4d1e93625060cf0\"}}, \"$schema\": \"http://json-schema.org/draft-04/schema#\", \"description\": \"etag@21.T11148/92e200311a56800b3e47\", \"$ref\": \"#/definitions/21.T11148_82e2503c49209e987740\"}"
+                    }
+                  },
+                  {
+                    "href": "http://dtr-test.pidconsortium.eu/#objects/21.T11148/92e200311a56800b3e47",
+                    "weight": 0,
+                    "view": "ui"
+                  }
+                ]
+              }
+            },
+            "ttl": 86400,
+            "timestamp": 1554117987000
+          },
+          {
+            "index": 100,
+            "type": "HS_ADMIN",
+            "data": {
+              "format": "admin",
+              "value": {
+                "handle": "21.T11148/repo",
+                "index": 300,
+                "permissions": "111111111111"
+              }
+            },
+            "ttl": 86400,
+            "timestamp": 1554117987000
+          }
+        ]
+      }
+    },
+    {
+      "type": {
+        "handle": {
+          "prefix": "21.T11148",
+          "suffix": "b8457812905b83046284"
+        },
+        "values": [
+          {
+            "index": 1,
+            "type": "10320/loc",
+            "data": {
+              "format": "string",
+              "value": {
+                "locations": [
+                  {
+                    "href": "http://dtr-test.pidconsortium.eu/objects/21.T11148/b8457812905b83046284",
+                    "weight": 1,
+                    "view": "json",
+                    "resolvedData": {
+                      "identifier": "21.T11148/b8457812905b83046284",
+                      "name": "digitalObjectLocation",
+                      "description": "Pointer to the content object location (pointer to the DO). This may be in addition to a pointer to ahuman-readable landing page for the object. (context : KernelInformation)\n",
+                      "standards": [
+                        {
+                          "natureOfApplicability": "depends",
+                          "name": "21.T11148/e0efc41346cda4ba84ca",
+                          "issuer": "DTR"
+                        }
+                      ],
+                      "provenance": {
+                        "contributors": [
+                          {
+                            "identifiedUsing": "Text",
+                            "name": "Ulrich Schwardmann",
+                            "details": "GWDG"
+                          }
+                        ],
+                        "creationDate": "2019-04-01T11:23:54.626Z",
+                        "lastModificationDate": "2019-11-14T12:28:18.895Z"
+                      },
+                      "representationsAndSemantics": [
+                        {
+                          "expression": "",
+                          "value": "",
+                          "subSchemaRelation": "denyAdditionalProperties",
+                          "allowAbbreviatedForm": "Yes"
+                        }
+                      ],
+                      "properties": [
+                        {
+                          "name": "digitalObjectLocation",
+                          "identifier": "21.T11148/e0efc41346cda4ba84ca",
+                          "representationsAndSemantics": [
+                            {
+                              "expression": "",
+                              "value": "",
+                              "obligation": "Mandatory",
+                              "repeatable": "No",
+                              "allowOmitSubsidiaries": "Yes"
+                            }
+                          ]
+                        }
+                      ],
+                      "validationSchema": "{\"definitions\": {\"21.T11148_e0efc41346cda4ba84ca\": {\"pattern\": \"^http(s)?:(\\\\/\\\\/([^/?#]*))?([^?#]*)(\\\\?([^#]*))?(#(.*))?$\", \"type\": \"string\", \"description\": \"URL@21.T11148/e0efc41346cda4ba84ca\"}}, \"$schema\": \"http://json-schema.org/draft-04/schema#\", \"description\": \"digitalObjectLocation@21.T11148/b8457812905b83046284\", \"$ref\": \"#/definitions/21.T11148_e0efc41346cda4ba84ca\"}"
+                    }
+                  },
+                  {
+                    "href": "http://dtr-test.pidconsortium.eu/#objects/21.T11148/b8457812905b83046284",
+                    "weight": 0,
+                    "view": "ui"
+                  }
+                ]
+              }
+            },
+            "ttl": 86400,
+            "timestamp": 1554117834000
+          },
+          {
+            "index": 100,
+            "type": "HS_ADMIN",
+            "data": {
+              "format": "admin",
+              "value": {
+                "handle": "21.T11148/repo",
+                "index": 300,
+                "permissions": "111111111111"
+              }
+            },
+            "ttl": 86400,
+            "timestamp": 1554117834000
+          }
+        ]
+      }
+    },
+    {
+      "type": {
+        "handle": {
+          "prefix": "21.T11148",
+          "suffix": "4fe7cde52629b61e3b82"
+        },
+        "values": [
+          {
+            "index": 1,
+            "type": "10320/loc",
+            "data": {
+              "format": "string",
+              "value": {
+                "locations": [
+                  {
+                    "href": "http://dtr-test.pidconsortium.eu/objects/21.T11148/4fe7cde52629b61e3b82",
+                    "weight": 1,
+                    "view": "json",
+                    "resolvedData": {
+                      "identifier": "21.T11148/4fe7cde52629b61e3b82",
+                      "name": "isMetadataFor",
+                      "description": "A PID pointing to another FAIR DO describing the digital object.",
+                      "provenance": {
+                        "contributors": [
+                          {
+                            "identifiedUsing": "",
+                            "name": "Andreas Pfeil",
+                            "details": "Andreas Pfeil, Karlsruhe Institute of Technology"
+                          }
+                        ],
+                        "creationDate": "2022-01-17T10:35:18.605Z",
+                        "lastModificationDate": "2022-01-17T10:35:18.605Z"
+                      },
+                      "expectedUses": [
+                        "It offers the possibility to link related FDOs to each other, e.g., to build up a FDO graph easily. Furthermore, it allows to find data belonging to a metadata-focussed object. With regard to machine-actionability this property allows to decide, whether a sufficient amount of metadata is available in order to interpret associated data for a certain use case."
+                      ],
+                      "representationsAndSemantics": [
+                        {
+                          "subSchemaRelation": "denyAdditionalProperties",
+                          "allowAbbreviatedForm": "Yes"
+                        }
+                      ],
+                      "properties": [
+                        {
+                          "name": "isMetadataFor",
+                          "identifier": "21.T11148/3626040cadcac1571685",
+                          "representationsAndSemantics": [
+                            {
+                              "obligation": "Mandatory",
+                              "repeatable": "Yes",
+                              "allowOmitSubsidiaries": "No"
+                            }
+                          ]
+                        }
+                      ],
+                      "validationSchema": "{\"definitions\": {\"21.T11148_3626040cadcac1571685\": {\"pattern\": \"^([0-9,A-Z,a-z])+(\\\\.([0-9,A-Z,a-z])+)*\\\\/([!-~])+$\", \"type\": \"string\", \"description\": \"Handle-Identifier-ASCII@21.T11148/3626040cadcac1571685\"}}, \"$schema\": \"http://json-schema.org/draft-04/schema#\", \"description\": \"isAbout@21.T11148/4c9677ebc4f407e500a8\", \"$ref\": \"#/definitions/21.T11148_3626040cadcac1571685\"}"
+                    }
+                  },
+                  {
+                    "href": "http://dtr-test.pidconsortium.eu/#objects/21.T11148/4fe7cde52629b61e3b82",
+                    "weight": 0,
+                    "view": "ui"
+                  }
+                ]
+              }
+            },
+            "ttl": 86400,
+            "timestamp": 1642415718000
+          },
+          {
+            "index": 2,
+            "type": "0.TYPE/DOIPService",
+            "data": {
+              "format": "string",
+              "value": "21.T11148/service"
+            },
+            "ttl": 86400,
+            "timestamp": 1642415718000
+          },
+          {
+            "index": 100,
+            "type": "HS_ADMIN",
+            "data": {
+              "format": "admin",
+              "value": {
+                "handle": "21.T11148/repo",
+                "index": 300,
+                "permissions": "111111111111"
+              }
+            },
+            "ttl": 86400,
+            "timestamp": 1642415718000
+          }
+        ]
+      }
+    },
+    {
+      "type": {
+        "handle": {
+          "prefix": "21.T11148",
+          "suffix": "4fe7cde52629b61e3b82"
+        },
+        "values": [
+          {
+            "index": 1,
+            "type": "10320/loc",
+            "data": {
+              "format": "string",
+              "value": {
+                "locations": [
+                  {
+                    "href": "http://dtr-test.pidconsortium.eu/objects/21.T11148/4fe7cde52629b61e3b82",
+                    "weight": 1,
+                    "view": "json",
+                    "resolvedData": {
+                      "identifier": "21.T11148/4fe7cde52629b61e3b82",
+                      "name": "isMetadataFor",
+                      "description": "A PID pointing to another FAIR DO describing the digital object.",
+                      "provenance": {
+                        "contributors": [
+                          {
+                            "identifiedUsing": "",
+                            "name": "Andreas Pfeil",
+                            "details": "Andreas Pfeil, Karlsruhe Institute of Technology"
+                          }
+                        ],
+                        "creationDate": "2022-01-17T10:35:18.605Z",
+                        "lastModificationDate": "2022-01-17T10:35:18.605Z"
+                      },
+                      "expectedUses": [
+                        "It offers the possibility to link related FDOs to each other, e.g., to build up a FDO graph easily. Furthermore, it allows to find data belonging to a metadata-focussed object. With regard to machine-actionability this property allows to decide, whether a sufficient amount of metadata is available in order to interpret associated data for a certain use case."
+                      ],
+                      "representationsAndSemantics": [
+                        {
+                          "subSchemaRelation": "denyAdditionalProperties",
+                          "allowAbbreviatedForm": "Yes"
+                        }
+                      ],
+                      "properties": [
+                        {
+                          "name": "isMetadataFor",
+                          "identifier": "21.T11148/3626040cadcac1571685",
+                          "representationsAndSemantics": [
+                            {
+                              "obligation": "Mandatory",
+                              "repeatable": "Yes",
+                              "allowOmitSubsidiaries": "No"
+                            }
+                          ]
+                        }
+                      ],
+                      "validationSchema": "{\"definitions\": {\"21.T11148_3626040cadcac1571685\": {\"pattern\": \"^([0-9,A-Z,a-z])+(\\\\.([0-9,A-Z,a-z])+)*\\\\/([!-~])+$\", \"type\": \"string\", \"description\": \"Handle-Identifier-ASCII@21.T11148/3626040cadcac1571685\"}}, \"$schema\": \"http://json-schema.org/draft-04/schema#\", \"description\": \"isAbout@21.T11148/4c9677ebc4f407e500a8\", \"$ref\": \"#/definitions/21.T11148_3626040cadcac1571685\"}"
+                    }
+                  },
+                  {
+                    "href": "http://dtr-test.pidconsortium.eu/#objects/21.T11148/4fe7cde52629b61e3b82",
+                    "weight": 0,
+                    "view": "ui"
+                  }
+                ]
+              }
+            },
+            "ttl": 86400,
+            "timestamp": 1642415718000
+          },
+          {
+            "index": 2,
+            "type": "0.TYPE/DOIPService",
+            "data": {
+              "format": "string",
+              "value": "21.T11148/service"
+            },
+            "ttl": 86400,
+            "timestamp": 1642415718000
+          },
+          {
+            "index": 100,
+            "type": "HS_ADMIN",
+            "data": {
+              "format": "admin",
+              "value": {
+                "handle": "21.T11148/repo",
+                "index": 300,
+                "permissions": "111111111111"
+              }
+            },
+            "ttl": 86400,
+            "timestamp": 1642415718000
+          }
+        ]
+      }
+    },
+    {
+      "type": {
+        "handle": {
+          "prefix": "21.T11148",
+          "suffix": "c83481d4bf467110e7c9"
+        },
+        "values": [
+          {
+            "index": 1,
+            "type": "10320/loc",
+            "data": {
+              "format": "string",
+              "value": {
+                "locations": [
+                  {
+                    "href": "http://dtr-test.pidconsortium.eu/objects/21.T11148/c83481d4bf467110e7c9",
+                    "weight": 1,
+                    "view": "json",
+                    "resolvedData": {
+                      "identifier": "21.T11148/c83481d4bf467110e7c9",
+                      "name": "genericObjectType",
+                      "description": "A profile often contains an object type, but a datatype is not always referencable by a pid. Therefore, this experiment tries to expand the possibilities.",
+                      "standards": [
+                        {
+                          "natureOfApplicability": "depends",
+                          "name": "21.T11148/3626040cadcac1571685",
+                          "issuer": "DTR",
+                          "details": "Handle-Identifier-ASCII"
+                        },
+                        {
+                          "natureOfApplicability": "depends",
+                          "name": "21.T11148/7f287d9d1d27eedf7306",
+                          "issuer": "DTR",
+                          "details": "media-type-IANA"
+                        }
+                      ],
+                      "provenance": {
+                        "contributors": [
+                          {
+                            "identifiedUsing": "Text",
+                            "name": "Andreas Pfeil",
+                            "details": "Andreas Pfeil, Karlsruhe Institute of Technology"
+                          }
+                        ],
+                        "creationDate": "2020-07-31T15:18:23.585Z",
+                        "lastModificationDate": "2022-08-15T14:39:51.949Z"
+                      },
+                      "representationsAndSemantics": [
+                        {
+                          "subSchemaRelation": "requestOneOfProperties",
+                          "allowAbbreviatedForm": "Yes"
+                        }
+                      ],
+                      "properties": [
+                        {
+                          "name": "pid",
+                          "identifier": "21.T11148/3626040cadcac1571685",
+                          "representationsAndSemantics": [
+                            {
+                              "obligation": "Mandatory",
+                              "repeatable": "Yes",
+                              "allowOmitSubsidiaries": "Yes",
+                              "details": "Repeatable in case a data type conforms to more than one format at once. Example: .drawio.png extension conforms to .png and .drawio."
+                            }
+                          ]
+                        },
+                        {
+                          "name": "mediaType",
+                          "identifier": "21.T11148/7f287d9d1d27eedf7306",
+                          "representationsAndSemantics": [
+                            {
+                              "obligation": "Mandatory",
+                              "repeatable": "Yes",
+                              "allowOmitSubsidiaries": "Yes"
+                            }
+                          ]
+                        }
+                      ],
+                      "validationSchema": "{\"definitions\": {\"21.T11148_011cdca5b33190bcdce7\": {\"enum\": [\"1d-interleaved-parityfec\", \"3gpp\", \"3gpp2\", \"3gpp-tt\", \"BMPEG\", \"BT656\", \"CelB\", \"DV\", \"encaprtp\", \"example\", \"H261\", \"H263\", \"H263-1998\", \"H263-2000\", \"H264\", \"H264-RCDO\", \"H264-SVC\", \"H265\", \"iso.segment\", \"JPEG\", \"jpeg2000\", \"mj2\", \"MP1S\", \"MP2P\", \"MP2T\", \"mp4\", \"MP4V-ES\", \"MPV\", \"mpeg\", \"mpeg4-generic\", \"nv\", \"ogg\", \"parityfec\", \"pointer\", \"quicktime\", \"raptorfec\", \"raw\", \"rtp-enc-aescm128\", \"rtploopback\", \"rtx\", \"SMPTE292M\", \"ulpfec\", \"vc1\", \"vnd.CCTV\", \"vnd.dece.hd\", \"vnd.dece.mobile\", \"vnd.dece.mp4\", \"vnd.dece.pd\", \"vnd.dece.sd\", \"vnd.dece.video\", \"vnd.directv.mpeg\", \"vnd.directv.mpeg-tts\", \"vnd.dlna.mpeg-tts\", \"vnd.dvb.file\", \"vnd.fvt\", \"vnd.hns.video\", \"vnd.iptvforum.1dparityfec-1010\", \"vnd.iptvforum.1dparityfec-2005\", \"vnd.iptvforum.2dparityfec-1010\", \"vnd.iptvforum.2dparityfec-2005\", \"vnd.iptvforum.ttsavc\", \"vnd.iptvforum.ttsmpeg2\", \"vnd.motorola.video\", \"vnd.motorola.videop\", \"vnd.mpegurl\", \"vnd.ms-playready.media.pyv\", \"vnd.nokia.interleaved-multimedia\", \"vnd.nokia.videovoip\", \"vnd.objectvideo\", \"vnd.radgamettools.bink\", \"vnd.radgamettools.smacker\", \"vnd.sealed.mpeg1\", \"vnd.sealed.mpeg4\", \"vnd.sealed.swf\", \"vnd.sealedmedia.softseal.mov\", \"vnd.uvvu.mp4\", \"vnd.vivo\", \"VP8\"], \"type\": \"string\", \"description\": \"media-type-IANA-video@21.T11148/011cdca5b33190bcdce7\"}, \"21.T11148_86f43ab94431ee80d013\": {\"enum\": [\"alternative\", \"appledouble\", \"byteranges\", \"digest\", \"encrypted\", \"example\", \"form-data\", \"header-set\", \"mixed\", \"parallel\", \"related\", \"report\", \"signed\", \"voice-message\", \"x-mixed-replace\"], \"type\": \"string\", \"description\": \"media-type-IANA-multipart@21.T11148/86f43ab94431ee80d013\"}, \"21.T11148_2834eac0159f584bcf05\": {\"enum\": [\"bmp\", \"cgm\", \"dicom-rle\", \"emf\", \"example\", \"fits\", \"g3fax\", \"gif\", \"ief\", \"jls\", \"jp2\", \"jpeg\", \"jpm\", \"jpx\", \"ktx\", \"naplps\", \"png\", \"prs.btif\", \"prs.pti\", \"pwg-raster\", \"svg+xml\", \"t38\", \"tiff\", \"tiff-fx\", \"vnd.adobe.photoshop\", \"vnd.airzip.accelerator.azv\", \"vnd.cns.inf2\", \"vnd.dece.graphic\", \"vnd.djvu\", \"vnd.dwg\", \"vnd.dxf\", \"vnd.dvb.subtitle\", \"vnd.fastbidsheet\", \"vnd.fpx\", \"vnd.fst\", \"vnd.fujixerox.edmics-mmr\", \"vnd.fujixerox.edmics-rlc\", \"vnd.globalgraphics.pgb\", \"vnd.microsoft.icon\", \"vnd.mix\", \"vnd.ms-modi\", \"vnd.mozilla.apng\", \"vnd.net-fpx\", \"vnd.radiance\", \"vnd.sealed.png\", \"vnd.sealedmedia.softseal.gif\", \"vnd.sealedmedia.softseal.jpg\", \"vnd.svf\", \"vnd.tencent.tap\", \"vnd.valve.source.texture\", \"vnd.wap.wbmp\", \"vnd.xiff\", \"vnd.zbrush.pcx\", \"wmf\", \"x-emf\", \"x-wmf\"], \"type\": \"string\", \"description\": \"media-type-IANA-image@21.T11148/2834eac0159f584bcf05\"}, \"21.T11148_edff7f2829db22e260a3\": {\"enum\": [\"1d-interleaved-parityfec\", \"3gpdash-qoe-report+xml\", \"3gpp-ims+xml\", \"A2L\", \"activemessage\", \"alto-costmap+json\", \"alto-costmapfilter+json\", \"alto-directory+json\", \"alto-endpointprop+json\", \"alto-endpointpropparams+json\", \"alto-endpointcost+json\", \"alto-endpointcostparams+json\", \"alto-error+json\", \"alto-networkmapfilter+json\", \"alto-networkmap+json\", \"AML\", \"andrew-inset\", \"applefile\", \"ATF\", \"ATFX\", \"atom+xml\", \"atomcat+xml\", \"atomdeleted+xml\", \"atomicmail\", \"atomsvc+xml\", \"ATXML\", \"auth-policy+xml\", \"bacnet-xdd+zip\", \"batch-SMTP\", \"beep+xml\", \"calendar+json\", \"calendar+xml\", \"call-completion\", \"CALS-1840\", \"cbor\", \"ccmp+xml\", \"ccxml+xml\", \"CDFX+XML\", \"cdmi-capability\", \"cdmi-container\", \"cdmi-domain\", \"cdmi-object\", \"cdmi-queue\", \"cdni\", \"CEA\", \"cea-2018+xml\", \"cellml+xml\", \"cfw\", \"cms\", \"cnrp+xml\", \"coap-group+json\", \"commonground\", \"conference-info+xml\", \"cpl+xml\", \"csrattrs\", \"csta+xml\", \"CSTAdata+xml\", \"csvm+json\", \"cybercash\", \"dash+xml\", \"dashdelta\", \"davmount+xml\", \"dca-rft\", \"DCD\", \"dec-dx\", \"dialog-info+xml\", \"dicom\", \"DII\", \"DIT\", \"dns\", \"dskpp+xml\", \"dssc+der\", \"dssc+xml\", \"dvcs\", \"ecmascript\", \"EDI-consent\", \"EDIFACT\", \"EDI-X12\", \"efi\", \"EmergencyCallData.Comment+xml\", \"EmergencyCallData.DeviceInfo+xml\", \"EmergencyCallData.ProviderInfo+xml\", \"EmergencyCallData.ServiceInfo+xml\", \"EmergencyCallData.SubscriberInfo+xml\", \"emma+xml\", \"emotionml+xml\", \"encaprtp\", \"epp+xml\", \"epub+zip\", \"eshop\", \"example\", \"exi\", \"fastinfoset\", \"fastsoap\", \"fdt+xml\", \"fits\", \"font-sfnt\", \"font-tdpfr\", \"font-woff\", \"framework-attributes+xml\", \"gzip\", \"H224\", \"held+xml\", \"http\", \"hyperstudio\", \"ibe-key-request+xml\", \"ibe-pkg-reply+xml\", \"ibe-pp-data\", \"iges\", \"im-iscomposing+xml\", \"index\", \"index.cmd\", \"index.obj\", \"index.response\", \"index.vnd\", \"inkml+xml\", \"iotp\", \"ipfix\", \"ipp\", \"isup\", \"its+xml\", \"javascript\", \"jose\", \"jose+json\", \"jrd+json\", \"json\", \"json-patch+json\", \"json-seq\", \"jwk+json\", \"jwk-set+json\", \"jwt\", \"kpml-request+xml\", \"kpml-response+xml\", \"ld+json\", \"lgr+xml\", \"link-format\", \"load-control+xml\", \"lost+xml\", \"lostsync+xml\", \"LXF\", \"mac-binhex40\", \"macwriteii\", \"mads+xml\", \"marc\", \"marcxml+xml\", \"mathematica\", \"mathml-content+xml\", \"mathml-presentation+xml\", \"mathml+xml\", \"mbms-associated-procedure-description+xml\", \"mbms-deregister+xml\", \"mbms-envelope+xml\", \"mbms-msk-response+xml\", \"mbms-msk+xml\", \"mbms-protection-description+xml\", \"mbms-reception-report+xml\", \"mbms-register-response+xml\", \"mbms-register+xml\", \"mbms-schedule+xml\", \"mbms-user-service-description+xml\", \"mbox\", \"media_control+xml\", \"media-policy-dataset+xml\", \"mediaservercontrol+xml\", \"merge-patch+json\", \"metalink4+xml\", \"mets+xml\", \"MF4\", \"mikey\", \"mods+xml\", \"moss-keys\", \"moss-signature\", \"mosskey-data\", \"mosskey-request\", \"mp21\", \"mp4\", \"mpeg4-generic\", \"mpeg4-iod\", \"mpeg4-iod-xmt\", \"mrb-consumer+xml\", \"mrb-publish+xml\", \"msc-ivr+xml\", \"msc-mixer+xml\", \"msword\", \"mxf\", \"nasdata\", \"news-checkgroups\", \"news-groupinfo\", \"news-transmission\", \"nlsml+xml\", \"nss\", \"ocsp-request\", \"ocsp-response\", \"octet-stream\", \"oda\", \"ODX\", \"oebps-package+xml\", \"ogg\", \"oxps\", \"p2p-overlay+xml\", \"parityfec\", \"patch-ops-error+xml\", \"pdf\", \"PDX\", \"pgp-encrypted\", \"pgp-keys\", \"pgp-signature\", \"pidf-diff+xml\", \"pidf+xml\", \"pkcs10\", \"pkcs7-mime\", \"pkcs7-signature\", \"pkcs8\", \"pkcs12\", \"pkix-attr-cert\", \"pkix-cert\", \"pkix-crl\", \"pkix-pkipath\", \"pkixcmp\", \"pls+xml\", \"poc-settings+xml\", \"postscript\", \"ppsp-tracker+json\", \"problem+json\", \"problem+xml\", \"provenance+xml\", \"prs.alvestrand.titrax-sheet\", \"prs.cww\", \"prs.hpub+zip\", \"prs.nprend\", \"prs.plucker\", \"prs.rdf-xml-crypt\", \"prs.xsf+xml\", \"pskc+xml\", \"rdf+xml\", \"qsig\", \"raptorfec\", \"rdap+json\", \"reginfo+xml\", \"relax-ng-compact-syntax\", \"remote-printing\", \"reputon+json\", \"resource-lists-diff+xml\", \"resource-lists+xml\", \"rfc+xml\", \"riscos\", \"rlmi+xml\", \"rls-services+xml\", \"rpki-ghostbusters\", \"rpki-manifest\", \"rpki-roa\", \"rpki-updown\", \"rtf\", \"rtploopback\", \"rtx\", \"samlassertion+xml\", \"samlmetadata+xml\", \"sbml+xml\", \"scaip+xml\", \"scim+json\", \"scvp-cv-request\", \"scvp-cv-response\", \"scvp-vp-request\", \"scvp-vp-response\", \"sdp\", \"sep-exi\", \"sep+xml\", \"session-info\", \"set-payment\", \"set-payment-initiation\", \"set-registration\", \"set-registration-initiation\", \"sgml\", \"sgml-open-catalog\", \"shf+xml\", \"sieve\", \"simple-filter+xml\", \"simple-message-summary\", \"simpleSymbolContainer\", \"slate\", \"smil\", \"smil+xml\", \"smpte336m\", \"soap+fastinfoset\", \"soap+xml\", \"sparql-query\", \"sparql-results+xml\", \"spirits-event+xml\", \"sql\", \"srgs\", \"srgs+xml\", \"sru+xml\", \"ssml+xml\", \"tamp-apex-update\", \"tamp-apex-update-confirm\", \"tamp-community-update\", \"tamp-community-update-confirm\", \"tamp-error\", \"tamp-sequence-adjust\", \"tamp-sequence-adjust-confirm\", \"tamp-status-query\", \"tamp-status-response\", \"tamp-update\", \"tamp-update-confirm\", \"tei+xml\", \"thraud+xml\", \"timestamp-query\", \"timestamp-reply\", \"timestamped-data\", \"ttml+xml\", \"tve-trigger\", \"ulpfec\", \"urc-grpsheet+xml\", \"urc-ressheet+xml\", \"urc-targetdesc+xml\", \"urc-uisocketdesc+xml\", \"vcard+json\", \"vcard+xml\", \"vemmi\", \"vnd.3gpp.access-transfer-events+xml\", \"vnd.3gpp.bsf+xml\", \"vnd.3gpp.mid-call+xml\", \"vnd.3gpp.pic-bw-large\", \"vnd.3gpp.pic-bw-small\", \"vnd.3gpp.pic-bw-var\", \"vnd.3gpp-prose-pc3ch+xml\", \"vnd.3gpp-prose+xml\", \"vnd.3gpp.sms\", \"vnd.3gpp.sms+xml\", \"vnd.3gpp.srvcc-ext+xml\", \"vnd.3gpp.SRVCC-info+xml\", \"vnd.3gpp.state-and-event-info+xml\", \"vnd.3gpp.ussd+xml\", \"vnd.3gpp2.bcmcsinfo+xml\", \"vnd.3gpp2.sms\", \"vnd.3gpp2.tcap\", \"vnd.3lightssoftware.imagescal\", \"vnd.3M.Post-it-Notes\", \"vnd.accpac.simply.aso\", \"vnd.accpac.simply.imp\", \"vnd.acucobol\", \"vnd.acucorp\", \"vnd.adobe.flash.movie\", \"vnd.adobe.formscentral.fcdt\", \"vnd.adobe.fxp\", \"vnd.adobe.partial-upload\", \"vnd.adobe.xdp+xml\", \"vnd.adobe.xfdf\", \"vnd.aether.imp\", \"vnd.ah-barcode\", \"vnd.ahead.space\", \"vnd.airzip.filesecure.azf\", \"vnd.airzip.filesecure.azs\", \"vnd.amazon.mobi8-ebook\", \"vnd.americandynamics.acc\", \"vnd.amiga.ami\", \"vnd.amundsen.maze+xml\", \"vnd.anki\", \"vnd.anser-web-certificate-issue-initiation\", \"vnd.antix.game-component\", \"vnd.apache.thrift.binary\", \"vnd.apache.thrift.compact\", \"vnd.apache.thrift.json\", \"vnd.api+json\", \"vnd.apple.mpegurl\", \"vnd.apple.installer+xml\", \"vnd.arastra.swi\", \"vnd.aristanetworks.swi\", \"vnd.artsquare\", \"vnd.astraea-software.iota\", \"vnd.audiograph\", \"vnd.autopackage\", \"vnd.avistar+xml\", \"vnd.balsamiq.bmml+xml\", \"vnd.balsamiq.bmpr\", \"vnd.bekitzur-stech+json\", \"vnd.biopax.rdf+xml\", \"vnd.blueice.multipass\", \"vnd.bluetooth.ep.oob\", \"vnd.bluetooth.le.oob\", \"vnd.bmi\", \"vnd.businessobjects\", \"vnd.cab-jscript\", \"vnd.canon-cpdl\", \"vnd.canon-lips\", \"vnd.cendio.thinlinc.clientconf\", \"vnd.century-systems.tcp_stream\", \"vnd.chemdraw+xml\", \"vnd.chess-pgn\", \"vnd.chipnuts.karaoke-mmd\", \"vnd.cinderella\", \"vnd.cirpack.isdn-ext\", \"vnd.citationstyles.style+xml\", \"vnd.claymore\", \"vnd.cloanto.rp9\", \"vnd.clonk.c4group\", \"vnd.cluetrust.cartomobile-config\", \"vnd.cluetrust.cartomobile-config-pkg\", \"vnd.coffeescript\", \"vnd.collection.doc+json\", \"vnd.collection+json\", \"vnd.collection.next+json\", \"vnd.comicbook+zip\", \"vnd.commerce-battelle\", \"vnd.commonspace\", \"vnd.coreos.ignition+json\", \"vnd.cosmocaller\", \"vnd.contact.cmsg\", \"vnd.crick.clicker\", \"vnd.crick.clicker.keyboard\", \"vnd.crick.clicker.palette\", \"vnd.crick.clicker.template\", \"vnd.crick.clicker.wordbank\", \"vnd.criticaltools.wbs+xml\", \"vnd.ctc-posml\", \"vnd.ctct.ws+xml\", \"vnd.cups-pdf\", \"vnd.cups-postscript\", \"vnd.cups-ppd\", \"vnd.cups-raster\", \"vnd.cups-raw\", \"vnd.curl\", \"vnd.cyan.dean.root+xml\", \"vnd.cybank\", \"vnd.dart\", \"vnd.data-vision.rdz\", \"vnd.debian.binary-package\", \"vnd.dece.data\", \"vnd.dece.ttml+xml\", \"vnd.dece.unspecified\", \"vnd.dece.zip\", \"vnd.denovo.fcselayout-link\", \"vnd.desmume.movie\", \"vnd.dir-bi.plate-dl-nosuffix\", \"vnd.dm.delegation+xml\", \"vnd.dna\", \"vnd.document+json\", \"vnd.dolby.mobile.1\", \"vnd.dolby.mobile.2\", \"vnd.doremir.scorecloud-binary-document\", \"vnd.dpgraph\", \"vnd.dreamfactory\", \"vnd.drive+json\", \"vnd.dtg.local\", \"vnd.dtg.local.flash\", \"vnd.dtg.local.html\", \"vnd.dvb.ait\", \"vnd.dvb.dvbj\", \"vnd.dvb.esgcontainer\", \"vnd.dvb.ipdcdftnotifaccess\", \"vnd.dvb.ipdcesgaccess\", \"vnd.dvb.ipdcesgaccess2\", \"vnd.dvb.ipdcesgpdd\", \"vnd.dvb.ipdcroaming\", \"vnd.dvb.iptv.alfec-base\", \"vnd.dvb.iptv.alfec-enhancement\", \"vnd.dvb.notif-aggregate-root+xml\", \"vnd.dvb.notif-container+xml\", \"vnd.dvb.notif-generic+xml\", \"vnd.dvb.notif-ia-msglist+xml\", \"vnd.dvb.notif-ia-registration-request+xml\", \"vnd.dvb.notif-ia-registration-response+xml\", \"vnd.dvb.notif-init+xml\", \"vnd.dvb.pfr\", \"vnd.dvb.service\", \"vnd.dxr\", \"vnd.dynageo\", \"vnd.dzr\", \"vnd.easykaraoke.cdgdownload\", \"vnd.ecdis-update\", \"vnd.ecowin.chart\", \"vnd.ecowin.filerequest\", \"vnd.ecowin.fileupdate\", \"vnd.ecowin.series\", \"vnd.ecowin.seriesrequest\", \"vnd.ecowin.seriesupdate\", \"vnd.emclient.accessrequest+xml\", \"vnd.enliven\", \"vnd.enphase.envoy\", \"vnd.eprints.data+xml\", \"vnd.epson.esf\", \"vnd.epson.msf\", \"vnd.epson.quickanime\", \"vnd.epson.salt\", \"vnd.epson.ssf\", \"vnd.ericsson.quickcall\", \"vnd.eszigno3+xml\", \"vnd.etsi.aoc+xml\", \"vnd.etsi.asic-s+zip\", \"vnd.etsi.asic-e+zip\", \"vnd.etsi.cug+xml\", \"vnd.etsi.iptvcommand+xml\", \"vnd.etsi.iptvdiscovery+xml\", \"vnd.etsi.iptvprofile+xml\", \"vnd.etsi.iptvsad-bc+xml\", \"vnd.etsi.iptvsad-cod+xml\", \"vnd.etsi.iptvsad-npvr+xml\", \"vnd.etsi.iptvservice+xml\", \"vnd.etsi.iptvsync+xml\", \"vnd.etsi.iptvueprofile+xml\", \"vnd.etsi.mcid+xml\", \"vnd.etsi.mheg5\", \"vnd.etsi.overload-control-policy-dataset+xml\", \"vnd.etsi.pstn+xml\", \"vnd.etsi.sci+xml\", \"vnd.etsi.simservs+xml\", \"vnd.etsi.timestamp-token\", \"vnd.etsi.tsl+xml\", \"vnd.etsi.tsl.der\", \"vnd.eudora.data\", \"vnd.ezpix-album\", \"vnd.ezpix-package\", \"vnd.f-secure.mobile\", \"vnd.fastcopy-disk-image\", \"vnd.fdf\", \"vnd.fdsn.mseed\", \"vnd.fdsn.seed\", \"vnd.ffsns\", \"vnd.filmit.zfc\", \"vnd.fints\", \"vnd.firemonkeys.cloudcell\", \"vnd.FloGraphIt\", \"vnd.fluxtime.clip\", \"vnd.font-fontforge-sfd\", \"vnd.framemaker\", \"vnd.frogans.fnc\", \"vnd.frogans.ltf\", \"vnd.fsc.weblaunch\", \"vnd.fujitsu.oasys\", \"vnd.fujitsu.oasys2\", \"vnd.fujitsu.oasys3\", \"vnd.fujitsu.oasysgp\", \"vnd.fujitsu.oasysprs\", \"vnd.fujixerox.ART4\", \"vnd.fujixerox.ART-EX\", \"vnd.fujixerox.ddd\", \"vnd.fujixerox.docuworks\", \"vnd.fujixerox.docuworks.binder\", \"vnd.fujixerox.docuworks.container\", \"vnd.fujixerox.HBPL\", \"vnd.fut-misnet\", \"vnd.fuzzysheet\", \"vnd.genomatix.tuxedo\", \"vnd.geo+json\", \"vnd.geocube+xml\", \"vnd.geogebra.file\", \"vnd.geogebra.tool\", \"vnd.geometry-explorer\", \"vnd.geonext\", \"vnd.geoplan\", \"vnd.geospace\", \"vnd.gerber\", \"vnd.globalplatform.card-content-mgt\", \"vnd.globalplatform.card-content-mgt-response\", \"vnd.gmx\", \"vnd.google-earth.kml+xml\", \"vnd.google-earth.kmz\", \"vnd.gov.sk.e-form+xml\", \"vnd.gov.sk.e-form+zip\", \"vnd.gov.sk.xmldatacontainer+xml\", \"vnd.grafeq\", \"vnd.gridmp\", \"vnd.groove-account\", \"vnd.groove-help\", \"vnd.groove-identity-message\", \"vnd.groove-injector\", \"vnd.groove-tool-message\", \"vnd.groove-tool-template\", \"vnd.groove-vcard\", \"vnd.hal+json\", \"vnd.hal+xml\", \"vnd.HandHeld-Entertainment+xml\", \"vnd.hbci\", \"vnd.hcl-bireports\", \"vnd.hdt\", \"vnd.heroku+json\", \"vnd.hhe.lesson-player\", \"vnd.hp-HPGL\", \"vnd.hp-hpid\", \"vnd.hp-hps\", \"vnd.hp-jlyt\", \"vnd.hp-PCL\", \"vnd.hp-PCLXL\", \"vnd.httphone\", \"vnd.hydrostatix.sof-data\", \"vnd.hyperdrive+json\", \"vnd.hzn-3d-crossword\", \"vnd.ibm.afplinedata\", \"vnd.ibm.electronic-media\", \"vnd.ibm.MiniPay\", \"vnd.ibm.modcap\", \"vnd.ibm.rights-management\", \"vnd.ibm.secure-container\", \"vnd.iccprofile\", \"vnd.ieee.1905\", \"vnd.igloader\", \"vnd.immervision-ivp\", \"vnd.immervision-ivu\", \"vnd.ims.imsccv1p1\", \"vnd.ims.imsccv1p2\", \"vnd.ims.imsccv1p3\", \"vnd.ims.lis.v2.result+json\", \"vnd.ims.lti.v2.toolconsumerprofile+json\", \"vnd.ims.lti.v2.toolproxy.id+json\", \"vnd.ims.lti.v2.toolproxy+json\", \"vnd.ims.lti.v2.toolsettings+json\", \"vnd.ims.lti.v2.toolsettings.simple+json\", \"vnd.informedcontrol.rms+xml\", \"vnd.infotech.project\", \"vnd.infotech.project+xml\", \"vnd.informix-visionary\", \"vnd.innopath.wamp.notification\", \"vnd.insors.igm\", \"vnd.intercon.formnet\", \"vnd.intergeo\", \"vnd.intertrust.digibox\", \"vnd.intertrust.nncp\", \"vnd.intu.qbo\", \"vnd.intu.qfx\", \"vnd.iptc.g2.catalogitem+xml\", \"vnd.iptc.g2.conceptitem+xml\", \"vnd.iptc.g2.knowledgeitem+xml\", \"vnd.iptc.g2.newsitem+xml\", \"vnd.iptc.g2.newsmessage+xml\", \"vnd.iptc.g2.packageitem+xml\", \"vnd.iptc.g2.planningitem+xml\", \"vnd.ipunplugged.rcprofile\", \"vnd.irepository.package+xml\", \"vnd.is-xpr\", \"vnd.isac.fcs\", \"vnd.jam\", \"vnd.japannet-directory-service\", \"vnd.japannet-jpnstore-wakeup\", \"vnd.japannet-payment-wakeup\", \"vnd.japannet-registration\", \"vnd.japannet-registration-wakeup\", \"vnd.japannet-setstore-wakeup\", \"vnd.japannet-verification\", \"vnd.japannet-verification-wakeup\", \"vnd.jcp.javame.midlet-rms\", \"vnd.jisp\", \"vnd.joost.joda-archive\", \"vnd.jsk.isdn-ngn\", \"vnd.kahootz\", \"vnd.kde.karbon\", \"vnd.kde.kchart\", \"vnd.kde.kformula\", \"vnd.kde.kivio\", \"vnd.kde.kontour\", \"vnd.kde.kpresenter\", \"vnd.kde.kspread\", \"vnd.kde.kword\", \"vnd.kenameaapp\", \"vnd.kidspiration\", \"vnd.Kinar\", \"vnd.koan\", \"vnd.kodak-descriptor\", \"vnd.las.las+xml\", \"vnd.liberty-request+xml\", \"vnd.llamagraphics.life-balance.desktop\", \"vnd.llamagraphics.life-balance.exchange+xml\", \"vnd.lotus-1-2-3\", \"vnd.lotus-approach\", \"vnd.lotus-freelance\", \"vnd.lotus-notes\", \"vnd.lotus-organizer\", \"vnd.lotus-screencam\", \"vnd.lotus-wordpro\", \"vnd.macports.portpkg\", \"vnd.mapbox-vector-tile\", \"vnd.marlin.drm.actiontoken+xml\", \"vnd.marlin.drm.conftoken+xml\", \"vnd.marlin.drm.license+xml\", \"vnd.marlin.drm.mdcf\", \"vnd.mason+json\", \"vnd.maxmind.maxmind-db\", \"vnd.mcd\", \"vnd.medcalcdata\", \"vnd.mediastation.cdkey\", \"vnd.meridian-slingshot\", \"vnd.MFER\", \"vnd.mfmp\", \"vnd.micro+json\", \"vnd.micrografx.flo\", \"vnd.micrografx.igx\", \"vnd.microsoft.portable-executable\", \"vnd.miele+json\", \"vnd.mif\", \"vnd.minisoft-hp3000-save\", \"vnd.mitsubishi.misty-guard.trustweb\", \"vnd.Mobius.DAF\", \"vnd.Mobius.DIS\", \"vnd.Mobius.MBK\", \"vnd.Mobius.MQY\", \"vnd.Mobius.MSL\", \"vnd.Mobius.PLC\", \"vnd.Mobius.TXF\", \"vnd.mophun.application\", \"vnd.mophun.certificate\", \"vnd.motorola.flexsuite\", \"vnd.motorola.flexsuite.adsi\", \"vnd.motorola.flexsuite.fis\", \"vnd.motorola.flexsuite.gotap\", \"vnd.motorola.flexsuite.kmr\", \"vnd.motorola.flexsuite.ttc\", \"vnd.motorola.flexsuite.wem\", \"vnd.motorola.iprm\", \"vnd.mozilla.xul+xml\", \"vnd.ms-artgalry\", \"vnd.ms-asf\", \"vnd.ms-cab-compressed\", \"vnd.ms-3mfdocument\", \"vnd.ms-excel\", \"vnd.ms-excel.addin.macroEnabled.12\", \"vnd.ms-excel.sheet.binary.macroEnabled.12\", \"vnd.ms-excel.sheet.macroEnabled.12\", \"vnd.ms-excel.template.macroEnabled.12\", \"vnd.ms-fontobject\", \"vnd.ms-htmlhelp\", \"vnd.ms-ims\", \"vnd.ms-lrm\", \"vnd.ms-office.activeX+xml\", \"vnd.ms-officetheme\", \"vnd.ms-playready.initiator+xml\", \"vnd.ms-powerpoint\", \"vnd.ms-powerpoint.addin.macroEnabled.12\", \"vnd.ms-powerpoint.presentation.macroEnabled.12\", \"vnd.ms-powerpoint.slide.macroEnabled.12\", \"vnd.ms-powerpoint.slideshow.macroEnabled.12\", \"vnd.ms-powerpoint.template.macroEnabled.12\", \"vnd.ms-PrintDeviceCapabilities+xml\", \"vnd.ms-PrintSchemaTicket+xml\", \"vnd.ms-project\", \"vnd.ms-tnef\", \"vnd.ms-windows.devicepairing\", \"vnd.ms-windows.nwprinting.oob\", \"vnd.ms-windows.printerpairing\", \"vnd.ms-windows.wsd.oob\", \"vnd.ms-wmdrm.lic-chlg-req\", \"vnd.ms-wmdrm.lic-resp\", \"vnd.ms-wmdrm.meter-chlg-req\", \"vnd.ms-wmdrm.meter-resp\", \"vnd.ms-word.document.macroEnabled.12\", \"vnd.ms-word.template.macroEnabled.12\", \"vnd.ms-works\", \"vnd.ms-wpl\", \"vnd.ms-xpsdocument\", \"vnd.msa-disk-image\", \"vnd.mseq\", \"vnd.msign\", \"vnd.multiad.creator\", \"vnd.multiad.creator.cif\", \"vnd.musician\", \"vnd.music-niff\", \"vnd.muvee.style\", \"vnd.mynfc\", \"vnd.ncd.control\", \"vnd.ncd.reference\", \"vnd.nervana\", \"vnd.netfpx\", \"vnd.neurolanguage.nlu\", \"vnd.nintendo.snes.rom\", \"vnd.nintendo.nitro.rom\", \"vnd.nitf\", \"vnd.noblenet-directory\", \"vnd.noblenet-sealer\", \"vnd.noblenet-web\", \"vnd.nokia.catalogs\", \"vnd.nokia.conml+wbxml\", \"vnd.nokia.conml+xml\", \"vnd.nokia.iptv.config+xml\", \"vnd.nokia.iSDS-radio-presets\", \"vnd.nokia.landmark+wbxml\", \"vnd.nokia.landmark+xml\", \"vnd.nokia.landmarkcollection+xml\", \"vnd.nokia.ncd\", \"vnd.nokia.n-gage.ac+xml\", \"vnd.nokia.n-gage.data\", \"vnd.nokia.n-gage.symbian.install\", \"vnd.nokia.pcd+wbxml\", \"vnd.nokia.pcd+xml\", \"vnd.nokia.radio-preset\", \"vnd.nokia.radio-presets\", \"vnd.novadigm.EDM\", \"vnd.novadigm.EDX\", \"vnd.novadigm.EXT\", \"vnd.ntt-local.content-share\", \"vnd.ntt-local.file-transfer\", \"vnd.ntt-local.ogw_remote-access\", \"vnd.ntt-local.sip-ta_remote\", \"vnd.ntt-local.sip-ta_tcp_stream\", \"vnd.oasis.opendocument.chart\", \"vnd.oasis.opendocument.chart-template\", \"vnd.oasis.opendocument.database\", \"vnd.oasis.opendocument.formula\", \"vnd.oasis.opendocument.formula-template\", \"vnd.oasis.opendocument.graphics\", \"vnd.oasis.opendocument.graphics-template\", \"vnd.oasis.opendocument.image\", \"vnd.oasis.opendocument.image-template\", \"vnd.oasis.opendocument.presentation\", \"vnd.oasis.opendocument.presentation-template\", \"vnd.oasis.opendocument.spreadsheet\", \"vnd.oasis.opendocument.spreadsheet-template\", \"vnd.oasis.opendocument.text\", \"vnd.oasis.opendocument.text-master\", \"vnd.oasis.opendocument.text-template\", \"vnd.oasis.opendocument.text-web\", \"vnd.obn\", \"vnd.oftn.l10n+json\", \"vnd.oipf.contentaccessdownload+xml\", \"vnd.oipf.contentaccessstreaming+xml\", \"vnd.oipf.cspg-hexbinary\", \"vnd.oipf.dae.svg+xml\", \"vnd.oipf.dae.xhtml+xml\", \"vnd.oipf.mippvcontrolmessage+xml\", \"vnd.oipf.pae.gem\", \"vnd.oipf.spdiscovery+xml\", \"vnd.oipf.spdlist+xml\", \"vnd.oipf.ueprofile+xml\", \"vnd.oipf.userprofile+xml\", \"vnd.olpc-sugar\", \"vnd.oma.bcast.associated-procedure-parameter+xml\", \"vnd.oma.bcast.drm-trigger+xml\", \"vnd.oma.bcast.imd+xml\", \"vnd.oma.bcast.ltkm\", \"vnd.oma.bcast.notification+xml\", \"vnd.oma.bcast.provisioningtrigger\", \"vnd.oma.bcast.sgboot\", \"vnd.oma.bcast.sgdd+xml\", \"vnd.oma.bcast.sgdu\", \"vnd.oma.bcast.simple-symbol-container\", \"vnd.oma.bcast.smartcard-trigger+xml\", \"vnd.oma.bcast.sprov+xml\", \"vnd.oma.bcast.stkm\", \"vnd.oma.cab-address-book+xml\", \"vnd.oma.cab-feature-handler+xml\", \"vnd.oma.cab-pcc+xml\", \"vnd.oma.cab-subs-invite+xml\", \"vnd.oma.cab-user-prefs+xml\", \"vnd.oma.dcd\", \"vnd.oma.dcdc\", \"vnd.oma.dd2+xml\", \"vnd.oma.drm.risd+xml\", \"vnd.oma.group-usage-list+xml\", \"vnd.oma.lwm2m+json\", \"vnd.oma.lwm2m+tlv\", \"vnd.oma.pal+xml\", \"vnd.oma.poc.detailed-progress-report+xml\", \"vnd.oma.poc.final-report+xml\", \"vnd.oma.poc.groups+xml\", \"vnd.oma.poc.invocation-descriptor+xml\", \"vnd.oma.poc.optimized-progress-report+xml\", \"vnd.oma.push\", \"vnd.oma.scidm.messages+xml\", \"vnd.oma.xcap-directory+xml\", \"vnd.omads-email+xml\", \"vnd.omads-file+xml\", \"vnd.omads-folder+xml\", \"vnd.omaloc-supl-init\", \"vnd.oma-scws-config\", \"vnd.oma-scws-http-request\", \"vnd.oma-scws-http-response\", \"vnd.onepager\", \"vnd.openblox.game-binary\", \"vnd.openblox.game+xml\", \"vnd.openeye.oeb\", \"vnd.openxmlformats-officedocument.custom-properties+xml\", \"vnd.openxmlformats-officedocument.customXmlProperties+xml\", \"vnd.openxmlformats-officedocument.drawing+xml\", \"vnd.openxmlformats-officedocument.drawingml.chart+xml\", \"vnd.openxmlformats-officedocument.drawingml.chartshapes+xml\", \"vnd.openxmlformats-officedocument.drawingml.diagramColors+xml\", \"vnd.openxmlformats-officedocument.drawingml.diagramData+xml\", \"vnd.openxmlformats-officedocument.drawingml.diagramLayout+xml\", \"vnd.openxmlformats-officedocument.drawingml.diagramStyle+xml\", \"vnd.openxmlformats-officedocument.extended-properties+xml\", \"vnd.openxmlformats-officedocument.presentationml.commentAuthors+xml\", \"vnd.openxmlformats-officedocument.presentationml.comments+xml\", \"vnd.openxmlformats-officedocument.presentationml.handoutMaster+xml\", \"vnd.openxmlformats-officedocument.presentationml.notesMaster+xml\", \"vnd.openxmlformats-officedocument.presentationml.notesSlide+xml\", \"vnd.openxmlformats-officedocument.presentationml.presentation\", \"vnd.openxmlformats-officedocument.presentationml.presentation.main+xml\", \"vnd.openxmlformats-officedocument.presentationml.presProps+xml\", \"vnd.openxmlformats-officedocument.presentationml.slide\", \"vnd.openxmlformats-officedocument.presentationml.slide+xml\", \"vnd.openxmlformats-officedocument.presentationml.slideLayout+xml\", \"vnd.openxmlformats-officedocument.presentationml.slideMaster+xml\", \"vnd.openxmlformats-officedocument.presentationml.slideshow\", \"vnd.openxmlformats-officedocument.presentationml.slideshow.main+xml\", \"vnd.openxmlformats-officedocument.presentationml.slideUpdateInfo+xml\", \"vnd.openxmlformats-officedocument.presentationml.tableStyles+xml\", \"vnd.openxmlformats-officedocument.presentationml.tags+xml\", \"vnd.openxmlformats-officedocument.presentationml.template\", \"vnd.openxmlformats-officedocument.presentationml.template.main+xml\", \"vnd.openxmlformats-officedocument.presentationml.viewProps+xml\", \"vnd.openxmlformats-officedocument.spreadsheetml.calcChain+xml\", \"vnd.openxmlformats-officedocument.spreadsheetml.chartsheet+xml\", \"vnd.openxmlformats-officedocument.spreadsheetml.comments+xml\", \"vnd.openxmlformats-officedocument.spreadsheetml.connections+xml\", \"vnd.openxmlformats-officedocument.spreadsheetml.dialogsheet+xml\", \"vnd.openxmlformats-officedocument.spreadsheetml.externalLink+xml\", \"vnd.openxmlformats-officedocument.spreadsheetml.pivotCacheDefinition+xml\", \"vnd.openxmlformats-officedocument.spreadsheetml.pivotCacheRecords+xml\", \"vnd.openxmlformats-officedocument.spreadsheetml.pivotTable+xml\", \"vnd.openxmlformats-officedocument.spreadsheetml.queryTable+xml\", \"vnd.openxmlformats-officedocument.spreadsheetml.revisionHeaders+xml\", \"vnd.openxmlformats-officedocument.spreadsheetml.revisionLog+xml\", \"vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml\", \"vnd.openxmlformats-officedocument.spreadsheetml.sheet\", \"vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml\", \"vnd.openxmlformats-officedocument.spreadsheetml.sheetMetadata+xml\", \"vnd.openxmlformats-officedocument.spreadsheetml.styles+xml\", \"vnd.openxmlformats-officedocument.spreadsheetml.table+xml\", \"vnd.openxmlformats-officedocument.spreadsheetml.tableSingleCells+xml\", \"vnd.openxmlformats-officedocument.spreadsheetml.template\", \"vnd.openxmlformats-officedocument.spreadsheetml.template.main+xml\", \"vnd.openxmlformats-officedocument.spreadsheetml.userNames+xml\", \"vnd.openxmlformats-officedocument.spreadsheetml.volatileDependencies+xml\", \"vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml\", \"vnd.openxmlformats-officedocument.theme+xml\", \"vnd.openxmlformats-officedocument.themeOverride+xml\", \"vnd.openxmlformats-officedocument.vmlDrawing\", \"vnd.openxmlformats-officedocument.wordprocessingml.comments+xml\", \"vnd.openxmlformats-officedocument.wordprocessingml.document\", \"vnd.openxmlformats-officedocument.wordprocessingml.document.glossary+xml\", \"vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml\", \"vnd.openxmlformats-officedocument.wordprocessingml.endnotes+xml\", \"vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml\", \"vnd.openxmlformats-officedocument.wordprocessingml.footer+xml\", \"vnd.openxmlformats-officedocument.wordprocessingml.footnotes+xml\", \"vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml\", \"vnd.openxmlformats-officedocument.wordprocessingml.settings+xml\", \"vnd.openxmlformats-officedocument.wordprocessingml.styles+xml\", \"vnd.openxmlformats-officedocument.wordprocessingml.template\", \"vnd.openxmlformats-officedocument.wordprocessingml.template.main+xml\", \"vnd.openxmlformats-officedocument.wordprocessingml.webSettings+xml\", \"vnd.openxmlformats-package.core-properties+xml\", \"vnd.openxmlformats-package.digital-signature-xmlsignature+xml\", \"vnd.openxmlformats-package.relationships+xml\", \"vnd.oracle.resource+json\", \"vnd.orange.indata\", \"vnd.osa.netdeploy\", \"vnd.osgeo.mapguide.package\", \"vnd.osgi.bundle\", \"vnd.osgi.dp\", \"vnd.osgi.subsystem\", \"vnd.otps.ct-kip+xml\", \"vnd.oxli.countgraph\", \"vnd.pagerduty+json\", \"vnd.palm\", \"vnd.panoply\", \"vnd.paos.xml\", \"vnd.pawaafile\", \"vnd.pcos\", \"vnd.pg.format\", \"vnd.pg.osasli\", \"vnd.piaccess.application-licence\", \"vnd.picsel\", \"vnd.pmi.widget\", \"vnd.poc.group-advertisement+xml\", \"vnd.pocketlearn\", \"vnd.powerbuilder6\", \"vnd.powerbuilder6-s\", \"vnd.powerbuilder7\", \"vnd.powerbuilder75\", \"vnd.powerbuilder75-s\", \"vnd.powerbuilder7-s\", \"vnd.preminet\", \"vnd.previewsystems.box\", \"vnd.proteus.magazine\", \"vnd.publishare-delta-tree\", \"vnd.pvi.ptid1\", \"vnd.pwg-multiplexed\", \"vnd.pwg-xhtml-print+xml\", \"vnd.qualcomm.brew-app-res\", \"vnd.quarantainenet\", \"vnd.Quark.QuarkXPress\", \"vnd.quobject-quoxdocument\", \"vnd.radisys.moml+xml\", \"vnd.radisys.msml-audit-conf+xml\", \"vnd.radisys.msml-audit-conn+xml\", \"vnd.radisys.msml-audit-dialog+xml\", \"vnd.radisys.msml-audit-stream+xml\", \"vnd.radisys.msml-audit+xml\", \"vnd.radisys.msml-conf+xml\", \"vnd.radisys.msml-dialog-base+xml\", \"vnd.radisys.msml-dialog-fax-detect+xml\", \"vnd.radisys.msml-dialog-fax-sendrecv+xml\", \"vnd.radisys.msml-dialog-group+xml\", \"vnd.radisys.msml-dialog-speech+xml\", \"vnd.radisys.msml-dialog-transform+xml\", \"vnd.radisys.msml-dialog+xml\", \"vnd.radisys.msml+xml\", \"vnd.rainstor.data\", \"vnd.rapid\", \"vnd.realvnc.bed\", \"vnd.recordare.musicxml\", \"vnd.recordare.musicxml+xml\", \"vnd.RenLearn.rlprint\", \"vnd.rig.cryptonote\", \"vnd.route66.link66+xml\", \"vnd.rs-274x\", \"vnd.ruckus.download\", \"vnd.s3sms\", \"vnd.sailingtracker.track\", \"vnd.sbm.cid\", \"vnd.sbm.mid2\", \"vnd.scribus\", \"vnd.sealed.3df\", \"vnd.sealed.csf\", \"vnd.sealed.doc\", \"vnd.sealed.eml\", \"vnd.sealed.mht\", \"vnd.sealed.net\", \"vnd.sealed.ppt\", \"vnd.sealed.tiff\", \"vnd.sealed.xls\", \"vnd.sealedmedia.softseal.html\", \"vnd.sealedmedia.softseal.pdf\", \"vnd.seemail\", \"vnd.sema\", \"vnd.semd\", \"vnd.semf\", \"vnd.shana.informed.formdata\", \"vnd.shana.informed.formtemplate\", \"vnd.shana.informed.interchange\", \"vnd.shana.informed.package\", \"vnd.SimTech-MindMapper\", \"vnd.siren+json\", \"vnd.smaf\", \"vnd.smart.notebook\", \"vnd.smart.teacher\", \"vnd.software602.filler.form+xml\", \"vnd.software602.filler.form-xml-zip\", \"vnd.solent.sdkm+xml\", \"vnd.spotfire.dxp\", \"vnd.spotfire.sfs\", \"vnd.sss-cod\", \"vnd.sss-dtf\", \"vnd.sss-ntf\", \"vnd.stepmania.package\", \"vnd.stepmania.stepchart\", \"vnd.street-stream\", \"vnd.sun.wadl+xml\", \"vnd.sus-calendar\", \"vnd.svd\", \"vnd.swiftview-ics\", \"vnd.syncml.dm.notification\", \"vnd.syncml.dmddf+xml\", \"vnd.syncml.dmtnds+wbxml\", \"vnd.syncml.dmtnds+xml\", \"vnd.syncml.dmddf+wbxml\", \"vnd.syncml.dm+wbxml\", \"vnd.syncml.dm+xml\", \"vnd.syncml.ds.notification\", \"vnd.syncml+xml\", \"vnd.tao.intent-module-archive\", \"vnd.tcpdump.pcap\", \"vnd.tml\", \"vnd.tmd.mediaflex.api+xml\", \"vnd.tmobile-livetv\", \"vnd.trid.tpt\", \"vnd.triscape.mxs\", \"vnd.trueapp\", \"vnd.truedoc\", \"vnd.ubisoft.webplayer\", \"vnd.ufdl\", \"vnd.uiq.theme\", \"vnd.umajin\", \"vnd.unity\", \"vnd.uoml+xml\", \"vnd.uplanet.alert\", \"vnd.uplanet.alert-wbxml\", \"vnd.uplanet.bearer-choice\", \"vnd.uplanet.bearer-choice-wbxml\", \"vnd.uplanet.cacheop\", \"vnd.uplanet.cacheop-wbxml\", \"vnd.uplanet.channel\", \"vnd.uplanet.channel-wbxml\", \"vnd.uplanet.list\", \"vnd.uplanet.listcmd\", \"vnd.uplanet.listcmd-wbxml\", \"vnd.uplanet.list-wbxml\", \"vnd.uri-map\", \"vnd.uplanet.signal\", \"vnd.valve.source.material\", \"vnd.vcx\", \"vnd.vd-study\", \"vnd.vectorworks\", \"vnd.vel+json\", \"vnd.verimatrix.vcas\", \"vnd.vidsoft.vidconference\", \"vnd.visio\", \"vnd.visionary\", \"vnd.vividence.scriptfile\", \"vnd.vsf\", \"vnd.wap.sic\", \"vnd.wap.slc\", \"vnd.wap.wbxml\", \"vnd.wap.wmlc\", \"vnd.wap.wmlscriptc\", \"vnd.webturbo\", \"vnd.wfa.p2p\", \"vnd.wfa.wsc\", \"vnd.windows.devicepairing\", \"vnd.wmc\", \"vnd.wmf.bootstrap\", \"vnd.wolfram.mathematica\", \"vnd.wolfram.mathematica.package\", \"vnd.wolfram.player\", \"vnd.wordperfect\", \"vnd.wqd\", \"vnd.wrq-hp3000-labelled\", \"vnd.wt.stf\", \"vnd.wv.csp+xml\", \"vnd.wv.csp+wbxml\", \"vnd.wv.ssp+xml\", \"vnd.xacml+json\", \"vnd.xara\", \"vnd.xfdl\", \"vnd.xfdl.webform\", \"vnd.xmi+xml\", \"vnd.xmpie.cpkg\", \"vnd.xmpie.dpkg\", \"vnd.xmpie.plan\", \"vnd.xmpie.ppkg\", \"vnd.xmpie.xlim\", \"vnd.yamaha.hv-dic\", \"vnd.yamaha.hv-script\", \"vnd.yamaha.hv-voice\", \"vnd.yamaha.openscoreformat.osfpvg+xml\", \"vnd.yamaha.openscoreformat\", \"vnd.yamaha.remote-setup\", \"vnd.yamaha.smaf-audio\", \"vnd.yamaha.smaf-phrase\", \"vnd.yamaha.through-ngn\", \"vnd.yamaha.tunnel-udpencap\", \"vnd.yaoweme\", \"vnd.yellowriver-custom-menu\", \"vnd.zul\", \"vnd.zzazz.deck+xml\", \"voicexml+xml\", \"vq-rtcpxr\", \"watcherinfo+xml\", \"whoispp-query\", \"whoispp-response\", \"widget\", \"wita\", \"wordperfect5.1\", \"wsdl+xml\", \"wspolicy+xml\", \"x-www-form-urlencoded\", \"x400-bp\", \"xacml+xml\", \"xcap-att+xml\", \"xcap-caps+xml\", \"xcap-diff+xml\", \"xcap-el+xml\", \"xcap-error+xml\", \"xcap-ns+xml\", \"xcon-conference-info-diff+xml\", \"xcon-conference-info+xml\", \"xenc+xml\", \"xhtml+xml\", \"xml\", \"xml-dtd\", \"xml-external-parsed-entity\", \"xml-patch+xml\", \"xmpp+xml\", \"xop+xml\", \"xslt+xml\", \"xv+xml\", \"yang\", \"yin+xml\", \"zip\", \"zlib\"], \"type\": \"string\", \"description\": \"media-type-IANA-application@21.T11148/edff7f2829db22e260a3\"}, \"21.T11148_095c4361f3044b203171\": {\"enum\": [\"example\", \"gltf+json\", \"iges\", \"mesh\", \"vnd.collada+xml\", \"vnd.dwf\", \"vnd.flatland.3dml\", \"vnd.gdl\", \"vnd.gs-gdl\", \"vnd.gtw\", \"vnd.moml+xml\", \"vnd.mts\", \"vnd.opengex\", \"vnd.parasolid.transmit.binary\", \"vnd.parasolid.transmit.text\", \"vnd.rosette.annotated-data-model\", \"vnd.valve.source.compiled-map\", \"vnd.vtu\", \"vrml\", \"x3d-vrml\", \"x3d+fastinfoset\", \"x3d+xml\"], \"type\": \"string\", \"description\": \"media-type-IANA-model@21.T11148/095c4361f3044b203171\"}, \"21.T11148_7f287d9d1d27eedf7306\": {\"anyOf\": [{\"$ref\": \"#/definitions/21.T11148_2834eac0159f584bcf05\"}, {\"$ref\": \"#/definitions/21.T11148_095c4361f3044b203171\"}, {\"$ref\": \"#/definitions/21.T11148_011cdca5b33190bcdce7\"}, {\"$ref\": \"#/definitions/21.T11148_41c3b31ecb5dc6aa6792\"}, {\"$ref\": \"#/definitions/21.T11148_86f43ab94431ee80d013\"}, {\"$ref\": \"#/definitions/21.T11148_916793ae5bba9b9208a8\"}, {\"$ref\": \"#/definitions/21.T11148_edff7f2829db22e260a3\"}], \"description\": \"media-type-IANA@21.T11148/7f287d9d1d27eedf7306\"}, \"21.T11148_41c3b31ecb5dc6aa6792\": {\"enum\": [\"1d-interleaved-parityfec\", \"cache-manifest\", \"calendar\", \"css\", \"csv\", \"csv-schema\", \"directory\", \"dns\", \"ecmascript\", \"encaprtp\", \"enriched\", \"example\", \"fwdred\", \"grammar-ref-list\", \"html\", \"javascript\", \"jcr-cnd\", \"markdown\", \"mizar\", \"n3\", \"parameters\", \"parityfec\", \"plain\", \"provenance-notation\", \"prs.fallenstein.rst\", \"prs.lines.tag\", \"prs.prop.logic\", \"raptorfec\", \"RED\", \"rfc822-headers\", \"richtext\", \"rtf\", \"rtp-enc-aescm128\", \"rtploopback\", \"rtx\", \"sgml\", \"t140\", \"tab-separated-values\", \"troff\", \"turtle\", \"ulpfec\", \"uri-list\", \"vcard\", \"vnd.a\", \"vnd.abc\", \"vnd.curl\", \"vnd.debian.copyright\", \"vnd.DMClientScript\", \"vnd.dvb.subtitle\", \"vnd.esmertec.theme-descriptor\", \"vnd.fly\", \"vnd.fmi.flexstor\", \"vnd.graphviz\", \"vnd.in3d.3dml\", \"vnd.in3d.spot\", \"vnd.IPTC.NewsML\", \"vnd.IPTC.NITF\", \"vnd.latex-z\", \"vnd.motorola.reflex\", \"vnd.ms-mediapackage\", \"vnd.net2phone.commcenter.command\", \"vnd.radisys.msml-basic-layout\", \"vnd.si.uricatalogue\", \"vnd.sun.j2me.app-descriptor\", \"vnd.trolltech.linguist\", \"vnd.wap.si\", \"vnd.wap.sl\", \"vnd.wap.wml\", \"vnd.wap.wmlscript\", \"xml\", \"xml-external-parsed-entity\"], \"type\": \"string\", \"description\": \"media-type-IANA-text@21.T11148/41c3b31ecb5dc6aa6792\"}, \"21.T11148_916793ae5bba9b9208a8\": {\"enum\": [\"CPIM\", \"delivery-status\", \"disposition-notification\", \"example\", \"external-body\", \"feedback-report\", \"global\", \"global-delivery-status\", \"global-disposition-notification\", \"global-headers\", \"http\", \"imdn+xml\", \"news\", \"partial\", \"rfc822\", \"s-http\", \"sip\", \"sipfrag\", \"tracking-status\", \"vnd.si.simp\", \"vnd.wfa.wsc\"], \"type\": \"string\", \"description\": \"media-type-IANA-message@21.T11148/916793ae5bba9b9208a8\"}, \"21.T11148_3626040cadcac1571685\": {\"pattern\": \"^([0-9,A-Z,a-z])+(\\\\.([0-9,A-Z,a-z])+)*\\\\/([!-~])+$\", \"type\": \"string\", \"description\": \"Handle-Identifier-ASCII@21.T11148/3626040cadcac1571685\"}}, \"$schema\": \"http://json-schema.org/draft-04/schema#\", \"anyOf\": [{\"$ref\": \"#/definitions/21.T11148_3626040cadcac1571685\"}, {\"$ref\": \"#/definitions/21.T11148_7f287d9d1d27eedf7306\"}], \"description\": \"genericObjectType@21.T11148/c83481d4bf467110e7c9\"}"
+                    }
+                  },
+                  {
+                    "href": "http://dtr-test.pidconsortium.eu/#objects/21.T11148/c83481d4bf467110e7c9",
+                    "weight": 0,
+                    "view": "ui"
+                  }
+                ]
+              }
+            },
+            "ttl": 86400,
+            "timestamp": 1596208703000
+          },
+          {
+            "index": 2,
+            "type": "0.TYPE/DOIPService",
+            "data": {
+              "format": "string",
+              "value": "21.T11148/service"
+            },
+            "ttl": 86400,
+            "timestamp": 1660574391000
+          },
+          {
+            "index": 100,
+            "type": "HS_ADMIN",
+            "data": {
+              "format": "admin",
+              "value": {
+                "handle": "21.T11148/repo",
+                "index": 300,
+                "permissions": "111111111111"
+              }
+            },
+            "ttl": 86400,
+            "timestamp": 1596208703000
+          }
+        ]
+      }
+    },
+    {
+      "type": {
+        "handle": {
+          "prefix": "21.T11148",
+          "suffix": "076759916209e5d62bd5"
+        },
+        "values": [
+          {
+            "index": 1,
+            "type": "10320/loc",
+            "data": {
+              "format": "string",
+              "value": {
+                "locations": [
+                  {
+                    "href": "http://dtr-test.pidconsortium.eu/objects/21.T11148/076759916209e5d62bd5",
+                    "weight": 1,
+                    "view": "json",
+                    "resolvedData": {
+                      "identifier": "21.T11148/076759916209e5d62bd5",
+                      "name": "KernelInformationProfile",
+                      "description": "Handle to the Kernel Information type profile; serves as pointer to profile in DTR. Address of DTR federation expected to be global (common) knowledge. (context : KernelInformation)\n",
+                      "standards": [
+                        {
+                          "natureOfApplicability": "depends",
+                          "name": "21.T11148/3626040cadcac1571685",
+                          "issuer": "DTR"
+                        }
+                      ],
+                      "provenance": {
+                        "contributors": [
+                          {
+                            "identifiedUsing": "Text",
+                            "name": "Ulrich Schwardmann",
+                            "details": "GWDG"
+                          }
+                        ],
+                        "creationDate": "2019-04-01T10:43:55.869Z",
+                        "lastModificationDate": "2019-11-14T12:28:18.643Z"
+                      },
+                      "representationsAndSemantics": [
+                        {
+                          "expression": "",
+                          "value": "",
+                          "subSchemaRelation": "denyAdditionalProperties",
+                          "allowAbbreviatedForm": "Yes"
+                        }
+                      ],
+                      "properties": [
+                        {
+                          "name": "KernelInformationProfile",
+                          "identifier": "21.T11148/3626040cadcac1571685",
+                          "representationsAndSemantics": [
+                            {
+                              "expression": "",
+                              "value": "",
+                              "obligation": "Mandatory",
+                              "repeatable": "No",
+                              "allowOmitSubsidiaries": "Yes"
+                            }
+                          ]
+                        }
+                      ],
+                      "validationSchema": "{\"definitions\": {\"21.T11148_3626040cadcac1571685\": {\"pattern\": \"^([0-9,A-Z,a-z])+(\\\\.([0-9,A-Z,a-z])+)*\\\\/([!-~])+$\", \"type\": \"string\", \"description\": \"Handle-Identifier-ASCII@21.T11148/3626040cadcac1571685\"}}, \"$schema\": \"http://json-schema.org/draft-04/schema#\", \"description\": \"KernelInformationProfile@21.T11148/076759916209e5d62bd5\", \"$ref\": \"#/definitions/21.T11148_3626040cadcac1571685\"}"
+                    }
+                  },
+                  {
+                    "href": "http://dtr-test.pidconsortium.eu/#objects/21.T11148/076759916209e5d62bd5",
+                    "weight": 0,
+                    "view": "ui"
+                  }
+                ]
+              }
+            },
+            "ttl": 86400,
+            "timestamp": 1554115436000
+          },
+          {
+            "index": 100,
+            "type": "HS_ADMIN",
+            "data": {
+              "format": "admin",
+              "value": {
+                "handle": "21.T11148/repo",
+                "index": 300,
+                "permissions": "111111111111"
+              }
+            },
+            "ttl": 86400,
+            "timestamp": 1554115436000
+          }
+        ]
+      }
+    },
+    {
+      "type": {
+        "handle": {
+          "prefix": "21.T11148",
+          "suffix": "1a73af9e7ae00182733b"
+        },
+        "values": [
+          {
+            "index": 1,
+            "type": "10320/loc",
+            "data": {
+              "format": "string",
+              "value": {
+                "locations": [
+                  {
+                    "href": "http://dtr-test.pidconsortium.eu/objects/21.T11148/1a73af9e7ae00182733b",
+                    "weight": 1,
+                    "view": "json",
+                    "resolvedData": {
+                      "identifier": "21.T11148/1a73af9e7ae00182733b",
+                      "name": "contact",
+                      "description": "A web-resolvable pointer to an institution or a person responsible for the digital object.",
+                      "provenance": {
+                        "contributors": [
+                          {
+                            "identifiedUsing": "Text",
+                            "name": "Andreas Pfeil",
+                            "details": "Andreas Pfeil, Karlsruhe Institute of Technology"
+                          }
+                        ],
+                        "creationDate": "2022-01-17T10:19:55.295Z",
+                        "lastModificationDate": "2022-01-17T10:27:36.366Z"
+                      },
+                      "expectedUses": [
+                        "Increases trust in the data, as there is someone who can be contacted if any questions about the data arise."
+                      ],
+                      "representationsAndSemantics": [
+                        {
+                          "subSchemaRelation": "denyAdditionalProperties",
+                          "allowAbbreviatedForm": "Yes"
+                        }
+                      ],
+                      "properties": [
+                        {
+                          "name": "contact",
+                          "identifier": "21.T11148/e0efc41346cda4ba84ca",
+                          "representationsAndSemantics": [
+                            {
+                              "obligation": "Mandatory",
+                              "repeatable": "Yes",
+                              "allowOmitSubsidiaries": "Yes"
+                            }
+                          ]
+                        }
+                      ],
+                      "validationSchema": "{\"definitions\": {\"21.T11148_e0efc41346cda4ba84ca\": {\"pattern\": \"^http(s)?:(\\\\/\\\\/([^/?#]*))?([^?#]*)(\\\\?([^#]*))?(#(.*))?$\", \"type\": \"string\", \"description\": \"URL@21.T11148/e0efc41346cda4ba84ca\"}}, \"$schema\": \"http://json-schema.org/draft-04/schema#\", \"description\": \"digitalObjectLocation@21.T11148/b8457812905b83046284\", \"$ref\": \"#/definitions/21.T11148_e0efc41346cda4ba84ca\"}"
+                    }
+                  },
+                  {
+                    "href": "http://dtr-test.pidconsortium.eu/#objects/21.T11148/1a73af9e7ae00182733b",
+                    "weight": 0,
+                    "view": "ui"
+                  }
+                ]
+              }
+            },
+            "ttl": 86400,
+            "timestamp": 1642414795000
+          },
+          {
+            "index": 2,
+            "type": "0.TYPE/DOIPService",
+            "data": {
+              "format": "string",
+              "value": "21.T11148/service"
+            },
+            "ttl": 86400,
+            "timestamp": 1642414795000
+          },
+          {
+            "index": 100,
+            "type": "HS_ADMIN",
+            "data": {
+              "format": "admin",
+              "value": {
+                "handle": "21.T11148/repo",
+                "index": 300,
+                "permissions": "111111111111"
+              }
+            },
+            "ttl": 86400,
+            "timestamp": 1642414795000
+          }
+        ]
+      }
+    },
+    {}
+  ]
+}

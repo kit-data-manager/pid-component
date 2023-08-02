@@ -26,17 +26,17 @@ export namespace Components {
     }
     interface IntelligentHandle {
         /**
-          * Whether the component should use the filled or the outlined design.
+          * Should the table inside the component change colors every other line?
          */
-        "filled": boolean;
+        "changingColors": boolean;
         /**
           * The Handle to highlight and link in this component.
          */
         "handle": string;
         /**
-          * An optional custom link to use instead of the default one which links to the FAIR DO Scope.
+          * Should the details element be open by default?
          */
-        "linkTo": "disable" | "fairdoscope" | "resolveRef";
+        "openStatus": boolean;
     }
 }
 declare global {
@@ -82,17 +82,17 @@ declare namespace LocalJSX {
     }
     interface IntelligentHandle {
         /**
-          * Whether the component should use the filled or the outlined design.
+          * Should the table inside the component change colors every other line?
          */
-        "filled"?: boolean;
+        "changingColors"?: boolean;
         /**
           * The Handle to highlight and link in this component.
          */
         "handle": string;
         /**
-          * An optional custom link to use instead of the default one which links to the FAIR DO Scope.
+          * Should the details element be open by default?
          */
-        "linkTo"?: "disable" | "fairdoscope" | "resolveRef";
+        "openStatus"?: boolean;
     }
     interface IntrinsicElements {
         "handle-highlight": HandleHighlight;
