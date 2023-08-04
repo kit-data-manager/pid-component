@@ -24,6 +24,32 @@ export namespace Components {
          */
         "linkTo": "disable" | "fairdoscope" | "resolveRef";
     }
+    interface IntelligentHandle {
+        /**
+          * Should the table inside the component change colors every other line?
+         */
+        "changingColors": boolean;
+        /**
+          * The current elevation level of the subcomponents. If the difference between the current level and the level of the subcomponents is 0, the subcomponents are not shown.
+         */
+        "currentLevelOfSubcomponents": number;
+        /**
+          * The Handle to highlight and link in this component.
+         */
+        "handle": string;
+        /**
+          * The maximum level of subcomponents to show.
+         */
+        "levelOfSubcomponents": number;
+        /**
+          * Should the details element be open by default?
+         */
+        "openStatus": boolean;
+        /**
+          * Should the subcomponents be shown?
+         */
+        "showSubcomponents": boolean;
+    }
 }
 declare global {
     /**
@@ -36,8 +62,15 @@ declare global {
         prototype: HTMLHandleHighlightElement;
         new (): HTMLHandleHighlightElement;
     };
+    interface HTMLIntelligentHandleElement extends Components.IntelligentHandle, HTMLStencilElement {
+    }
+    var HTMLIntelligentHandleElement: {
+        prototype: HTMLIntelligentHandleElement;
+        new (): HTMLIntelligentHandleElement;
+    };
     interface HTMLElementTagNameMap {
         "handle-highlight": HTMLHandleHighlightElement;
+        "intelligent-handle": HTMLIntelligentHandleElement;
     }
 }
 declare namespace LocalJSX {
@@ -59,8 +92,35 @@ declare namespace LocalJSX {
          */
         "linkTo"?: "disable" | "fairdoscope" | "resolveRef";
     }
+    interface IntelligentHandle {
+        /**
+          * Should the table inside the component change colors every other line?
+         */
+        "changingColors"?: boolean;
+        /**
+          * The current elevation level of the subcomponents. If the difference between the current level and the level of the subcomponents is 0, the subcomponents are not shown.
+         */
+        "currentLevelOfSubcomponents"?: number;
+        /**
+          * The Handle to highlight and link in this component.
+         */
+        "handle": string;
+        /**
+          * The maximum level of subcomponents to show.
+         */
+        "levelOfSubcomponents"?: number;
+        /**
+          * Should the details element be open by default?
+         */
+        "openStatus"?: boolean;
+        /**
+          * Should the subcomponents be shown?
+         */
+        "showSubcomponents"?: boolean;
+    }
     interface IntrinsicElements {
         "handle-highlight": HandleHighlight;
+        "intelligent-handle": IntelligentHandle;
     }
 }
 export { LocalJSX as JSX };
@@ -72,6 +132,7 @@ declare module "@stencil/core" {
              * It automatically generates colors for the parts of the handle (prefix and suffix) to make them easily distinguishable.
              */
             "handle-highlight": LocalJSX.HandleHighlight & JSXBase.HTMLAttributes<HTMLHandleHighlightElement>;
+            "intelligent-handle": LocalJSX.IntelligentHandle & JSXBase.HTMLAttributes<HTMLIntelligentHandleElement>;
         }
     }
 }
