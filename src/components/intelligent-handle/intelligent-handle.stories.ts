@@ -1,4 +1,4 @@
-import {Meta, StoryObj} from "@storybook/html"
+import {Meta, StoryObj} from "@storybook/web-components"
 
 const meta: Meta = {
     title: "intelligent-handle",
@@ -26,6 +26,27 @@ const meta: Meta = {
                 type: "boolean",
             }
         },
+        showSubcomponents: {
+            description: "Determines whether the subcomponents are shown",
+            defaultValue: true,
+            control: {
+                type: "boolean",
+            }
+        },
+        levelOfSubcomponents: {
+            description: "The maximum level of subcomponents to show. ",
+            defaultValue: 1,
+            control: {
+                type: "number",
+            }
+        },
+        currentLevelOfSubcomponents: {
+            description: "The current elevation level of the subcomponents.",
+            defaultValue: 0,
+            control: {
+                type: "number",
+            }
+        }
     },
     args: {
         handle: "21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343",

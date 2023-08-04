@@ -45,12 +45,24 @@
           "description": "Should the table inside the component change colors every other line?"
         },
         {
+          "name": "current-level-of-subcomponents",
+          "description": "The current elevation level of the subcomponents.\nIf the difference between the current level and the level of the subcomponents is 0, the subcomponents are not shown."
+        },
+        {
           "name": "handle",
           "description": "The Handle to highlight and link in this component."
         },
         {
+          "name": "level-of-subcomponents",
+          "description": "The maximum level of subcomponents to show."
+        },
+        {
           "name": "open-status",
           "description": "Should the details element be open by default?"
+        },
+        {
+          "name": "show-subcomponents",
+          "description": "Should the subcomponents be shown?"
         }
       ]
     }

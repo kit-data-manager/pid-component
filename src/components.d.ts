@@ -30,13 +30,25 @@ export namespace Components {
          */
         "changingColors": boolean;
         /**
+          * The current elevation level of the subcomponents. If the difference between the current level and the level of the subcomponents is 0, the subcomponents are not shown.
+         */
+        "currentLevelOfSubcomponents": number;
+        /**
           * The Handle to highlight and link in this component.
          */
         "handle": string;
         /**
+          * The maximum level of subcomponents to show.
+         */
+        "levelOfSubcomponents": number;
+        /**
           * Should the details element be open by default?
          */
         "openStatus": boolean;
+        /**
+          * Should the subcomponents be shown?
+         */
+        "showSubcomponents": boolean;
     }
 }
 declare global {
@@ -86,13 +98,25 @@ declare namespace LocalJSX {
          */
         "changingColors"?: boolean;
         /**
+          * The current elevation level of the subcomponents. If the difference between the current level and the level of the subcomponents is 0, the subcomponents are not shown.
+         */
+        "currentLevelOfSubcomponents"?: number;
+        /**
           * The Handle to highlight and link in this component.
          */
         "handle": string;
         /**
+          * The maximum level of subcomponents to show.
+         */
+        "levelOfSubcomponents"?: number;
+        /**
           * Should the details element be open by default?
          */
         "openStatus"?: boolean;
+        /**
+          * Should the subcomponents be shown?
+         */
+        "showSubcomponents"?: boolean;
     }
     interface IntrinsicElements {
         "handle-highlight": HandleHighlight;

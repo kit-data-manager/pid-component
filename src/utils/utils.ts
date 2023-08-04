@@ -1,32 +1,4 @@
-export type HSLColor = { hue: number, sat: number, lum: number };
-export type Handle = { prefix: string, suffix: string };
-export type HandleObject = {
-  handle: Handle,
-  values: HandleValue[]
-};
-export type HandleValue = {
-  index: number,
-  type: Handle | string,
-  data: {
-    format: string,
-    value: string | object
-  },
-  ttl: number,
-  timestamp: string | Date,
-};
-export type _10320_Loc = {
-  locations: {
-    href: string,
-    weight?: number,
-    view?: string,
-    resolvedData?: Object
-  }[],
-}
-
-const handleMap = new Map<Handle, HandleObject>();
-const unresolvedHandles = new Set<string>();
-const kipIndicator: Handle = {prefix: "21.T11148", suffix: "076759916209e5d62bd5"};
-
+export type HSLColor = { hue: number; sat: number; lum: number };
 
 /*
 This function takes a string and returns a color based on the string.
@@ -44,151 +16,28 @@ export async function generateColor(text: string): Promise<HSLColor> {
   return {hue: hue, sat: 70, lum: 30 + lum};
 }
 
+import {PID} from "./PID";
+import {PIDDataType} from "./PIDDataType";
+import {PIDRecord} from "./PIDRecord";
 
-async function resolveHandle(handle: Handle): Promise<HandleObject | undefined> {
-  if (unresolvedHandles.has(`${handle.prefix}/${handle.suffix}`)) return undefined;
-  else if (handleMap.has(handle)) return handleMap.get(handle);
-  else {
-    console.log("Resolving handle " + handle.prefix + "/" + handle.suffix)
-    try {
-      const response = await fetch(`https://hdl.handle.net/api/handles/${handle.prefix}/${handle.suffix}#resolve`);
-      if (response.status !== 200) {
-        console.error(`Handle ${handle.prefix}/${handle.suffix} probably doesn't exist`);
-        unresolvedHandles.add(`${handle.prefix}/${handle.suffix}`)
-        return undefined;
-      }
-      const json = await response.json();
-      let handleObject = {
-        handle: handle,
-        values: []
-      }
-      for (let value of json.values) {
-        handleObject.values.push({
-          index: value.index,
-          type: value.type,
-          data: value.data,
-          ttl: value.ttl,
-          timestamp: Date.parse(value.timestamp)
-        });
-      }
-      handleMap.set(handle, handleObject);
-      await resolveValues(handle);
-      return handleObject;
-    } catch (e) {
-      console.error(e);
-      unresolvedHandles.add(`${handle.prefix}/${handle.suffix}`)
-      return undefined;
-    }
-  }
-}
+/**
+ * A map of all PID data types and their PIDs.
+ * @type {Map<PID, PIDDataType>}
+ */
+export const typeMap: Map<PID, PIDDataType> = new Map();
 
-async function resolveHandleString(handle: string): Promise<HandleObject | string> {
-  const handleSplit = handle.split("/");
-  const handleJSON: Handle = {
-    prefix: handleSplit[0],
-    suffix: handleSplit[1]
-  }
-  if (handleMap.has(handleJSON)) return handleMap.get(handleJSON);
-  else if (!handle.includes("/") || unresolvedHandles.has(handle) || handleSplit.length != 2) return handle;
-  const handleObject = await resolveHandle(handleJSON);
-  if (handleObject === undefined) {
-    unresolvedHandles.add(handle)
-    return handle;
-  } else return handleObject;
-}
+/**
+ * The PID of the location data type which points to a field where the locations of the data types in the data type registries are stored.
+ */
+export const locationType: PID = new PID("10320", "loc");
 
-async function resolveValues(handle: Handle) {
-  const object = handleMap.get(handle);
-  if (object === undefined) return;
+/**
+ * A map of all PIDs and their PIDRecords.
+ * @type {Map<PID, PIDRecord>}
+ */
+export const handleMap: Map<PID, PIDRecord> = new Map();
 
-  for (let i = 0; i < object.values.length; i++) {
-    if (object.values[i].type === "10320/loc") {
-      let newValue: _10320_Loc = {
-        locations: []
-      }
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(object.values[i].data.value as string, "text/xml");
-      const locations = xmlDoc.getElementsByTagName("location");
-      for (let i = 0; i < locations.length; i++) {
-        let newLocation = {
-          href: locations[i].getAttribute("href"),
-          weight: undefined,
-          view: undefined,
-          resolvedData: undefined
-        }
-        try {
-          newLocation.weight = parseInt(locations[i].getAttribute("weight"))
-        } catch (ignored) {
-        }
-
-        try {
-          newLocation.view = locations[i].getAttribute("view")
-        } catch (ignored) {
-        }
-
-        try {
-          if (newLocation.view === "json") {
-            const res = await fetch(newLocation.href);
-            newLocation.resolvedData = await res.json();
-          }
-        } catch (ignored) {
-        }
-
-        newValue.locations.push(newLocation)
-      }
-      object.values[i].data.value = newValue;
-    } else if (typeof object.values[i] !== "string") {
-      await resolveHandle(object.values[i].type as Handle);
-      // object.values[i].type = await resolveHandle(object.values[i].type as Handle);
-    }
-  }
-  handleMap.set(handle, object);
-}
-
-function combineAllData(handleObject: HandleObject) {
-  let data = {
-    handle: handleObject.handle,
-    values: []
-  }
-  for (let i = 0; i < handleObject.values.length; i++) {
-    let typeData = handleMap.get(handleObject.values[i].type as Handle)
-    let dataData = handleMap.get(handleObject.values[i].data.value as Handle)
-    data.values.push({
-      type: typeData,
-      value: dataData
-    })
-  }
-  console.log(data);
-  // console.log(JSON.stringify(data))
-  return data;
-}
-
-export async function loadDisplayData(handle: string): Promise<HandleObject> {
-  const handleObject = await resolveHandleString(handle) as HandleObject;
-  const kip = await resolveHandleString(handleObject.values.find(value => value.type === `${kipIndicator.prefix}/${kipIndicator.suffix}`).data.value as string) as HandleObject
-  // await resolveValues(kip.handle)
-  for (let i = 0; i < handleObject.values.length; i++) {
-    const valueObject = await resolveHandleString(handleObject.values[i].type as string);
-    handleObject.values[i].type = (typeof valueObject !== "string") ? valueObject.handle : handleObject.values[i].type;
-  }
-  // console.log(handleObject);
-  // console.log(handleMap);
-  combineAllData(handleObject)
-  console.log(kip);
-
-  // let data = {
-  //   handle: handleObject.handle,
-  //   values: []
-  // }
-  // for (let i = 0; i < handleObject.values.length; i++) {
-  //   let typeData = handleMap.get(handleObject.values[i].type as Handle)
-  //   let dataData = handleMap.get(handleObject.values[i].data.value as Handle)
-  //   data.values.push({
-  //     type: typeData,
-  //     value: dataData
-  //   })
-  // }
-  // console.log(data);
-
-  return kip;
-}
+/**
+ * A set of all PIDs that are not resolvable.
+ */
+export const unresolvables: Set<PID> = new Set();
