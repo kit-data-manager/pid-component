@@ -68,7 +68,6 @@ export class IntelligentHandle {
    * Since the generation of the colors is asynchronous, the parts are added to the state as soon as they are generated.
    */
   async connectedCallback() {
-    console.log("Loading...");
     // Parse the PID
     const pid = PID.getPIDFromString(this.handle);
 
@@ -191,10 +190,11 @@ export class IntelligentHandle {
                                                   levelOfSubcomponents={this.levelOfSubcomponents}
                                                   currentLevelOfSubcomponents={this.currentLevelOfSubcomponents + 1}
                               /> :
-                              <a
-                                href={`https://kit-data-manager.github.io/fairdoscope/?pid=${value.data.value.toString()}`}
-                                class={"underline"}
-                                target={"_blank"}>{value.data.value.toString()}</a>) :
+                              <handle-highlight handle={value.data.value.toString()}></handle-highlight>):
+                              // <a
+                              //   href={`https://kit-data-manager.github.io/fairdoscope/?pid=${value.data.value.toString()}`}
+                              //   class={"underline"}
+                              //   target={"_blank"}>{value.data.value.toString()}</a>) :
                             value.data.value
                         }
                       </td>

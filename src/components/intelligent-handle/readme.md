@@ -26,6 +26,7 @@
 ### Depends on
 
 - [intelligent-handle](.)
+- [handle-highlight](../handle-highlight)
 
 ### Graph
 ```mermaid
