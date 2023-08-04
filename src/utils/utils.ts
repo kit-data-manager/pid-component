@@ -27,11 +27,6 @@ import {PIDRecord} from "./PIDRecord";
 export const typeMap: Map<PID, PIDDataType> = new Map();
 
 /**
- * The PID of the location data type which points to a field where the locations of the data types in the data type registries are stored.
- */
-export const locationType: PID = new PID("10320", "loc");
-
-/**
  * A map of all PIDs and their PIDRecords.
  * @type {Map<PID, PIDRecord>}
  */

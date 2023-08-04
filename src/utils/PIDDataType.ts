@@ -1,5 +1,5 @@
-import {PID} from "./PID";
-import {locationType, typeMap, unresolvables} from "./utils";
+import {locationType, PID} from "./PID";
+import {typeMap, unresolvables} from "./utils";
 
 /**
  * This class represents a PID data type.

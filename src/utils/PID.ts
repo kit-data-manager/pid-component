@@ -115,3 +115,8 @@ export class PID {
         }
     }
 }
+
+/**
+ * The PID of the location data type which points to a field where the locations of the data types in the data type registries are stored.
+ */
+export const locationType: PID = new PID("10320", "loc");
