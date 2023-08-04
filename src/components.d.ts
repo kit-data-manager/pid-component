@@ -6,6 +6,9 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
+    interface BeautifulOrcid {
+        "orcid": string;
+    }
     /**
      * This component highlights a handle and links to the FAIR DO Scope.
      * It automatically generates colors for the parts of the handle (prefix and suffix) to make them easily distinguishable.
@@ -52,6 +55,12 @@ export namespace Components {
     }
 }
 declare global {
+    interface HTMLBeautifulOrcidElement extends Components.BeautifulOrcid, HTMLStencilElement {
+    }
+    var HTMLBeautifulOrcidElement: {
+        prototype: HTMLBeautifulOrcidElement;
+        new (): HTMLBeautifulOrcidElement;
+    };
     /**
      * This component highlights a handle and links to the FAIR DO Scope.
      * It automatically generates colors for the parts of the handle (prefix and suffix) to make them easily distinguishable.
@@ -69,11 +78,15 @@ declare global {
         new (): HTMLIntelligentHandleElement;
     };
     interface HTMLElementTagNameMap {
+        "beautiful-orcid": HTMLBeautifulOrcidElement;
         "handle-highlight": HTMLHandleHighlightElement;
         "intelligent-handle": HTMLIntelligentHandleElement;
     }
 }
 declare namespace LocalJSX {
+    interface BeautifulOrcid {
+        "orcid": string;
+    }
     /**
      * This component highlights a handle and links to the FAIR DO Scope.
      * It automatically generates colors for the parts of the handle (prefix and suffix) to make them easily distinguishable.
@@ -119,6 +132,7 @@ declare namespace LocalJSX {
         "showSubcomponents"?: boolean;
     }
     interface IntrinsicElements {
+        "beautiful-orcid": BeautifulOrcid;
         "handle-highlight": HandleHighlight;
         "intelligent-handle": IntelligentHandle;
     }
@@ -127,6 +141,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "beautiful-orcid": LocalJSX.BeautifulOrcid & JSXBase.HTMLAttributes<HTMLBeautifulOrcidElement>;
             /**
              * This component highlights a handle and links to the FAIR DO Scope.
              * It automatically generates colors for the parts of the handle (prefix and suffix) to make them easily distinguishable.
