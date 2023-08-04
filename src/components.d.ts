@@ -7,6 +7,13 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface BeautifulOrcid {
+        /**
+          * The date of the affiliation to display. (optional) Defaults to the current date.
+         */
+        "affiliationAt": Date;
+        /**
+          * The ORCiD to display, evaluate and link in this component.
+         */
         "orcid": string;
     }
     /**
@@ -85,6 +92,13 @@ declare global {
 }
 declare namespace LocalJSX {
     interface BeautifulOrcid {
+        /**
+          * The date of the affiliation to display. (optional) Defaults to the current date.
+         */
+        "affiliationAt"?: Date;
+        /**
+          * The ORCiD to display, evaluate and link in this component.
+         */
         "orcid": string;
     }
     /**
