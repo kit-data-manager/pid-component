@@ -10,7 +10,15 @@
       "attributes": [
         {
           "name": "orcid",
-          "description": ""
+          "description": "The ORCiD to display, evaluate and link in this component.\n(required)"
+        },
+        {
+          "name": "show-affiliation",
+          "description": "Whether to show the affiliation or not.\n(optional) Defaults to true."
+        },
+        {
+          "name": "show-department",
+          "description": "Whether to show the department of the affiliation or not.\nDepends internally on availability of the department in the ORCiD information.\n(optional) Defaults to true."
         }
       ]
     },

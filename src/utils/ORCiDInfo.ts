@@ -126,6 +126,15 @@ export class ORCiDInfo {
     return undefined;
   }
 
+  getAffiliationAtString(date: Date, showDepartment: boolean = true): string | undefined {
+    const affiliation = this.getAffiliationAt(date);
+    if (affiliation === undefined || affiliation.organization === null) return undefined;
+    else {
+      if (showDepartment && affiliation.department !== null) return `${affiliation.organization} [${affiliation.department}]`;
+      else return affiliation.organization;
+    }
+  }
+
   /**
    * Checks if a string has the format of an ORCiD.
    * @param text The string to check.

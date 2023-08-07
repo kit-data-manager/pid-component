@@ -9,12 +9,24 @@ export namespace Components {
     interface BeautifulOrcid {
         /**
           * The date of the affiliation to display. (optional) Defaults to the current date.
+          * @type {Date}
          */
         "affiliationAt": Date;
         /**
-          * The ORCiD to display, evaluate and link in this component.
+          * The ORCiD to display, evaluate and link in this component. (required)
+          * @type {string}
          */
         "orcid": string;
+        /**
+          * Whether to show the affiliation or not. (optional) Defaults to true.
+          * @type {boolean}
+         */
+        "showAffiliation": boolean;
+        /**
+          * Whether to show the department of the affiliation or not. Depends internally on availability of the department in the ORCiD information. (optional) Defaults to true.
+          * @type {boolean}
+         */
+        "showDepartment": boolean;
     }
     /**
      * This component highlights a handle and links to the FAIR DO Scope.
@@ -94,12 +106,24 @@ declare namespace LocalJSX {
     interface BeautifulOrcid {
         /**
           * The date of the affiliation to display. (optional) Defaults to the current date.
+          * @type {Date}
          */
         "affiliationAt"?: Date;
         /**
-          * The ORCiD to display, evaluate and link in this component.
+          * The ORCiD to display, evaluate and link in this component. (required)
+          * @type {string}
          */
         "orcid": string;
+        /**
+          * Whether to show the affiliation or not. (optional) Defaults to true.
+          * @type {boolean}
+         */
+        "showAffiliation"?: boolean;
+        /**
+          * Whether to show the department of the affiliation or not. Depends internally on availability of the department in the ORCiD information. (optional) Defaults to true.
+          * @type {boolean}
+         */
+        "showDepartment"?: boolean;
     }
     /**
      * This component highlights a handle and links to the FAIR DO Scope.
