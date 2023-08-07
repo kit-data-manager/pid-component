@@ -23,12 +23,12 @@ export namespace Components {
          */
         "showAffiliation": boolean;
         /**
-          * Whether to show the department of the affiliation or not. Depends internally on availability of the department in the ORCiD information. (optional) Defaults to true.
+          * Whether to show the department of the affiliation or not. Depends internally on availability of the department in the ORCiD information. (optional) Defaults to false.
           * @type {boolean}
          */
         "showDepartment": boolean;
         /**
-          * Whether to show the ORCiD inline or not. (optional) Defaults to true.
+          * Whether to show the ORCiD inline or not. (optional) Defaults to false.
           * @type {boolean}
          */
         "showOrcid": boolean;
@@ -125,12 +125,12 @@ declare namespace LocalJSX {
          */
         "showAffiliation"?: boolean;
         /**
-          * Whether to show the department of the affiliation or not. Depends internally on availability of the department in the ORCiD information. (optional) Defaults to true.
+          * Whether to show the department of the affiliation or not. Depends internally on availability of the department in the ORCiD information. (optional) Defaults to false.
           * @type {boolean}
          */
         "showDepartment"?: boolean;
         /**
-          * Whether to show the ORCiD inline or not. (optional) Defaults to true.
+          * Whether to show the ORCiD inline or not. (optional) Defaults to false.
           * @type {boolean}
          */
         "showOrcid"?: boolean;

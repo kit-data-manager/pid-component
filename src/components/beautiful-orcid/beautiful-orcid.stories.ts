@@ -25,7 +25,7 @@ const meta: Meta = {
     showDepartment: {
       name: "showDepartment",
       description: "Whether to show the department of the person, if available.",
-      defaultValue: true,
+      defaultValue: false,
       control: {
         type: "boolean"
       }
@@ -33,7 +33,7 @@ const meta: Meta = {
     showOrcid: {
       name: "showOrcid",
       description: "Whether to show the ORCiD in the component.",
-      defaultValue: true,
+      defaultValue: false,
       control: {
         type: "boolean"
       }
@@ -50,9 +50,9 @@ const meta: Meta = {
   args: {
     orcid: "0009-0005-2800-4833",
     showAffiliation: true,
-    showDepartment: true,
+    showDepartment: false,
     affiliationAt: new Date(),
-    showOrcid: true,
+    showOrcid: false,
   }
 }
 export default meta;
@@ -83,6 +83,16 @@ export const Default: Story = {
   }
 }
 
+export const AllOptions: Story = {
+  args: {
+    orcid: "0000-0003-3642-1264",
+    showAffiliation: true,
+    showDepartment: true,
+    showOrcid: true,
+    affiliationAt: new Date(Date.UTC(1999,12,31)),
+  }
+}
+
 export const WithoutAffiliation: Story = {
   args: {
     orcid: "0009-0005-2800-4833",
@@ -97,28 +107,30 @@ export const WithoutAffiliation: Story = {
   }
 }
 
-export const WithoutDepartment: Story = {
+export const WithDepartment: Story = {
   args: {
     orcid: "0009-0005-2800-4833",
-    showDepartment: false,
+    showDepartment: true,
   },
   parameters: {
     docs: {
       source: {
-        code: `<beautiful-orcid orcid="0009-0005-2800-4833" showDepartment="false"></beautiful-orcid>`
+        code: `<beautiful-orcid orcid="0009-0005-2800-4833" showDepartment="true"></beautiful-orcid>`
       }
     }
   }
 }
 
-export const LongEntry: Story = {
+export const WithOrcid: Story = {
+  name: "With ORCiD",
   args: {
-    orcid: "0000-0003-3642-1264",
+    orcid: "0009-0005-2800-4833",
+    showOrcid: true,
   },
   parameters: {
     docs: {
       source: {
-        code: `<beautiful-orcid orcid="0000-0003-3642-1264"></beautiful-orcid>`
+        code: `<beautiful-orcid orcid="0009-0005-2800-4833" showOrcid="true"></beautiful-orcid>`
       }
     }
   }

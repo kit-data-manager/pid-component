@@ -116,26 +116,26 @@ export class IntelligentHandle {
           open={this.openStatus}
           onToggle={this.toggleSubcomponents}>
           <summary class="mx-2 select-none list-inside bg-white text-clip overflow-x-clip">
-                            <span>
-                                {
-                                  this.parts.map((element) => {
-                                    return (
-                                      <span>
-                                                <span
-                                                  style={{
-                                                    color: "hsl(" + element.color.hue + "," + element.color.sat + "%," + element.color.lum + "%)",
-                                                  }}
-                                                  class={`font-mono font-bold p-0.5 rounded-md`}>
-                                                    {element.text}
-                                                </span>
-                                                <span class={"font-mono font-bold text-gray-800 mx-0.5"}>
-                                                    {element.nextExists ? "/" : ""}
-                                                </span>
-                                            </span>
-                                    )
-                                  })
-                                }
-                            </span>
+            <span>
+              {
+                this.parts.map((element) => {
+                  return (
+                    <span>
+                      <span
+                        style={{
+                          color: "hsl(" + element.color.hue + "," + element.color.sat + "%," + element.color.lum + "%)",
+                        }}
+                        class={`font-mono font-bold p-0.5 rounded-md`}>
+                        {element.text}
+                      </span>
+                      <span class={"font-mono font-bold text-gray-800 mx-0.5"}>
+                        {element.nextExists ? "/" : ""}
+                      </span>
+                    </span>
+                  )
+                })
+              }
+            </span>
           </summary>
           <div
             class="divide-y text-sm leading-6 bg-gray-100 m-2 p-1 pt-0 max-h-64 overflow-y-scroll border rounded">

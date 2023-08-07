@@ -25,17 +25,17 @@ export class BeautifulOrcid {
   /**
    * Whether to show the department of the affiliation or not.
    * Depends internally on availability of the department in the ORCiD information.
-   * (optional) Defaults to true.
+   * (optional) Defaults to false.
    * @type {boolean}
    */
-  @Prop() showDepartment: boolean = true;
+  @Prop() showDepartment: boolean = false;
 
   /**
    * Whether to show the ORCiD inline or not.
-   * (optional) Defaults to true.
+   * (optional) Defaults to false.
    * @type {boolean}
    */
-  @Prop() showOrcid: boolean = true;
+  @Prop() showOrcid: boolean = false;
 
   /**
    * The date of the affiliation to display.
@@ -57,9 +57,9 @@ export class BeautifulOrcid {
   render() {
     return <Host>
       <a href={`https://orcid.org/${this.orcid}`}
-         class={"bg-white hover:bg-gray-50 border shadow-md p-0.5 rounded-md inline-flex flex-row flex-nowrap items-center text-clip align-bottom"}
+         class={"bg-white hover:bg-gray-50 border shadow-md rounded-md inline-flex flex-row flex-nowrap items-center text-clip align-bottom"}
          target={"_blank"}>
-        <span class={"pr-1"}>
+        <span class={"border-r px-0.5 rounded bg-white"}>
           <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"
                class={"h-5 p-0.5 items-center self-stretch"}>
             <path class="st0"
@@ -76,7 +76,7 @@ export class BeautifulOrcid {
         {
           this.orcidInfo !== undefined
             ?
-            <span class="flex-nowrap font-mono text-sm p-0.5 font-medium hover:text-blue-400">
+            <span class="flex-nowrap font-mono text-sm px-1.5 font-medium hover:text-blue-400 divide-x">
               {this.orcidInfo.familyName}, {this.orcidInfo.givenNames}
               {this.orcidInfo.getAffiliationAt(this.affiliationAt) !== undefined && this.showAffiliation
                 ? ` (${this.orcidInfo.getAffiliationAtString(this.affiliationAt, this.showDepartment)}${this.showOrcid ? ", " : ""}`
