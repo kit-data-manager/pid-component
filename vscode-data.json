@@ -19,6 +19,10 @@
         {
           "name": "show-department",
           "description": "Whether to show the department of the affiliation or not.\nDepends internally on availability of the department in the ORCiD information.\n(optional) Defaults to true."
+        },
+        {
+          "name": "show-orcid",
+          "description": "Whether to show the ORCiD inline or not.\n(optional) Defaults to true."
         }
       ]
     },

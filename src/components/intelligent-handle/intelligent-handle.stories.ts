@@ -53,6 +53,9 @@ const meta: Meta = {
     handle: "21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343",
     changingColors: true,
     openStatus: false,
+    showSubcomponents: true,
+    levelOfSubcomponents: 2,
+    currentLevelOfSubcomponents: 0,
   }
 }
 const textDecorator = (story) => html`<p>

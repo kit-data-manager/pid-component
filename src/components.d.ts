@@ -27,6 +27,11 @@ export namespace Components {
           * @type {boolean}
          */
         "showDepartment": boolean;
+        /**
+          * Whether to show the ORCiD inline or not. (optional) Defaults to true.
+          * @type {boolean}
+         */
+        "showOrcid": boolean;
     }
     /**
      * This component highlights a handle and links to the FAIR DO Scope.
@@ -124,6 +129,11 @@ declare namespace LocalJSX {
           * @type {boolean}
          */
         "showDepartment"?: boolean;
+        /**
+          * Whether to show the ORCiD inline or not. (optional) Defaults to true.
+          * @type {boolean}
+         */
+        "showOrcid"?: boolean;
     }
     /**
      * This component highlights a handle and links to the FAIR DO Scope.

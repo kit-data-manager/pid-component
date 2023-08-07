@@ -30,6 +30,14 @@ const meta: Meta = {
         type: "boolean"
       }
     },
+    showOrcid: {
+      name: "showOrcid",
+      description: "Whether to show the ORCiD in the component.",
+      defaultValue: true,
+      control: {
+        type: "boolean"
+      }
+    },
     affiliationAt: {
       name: "affiliationAt",
       description: "The date at which to show the affiliation of the person. Defaults to the current date.",
@@ -44,6 +52,7 @@ const meta: Meta = {
     showAffiliation: true,
     showDepartment: true,
     affiliationAt: new Date(),
+    showOrcid: true,
   }
 }
 export default meta;
@@ -97,6 +106,19 @@ export const WithoutDepartment: Story = {
     docs: {
       source: {
         code: `<beautiful-orcid orcid="0009-0005-2800-4833" showDepartment="false"></beautiful-orcid>`
+      }
+    }
+  }
+}
+
+export const LongEntry: Story = {
+  args: {
+    orcid: "0000-0003-3642-1264",
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `<beautiful-orcid orcid="0000-0003-3642-1264"></beautiful-orcid>`
       }
     }
   }

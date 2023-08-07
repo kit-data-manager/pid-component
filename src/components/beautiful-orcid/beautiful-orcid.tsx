@@ -31,6 +31,13 @@ export class BeautifulOrcid {
   @Prop() showDepartment: boolean = true;
 
   /**
+   * Whether to show the ORCiD inline or not.
+   * (optional) Defaults to true.
+   * @type {boolean}
+   */
+  @Prop() showOrcid: boolean = true;
+
+  /**
    * The date of the affiliation to display.
    * (optional) Defaults to the current date.
    * @type {Date}
@@ -50,9 +57,9 @@ export class BeautifulOrcid {
   render() {
     return <Host>
       <a href={`https://orcid.org/${this.orcid}`}
-         class={"bg-white hover:bg-gray-50 border shadow-md p-0.5 rounded-md inline-flex flex-row flex-nowrap items-center text-clip align-baseline"}
+         class={"bg-white hover:bg-gray-50 border shadow-md p-0.5 rounded-md inline-flex flex-row flex-nowrap items-center text-clip align-bottom"}
          target={"_blank"}>
-        <span>
+        <span class={"pr-1"}>
           <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"
                class={"h-5 p-0.5 items-center self-stretch"}>
             <path class="st0"
@@ -68,11 +75,17 @@ export class BeautifulOrcid {
       </span>
         {
           this.orcidInfo !== undefined
-            ? <span
-              class="flex-nowrap font-mono text-sm p-0.5 font-medium hover:text-blue-500">{this.orcidInfo.familyName}, {this.orcidInfo.givenNames} ({
-              this.orcidInfo.getAffiliationAt(this.affiliationAt) !== undefined && this.showAffiliation
-                ? `${this.orcidInfo.getAffiliationAtString(this.affiliationAt, this.showDepartment)}, `
-                : ""}{this.orcidInfo.orcid})</span>
+            ?
+            <span class="flex-nowrap font-mono text-sm p-0.5 font-medium hover:text-blue-400">
+              {this.orcidInfo.familyName}, {this.orcidInfo.givenNames}
+              {this.orcidInfo.getAffiliationAt(this.affiliationAt) !== undefined && this.showAffiliation
+                ? ` (${this.orcidInfo.getAffiliationAtString(this.affiliationAt, this.showDepartment)}${this.showOrcid ? ", " : ""}`
+                : this.showOrcid ? " (" : ""}
+              {this.showOrcid
+                ? <span class={"hover:text-[#A6CE39]"}>{this.orcidInfo.orcid}</span>
+                : ""}
+              {(this.orcidInfo.getAffiliationAt(this.affiliationAt) !== undefined && this.showAffiliation) || this.showOrcid ? ")" : ""}
+            </span>
             : ""
         }
       </a>
