@@ -1,6 +1,6 @@
 import {Component, Host, h, Prop, State} from '@stencil/core';
 // @ts-ignore
-import {ORCiDInfo} from '../../utils/orcidInfo';
+import {ORCIDInfo} from '../../utils/ORCIDInfo';
 
 @Component({
   tag: 'beautiful-orcid',
@@ -47,10 +47,10 @@ export class BeautifulOrcid {
   /**
    * The private state of the ORCiD information.
    */
-  @State() orcidInfo: ORCiDInfo;
+  @State() orcidInfo: ORCIDInfo;
 
   async connectedCallback() {
-    this.orcidInfo = await ORCiDInfo.getORCiDInfo(this.orcid);
+    this.orcidInfo = await ORCIDInfo.getORCiDInfo(this.orcid);
     console.log(this.orcidInfo);
   }
 

@@ -27,6 +27,35 @@
       ]
     },
     {
+      "name": "foldable-component",
+      "description": {
+        "kind": "markdown",
+        "value": ""
+      },
+      "attributes": [
+        {
+          "name": "changing-colors",
+          "description": "Should the table inside the component change colors every other line?"
+        },
+        {
+          "name": "current-level-of-subcomponents",
+          "description": "The current elevation level of the subcomponents.\nIf the difference between the current level and the level of the subcomponents is 0, the subcomponents are not shown."
+        },
+        {
+          "name": "level-of-subcomponents",
+          "description": "The maximum level of subcomponents to show."
+        },
+        {
+          "name": "open-status",
+          "description": "Should the details element be open by default?"
+        },
+        {
+          "name": "show-subcomponents",
+          "description": "Should the subcomponents be shown?"
+        }
+      ]
+    },
+    {
       "name": "handle-highlight",
       "description": {
         "kind": "markdown",
@@ -88,6 +117,39 @@
         {
           "name": "show-subcomponents",
           "description": "Should the subcomponents be shown?"
+        }
+      ]
+    },
+    {
+      "name": "useful-orcid",
+      "description": {
+        "kind": "markdown",
+        "value": ""
+      },
+      "attributes": [
+        {
+          "name": "changing-colors",
+          "description": "Should the table inside the component change colors every other line?"
+        },
+        {
+          "name": "open-status",
+          "description": "Should the details element be open by default?"
+        },
+        {
+          "name": "orcid",
+          "description": "The ORCiD to display, evaluate and link in this component.\n(required)"
+        },
+        {
+          "name": "show-affiliation",
+          "description": "Whether to show the affiliation or not.\n(optional) Defaults to true."
+        },
+        {
+          "name": "show-department",
+          "description": "Whether to show the department of the affiliation or not.\nDepends internally on availability of the department in the ORCiD information.\n(optional) Defaults to false."
+        },
+        {
+          "name": "show-orcid",
+          "description": "Whether to show the ORCiD inline or not.\n(optional) Defaults to false."
         }
       ]
     }
