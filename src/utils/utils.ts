@@ -18,3 +18,17 @@ export const handleMap: Map<PID, PIDRecord> = new Map();
  * A set of all PIDs that are not resolvable.
  */
 export const unresolvables: Set<PID> = new Set();
+
+export function getLocaleDetail(locale: string, type: "region" | "language"): string {
+  console.log("getLocaleDetail", locale, type);
+
+  const friendlyName = new Intl.DisplayNames(['en'], {type: type}).of(locale.toUpperCase());
+  if (type === "language") return friendlyName;
+
+  const codePoints = locale
+    .toUpperCase()
+    .split('')
+    .map(char => 127397 + char.charCodeAt(0));
+  const flag = String.fromCodePoint(...codePoints);
+  return `${flag} ${friendlyName}`;
+}

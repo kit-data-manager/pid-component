@@ -1,4 +1,5 @@
 import {Meta, StoryObj} from "@storybook/html"
+import {html} from "lit-html";
 
 const meta: Meta = {
   title: "handle-highlight",
@@ -33,6 +34,21 @@ const meta: Meta = {
     filled: false,
   }
 }
+const textDecorator = (story) => html`
+  <p>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+    magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+    pariatur.
+    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    ${story()} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+    dolore
+    magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+    pariatur.
+    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  </p>`
+
 export default meta;
 type Story = StoryObj
 
@@ -90,28 +106,23 @@ export const LinkResolved: Story = {
   }
 }
 
-export const HandleInText = (args: {
-  handle: string,
-  link?: string,
-}) => `
-<p>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-<handle-highlight handle="${args.handle}"></handle-highlight>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-</p>`;
-HandleInText.args = {
-  handle: "21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343",
-}
-HandleInText.parameters = {
-  docs: {
-    source: {
-      code: `
+export const HandleInText: Story = {
+  args: {
+    handle: "21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343",
+  },
+  //@ts-ignore
+  decorators: [textDecorator],
+  parameters: {
+    docs: {
+      source: {
+        code: `
 <p>
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 <handle-highlight handle="21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343"></handle-highlight>
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+<handle-highlight handle="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"></handle-highlight>
 </p>`
+      }
     }
   }
 }
-HandleInText.bind({})

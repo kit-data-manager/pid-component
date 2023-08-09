@@ -82,7 +82,6 @@ export class HandleHighlight {
                   <span
                     style={{
                       backgroundColor: "hsl(" + element.color.hue + "," + element.color.sat + "%," + element.color.lum + "%)",
-                      // color: element.color.lum > 50 ? "black" : "white"
                     }}
                     class={`font-mono p-0.5 rounded-md ${element.color.lum > 50 ? "text-gray-800" : "text-gray-200"}`}>
                     {element.text}
