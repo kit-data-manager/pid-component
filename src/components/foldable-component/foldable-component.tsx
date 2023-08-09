@@ -1,4 +1,5 @@
 import {Component, Host, h, State, Prop} from '@stencil/core';
+import {PID} from "../../utils/PID";
 
 export type FoldableItem = {
   keyTitle: string,
@@ -137,6 +138,7 @@ export class FoldableComponent {
   @Prop() showSubcomponents: boolean = true;
 
   private toggleSubcomponents = () => {
+    console.log(`currentLevelOfSubcomponents: ${this.currentLevelOfSubcomponents}, levelOfSubcomponents: ${this.levelOfSubcomponents}, showSubcomponents: ${this.showSubcomponents}`);
     if (this.showSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) this.loadSubcomponents = !this.loadSubcomponents;
   }
 
@@ -161,7 +163,8 @@ export class FoldableComponent {
       <Host class="inline-flex flex-grow max-w-screen-lg font-sans flex-wrap">
         {
           this.items.length === 0 && this.actions.length === 0
-            ? <div class="rounded-md shadow-md border inline-flex flex-grow max-w-screen-lg font-sans p-0.5 mx-2 select-none list-inside bg-white text-clip overflow-x-clip">
+            ? <div
+              class="rounded-md shadow-md border inline-flex flex-grow max-w-screen-lg font-sans p-0.5 mx-2 select-none list-inside bg-white text-clip overflow-x-clip">
               {/*<handle-highlight handle="21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343"></handle-highlight>*/}
               <slot/>
             </div>
@@ -172,7 +175,7 @@ export class FoldableComponent {
               onToggle={this.toggleSubcomponents}>
               <summary class="mx-2 select-none list-inside bg-white text-clip overflow-x-clip mb-1">
                 {/*<handle-highlight handle="21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343"></handle-highlight>*/}
-                <slot />
+                <slot/>
               </summary>
               {
                 this.items.length > 0
@@ -218,7 +221,18 @@ export class FoldableComponent {
                                 </a>
                               </td>
                               <td class={"align-top text-clip text-sm overflow-x-scroll p-1 w-3/4"}>
-                                {value.value}
+                                {/*{value.value}*/}
+                                {
+                                  PID.isPID(value.value) ?
+                                    (this.loadSubcomponents ?
+                                      <intelligent-handle handle={value.value}
+                                                          changingColors={this.changingColors}
+                                                          levelOfSubcomponents={this.levelOfSubcomponents}
+                                                          currentLevelOfSubcomponents={this.currentLevelOfSubcomponents + 1}
+                                      /> :
+                                      <handle-highlight handle={value.value.toString()}></handle-highlight>) :
+                                    value.value
+                                }
                               </td>
                             </tr>
                           )

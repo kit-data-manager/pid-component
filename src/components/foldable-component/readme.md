@@ -22,11 +22,20 @@
 
 ### Used by
 
+ - [intelligent-handle](../intelligent-handle)
  - [useful-orcid](../useful-orcid)
+
+### Depends on
+
+- [intelligent-handle](../intelligent-handle)
+- [handle-highlight](../handle-highlight)
 
 ### Graph
 ```mermaid
 graph TD;
+  foldable-component --> intelligent-handle
+  foldable-component --> handle-highlight
+  intelligent-handle --> foldable-component
   useful-orcid --> foldable-component
   style foldable-component fill:#f9f,stroke:#333,stroke-width:4px
 ```

@@ -30,6 +30,10 @@
 graph TD;
   useful-orcid --> foldable-component
   useful-orcid --> beautiful-orcid
+  foldable-component --> intelligent-handle
+  foldable-component --> handle-highlight
+  intelligent-handle --> foldable-component
+  intelligent-handle --> handle-highlight
   style useful-orcid fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
