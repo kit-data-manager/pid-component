@@ -31,7 +31,14 @@ export class IntelligentHandle {
      */
     @State() loadSubcomponents: boolean = false;
 
+    /**
+     * The private state of the items shown in the foldable-component.
+     */
     @State() items: FoldableItem[] = [];
+
+    /**
+     * The private state of the actions offered in the foldable-component.
+     */
     @State() actions: FoldableAction[] = [];
 
     /**
@@ -64,7 +71,6 @@ export class IntelligentHandle {
      * Should the subcomponents be shown?
      */
     @Prop() showSubcomponents: boolean = true;
-
 
     /**
      * This method is called when the component is first connected to the DOM.

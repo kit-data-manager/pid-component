@@ -22,6 +22,7 @@
 
 ### Used by
 
+ - [display-magic](../display-magic)
  - [intelligent-handle](../intelligent-handle)
  - [useful-orcid](../useful-orcid)
 
@@ -36,6 +37,7 @@ graph TD;
   foldable-component --> intelligent-handle
   foldable-component --> handle-highlight
   intelligent-handle --> foldable-component
+  display-magic --> foldable-component
   useful-orcid --> foldable-component
   style foldable-component fill:#f9f,stroke:#333,stroke-width:4px
 ```

@@ -35,6 +35,20 @@ export namespace Components {
          */
         "showOrcid": boolean;
     }
+    interface DisplayMagic {
+        "changingColors": boolean;
+        "currentLevelOfSubcomponents": number;
+        "levelOfSubcomponents": number;
+        "openStatus": boolean;
+        "settings": {
+    type: string,
+    values: {
+      name: string,
+      value: any
+    }[]
+  }[];
+        "value": string;
+    }
     interface FoldableComponent {
         "actions": FoldableAction[];
         /**
@@ -146,6 +160,12 @@ declare global {
         prototype: HTMLBeautifulOrcidElement;
         new (): HTMLBeautifulOrcidElement;
     };
+    interface HTMLDisplayMagicElement extends Components.DisplayMagic, HTMLStencilElement {
+    }
+    var HTMLDisplayMagicElement: {
+        prototype: HTMLDisplayMagicElement;
+        new (): HTMLDisplayMagicElement;
+    };
     interface HTMLFoldableComponentElement extends Components.FoldableComponent, HTMLStencilElement {
     }
     var HTMLFoldableComponentElement: {
@@ -176,6 +196,7 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "beautiful-orcid": HTMLBeautifulOrcidElement;
+        "display-magic": HTMLDisplayMagicElement;
         "foldable-component": HTMLFoldableComponentElement;
         "handle-highlight": HTMLHandleHighlightElement;
         "intelligent-handle": HTMLIntelligentHandleElement;
@@ -209,6 +230,20 @@ declare namespace LocalJSX {
           * @type {boolean}
          */
         "showOrcid"?: boolean;
+    }
+    interface DisplayMagic {
+        "changingColors"?: boolean;
+        "currentLevelOfSubcomponents"?: number;
+        "levelOfSubcomponents"?: number;
+        "openStatus"?: boolean;
+        "settings"?: {
+    type: string,
+    values: {
+      name: string,
+      value: any
+    }[]
+  }[];
+        "value"?: string;
     }
     interface FoldableComponent {
         "actions"?: FoldableAction[];
@@ -315,6 +350,7 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "beautiful-orcid": BeautifulOrcid;
+        "display-magic": DisplayMagic;
         "foldable-component": FoldableComponent;
         "handle-highlight": HandleHighlight;
         "intelligent-handle": IntelligentHandle;
@@ -326,6 +362,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "beautiful-orcid": LocalJSX.BeautifulOrcid & JSXBase.HTMLAttributes<HTMLBeautifulOrcidElement>;
+            "display-magic": LocalJSX.DisplayMagic & JSXBase.HTMLAttributes<HTMLDisplayMagicElement>;
             "foldable-component": LocalJSX.FoldableComponent & JSXBase.HTMLAttributes<HTMLFoldableComponentElement>;
             /**
              * This component highlights a handle and links to the FAIR DO Scope.

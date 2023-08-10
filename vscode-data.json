@@ -27,6 +27,35 @@
       ]
     },
     {
+      "name": "display-magic",
+      "description": {
+        "kind": "markdown",
+        "value": ""
+      },
+      "attributes": [
+        {
+          "name": "changing-colors",
+          "description": ""
+        },
+        {
+          "name": "current-level-of-subcomponents",
+          "description": ""
+        },
+        {
+          "name": "level-of-subcomponents",
+          "description": ""
+        },
+        {
+          "name": "open-status",
+          "description": ""
+        },
+        {
+          "name": "value",
+          "description": ""
+        }
+      ]
+    },
+    {
       "name": "foldable-component",
       "description": {
         "kind": "markdown",
