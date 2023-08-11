@@ -6,7 +6,8 @@ export type FoldableItem = {
   keyTooltip: string,
   keyLink?: string,
   value: string,
-  valueRegex?: RegExp
+  valueRegex?: RegExp,
+  valueIsFoldable?: boolean
 }
 
 export type FoldableAction = {
@@ -22,89 +23,9 @@ export type FoldableAction = {
 })
 export class FoldableComponent {
 
-  @Prop() items: FoldableItem[] = [
-    // {
-    //   keyTitle: "Title",
-    //   keyTooltip: "The title of the dataset.",
-    //   keyLink: "https://schema.org/name",
-    //   value: "KIT Data Manager",
-    //   valueRegex: /KIT Data Manager/
-    // },
-    // {
-    //   keyTitle: "Description",
-    //   keyTooltip: "The description of the dataset.",
-    //   keyLink: "https://schema.org/description",
-    //   value: "The KIT Data Manager is a software for managing research data.",
-    //   valueRegex: /The KIT Data Manager is a software for managing research data./
-    // },
-    // {
-    //   keyTitle: "Identifier",
-    //   keyTooltip: "The identifier of the dataset.",
-    //   keyLink: "https://schema.org/identifier",
-    //   value: "https://doi.org/10.5445/IR/1000123456",
-    //   valueRegex: /https:\/\/doi.org\/10.5445\/IR\/1000123456/
-    // },
-    // {
-    //   keyTitle: "Publisher",
-    //   keyTooltip: "The publisher of the dataset.",
-    //   keyLink: "https://schema.org/publisher",
-    //   value: "Karlsruhe Institute of Technology (KIT)",
-    //   valueRegex: /Karlsruhe Institute of Technology \(KIT\)/
-    // },
-    // {
-    //   keyTitle: "Creator",
-    //   keyTooltip: "The creator of the dataset.",
-    //   keyLink: "https://schema.org/creator",
-    //   value: "Karlsruhe Institute of Technology (KIT)",
-    //   valueRegex: /Karlsruhe Institute of Technology \(KIT\)/
-    // },
-    // {
-    //   keyTitle: "Contributor",
-    //   keyTooltip: "The contributor of the dataset.",
-    //   keyLink: "https://schema.org/contributor",
-    //   value: "Karlsruhe Institute of Technology (KIT)",
-    //   valueRegex: /Karlsruhe Institute of Technology \(KIT\)/
-    // },
-    // {
-    //   keyTitle: "Date Published",
-    //   keyTooltip: "The date the dataset was published.",
-    //   keyLink: "https://schema.org/datePublished",
-    //   value: "2021-01-01",
-    //   valueRegex: /2021-01-01/
-    // },
-    // {
-    //   keyTitle: "Date Modified",
-    //   keyTooltip: "The date the dataset was modified.",
-    //   keyLink: "https://schema.org/dateModified",
-    //   value: "2021-01-01",
-    //   valueRegex: /2021-01-01/
-    // },
-    // {
-    //   keyTitle: "License",
-    //   keyTooltip: "The license of the dataset.",
-    //   keyLink: "https://schema.org/license",
-    //   value: "https://creativecommons.org/licenses/by/4.0/",
-    //   valueRegex: /https:\/\/creativecommons.org\/licenses\/by\/4.0\//
-    // }
-  ]
+  @Prop() items: FoldableItem[] = []
 
-  @Prop() actions: FoldableAction[] = [
-    // {
-    //   title: "View on FAIR Data Point",
-    //   link: "https://kit-fairdatapoint.esc.rzg.mpg.de/fdp/dataset/kitdm/",
-    //   style: "primary"
-    // },
-    // {
-    //   title: "View on FAIR Data Point",
-    //   link: "https://kit-fairdatapoint.esc.rzg.mpg.de/fdp/dataset/kitdm/",
-    //   style: "secondary"
-    // },
-    // {
-    //   title: "View on FAIR Data Point",
-    //   link: "https://kit-fairdatapoint.esc.rzg.mpg.de/fdp/dataset/kitdm/",
-    //   style: "danger"
-    // }
-  ]
+  @Prop() actions: FoldableAction[] = []
 
   /**
    * The private state of whether the subcomponents in the table should be loaded.
@@ -138,7 +59,7 @@ export class FoldableComponent {
   @Prop() showSubcomponents: boolean = true;
 
   private toggleSubcomponents = () => {
-    console.log(`currentLevelOfSubcomponents: ${this.currentLevelOfSubcomponents}, levelOfSubcomponents: ${this.levelOfSubcomponents}, showSubcomponents: ${this.showSubcomponents}`);
+    // console.log(`currentLevelOfSubcomponents: ${this.currentLevelOfSubcomponents}, levelOfSubcomponents: ${this.levelOfSubcomponents}, showSubcomponents: ${this.showSubcomponents}`);
     if (this.showSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) this.loadSubcomponents = !this.loadSubcomponents;
   }
 
@@ -165,22 +86,21 @@ export class FoldableComponent {
           this.items.length === 0 && this.actions.length === 0
             ? <div
               class="rounded-md shadow-md border inline-flex flex-grow max-w-screen-lg font-sans p-0.5 mx-2 select-none list-inside bg-white text-clip overflow-x-clip">
-              {/*<handle-highlight handle="21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343"></handle-highlight>*/}
-              <slot/>
+              <slot name="preview"/>
             </div>
             :
             <details
               class={"rounded-md shadow-md bg-white border text-clip inline-flex flex-grow max-w-screen-lg font-sans p-0.5 open:p-1 open:align-top"}
               open={this.openStatus}
               onToggle={this.toggleSubcomponents}>
-              <summary class="mx-2 select-none list-inside bg-white text-clip overflow-x-clip mb-1">
-                {/*<handle-highlight handle="21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343"></handle-highlight>*/}
+              <summary class="px-2 select-none list-inside bg-white text-clip overflow-x-hidden mb-1 inline flex-nowrap">
                 <slot/>
+                {/*<slot name="previw"/>*/}
               </summary>
               {
                 this.items.length > 0
                   ? <div
-                    class="divide-y text-sm leading-6 bg-gray-100 m-1 p-0.5 max-h-64 overflow-y-scroll border rounded">
+                    class="divide-y text-sm leading-6 bg-gray-100 m-1 p-0.5 max-h-72 overflow-y-scroll border rounded">
                     <table class="text-left w-full text-sm font-sans">
                       <thead class="bg-slate-600 flex text-slate-200 w-full rounded-t">
                       <tr class="flex w-full rounded font-semibold">
@@ -189,7 +109,7 @@ export class FoldableComponent {
                       </tr>
                       </thead>
                       <tbody
-                        class="bg-grey-100 flex flex-col items-center justify-between overflow-y-scroll w-full max-h-48 rounded-b">
+                        class="bg-grey-100 flex flex-col items-center justify-between overflow-y-scroll w-full max-h-64 rounded-b">
                       {
                         this.items.map((value) => {
                           return (
@@ -221,7 +141,15 @@ export class FoldableComponent {
                                 </a>
                               </td>
                               <td class={"align-top text-clip text-sm overflow-x-scroll p-1 w-3/4"}>
-                                {/*{value.value}*/}
+                                {/*{*/}
+                                {/*  this.loadSubcomponents && !value.valueIsFoldable ?*/}
+                                {/*    <display-magic value={value.value} changingColors={this.changingColors}*/}
+                                {/*                   levelOfSubcomponents={this.levelOfSubcomponents}*/}
+                                {/*                   currentLevelOfSubcomponents={this.currentLevelOfSubcomponents + 1}*/}
+                                {/*    />*/}
+                                {/*    : value.value*/}
+                                {/*}*/}
+
                                 {
                                   PID.isPID(value.value) ?
                                     (this.loadSubcomponents ?
@@ -244,6 +172,7 @@ export class FoldableComponent {
                   </div>
                   : ""
               }
+              {/*<slot name="body"/>*/}
               {
                 this.actions.length > 0 ?
                   <span class={"m-0.5 flex justify-between gap-1"}>

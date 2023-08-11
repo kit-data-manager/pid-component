@@ -20,8 +20,6 @@ export const handleMap: Map<PID, PIDRecord> = new Map();
 export const unresolvables: Set<PID> = new Set();
 
 export function getLocaleDetail(locale: string, type: "region" | "language"): string {
-  console.log("getLocaleDetail", locale, type);
-
   const friendlyName = new Intl.DisplayNames(['en'], {type: type}).of(locale.toUpperCase());
   if (type === "language") return friendlyName;
 

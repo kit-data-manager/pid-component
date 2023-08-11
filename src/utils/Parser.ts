@@ -2,16 +2,30 @@ import {GenericIdentifierType} from "./GenericIdentifierType";
 import {HandleType} from "./HandleType";
 import {FallbackType} from "./FallbackType";
 import {ORCIDType} from "./ORCIDType";
+import {DateType} from "./DateType";
 
 export class Parser {
   private static readonly _dataTypes: (new(value: string, settings?: {
     name: string,
     value: any
   }[]) => GenericIdentifierType)[] = [
+    DateType,
     ORCIDType,
     HandleType,
     FallbackType,
   ];
+
+  static getEstimatedPriority(value: string): number {
+    let priority = 0;
+    for (let i = 0; i < this._dataTypes.length; i++) {
+      const obj = new this._dataTypes[i](value);
+      if (obj.hasCorrectFormat()) {
+        priority = i;
+        break;
+      }
+    }
+    return priority;
+  }
 
   static async getBestFit(value: string, settings: {
     type: string, values: {

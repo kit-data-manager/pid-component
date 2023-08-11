@@ -36,6 +36,7 @@ export namespace Components {
         "showOrcid": boolean;
     }
     interface DisplayMagic {
+        "amountOfItems": number;
         "changingColors": boolean;
         "currentLevelOfSubcomponents": number;
         "levelOfSubcomponents": number;
@@ -47,6 +48,7 @@ export namespace Components {
       value: any
     }[]
   }[];
+        "showSubcomponents": boolean;
         "value": string;
     }
     interface FoldableComponent {
@@ -232,6 +234,7 @@ declare namespace LocalJSX {
         "showOrcid"?: boolean;
     }
     interface DisplayMagic {
+        "amountOfItems"?: number;
         "changingColors"?: boolean;
         "currentLevelOfSubcomponents"?: number;
         "levelOfSubcomponents"?: number;
@@ -243,6 +246,7 @@ declare namespace LocalJSX {
       value: any
     }[]
   }[];
+        "showSubcomponents"?: boolean;
         "value"?: string;
     }
     interface FoldableComponent {

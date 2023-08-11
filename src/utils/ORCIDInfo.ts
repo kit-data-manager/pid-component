@@ -274,7 +274,7 @@ export class ORCIDInfo {
    * @param text The string to check.
    */
   static isORCiD(text: string): boolean {
-    return text.match("^[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]$") !== null;
+    return text.match("^(https:\/\/orcid.org\/)?[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]$") !== null;
   }
 
   /**
@@ -283,6 +283,8 @@ export class ORCIDInfo {
    */
   static async getORCiDInfo(orcid: string): Promise<ORCIDInfo> {
     if (!ORCIDInfo.isORCiD(orcid)) throw new Error("Invalid input");
+
+    if (orcid.match("^(https:\/\/orcid.org\/)?[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]$") !== null) orcid = orcid.replace("https://orcid.org/", "");
 
     console.log("Fetching ORCID data for " + orcid);
     const response = await fetch(`https://pub.orcid.org/v3.0/${orcid}`, {
@@ -305,21 +307,23 @@ export class ORCIDInfo {
       organization: string,
       department: string,
     }[] = [];
-    for (let i = 0; i < affiliations.length; i++) {
-      const employmentSummary = affiliations[i]["summaries"][0]["employment-summary"];
-      let employment = {
-        startDate: new Date(),
-        endDate: null,
-        organization: null,
-        department: null
-      }
-      if (employmentSummary["start-date"] !== null) employment.startDate = new Date(employmentSummary["start-date"]["year"]["value"], employmentSummary["start-date"]["month"]["value"], employmentSummary["start-date"]["day"]["value"]);
-      if (employmentSummary["end-date"] !== null) employment.endDate = new Date(employmentSummary["end-date"]["year"]["value"], employmentSummary["end-date"]["month"]["value"], employmentSummary["end-date"]["day"]["value"]);
-      employment.organization = employmentSummary["organization"]["name"];
-      employment.department = employmentSummary["department-name"];
+    try {
+      for (let i = 0; i < affiliations.length; i++) {
+        const employmentSummary = affiliations[i]["summaries"][0]["employment-summary"];
+        let employment = {
+          startDate: new Date(),
+          endDate: null,
+          organization: null,
+          department: null
+        }
+        if (employmentSummary["start-date"] !== null) employment.startDate = new Date(employmentSummary["start-date"]["year"]["value"], employmentSummary["start-date"]["month"]["value"], employmentSummary["start-date"]["day"]["value"]);
+        if (employmentSummary["end-date"] !== null) employment.endDate = new Date(employmentSummary["end-date"]["year"]["value"], employmentSummary["end-date"]["month"]["value"], employmentSummary["end-date"]["day"]["value"]);
+        employment.organization = employmentSummary["organization"]["name"];
+        employment.department = employmentSummary["department-name"];
 
-      employments.push(employment);
-    }
+        employments.push(employment);
+      }
+    } catch (e) {}
 
     // Parse preferred locale, if available
     let preferredLocale: string | undefined = rawOrcidJSON["preferences"]["locale"] !== null ? rawOrcidJSON["preferences"]["locale"] : undefined;

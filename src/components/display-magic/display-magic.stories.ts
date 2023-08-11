@@ -13,6 +13,12 @@ const meta: Meta = {
         type: "text"
       }
     },
+    settings: {
+      description: "The settings to use for the component",
+      control: {
+        type: "object",
+      }
+    },
     changingColors: {
       description: "Determines whether the integrated table changes colors every other row",
       defaultValue: true,
@@ -25,6 +31,13 @@ const meta: Meta = {
       defaultValue: false,
       control: {
         type: "boolean",
+      }
+    },
+    amountOfItems: {
+      description: "The amount of items to show in the table",
+      defaultValue: 10,
+      control: {
+        type: "number",
       }
     },
     showSubcomponents: {
@@ -47,12 +60,15 @@ const meta: Meta = {
       control: {
         type: "number",
       }
-    }
+    },
+
   },
   args: {
     value: "21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343",
+    settings: {},
     changingColors: true,
     openStatus: false,
+    amountOfItems: 10,
     showSubcomponents: true,
     levelOfSubcomponents: 2,
     currentLevelOfSubcomponents: 0,
@@ -89,6 +105,7 @@ export const Handle: Story = {
 export const ORCID: Story = {
   args: {
     value: "0009-0005-2800-4833",
+    openStatus: true,
   }
 }
 
@@ -96,6 +113,19 @@ export const Fallback: Story = {
   args: {
     value: "sdfglhjsdfg",
   },
+}
+
+export const ORCIDInRecord = {
+  args: {
+    value: "21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6",
+  }
+}
+
+export const ORCIDInRecordWithoutLimit = {
+  args: {
+    value: "21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6",
+    amountOfItems: 100,
+  }
 }
 
 export const HandleInText: Story = {

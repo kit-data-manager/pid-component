@@ -21,11 +21,21 @@ export class ORCIDType extends GenericIdentifierType {
     // Generate items and actions
 
     this.items.push(...[
-      new FoldableItem(0, "ORCiD", parsed.orcid, "ORCiD is a free service for researchers to distinguish themselves by creating a unique personal identifier.", "https://orcid.org"),
-      new FoldableItem(0, "Family Name", parsed.familyName, "The family name of the person."),
-      new FoldableItem(0, "Given Names", parsed.givenNames.toString(), "The given names of the person."),
-      new FoldableItem(0, "Current Affiliation", parsed.getAffiliationAtString(new Date(Date.now()), true), "The current affiliation of the person."),
+      new FoldableItem(0, "ORCiD", parsed.orcid, "ORCiD is a free service for researchers to distinguish themselves by creating a unique personal identifier.", "https://orcid.org",undefined, true),
+      new FoldableItem(1, "Family Name", parsed.familyName, "The family name of the person."),
+      new FoldableItem(2, "Given Names", parsed.givenNames.toString(), "The given names of the person."),
     ])
+
+    this.actions.push(new FoldableAction(0, "Open ORCiD", `https://orcid.org/${parsed.orcid}`, "primary"))
+
+    try {
+      const affiliation = parsed.getAffiliationAtString(new Date(Date.now()), true)
+      if (affiliation !== undefined && affiliation.length > 2 )this.items.push(
+        new FoldableItem(50, "Current Affiliation", affiliation, "The current affiliation of the person."),
+      )
+    } catch (e) {
+      console.log(e);
+    }
 
     // if (parsed.getAffiliationAt(this.affiliationAt) !== parsed.getAffiliationAt(new Date(Date.now()))) {
     //   this.items.push({
@@ -45,24 +55,24 @@ export class ORCIDType extends GenericIdentifierType {
 
       // If there is a primary e-mail address, generate an item and an action to send email
       if (primary) {
-        this.items.push(new FoldableItem(0, "Primary E-Mail address", primary.email, "The primary e-mail address of the person."))
+        this.items.push(new FoldableItem(20, "Primary E-Mail address", primary.email, "The primary e-mail address of the person."))
         this.actions.push(new FoldableAction(0, "Send E-Mail", `mailto:${primary.email}`, "secondary"))
       }
 
       // If there are other e-mail addresses, generate an item with a list of them
-      if (other.length > 0) this.items.push(new FoldableItem(0, "Other E-Mail addresses", other.map((email) => email.email).join(", "), "All other e-mail addresses of the person."))
+      if (other.length > 0) this.items.push(new FoldableItem(70, "Other E-Mail addresses", other.map((email) => email.email).join(", "), "All other e-mail addresses of the person."))
 
-      if (parsed.preferredLocale) this.items.push(new FoldableItem(0, "Preferred Language", getLocaleDetail(parsed.preferredLocale, "language"), "The preferred locale/language of the person."))
+      if (parsed.preferredLocale) this.items.push(new FoldableItem(25, "Preferred Language", getLocaleDetail(parsed.preferredLocale, "language"), "The preferred locale/language of the person."))
 
       for (let url of parsed.researcherUrls) {
-        this.items.push(new FoldableItem(0, url.name, url.url, "A link to a website specified by the person."))
+        this.items.push(new FoldableItem(100, url.name, url.url, "A link to a website specified by the person."))
       }
 
-      if (parsed.keywords.length > 0) this.items.push(new FoldableItem(0, "Keywords", parsed.keywords.map((keyword) => keyword.content).join(", "), "Keywords specified by the person."))
+      if (parsed.keywords.length > 50) this.items.push(new FoldableItem(60, "Keywords", parsed.keywords.map((keyword) => keyword.content).join(", "), "Keywords specified by the person."))
 
-      if (parsed.biography) this.items.push(new FoldableItem(0, "Biography", parsed.biography, "The biography of the person."))
+      if (parsed.biography) this.items.push(new FoldableItem(200, "Biography", parsed.biography, "The biography of the person."))
 
-      if (parsed.country) this.items.push(new FoldableItem(0, "Country", getLocaleDetail(parsed.country, "region"), "The country of the person."))
+      if (parsed.country) this.items.push(new FoldableItem(30, "Country", getLocaleDetail(parsed.country, "region"), "The country of the person."))
 
       console.log(this._orcidInfo);
       console.log(this.items);
