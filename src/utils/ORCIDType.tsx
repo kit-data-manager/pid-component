@@ -8,6 +8,10 @@ import {getLocaleDetail} from "./utils";
 export class ORCIDType extends GenericIdentifierType {
 
   private _orcidInfo: ORCIDInfo;
+  private affiliationAt: Date = new Date(Date.now());
+  private showAffiliation: boolean = true;
+  private showDepartment: boolean = false;
+  private showOrcid: boolean = false;
 
   hasCorrectFormat(): boolean {
     console.log("Checking if this is a ORCiD " + this.value);
@@ -18,10 +22,33 @@ export class ORCIDType extends GenericIdentifierType {
     let parsed = await ORCIDInfo.getORCiDInfo(this.value);
     this._orcidInfo = parsed;
 
+    console.log("Settings: ")
+    console.log(this.settings);
+
+    if (this.settings) {
+      for (let i of this.settings) {
+        console.log(i)
+        switch (i["name"]) {
+          case "showAffiliation":
+            this.showAffiliation = i["value"];
+            break;
+          case "showDepartment":
+            this.showDepartment = i["value"];
+            break;
+          case "showOrcid":
+            this.showOrcid = i["value"];
+            break;
+          case "affiliationAt":
+            this.affiliationAt = new Date(i["value"]);
+            break;
+        }
+      }
+    }
+
     // Generate items and actions
 
     this.items.push(...[
-      new FoldableItem(0, "ORCiD", parsed.orcid, "ORCiD is a free service for researchers to distinguish themselves by creating a unique personal identifier.", "https://orcid.org",undefined, true),
+      new FoldableItem(0, "ORCiD", parsed.orcid, "ORCiD is a free service for researchers to distinguish themselves by creating a unique personal identifier.", "https://orcid.org", undefined, true),
       new FoldableItem(1, "Family Name", parsed.familyName, "The family name of the person."),
       new FoldableItem(2, "Given Names", parsed.givenNames.toString(), "The given names of the person."),
     ])
@@ -30,24 +57,20 @@ export class ORCIDType extends GenericIdentifierType {
 
     try {
       const affiliation = parsed.getAffiliationAtString(new Date(Date.now()), true)
-      if (affiliation !== undefined && affiliation.length > 2 )this.items.push(
+      if (affiliation !== undefined && affiliation.length > 2) this.items.push(
         new FoldableItem(50, "Current Affiliation", affiliation, "The current affiliation of the person."),
       )
     } catch (e) {
       console.log(e);
     }
 
-    // if (parsed.getAffiliationAt(this.affiliationAt) !== parsed.getAffiliationAt(new Date(Date.now()))) {
-    //   this.items.push({
-    //     keyTitle: "Affiliation at " + this.affiliationAt.toLocaleDateString("en-US", {
-    //       year: "numeric",
-    //       month: "numeric",
-    //       day: "numeric"
-    //     }),
-    //     keyTooltip: "The affiliation of the person at the given date.",
-    //     value: parsed.getAffiliationAtString(this.affiliationAt, true),
-    //   })
-    // }
+    if (parsed.getAffiliationAt(this.affiliationAt) !== parsed.getAffiliationAt(new Date(Date.now()))) {
+      this.items.push(new FoldableItem(10, "Affiliation at " + this.affiliationAt.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric"
+      }), parsed.getAffiliationAtString(this.affiliationAt, true), "The affiliation of the person at the given date."))
+    }
 
     if (parsed.emails) {
       let primary = parsed.emails.filter((email) => email.primary)[0];
@@ -75,8 +98,6 @@ export class ORCIDType extends GenericIdentifierType {
       if (parsed.country) this.items.push(new FoldableItem(30, "Country", getLocaleDetail(parsed.country, "region"), "The country of the person."))
 
       console.log(this._orcidInfo);
-      console.log(this.items);
-      return Promise.resolve(undefined);
     }
   }
 
@@ -90,10 +111,9 @@ export class ORCIDType extends GenericIdentifierType {
 
   renderPreview(): FunctionalComponent<any> {
     return (
-      // <beautiful-orcid orcid={this._orcidInfo.orcid} showAffiliation={this.showAffiliation}
-      //                  showDepartment={this.showDepartment} affiliationAt={this.affiliationAt}
-      //                  showOrcid={this.showOrcid}/>
-      <beautiful-orcid orcid={this._orcidInfo.orcid}/>
+      <beautiful-orcid orcid={this._orcidInfo.orcid} showAffiliation={this.showAffiliation}
+                       showDepartment={this.showDepartment} affiliationAt={this.affiliationAt}
+                       showOrcid={this.showOrcid}/>
     )
   }
 

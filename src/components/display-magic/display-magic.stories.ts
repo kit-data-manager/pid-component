@@ -16,7 +16,7 @@ const meta: Meta = {
     settings: {
       description: "The settings to use for the component",
       control: {
-        type: "object",
+        type: "text",
       }
     },
     changingColors: {
@@ -65,7 +65,7 @@ const meta: Meta = {
   },
   args: {
     value: "21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343",
-    settings: {},
+    settings: '[{"type":"ORCIDConfig","values":[{"name":"showAffiliation","value":true},{"name":"showOrcid","value":true}]}]',
     changingColors: true,
     openStatus: false,
     amountOfItems: 10,

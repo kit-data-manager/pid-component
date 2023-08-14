@@ -41,13 +41,7 @@ export namespace Components {
         "currentLevelOfSubcomponents": number;
         "levelOfSubcomponents": number;
         "openStatus": boolean;
-        "settings": {
-    type: string,
-    values: {
-      name: string,
-      value: any
-    }[]
-  }[];
+        "settings": string;
         "showSubcomponents": boolean;
         "value": string;
     }
@@ -239,13 +233,7 @@ declare namespace LocalJSX {
         "currentLevelOfSubcomponents"?: number;
         "levelOfSubcomponents"?: number;
         "openStatus"?: boolean;
-        "settings"?: {
-    type: string,
-    values: {
-      name: string,
-      value: any
-    }[]
-  }[];
+        "settings"?: string;
         "showSubcomponents"?: boolean;
         "value"?: string;
     }

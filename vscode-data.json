@@ -54,6 +54,10 @@
           "description": ""
         },
         {
+          "name": "settings",
+          "description": ""
+        },
+        {
           "name": "show-subcomponents",
           "description": ""
         },

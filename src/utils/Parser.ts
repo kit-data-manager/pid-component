@@ -4,7 +4,15 @@ import {FallbackType} from "./FallbackType";
 import {ORCIDType} from "./ORCIDType";
 import {DateType} from "./DateType";
 
+/**
+ * Class that handles the parsing of a given value and returns the best fitting component object
+ */
 export class Parser {
+
+  /**
+   * Array of all component objects that can be used to parse a given value, ordered by priority (lower is better)
+   * @private
+   */
   private static readonly _dataTypes: (new(value: string, settings?: {
     name: string,
     value: any
@@ -15,6 +23,10 @@ export class Parser {
     FallbackType,
   ];
 
+  /**
+   * Returns the priority of the best fitting component object for a given value (lower is better)
+   * @param value String value to parse and evaluate
+   */
   static getEstimatedPriority(value: string): number {
     let priority = 0;
     for (let i = 0; i < this._dataTypes.length; i++) {
@@ -27,30 +39,28 @@ export class Parser {
     return priority;
   }
 
+  /**
+   * Returns the best fitting component object for a given value
+   * @param value String value to parse and evaluate
+   * @param settings Settings of the environment from which the settings for the component are extracted
+   * @returns {Promise<GenericIdentifierType>} The best fitting component object
+   */
   static async getBestFit(value: string, settings: {
     type: string, values: {
       name: string,
       value: any
     }[]
   }[]): Promise<GenericIdentifierType> {
-    console.log("AllTypes", this._dataTypes);
-    // let bestFit = this._dataTypes[this._dataTypes.length - 1];
-    // console.log(new this._dataTypes[0](value));
+    // default to fallback
     let bestFit = new this._dataTypes[this._dataTypes.length - 1](value)
-    // let bestFit = this.create(this._dataTypes[length - 1], value);
 
+    // find best fit in _dataTypes array with highest priority (lowest index has highest priority) and correct format
     for (let i = this._dataTypes.length - 1; i >= 0; i--) {
-      // if (this._dataTypes[i].prototype.hasCorrectFormat()) {
-      //   bestFit = this._dataTypes[i];
-      // }
       const obj = new this._dataTypes[i](value);
-      // const obj = this.create(this._dataTypes[i], value);
       if (obj.hasCorrectFormat()) bestFit = obj;
     }
 
-    console.log("Found bestFit", bestFit);
-
-    // const obj = this.create(bestFit, value);
+    // if settings for this type exist, add them to the object
     try {
       const settingsKey = bestFit.getSettingsKey();
       const settingsValues = settings.find((value) => value.type === settingsKey)?.values;
@@ -59,22 +69,8 @@ export class Parser {
       console.log("No settings found for", bestFit.getSettingsKey());
     }
 
+    // initialize and return the object
     await bestFit.init()
     return bestFit
   }
-
-  // static create<T extends GenericIdentifierType>(
-  //   c: new(value: string, settings?: {
-  //     name: string,
-  //     value: any
-  //   }[]) => T,
-  //   value: string,
-  //   settings?: {
-  //     name: string,
-  //     value: any
-  //   }[]): T {
-  //   console.log("create", c, value, settings);
-  //   return new c(value, settings);
-  // }
-
 }

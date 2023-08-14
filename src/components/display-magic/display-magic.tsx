@@ -12,13 +12,7 @@ import {Parser} from "../../utils/Parser";
 export class DisplayMagic {
 
   @Prop() value: string;
-  @Prop() settings: {
-    type: string,
-    values: {
-      name: string,
-      value: any
-    }[]
-  }[];
+  @Prop() settings: string;
   @Prop() openStatus: boolean = false;
   @Prop() changingColors: boolean = true;
   @Prop() amountOfItems: number = 10;
@@ -34,10 +28,23 @@ export class DisplayMagic {
   @State() tablePage: number = 0;
 
   async connectedCallback() {
-    const obj = await Parser.getBestFit(this.value, this.settings);
+    let settings: {
+      type: string,
+      values: {
+        name: string,
+        value: any
+      }[]
+    }[];
+
+    try {
+      settings = JSON.parse(this.settings);
+    } catch (e) {
+    }
+
+    const obj = await Parser.getBestFit(this.value, settings);
     this.identifierObject = obj;
 
-    if(this.showSubcomponents) {
+    if (this.showSubcomponents) {
       this.items = obj.items;
       this.items.sort((a, b) => {
         if (a.priority > b.priority) return 1;
@@ -173,7 +180,8 @@ export class DisplayMagic {
                         </tbody>
                       </table>
                     </div>
-                    <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 max-h-12">
+                    <div
+                      class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 max-h-12">
                       {/*<div class="flex flex-1 justify-between sm:hidden">*/}
                       {/*  <a href="#"*/}
                       {/*     class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Previous</a>*/}
@@ -186,7 +194,8 @@ export class DisplayMagic {
                             Showing
                             <span class="font-medium"> {1 + this.tablePage * this.amountOfItems} </span>
                             to
-                            <span class="font-medium"> {this.tablePage * this.amountOfItems + this.amountOfItems - 1} </span>
+                            <span
+                              class="font-medium"> {this.tablePage * this.amountOfItems + this.amountOfItems - 1} </span>
                             of
                             <span class="font-medium"> {this.items.length} </span>
                             entries
@@ -217,8 +226,9 @@ export class DisplayMagic {
                                class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">9</a>
                             <a href="#"
                                class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">10</a>
-                            <a onClick={() => this.tablePage = Math.min(this.tablePage + 1, Math.floor(this.items.length / this.amountOfItems))}
-                               class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                            <a
+                              onClick={() => this.tablePage = Math.min(this.tablePage + 1, Math.floor(this.items.length / this.amountOfItems))}
+                              class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
                               <span class="sr-only">Next</span>
                               <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                 <path fill-rule="evenodd"
