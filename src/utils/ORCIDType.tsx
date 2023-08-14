@@ -9,6 +9,7 @@ export class ORCIDType extends GenericIdentifierType {
 
   private _orcidInfo: ORCIDInfo;
   private affiliationAt: Date = new Date(Date.now());
+  private showAffiliation: boolean = true;
 
   hasCorrectFormat(): boolean {
     console.log("Checking if this is a ORCiD " + this.value);
@@ -19,16 +20,14 @@ export class ORCIDType extends GenericIdentifierType {
     let parsed = await ORCIDInfo.getORCiDInfo(this.value);
     this._orcidInfo = parsed;
 
-    console.log("Settings: ")
-    console.log(this.settings);
-
     if (this.settings) {
       for (let i of this.settings) {
-        console.log(i)
         switch (i["name"]) {
           case "affiliationAt":
             this.affiliationAt = new Date(i["value"]);
-            console.log(this.affiliationAt)
+            break;
+          case "showAffiliation":
+            this.showAffiliation = i["value"];
             break;
         }
       }
@@ -56,7 +55,7 @@ export class ORCIDType extends GenericIdentifierType {
       console.log(e);
     }
 
-    if (parsed.getAffiliationsAt(this.affiliationAt) !== parsed.getAffiliationsAt(new Date(Date.now()))) {
+    if (parsed.getAffiliationsAt(this.affiliationAt) !== parsed.getAffiliationsAt(new Date()) && this.affiliationAt.toLocaleDateString("en-US") !== new Date().toLocaleDateString("en-US")) {
       const affiliationsThen = parsed.getAffiliationsAt(this.affiliationAt);
 
       for (let data of affiliationsThen) {
@@ -129,7 +128,7 @@ export class ORCIDType extends GenericIdentifierType {
             </g>
           </svg>
           <span class={"flex-none"}>
-             {this._orcidInfo.familyName}, {this._orcidInfo.givenNames}
+             {this._orcidInfo.familyName}, {this._orcidInfo.givenNames} {this.showAffiliation && this._orcidInfo.getAffiliationsAt(new Date()).length > 0 ? `(${this._orcidInfo.getAffiliationAsString(this._orcidInfo.getAffiliationsAt(new Date())[0], false)}${this._orcidInfo.getAffiliationsAt(this.affiliationAt).length > 0 && this._orcidInfo.getAffiliationsAt(this.affiliationAt)[0].organization !== this._orcidInfo.getAffiliationsAt(new Date())[0].organization ? `, then: ${this._orcidInfo.getAffiliationsAt(this.affiliationAt)[0].organization}` : ""})` : ""}
           </span>
       </span>
     )

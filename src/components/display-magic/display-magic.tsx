@@ -104,7 +104,7 @@ export class DisplayMagic {
                 Loading... {this.value}
               </span>
             : <details
-              class={"rounded-md shadow-md bg-white border text-clip inline flex-grow font-sans p-0.5 open:p-1 open:align-top"}
+              class={"rounded-md shadow-md bg-white border text-clip inline flex-grow font-sans p-0.5 open:p-1 open:align-top open:w-full"}
               open={this.openStatus}
               onToggle={this.toggleSubcomponents}>
               <summary class="mx-2 select-none list-inside bg-white text-clip overflow-x-clip mb-1">
