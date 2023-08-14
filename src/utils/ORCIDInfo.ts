@@ -247,21 +247,31 @@ export class ORCIDInfo {
    * Outputs the employment object of the person at a given date.
    * @param date The date to check.
    */
-  getAffiliationAt(date: Date): {
+  getAffiliationsAt(date: Date): {
     startDate: Date,
     endDate: Date | null,
     organization: string,
     department: string,
-  } | undefined {
+  }[] {
+    let affiliations: {
+      startDate: Date,
+      endDate: Date | null,
+      organization: string,
+      department: string,
+    }[] = [];
     for (const employment of this._employments) {
-      if (employment.startDate <= date && employment.endDate === null) return employment;
-      if (employment.startDate <= date && employment.endDate !== null && employment.endDate >= date) return employment;
+      if (employment.startDate <= date && employment.endDate === null) affiliations.push(employment);
+      if (employment.startDate <= date && employment.endDate !== null && employment.endDate >= date) affiliations.push(employment);
     }
-    return undefined;
+    return affiliations;
   }
 
-  getAffiliationAtString(date: Date, showDepartment: boolean = true): string | undefined {
-    const affiliation = this.getAffiliationAt(date);
+  getAffiliationAsString(affiliation: {
+    startDate: Date,
+    endDate: Date | null,
+    organization: string,
+    department: string,
+  }, showDepartment: boolean = true): string | undefined {
     if (affiliation === undefined || affiliation.organization === null) return undefined;
     else {
       if (showDepartment && affiliation.department !== null) return `${affiliation.organization} [${affiliation.department}]`;

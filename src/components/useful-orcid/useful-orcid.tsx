@@ -93,20 +93,25 @@ export class UsefulOrcid {
       {
         keyTitle: "Current Affiliation",
         keyTooltip: "The current affiliation of the person.",
-        value: parsed.getAffiliationAtString(new Date(Date.now()), true),
+        value: parsed.getAffiliationAsString(parsed.getAffiliationsAt(new Date())[0], true),
       }
     ]
 
-    if (parsed.getAffiliationAt(this.affiliationAt) !== parsed.getAffiliationAt(new Date(Date.now()))) {
-      this.items.push({
-        keyTitle: "Affiliation at " + this.affiliationAt.toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "numeric",
-          day: "numeric"
-        }),
-        keyTooltip: "The affiliation of the person at the given date.",
-        value: parsed.getAffiliationAtString(this.affiliationAt, true),
-      })
+    if (parsed.getAffiliationsAt(this.affiliationAt) !== parsed.getAffiliationsAt(new Date(Date.now()))) {
+      const affiliationsThen = parsed.getAffiliationsAt(this.affiliationAt);
+
+      for (let data of affiliationsThen) {
+        const affiliation = parsed.getAffiliationAsString(data)
+        this.items.push({
+          keyTitle: "Affiliation at " + this.affiliationAt.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "numeric",
+            day: "numeric"
+          }),
+          keyTooltip: "The affiliation of the person at the given date.",
+          value: affiliation,
+        })
+      }
     }
 
     if (parsed.emails) {

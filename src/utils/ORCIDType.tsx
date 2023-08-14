@@ -9,9 +9,6 @@ export class ORCIDType extends GenericIdentifierType {
 
   private _orcidInfo: ORCIDInfo;
   private affiliationAt: Date = new Date(Date.now());
-  private showAffiliation: boolean = true;
-  private showDepartment: boolean = false;
-  private showOrcid: boolean = false;
 
   hasCorrectFormat(): boolean {
     console.log("Checking if this is a ORCiD " + this.value);
@@ -29,17 +26,9 @@ export class ORCIDType extends GenericIdentifierType {
       for (let i of this.settings) {
         console.log(i)
         switch (i["name"]) {
-          case "showAffiliation":
-            this.showAffiliation = i["value"];
-            break;
-          case "showDepartment":
-            this.showDepartment = i["value"];
-            break;
-          case "showOrcid":
-            this.showOrcid = i["value"];
-            break;
           case "affiliationAt":
             this.affiliationAt = new Date(i["value"]);
+            console.log(this.affiliationAt)
             break;
         }
       }
@@ -56,20 +45,28 @@ export class ORCIDType extends GenericIdentifierType {
     this.actions.push(new FoldableAction(0, "Open ORCiD", `https://orcid.org/${parsed.orcid}`, "primary"))
 
     try {
-      const affiliation = parsed.getAffiliationAtString(new Date(Date.now()), true)
-      if (affiliation !== undefined && affiliation.length > 2) this.items.push(
-        new FoldableItem(50, "Current Affiliation", affiliation, "The current affiliation of the person."),
-      )
+      const affiliations = parsed.getAffiliationsAt(new Date(Date.now()));
+      for (let data of affiliations) {
+        const affiliation = parsed.getAffiliationAsString(data);
+        if (affiliation !== undefined && affiliation.length > 2) this.items.push(
+          new FoldableItem(50, "Current Affiliation", affiliation, "The current affiliation of the person."),
+        )
+      }
     } catch (e) {
       console.log(e);
     }
 
-    if (parsed.getAffiliationAt(this.affiliationAt) !== parsed.getAffiliationAt(new Date(Date.now()))) {
-      this.items.push(new FoldableItem(10, "Affiliation at " + this.affiliationAt.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "numeric",
-        day: "numeric"
-      }), parsed.getAffiliationAtString(this.affiliationAt, true), "The affiliation of the person at the given date."))
+    if (parsed.getAffiliationsAt(this.affiliationAt) !== parsed.getAffiliationsAt(new Date(Date.now()))) {
+      const affiliationsThen = parsed.getAffiliationsAt(this.affiliationAt);
+
+      for (let data of affiliationsThen) {
+        const affiliation = parsed.getAffiliationAsString(data)
+        this.items.push(new FoldableItem(49, "Affiliation at " + this.affiliationAt.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "numeric",
+          day: "numeric"
+        }), affiliation, "The affiliation of the person at the given date."))
+      }
     }
 
     if (parsed.emails) {
@@ -111,9 +108,30 @@ export class ORCIDType extends GenericIdentifierType {
 
   renderPreview(): FunctionalComponent<any> {
     return (
-      <beautiful-orcid orcid={this._orcidInfo.orcid} showAffiliation={this.showAffiliation}
-                       showDepartment={this.showDepartment} affiliationAt={this.affiliationAt}
-                       showOrcid={this.showOrcid}/>
+      // <beautiful-orcid orcid={this._orcidInfo.orcid} showAffiliation={this.showAffiliation}
+      //                  showDepartment={this.showDepartment} affiliationAt={this.affiliationAt}
+      //                  showOrcid={this.showOrcid}/>
+      <span class={"inline-flex items-center font-mono flex-row flex-nowrap px-1 align-top"}>
+          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"
+               class={"h-5 p-0.5 mr-2 flex-none"}>
+            <style type="text/css">
+              {`.st0{fill:#A6CE39;}`}
+              {`.st1{fill:#FFFFFF;}`}
+            </style>
+            <path class="st0"
+                  d="M256,128c0,70.7-57.3,128-128,128C57.3,256,0,198.7,0,128C0,57.3,57.3,0,128,0C198.7,0,256,57.3,256,128z"/>
+            <g>
+              <path class="st1" d="M86.3,186.2H70.9V79.1h15.4v48.4V186.2z"/>
+              <path class="st1" d="M108.9,79.1h41.6c39.6,0,57,28.3,57,53.6c0,27.5-21.5,53.6-56.8,53.6h-41.8V79.1z M124.3,172.4h24.5
+                        c34.9,0,42.9-26.5,42.9-39.7c0-21.5-13.7-39.7-43.7-39.7h-23.7V172.4z"/>
+              <path class="st1" d="M88.7,56.8c0,5.5-4.5,10.1-10.1,10.1c-5.6,0-10.1-4.6-10.1-10.1c0-5.6,4.5-10.1,10.1-10.1
+                        C84.2,46.7,88.7,51.3,88.7,56.8z"/>
+            </g>
+          </svg>
+          <span class={"flex-none"}>
+             {this._orcidInfo.familyName}, {this._orcidInfo.givenNames}
+          </span>
+      </span>
     )
   }
 

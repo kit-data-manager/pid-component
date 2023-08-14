@@ -1,4 +1,4 @@
-import {Component, Host, h, Prop, State} from '@stencil/core';
+import {Component, Host, h, Prop, State, Watch} from '@stencil/core';
 import {GenericIdentifierType} from "../../utils/GenericIdentifierType";
 import {FoldableItem} from "../../utils/FoldableItem";
 import {FoldableAction} from "../../utils/FoldableAction";
@@ -26,6 +26,14 @@ export class DisplayMagic {
   @State() loadSubcomponents: boolean = false;
   @State() displayStatus: "loading" | "loaded" | "error" = "loading";
   @State() tablePage: number = 0;
+
+  // reload and rerender the component when the value changes
+  @Watch("value")
+  watchValue(newValue: string, oldValue: string) {
+    console.log(`value changed from ${oldValue} to ${newValue}`);
+    this.displayStatus = "loading";
+    this.connectedCallback().then(r => console.log("done", r));
+  }
 
   async connectedCallback() {
     let settings: {
@@ -81,7 +89,7 @@ export class DisplayMagic {
 
   render() {
     return (
-      <Host class="inline flex-grow max-w-screen-lg font-sans flex-wrap">
+      <Host class="inline flex-grow max-w-full font-sans flex-wrap">
         {
           this.items.length === 0 && this.actions.length === 0
             ? this.identifierObject !== undefined
@@ -95,13 +103,8 @@ export class DisplayMagic {
                 </svg>
                 Loading... {this.value}
               </span>
-
-            // <div
-            //   class="rounded-md shadow-md border inline-flex flex-grow max-w-screen-lg font-sans p-0.5 mx-2 select-none list-inside bg-white text-clip overflow-x-clip">
-            //   {this.identifierObject !== undefined ? this.identifierObject.renderPreview() : this.value}
-            // </div>
             : <details
-              class={"rounded-md shadow-md bg-white border text-clip inline flex-grow max-w-screen-lg font-sans p-0.5 open:p-1 open:align-top"}
+              class={"rounded-md shadow-md bg-white border text-clip inline flex-grow font-sans p-0.5 open:p-1 open:align-top"}
               open={this.openStatus}
               onToggle={this.toggleSubcomponents}>
               <summary class="mx-2 select-none list-inside bg-white text-clip overflow-x-clip mb-1">
@@ -112,7 +115,7 @@ export class DisplayMagic {
                   ? <div>
                     <div
                       class="divide-y text-sm leading-6 bg-gray-100 m-1 p-0.5 max-h-72 overflow-y-scroll border rounded">
-                      <table class="text-left w-fit text-sm font-sans">
+                      <table class="text-left w-full text-sm font-sans">
                         <thead class="bg-slate-600 flex text-slate-200 w-full rounded-t">
                         <tr class="flex w-full rounded font-semibold">
                           <th class="px-1 w-1/3">Key</th>
@@ -122,8 +125,10 @@ export class DisplayMagic {
                         <tbody
                           class="bg-grey-100 flex flex-col items-center justify-between overflow-y-scroll w-full max-h-64 rounded-b">
                         {
-                          this.items.map((value, index) => {
-                            if (index >= this.amountOfItems) return;
+                          this.items.filter((_, index) => {
+                            // Filter out items that are not on the current page
+                            return index >= this.tablePage * this.amountOfItems && index < this.tablePage * this.amountOfItems + this.amountOfItems;
+                          }).map((value) => {
                             return (
                               <tr class={this.changingColors ? "odd:bg-slate-200 flex w-full" : "flex w-full"}>
                                 <td class={"overflow-x-scroll p-1 w-1/3 font-mono"}>
@@ -162,13 +167,14 @@ export class DisplayMagic {
                                                      levelOfSubcomponents={this.levelOfSubcomponents}
                                                      currentLevelOfSubcomponents={this.currentLevelOfSubcomponents + 1}
                                                      amountOfItems={this.amountOfItems}
-                                                     showSubcomponents={true}
+                                                     showSubcomponents={true} settings={this.settings}
                                       />
                                       : this.showSubcomponents && this.currentLevelOfSubcomponents === this.levelOfSubcomponents && !value.doNOTFold ?
                                         <display-magic value={value.value} changingColors={this.changingColors}
                                                        levelOfSubcomponents={this.currentLevelOfSubcomponents}
                                                        currentLevelOfSubcomponents={this.currentLevelOfSubcomponents}
                                                        amountOfItems={this.amountOfItems} showSubcomponents={false}
+                                                       settings={this.settings}
                                         />
                                         : value.value
                                   }
@@ -181,62 +187,58 @@ export class DisplayMagic {
                       </table>
                     </div>
                     <div
-                      class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 max-h-12">
-                      {/*<div class="flex flex-1 justify-between sm:hidden">*/}
-                      {/*  <a href="#"*/}
-                      {/*     class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Previous</a>*/}
-                      {/*  <a href="#"*/}
-                      {/*     class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Next</a>*/}
-                      {/*</div>*/}
-                      <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-                        <div>
+                      class="flex items-center justify-between border-t border-gray-200 bg-white px-1 py-1 sm:px-1 max-h-12">
+                      <div class="hidden sm:flex sm:flex-1 sm:flex-nowrap sm:items-center sm:justify-between text-sm">
+                        <div class={""}>
                           <p class="text-sm text-gray-700">
                             Showing
                             <span class="font-medium"> {1 + this.tablePage * this.amountOfItems} </span>
                             to
                             <span
-                              class="font-medium"> {this.tablePage * this.amountOfItems + this.amountOfItems - 1} </span>
+                              class="font-medium"> {Math.min(this.tablePage * this.amountOfItems + this.amountOfItems, this.items.length)} </span>
                             of
                             <span class="font-medium"> {this.items.length} </span>
                             entries
                           </p>
                         </div>
                         <div>
-                          <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-                            <a onClick={() => this.tablePage = Math.max(this.tablePage - 1, 0)}
-                               class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
-                              <span class="sr-only">Previous</span>
-                              <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                <path fill-rule="evenodd"
-                                      d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
-                                      clip-rule="evenodd"/>
-                              </svg>
-                            </a>
-                            <a href="#" aria-current="page"
-                               class="relative z-10 inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">1</a>
-                            <a href="#"
-                               class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">2</a>
-                            <a href="#"
-                               class="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex">3</a>
-                            <span
-                              class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">...</span>
-                            <a href="#"
-                               class="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex">8</a>
-                            <a href="#"
-                               class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">9</a>
-                            <a href="#"
-                               class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">10</a>
-                            <a
-                              onClick={() => this.tablePage = Math.min(this.tablePage + 1, Math.floor(this.items.length / this.amountOfItems))}
-                              class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
-                              <span class="sr-only">Next</span>
-                              <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                <path fill-rule="evenodd"
-                                      d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
-                                      clip-rule="evenodd"/>
-                              </svg>
-                            </a>
-                          </nav>
+                          {this.items.length > this.amountOfItems ?
+                            <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+                              <button onClick={() => {
+                                this.tablePage = Math.max(this.tablePage - 1, 0)
+                              }}
+                                      class="relative inline-flex items-center rounded-l-md px-1 py-1 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                                <span class="sr-only">Previous</span>
+                                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                  <path fill-rule="evenodd"
+                                        d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
+                                        clip-rule="evenodd"/>
+                                </svg>
+                              </button>
+                              {
+                                Array(Math.ceil(this.items.length / this.amountOfItems)).fill(0).map((_, index) => {
+                                  return (
+                                    <button onClick={() => this.tablePage = index}
+                                            class={index === this.tablePage ? "relative z-10 inline-flex items-center bg-indigo-600 px-2 py-1 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" : "relative hidden items-center px-2 py-1 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex"}>{index + 1}
+                                    </button>
+                                  )
+                                })
+                              }
+                              <button
+                                onClick={() => {
+                                  this.tablePage = Math.min(this.tablePage + 1, Math.floor(this.items.length / this.amountOfItems))
+                                }}
+                                class="relative inline-flex items-center rounded-r-md px-1 py-1 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                                <span class="sr-only">Next</span>
+                                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                  <path fill-rule="evenodd"
+                                        d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+                                        clip-rule="evenodd"/>
+                                </svg>
+                              </button>
+                            </nav>
+                            : ""
+                          }
                         </div>
                       </div>
                     </div>
@@ -278,23 +280,5 @@ export class DisplayMagic {
         }
       </Host>
     )
-
-
-    // return (
-    //   <Host class="inline-flex flex-grow w-fit max-w-screen-lg font-sans">
-    //     {this.items.length > 0 ?
-    //       <foldable-component items={this.items} actions={this.actions} openStatus={this.openStatus}
-    //                           changingColors={this.changingColors}
-    //                           levelOfSubcomponents={this.levelOfSubcomponents}
-    //                           currentLevelOfSubcomponents={this.currentLevelOfSubcomponents}>
-    //         {this.identifierObject.renderPreview()}
-    //         {/*<span slot="preview">{this.identifierObject.renderPreview()}</span>*/}
-    //         {/*<span slot="body">{this.identifierObject.renderBody()}</span>*/}
-    //       </foldable-component>
-    //       : this.value
-    //     }
-    //   </Host>
-    // );
   }
-
 }

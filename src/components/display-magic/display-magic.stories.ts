@@ -65,7 +65,7 @@ const meta: Meta = {
   },
   args: {
     value: "21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343",
-    settings: '[{"type":"ORCIDConfig","values":[{"name":"showAffiliation","value":true},{"name":"showOrcid","value":true}]}]',
+    settings: '[]',
     changingColors: true,
     openStatus: false,
     amountOfItems: 10,
@@ -118,6 +118,7 @@ export const Fallback: Story = {
 export const ORCIDInRecord = {
   args: {
     value: "21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6",
+    openStatus: true,
   }
 }
 
@@ -125,6 +126,14 @@ export const ORCIDInRecordWithoutLimit = {
   args: {
     value: "21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6",
     amountOfItems: 100,
+    openStatus: true,
+  }
+}
+
+export const ORCIDInRecordWithSettings = {
+  args: {
+    value: "21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6",
+    settings: '[{"type":"ORCIDConfig","values":[{"name":"affiliationAt","value":949363200000}]}]',
   }
 }
 
