@@ -88,6 +88,21 @@ export class DisplayMagic {
   }
 
   render() {
+    function copyValue(event: MouseEvent, value: string) {
+      navigator.clipboard.writeText(value)
+      let el = event.target as HTMLButtonElement
+      el.innerText = "✓ Copied!"
+      el.classList.remove("hover:bg-blue-200")
+      el.classList.remove("bg-white")
+      el.classList.add("bg-green-200")
+      setTimeout(() => {
+        el.innerText = "Copy"
+        el.classList.remove("bg-green-200")
+        el.classList.add("hover:bg-blue-200")
+        el.classList.add("bg-white")
+      }, 1500)
+    }
+
     return (
       <Host class="inline flex-grow max-w-full font-sans flex-wrap">
         {
@@ -104,22 +119,31 @@ export class DisplayMagic {
                 Loading... {this.value}
               </span>
             : <details
-              class={"rounded-md shadow-md bg-white border text-clip inline flex-grow font-sans p-0.5 open:p-1 open:align-top open:w-full"}
+              class={"rounded-md shadow-md bg-white border text-clip inline flex-grow font-sans p-0.5 open:p-1 open:align-top open:w-full ease-in-out transition-all duration-200"}
               open={this.openStatus}
               onToggle={this.toggleSubcomponents}>
-              <summary class="mx-2 select-none list-inside bg-white text-clip overflow-x-clip mb-1">
+              <summary class="mx-2 select-none list-inside bg-white text-clip overflow-x-clip py-1 space-x-3">
                 {this.identifierObject.renderPreview()}
+                {
+                  this.currentLevelOfSubcomponents === 0 ?
+                    <button
+                      class={"bg-white border border-slate-500 text-slate-800 font-medium font-mono text-sm rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex-none max-h-min align-top mr-2"}
+                      id={`copyButton-${this.identifierObject.value}`}
+                      onClick={(event) => copyValue(event, this.identifierObject.value)}>Copy
+                    </button>
+                    : ""
+                }
               </summary>
               {
                 this.items.length > 0
                   ? <div>
                     <div
                       class="divide-y text-sm leading-6 bg-gray-100 m-1 p-0.5 max-h-72 overflow-y-scroll border rounded">
-                      <table class="text-left w-full text-sm font-sans">
+                      <table class="text-left w-full text-sm font-sans select-text">
                         <thead class="bg-slate-600 flex text-slate-200 w-full rounded-t">
                         <tr class="flex w-full rounded font-semibold">
-                          <th class="px-1 w-1/3">Key</th>
-                          <th class="px-1 w-2/3">Value</th>
+                          <th class="px-1 w-1/4">Key</th>
+                          <th class="px-1 w-3/4">Value</th>
                         </tr>
                         </thead>
                         <tbody
@@ -131,7 +155,7 @@ export class DisplayMagic {
                           }).map((value) => {
                             return (
                               <tr class={this.changingColors ? "odd:bg-slate-200 flex w-full" : "flex w-full"}>
-                                <td class={"overflow-x-scroll p-1 w-1/3 font-mono"}>
+                                <td class={"overflow-x-scroll p-1 w-1/4 font-mono"}>
                                   <a role="link"
                                      class="right-0 focus:outline-none focus:ring-gray-300 rounded-md focus:ring-offset-2 focus:ring-2 focus:bg-gray-200 relative md:mt-0 inline flex-nowrap"
                                      onMouseOver={this.showTooltip} onFocus={this.showTooltip}
@@ -160,7 +184,8 @@ export class DisplayMagic {
                                     >{value.keyTooltip}</p>
                                   </a>
                                 </td>
-                                <td class={"align-top text-clip text-sm overflow-x-scroll p-1 w-2/3"}>
+                                <td class={"align-top overflow-x-scroll text-sm p-1 w-3/4 select-text flex "}>
+                                  <span class={"font-mono flex-grow"}>
                                   {
                                     this.loadSubcomponents && this.showSubcomponents && !value.doNOTFold ?
                                       <display-magic value={value.value} changingColors={this.changingColors}
@@ -178,6 +203,12 @@ export class DisplayMagic {
                                         />
                                         : value.value
                                   }
+                                  </span>
+                                  <button
+                                    class={"bg-white border border-slate-500 text-slate-800 font-medium font-mono text-sm rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex-none max-h-min align-top mx-2"}
+                                    id={`copyButton-${value.value}`}
+                                    onClick={(event) => copyValue(event, value.value)}>Copy
+                                  </button>
                                 </td>
                               </tr>
                             )

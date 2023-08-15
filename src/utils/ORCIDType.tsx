@@ -127,8 +127,16 @@ export class ORCIDType extends GenericIdentifierType {
                         C84.2,46.7,88.7,51.3,88.7,56.8z"/>
             </g>
           </svg>
-          <span class={"flex-none"}>
-             {this._orcidInfo.familyName}, {this._orcidInfo.givenNames} {this.showAffiliation && this._orcidInfo.getAffiliationsAt(new Date()).length > 0 ? `(${this._orcidInfo.getAffiliationAsString(this._orcidInfo.getAffiliationsAt(new Date())[0], false)}${this._orcidInfo.getAffiliationsAt(this.affiliationAt).length > 0 && this._orcidInfo.getAffiliationsAt(this.affiliationAt)[0].organization !== this._orcidInfo.getAffiliationsAt(new Date())[0].organization ? `, then: ${this._orcidInfo.getAffiliationsAt(this.affiliationAt)[0].organization}` : ""})` : ""}
+          <span class={"flex-none overflow-x-hidden text-ellipsis ..."}>
+             {this._orcidInfo.familyName}, {this._orcidInfo.givenNames} {
+            this.showAffiliation && this._orcidInfo.getAffiliationsAt(new Date()).length > 0
+              ? `(${this._orcidInfo.getAffiliationAsString(this._orcidInfo.getAffiliationsAt(new Date())[0], false)
+              }${
+                this._orcidInfo.getAffiliationsAt(this.affiliationAt).length > 0 &&
+                (this._orcidInfo.getAffiliationsAt(this.affiliationAt)[0].organization !== this._orcidInfo.getAffiliationsAt(new Date())[0].organization)
+                  ? `, then: ${this._orcidInfo.getAffiliationsAt(this.affiliationAt)[0].organization}`
+                  : ""})`
+              : ""}
           </span>
       </span>
     )
