@@ -1,3 +1,5 @@
+import {dataCache} from "./DataCache";
+
 /**
  * This file contains the ORCIDInfo class, which is used to store information about an ORCiD.
  */
@@ -297,12 +299,7 @@ export class ORCIDInfo {
     if (orcid.match("^(https:\/\/orcid.org\/)?[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]$") !== null) orcid = orcid.replace("https://orcid.org/", "");
 
     console.log("Fetching ORCID data for " + orcid);
-    const response = await fetch(`https://pub.orcid.org/v3.0/${orcid}`, {
-      headers: {
-        "Accept": "application/json",
-        // "Access-Control-Allow-Origin": "orcid.org"
-      }
-    })
+    const response = await dataCache.fetch(`https://pub.orcid.org/v3.0/${orcid}`)
     const rawOrcidJSON = await response.json();
 
     // Parse family name and given names

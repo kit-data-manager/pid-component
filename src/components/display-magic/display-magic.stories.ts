@@ -70,7 +70,7 @@ const meta: Meta = {
     openStatus: false,
     amountOfItems: 10,
     showSubcomponents: true,
-    levelOfSubcomponents: 2,
+    levelOfSubcomponents: 1,
     currentLevelOfSubcomponents: 0,
   }
 }

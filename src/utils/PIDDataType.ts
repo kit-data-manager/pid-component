@@ -1,5 +1,6 @@
 import {locationType, PID} from "./PID";
 import {typeMap, unresolvables} from "./utils";
+import {dataCache} from "./DataCache";
 
 /**
  * This class represents a PID data type.
@@ -158,7 +159,7 @@ export class PIDDataType {
                     try {
                         if (newLocation.view === "json") {
                             // if view is json then fetch the data from the link (ePIC data type registry) and save them into the temp object
-                            const res = await fetch(newLocation.href);
+                            const res = await dataCache.fetch(newLocation.href);
                             newLocation.resolvedData = await res.json();
                             tempDataType.ePICJSON = newLocation.resolvedData;
                             tempDataType.name = newLocation.resolvedData["name"];

@@ -1,6 +1,7 @@
 import {PIDRecord} from "./PIDRecord";
 import {PIDDataType} from "./PIDDataType";
 import {unresolvables, handleMap} from "./utils";
+import {dataCache} from "./DataCache";
 
 /**
  * This class represents the PID itself.
@@ -88,7 +89,7 @@ export class PID {
         else if (handleMap.has(this)) return handleMap.get(this);
         else {
             console.log(`Resolving PID ${this.toString()}`);
-            const raw = await fetch(`https://hdl.handle.net/api/handles/${this.prefix}/${this.suffix}#resolve`);
+            const raw = await dataCache.fetch(`https://hdl.handle.net/api/handles/${this.prefix}/${this.suffix}#resolve`);
             if (raw.status !== 200) {
                 console.error(`PID ${this.toString()} probably doesn't exist`);
                 unresolvables.add(this);
