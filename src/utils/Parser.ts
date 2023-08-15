@@ -3,6 +3,7 @@ import {HandleType} from "./HandleType";
 import {FallbackType} from "./FallbackType";
 import {ORCIDType} from "./ORCIDType";
 import {DateType} from "./DateType";
+import {URLType} from "./URLType";
 
 /**
  * Class that handles the parsing of a given value and returns the best fitting component object
@@ -20,6 +21,7 @@ export class Parser {
     DateType,
     ORCIDType,
     HandleType,
+    URLType,
     FallbackType,
   ];
 

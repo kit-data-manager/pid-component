@@ -36,13 +36,44 @@ export namespace Components {
         "showOrcid": boolean;
     }
     interface DisplayMagic {
+        /**
+          * The amount of items to show in the table per page. Defaults to 10. (optional)
+          * @type {number}
+         */
         "amountOfItems": number;
+        /**
+          * Determines whether the colors of the table inside the component should change or not. Defaults to true. (optional)
+          * @type {boolean}
+         */
         "changingColors": boolean;
+        /**
+          * The current level of subcomponents. Defaults to 0. (optional)
+          * @type {number}
+         */
         "currentLevelOfSubcomponents": number;
+        /**
+          * The total amount of levels of subcomponents to show. Defaults to 1. (optional)
+          * @type {number}
+         */
         "levelOfSubcomponents": number;
+        /**
+          * Determines whether the component is open or not by default. Defaults to false. (optional)
+          * @type {boolean}
+         */
         "openStatus": boolean;
+        /**
+          * A stringified JSON object containing settings for this component. The resulting object is passed to every subcomponent, so that every component has the same settings. Values and the according type are defined by the components themselves. (optional)  Schema: ```typescript {  type: string,  values: {   name: string,   value: any  }[] }[] ```
+          * @type {string}
+         */
         "settings": string;
+        /**
+          * Determines whether subcomponents should generally be shown or not. If set to true but the total level of subcomponents is reached, subcomponents will not be shown. Defaults to true. (optional)
+         */
         "showSubcomponents": boolean;
+        /**
+          * The value to parse, evaluate and render.
+          * @type {string}
+         */
         "value": string;
     }
     interface FoldableComponent {
@@ -228,13 +259,44 @@ declare namespace LocalJSX {
         "showOrcid"?: boolean;
     }
     interface DisplayMagic {
+        /**
+          * The amount of items to show in the table per page. Defaults to 10. (optional)
+          * @type {number}
+         */
         "amountOfItems"?: number;
+        /**
+          * Determines whether the colors of the table inside the component should change or not. Defaults to true. (optional)
+          * @type {boolean}
+         */
         "changingColors"?: boolean;
+        /**
+          * The current level of subcomponents. Defaults to 0. (optional)
+          * @type {number}
+         */
         "currentLevelOfSubcomponents"?: number;
+        /**
+          * The total amount of levels of subcomponents to show. Defaults to 1. (optional)
+          * @type {number}
+         */
         "levelOfSubcomponents"?: number;
+        /**
+          * Determines whether the component is open or not by default. Defaults to false. (optional)
+          * @type {boolean}
+         */
         "openStatus"?: boolean;
+        /**
+          * A stringified JSON object containing settings for this component. The resulting object is passed to every subcomponent, so that every component has the same settings. Values and the according type are defined by the components themselves. (optional)  Schema: ```typescript {  type: string,  values: {   name: string,   value: any  }[] }[] ```
+          * @type {string}
+         */
         "settings"?: string;
+        /**
+          * Determines whether subcomponents should generally be shown or not. If set to true but the total level of subcomponents is reached, subcomponents will not be shown. Defaults to true. (optional)
+         */
         "showSubcomponents"?: boolean;
+        /**
+          * The value to parse, evaluate and render.
+          * @type {string}
+         */
         "value"?: string;
     }
     interface FoldableComponent {

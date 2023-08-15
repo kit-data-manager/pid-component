@@ -11,30 +11,124 @@ import {Parser} from "../../utils/Parser";
 })
 export class DisplayMagic {
 
+  /**
+   * The value to parse, evaluate and render.
+   * @type {string}
+   */
   @Prop() value: string;
+  /**
+   * A stringified JSON object containing settings for this component.
+   * The resulting object is passed to every subcomponent, so that every component has the same settings.
+   * Values and the according type are defined by the components themselves.
+   * (optional)
+   *
+   * Schema:
+   * ```typescript
+   * {
+   *  type: string,
+   *  values: {
+   *   name: string,
+   *   value: any
+   *  }[]
+   * }[]
+   * ```
+   * @type {string}
+   */
   @Prop() settings: string;
+
+  /**
+   * Determines whether the component is open or not by default.
+   * Defaults to false.
+   * (optional)
+   * @type {boolean}
+   */
   @Prop() openStatus: boolean = false;
+
+  /**
+   * Determines whether the colors of the table inside the component should change or not.
+   * Defaults to true.
+   * (optional)
+   * @type {boolean}
+   */
   @Prop() changingColors: boolean = true;
+
+  /**
+   * The amount of items to show in the table per page.
+   * Defaults to 10.
+   * (optional)
+   * @type {number}
+   */
   @Prop() amountOfItems: number = 10;
+
+  /**
+   * The total amount of levels of subcomponents to show.
+   * Defaults to 1.
+   * (optional)
+   * @type {number}
+   */
   @Prop() levelOfSubcomponents: number = 1;
+
+  /**
+   * The current level of subcomponents.
+   * Defaults to 0.
+   * (optional)
+   * @type {number}
+   */
   @Prop() currentLevelOfSubcomponents: number = 0;
+
+  /**
+   * Determines whether subcomponents should generally be shown or not.
+   * If set to true but the total level of subcomponents is reached, subcomponents will not be shown.
+   * Defaults to true.
+   * (optional)
+   */
   @Prop() showSubcomponents: boolean = true;
 
+  /**
+   * Stores the parsed identifier object.
+   */
   @State() identifierObject: GenericIdentifierType;
+
+  /**
+   * Lists all the items to show in the table.
+   */
   @State() items: FoldableItem[] = [];
+
+  /**
+   * Lists all the actions to show in the table.
+   */
   @State() actions: FoldableAction[] = [];
+
+  /**
+   * Determines whether the subcomponents should be loaded or not.
+   */
   @State() loadSubcomponents: boolean = false;
+
+  /**
+   * The current status of the component.
+   * Can be "loading", "loaded" or "error".
+   * Defaults to "loading".
+   */
   @State() displayStatus: "loading" | "loaded" | "error" = "loading";
+
+  /**
+   * The current page of the table.
+   */
   @State() tablePage: number = 0;
 
-  // reload and rerender the component when the value changes
+  /**
+   * Watches the value property and calls connectedCallback() if it changes.
+   * This is important for the different pages inside the table, since the magic-display components are not rerendered by default on value or state change.
+   */
   @Watch("value")
-  watchValue(newValue: string, oldValue: string) {
-    console.log(`value changed from ${oldValue} to ${newValue}`);
+  async watchValue() {
     this.displayStatus = "loading";
-    this.connectedCallback().then(r => console.log("done", r));
+    await this.connectedCallback();
   }
 
+  /**
+   * Parses the value and settings, generates the items and actions and sets the displayStatus to "loaded".
+   */
   async connectedCallback() {
     let settings: {
       type: string,
@@ -49,14 +143,20 @@ export class DisplayMagic {
     } catch (e) {
     }
 
+    // Get an object from the best fitting class implementing GenericIdentifierType
     const obj = await Parser.getBestFit(this.value, settings);
     this.identifierObject = obj;
 
+    // Generate items and actions if subcomponents should be shown
     if (this.showSubcomponents) {
       this.items = obj.items;
       this.items.sort((a, b) => {
+
+        // Sort by priority defined in the specific implementation of GenericIdentifierType (lower is better)
         if (a.priority > b.priority) return 1;
         if (a.priority < b.priority) return -1;
+
+        // Sort by priority defined by the index in the array of all data types in the parser (lower is better)
         if (a.estimatedTypePriority > b.estimatedTypePriority) return 1;
         if (a.estimatedTypePriority < b.estimatedTypePriority) return -1;
       });
@@ -66,11 +166,17 @@ export class DisplayMagic {
     this.displayStatus = "loaded";
   }
 
+  /**
+   * Toggles the loadSubcomponents property if the current level of subcomponents is not the total level of subcomponents.
+   */
   private toggleSubcomponents = () => {
-    // console.log(`currentLevelOfSubcomponents: ${this.currentLevelOfSubcomponents}, levelOfSubcomponents: ${this.levelOfSubcomponents}, showSubcomponents: ${this.showSubcomponents}`);
     if (this.showSubcomponents && (this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0)) this.loadSubcomponents = !this.loadSubcomponents;
   }
 
+  /**
+   * Shows the tooltip of the hovered element.
+   * @param event The event that triggered this function.
+   */
   private showTooltip = (event: Event) => {
     let target = event.target as HTMLElement;
     do {
@@ -79,6 +185,10 @@ export class DisplayMagic {
     if (target !== null) target.children[1].classList.remove("hidden");
   }
 
+  /**
+   * Hides the tooltip of the hovered element.
+   * @param event The event that triggered this function.
+   */
   private hideTooltip = (event: Event) => {
     let target = event.target as HTMLElement;
     do {
@@ -87,7 +197,15 @@ export class DisplayMagic {
     if (target !== null) target.children[1].classList.add("hidden");
   }
 
+  /**
+   * Renders the component.
+   */
   render() {
+    /**
+     * Copies the given value to the clipboard and changes the text of the button to "✓ Copied!" for 1.5 seconds.
+     * @param event The event that triggered this function.
+     * @param value The value to copy to the clipboard.
+     */
     function copyValue(event: MouseEvent, value: string) {
       navigator.clipboard.writeText(value)
       let el = event.target as HTMLButtonElement
@@ -106,8 +224,10 @@ export class DisplayMagic {
     return (
       <Host class="inline flex-grow max-w-full font-sans flex-wrap">
         {
+          // Check if there are any items or actions to show
           this.items.length === 0 && this.actions.length === 0
-            ? this.identifierObject !== undefined
+            ? this.identifierObject !== undefined && this.displayStatus === "loaded"
+              // If loaded but no items available render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
               ? this.identifierObject.renderPreview()
               : <span class={"inline-flex items-center transition ease-in-out"}>
                 <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-black"
@@ -123,8 +243,12 @@ export class DisplayMagic {
               open={this.openStatus}
               onToggle={this.toggleSubcomponents}>
               <summary class="mx-2 select-none list-inside bg-white text-clip overflow-x-clip py-1 space-x-3">
-                {this.identifierObject.renderPreview()}
                 {
+                  // Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
+                  this.identifierObject.renderPreview()
+                }
+                {
+                  // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
                   this.currentLevelOfSubcomponents === 0 ?
                     <button
                       class={"bg-white border border-slate-500 text-slate-800 font-medium font-mono text-sm rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex-none max-h-min align-top mr-2"}
@@ -135,6 +259,7 @@ export class DisplayMagic {
                 }
               </summary>
               {
+                // If there are any items to show, render the table
                 this.items.length > 0
                   ? <div>
                     <div
@@ -153,6 +278,7 @@ export class DisplayMagic {
                             // Filter out items that are not on the current page
                             return index >= this.tablePage * this.amountOfItems && index < this.tablePage * this.amountOfItems + this.amountOfItems;
                           }).map((value) => {
+                            // Render a row for every item
                             return (
                               <tr class={this.changingColors ? "odd:bg-slate-200 flex w-full" : "flex w-full"}>
                                 <td class={"overflow-x-scroll p-1 w-1/4 font-mono"}>
@@ -187,6 +313,7 @@ export class DisplayMagic {
                                 <td class={"align-top overflow-x-scroll text-sm p-1 w-3/4 select-text flex "}>
                                   <span class={"font-mono flex-grow"}>
                                   {
+                                    // Load a foldable subcomponent if subcomponents are enabled (show subComponents) and the current level of subcomponents is not the total level of subcomponents. If the subcomponent is on the bottom level of the hierarchy render just a preview. If the value should not be resolved (isFoldable), just render the value as text.
                                     this.loadSubcomponents && this.showSubcomponents && !value.doNOTFold ?
                                       <display-magic value={value.value} changingColors={this.changingColors}
                                                      levelOfSubcomponents={this.levelOfSubcomponents}

@@ -58,10 +58,6 @@ export class HandleType extends GenericIdentifierType {
     return this._pidRecord.values.length > 0;
   }
 
-  renderBody(): FunctionalComponent<any> {
-    return undefined;
-  }
-
   renderPreview(): FunctionalComponent<any> {
     return (
       <span>

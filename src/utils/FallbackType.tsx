@@ -14,10 +14,6 @@ export class FallbackType extends GenericIdentifierType {
     return false;
   }
 
-  renderBody(): FunctionalComponent<any> {
-    return undefined;
-  }
-
   renderPreview(): FunctionalComponent<any> {
     return (
       <span>{this.value}</span>

@@ -41,7 +41,7 @@ export class ORCIDType extends GenericIdentifierType {
       new FoldableItem(2, "Given Names", parsed.givenNames.toString(), "The given names of the person."),
     ])
 
-    this.actions.push(new FoldableAction(0, "Open ORCiD", `https://orcid.org/${parsed.orcid}`, "primary"))
+    this.actions.push(new FoldableAction(0, "Open ORCiD profile", `https://orcid.org/${parsed.orcid}`, "primary"))
 
     try {
       const affiliations = parsed.getAffiliationsAt(new Date(Date.now()));
@@ -101,15 +101,8 @@ export class ORCIDType extends GenericIdentifierType {
     return this._orcidInfo.ORCiDJSON !== undefined;
   }
 
-  renderBody(): FunctionalComponent<any> {
-    return undefined;
-  }
-
   renderPreview(): FunctionalComponent<any> {
     return (
-      // <beautiful-orcid orcid={this._orcidInfo.orcid} showAffiliation={this.showAffiliation}
-      //                  showDepartment={this.showDepartment} affiliationAt={this.affiliationAt}
-      //                  showOrcid={this.showOrcid}/>
       <span class={"inline-flex items-center font-mono flex-row flex-nowrap px-1 align-top"}>
           <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"
                class={"h-5 p-0.5 mr-2 flex-none"}>
