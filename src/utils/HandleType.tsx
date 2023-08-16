@@ -8,80 +8,74 @@ import {FoldableItem} from "./FoldableItem";
 import {FoldableAction} from "./FoldableAction";
 
 export class HandleType extends GenericIdentifierType {
-  private _parts: {
-    text: string,
-    color: HSLColor,
-    nextExists: boolean
-  }[] = [];
+    private _parts: {
+        text: string,
+        color: HSLColor,
+        nextExists: boolean
+    }[] = [];
 
-  private _pidRecord: PIDRecord;
+    private _pidRecord: PIDRecord;
 
-  hasCorrectFormat(): boolean {
-    console.log("Checking if this is a Handle " + this.value);
-    return PID.isPID(this.value);
-  }
-
-  async init(): Promise<void> {
-    console.log("Initializing Handle " + this.value);
-    const pid = PID.getPIDFromString(this.value);
-
-    // Generate the colors for the parts of the PID
-    this._parts = [{
-      text: pid.prefix,
-      color: await HSLColor.generateColor(pid.prefix),
-      nextExists: true
-    }, {
-      text: pid.suffix,
-      color: await HSLColor.generateColor(pid.suffix),
-      nextExists: false
-    }]
-
-    // Resolve the PID
-    const resolved = await pid.resolve();
-    this._pidRecord = resolved;
-    for (const value of resolved.values) {
-      if (value.type instanceof PIDDataType) {
-        this.items.push(new FoldableItem(0, value.type.name, value.data.value, value.type.description, value.type.redirectURL, value.type.regex))
-      }
+    hasCorrectFormat(): boolean {
+        return PID.isPID(this.value);
     }
 
-    this.actions.push(new FoldableAction(0, "Open in FAIR-DOscope", `https://kit-data-manager.github.io/fairdoscope/?pid=${resolved.pid.toString()}`, "primary"))
+    async init(): Promise<void> {
+        const pid = PID.getPIDFromString(this.value);
 
-    console.log(this._pidRecord)
-    console.log(this.items)
-    console.log(this.actions)
-    console.log("Finished loading...");
-    return Promise.resolve(undefined);
-  }
+        // Generate the colors for the parts of the PID
+        this._parts = [{
+            text: pid.prefix,
+            color: await HSLColor.generateColor(pid.prefix),
+            nextExists: true
+        }, {
+            text: pid.suffix,
+            color: await HSLColor.generateColor(pid.suffix),
+            nextExists: false
+        }]
 
-  isResolvable(): boolean {
-    return this._pidRecord.values.length > 0;
-  }
+        // Resolve the PID
+        const resolved = await pid.resolve();
+        this._pidRecord = resolved;
+        for (const value of resolved.values) {
+            if (value.type instanceof PIDDataType) {
+                this.items.push(new FoldableItem(0, value.type.name, value.data.value, value.type.description, value.type.redirectURL, value.type.regex))
+            }
+        }
 
-  renderPreview(): FunctionalComponent<any> {
-    return (
-      <span>
-        {this._parts.map((element) => {
-            return (
-              <span>
-                <span
-                  style={{
-              color: "hsl(" + element.color.hue + "," + element.color.sat + "%," + element.color.lum + "%)",
-            }}
-            class={`font-mono font-bold rounded-md`}>
-            {element.text}
+        this.actions.push(new FoldableAction(0, "Open in FAIR-DOscope", `https://kit-data-manager.github.io/fairdoscope/?pid=${resolved.pid.toString()}`, "primary"))
+
+        return;
+    }
+
+    isResolvable(): boolean {
+        return this._pidRecord.values.length > 0;
+    }
+
+    renderPreview(): FunctionalComponent<any> {
+        return (
+            <span class={"font-mono font-bold"}>
+                {this._parts.map((element) => {
+                    return (
+                        <span class={"font-bold font-mono"}>
+                            <span
+                                style={{
+                                    color: "hsl(" + element.color.hue + "," + element.color.sat + "%," + element.color.lum + "%)",
+                                }}
+                                class={`font-mono font-bold rounded-md`}>
+                            {element.text}
+                            </span>
+                            <span class={"font-mono font-bold text-gray-800 mx-0.5"}>
+                                {element.nextExists ? "/" : ""}
+                            </span>
+                      </span>
+                    )
+                })}
             </span>
-            <span class={"font-mono font-bold text-gray-800 mx-0.5"}>
-              {element.nextExists ? "/" : ""}
-              </span>
-              </span>
-          )
-          })}
-      </span>
-    )
-  }
+        )
+    }
 
-  getSettingsKey(): string {
-    return "HandleConfig";
-  }
+    getSettingsKey(): string {
+        return "HandleConfig";
+    }
 }

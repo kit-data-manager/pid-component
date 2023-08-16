@@ -1,6 +1,6 @@
 import {locationType, PID} from "./PID";
 import {typeMap, unresolvables} from "./utils";
-import {dataCache} from "./DataCache";
+import {dataCache} from "./utils";
 
 /**
  * This class represents a PID data type.
@@ -105,14 +105,14 @@ export class PIDDataType {
 
         // Check if PID is resolvable
         if (!pid.isResolvable()) {
-            console.log(`PID ${pid.toString()} is not resolvable`);
+            console.debug(`PID ${pid.toString()} is not resolvable`);
             return undefined;
         }
 
         // Resolve PID and make sure it isn't undefined
         const pidRecord = await pid.resolve()
         if (pidRecord === undefined) {
-            console.log(`PID ${pid.toString()} could not be resolved`);
+            console.debug(`PID ${pid.toString()} could not be resolved`);
             unresolvables.add(pid);
             return undefined;
         }

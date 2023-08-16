@@ -12,7 +12,6 @@ export class ORCIDType extends GenericIdentifierType {
   private showAffiliation: boolean = true;
 
   hasCorrectFormat(): boolean {
-    console.log("Checking if this is a ORCiD " + this.value);
     return ORCIDInfo.isORCiD(this.value);
   }
 
@@ -103,7 +102,7 @@ export class ORCIDType extends GenericIdentifierType {
 
   renderPreview(): FunctionalComponent<any> {
     return (
-      <span class={"inline-flex items-center font-mono flex-row flex-nowrap px-1 align-top"}>
+      <span class={"inline-flex items-center font-mono px-1 flex-nowrap align-top max-w-md truncate"}>
           <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"
                class={"h-5 p-0.5 mr-2 flex-none"}>
             <style type="text/css">
@@ -120,12 +119,13 @@ export class ORCIDType extends GenericIdentifierType {
                         C84.2,46.7,88.7,51.3,88.7,56.8z"/>
             </g>
           </svg>
-          <span class={"flex-none overflow-x-hidden text-ellipsis ..."}>
+          <span class={"flex-none overflow-x-hidden max-w-lg truncate"}>
              {this._orcidInfo.familyName}, {this._orcidInfo.givenNames} {
             this.showAffiliation && this._orcidInfo.getAffiliationsAt(new Date()).length > 0
               ? `(${this._orcidInfo.getAffiliationAsString(this._orcidInfo.getAffiliationsAt(new Date())[0], false)
               }${
                 this._orcidInfo.getAffiliationsAt(this.affiliationAt).length > 0 &&
+                this.affiliationAt.toLocaleDateString() !== new Date().toLocaleDateString() &&
                 (this._orcidInfo.getAffiliationsAt(this.affiliationAt)[0].organization !== this._orcidInfo.getAffiliationsAt(new Date())[0].organization)
                   ? `, then: ${this._orcidInfo.getAffiliationsAt(this.affiliationAt)[0].organization}`
                   : ""})`

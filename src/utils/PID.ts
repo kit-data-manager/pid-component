@@ -1,7 +1,6 @@
 import {PIDRecord} from "./PIDRecord";
 import {PIDDataType} from "./PIDDataType";
-import {unresolvables, handleMap} from "./utils";
-import {dataCache} from "./DataCache";
+import {unresolvables, handleMap, dataCache} from "./utils";
 
 /**
  * This class represents the PID itself.
@@ -55,7 +54,8 @@ export class PID {
      * @returns {boolean} True if the string could be a PID, false if not.
      */
     public static isPID(text: string): boolean {
-        return text.match("^([0-9,A-Z,a-z])+(\.([0-9,A-Z,a-z])+)*\/([!-~])+$") !== null;
+        return new RegExp("^([0-9,A-Za-z])+(\.([0-9,A-Za-z])+)*\/([!-~])+$").test(text);
+        // return text.match("^([0-9,A-Z,a-z])+(\.([0-9,A-Z,a-z])+)*\/([!-~])+$") !== null;
     }
 
     /**
@@ -88,10 +88,9 @@ export class PID {
         if (unresolvables.has(this)) return undefined;
         else if (handleMap.has(this)) return handleMap.get(this);
         else {
-            console.log(`Resolving PID ${this.toString()}`);
             const raw = await dataCache.fetch(`https://hdl.handle.net/api/handles/${this.prefix}/${this.suffix}#resolve`);
             if (raw.status !== 200) {
-                console.error(`PID ${this.toString()} probably doesn't exist`);
+                console.log(`PID ${this.toString()} probably doesn't exist`);
                 unresolvables.add(this);
                 return undefined;
             }
