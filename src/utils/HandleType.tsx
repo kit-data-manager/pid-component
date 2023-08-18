@@ -54,7 +54,7 @@ export class HandleType extends GenericIdentifierType {
 
     renderPreview(): FunctionalComponent<any> {
         return (
-            <span class={"font-mono font-bold"}>
+            <span class={"font-mono font-bold bg-white p-0.5 rounded-md"}>
                 {this._parts.map((element) => {
                     return (
                         <span class={"font-bold font-mono"}>
