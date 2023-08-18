@@ -116,7 +116,7 @@ export namespace Components {
         /**
           * An optional custom link to use instead of the default one which links to the FAIR DO Scope.
          */
-        "linkTo": "disable" | "fairdoscope" | "resolveRef";
+        "linkTo": 'disable' | 'fairdoscope' | 'resolveRef';
     }
     interface IntelligentHandle {
         /**
@@ -339,7 +339,7 @@ declare namespace LocalJSX {
         /**
           * An optional custom link to use instead of the default one which links to the FAIR DO Scope.
          */
-        "linkTo"?: "disable" | "fairdoscope" | "resolveRef";
+        "linkTo"?: 'disable' | 'fairdoscope' | 'resolveRef';
     }
     interface IntelligentHandle {
         /**
