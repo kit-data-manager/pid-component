@@ -2,7 +2,7 @@ import { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 
 const meta: Meta = {
-  title: 'display-magic',
+  title: 'pid-component/display-magic',
   component: 'display-magic',
   // tags: ["autodocs"],
   argTypes: {
