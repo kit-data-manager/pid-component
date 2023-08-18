@@ -41,10 +41,23 @@ export class DataCache {
         return response.json();
       } else {
         // If the resource is not cached, fetch it from the network, cache and return it.
-        // console.log(`Cache ${this.name} miss for ${url} - fetching from network`)
-        const response = await fetch(url, init);
+        let response: Response;
+        const parts = url.split('://');
+        if (parts[0] !== 'https') {
+          // if not https, make it https
+          response = await fetch(`https://${parts[1]}`, init);
+          if (!response) {
+            // if https fails, try http as fallback
+            console.log(`404 for https://${parts[1]} - trying http://${parts[1]}`);
+            response = await fetch(`http://${parts[1]}`, init);
+          }
+        } else {
+          // if https, use it
+          response = await fetch(url, init);
+        }
+
+        // add to cache and return
         await this.cacheInstance.put(url, response.clone());
-        // console.log(`Cache ${this.name} updated for ${url}`, response);
         return response.json();
       }
     } else {
