@@ -1,12 +1,10 @@
 import {PID} from "./PID";
 import {PIDDataType} from "./PIDDataType";
 import {PIDRecord} from "./PIDRecord";
-// import {init} from "./DataCache";
 
 /**
  * A cache of all fetched data.
  */
-// export const dataCache = await DataCache.init("pid-component");
 
 /**
  * A map of all PID data types and their PIDs.

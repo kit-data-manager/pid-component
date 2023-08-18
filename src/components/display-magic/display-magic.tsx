@@ -212,19 +212,50 @@ export class DisplayMagic {
      * @param value The value to copy to the clipboard.
      */
     function copyValue(event: MouseEvent, value: string) {
-      navigator.clipboard.writeText(value).then(() => {
-        let el = event.target as HTMLButtonElement
-        el.innerText = "✓ Copied!"
-        el.classList.remove("hover:bg-blue-200")
-        el.classList.remove("bg-white")
-        el.classList.add("bg-green-200")
-        setTimeout(() => {
-          el.innerText = "Copy"
-          el.classList.remove("bg-green-200")
-          el.classList.add("hover:bg-blue-200")
-          el.classList.add("bg-white")
-        }, 1500)
-      })
+      if ('clipboard' in navigator) {
+        // Use the Async Clipboard API when available.
+        navigator.clipboard.writeText(value).then(() => {
+          // Show a success message for 1.5 seconds to the user
+          let el = event.target as HTMLButtonElement
+          el.innerText = "✓ Copied!"
+          el.classList.remove("hover:bg-blue-200")
+          el.classList.remove("bg-white")
+          el.classList.add("bg-green-200")
+          setTimeout(() => {
+            el.innerText = "Copy"
+            el.classList.remove("bg-green-200")
+            el.classList.add("hover:bg-blue-200")
+            el.classList.add("bg-white")
+          }, 1500)
+        })
+      } else {
+        // ...Otherwise, use document.execCommand() fallback.
+        const textArea = document.createElement('textarea');
+        textArea.value = value;
+        textArea.style.opacity = "0";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+          const success = document.execCommand('copy');
+          console.log(`Deprecated Text copy was ${success ? 'successful' : 'unsuccessful'}.`);
+          // Show a success message for 1.5 seconds to the user
+          let el = event.target as HTMLButtonElement
+          el.innerText = "✓ Copied!"
+          el.classList.remove("hover:bg-blue-200")
+          el.classList.remove("bg-white")
+          el.classList.add("bg-green-200")
+          setTimeout(() => {
+            el.innerText = "Copy"
+            el.classList.remove("bg-green-200")
+            el.classList.add("hover:bg-blue-200")
+            el.classList.add("bg-white")
+          }, 1500)
+        } catch (err) {
+          console.error(err.name, err.message);
+        }
+        document.body.removeChild(textArea);
+      }
     }
 
     return (
@@ -245,12 +276,18 @@ export class DisplayMagic {
                 Loading... {this.value}
               </span>
             : <details
-              class={"rounded-md shadow-md bg-white border text-clip inline flex-grow font-sans p-0.5 open:p-1 open:align-top open:w-full ease-in-out transition-all duration-200"}
+              class={"group rounded-md shadow-md bg-white border text-clip inline flex-grow font-sans p-0.5 open:align-top open:w-full ease-in-out transition-all duration-200"}
               open={this.openStatus}
               onToggle={this.toggleSubcomponents}>
               <summary
-                class="px-2 select-text list-outside bg-white overflow-x-hidden space-x-3 inline-flex flex-nowrap flex-shrink-0 items-center">
-                <span class={"font-mono inline-flex flex-nowrap overflow-x-auto"}>{
+                class="overflow-y-hidden font-bold font-mono cursor-pointer list-none p-0.5 bg-white overflow-x-hidden space-x-2 inline-flex flex-nowrap flex-shrink-0 items-center">
+                <svg class="transition group-open:-rotate-180" fill="none" height="24"
+                     shape-rendering="geometricPrecision"
+                     stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                     viewBox="0 0 24 24" width="24">
+                  <path d="M6 9l6 6 6-6"></path>
+                </svg>
+                <span class={"font-medium font-mono inline-flex flex-nowrap overflow-x-auto"}>{
                   // Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
                   this.identifierObject.renderPreview()
                 }
@@ -258,7 +295,7 @@ export class DisplayMagic {
                 // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
                 this.currentLevelOfSubcomponents === 0
                   ? <button
-                    class={"bg-white border border-slate-500 text-slate-800 font-medium font-mono text-sm rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-blue-500 flex-none max-h-min"}
+                    class={"bg-white border border-slate-500 text-slate-800 font-medium font-mono text-sm rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 flex-none max-h-min"}
                     id={`copyButton-${this.identifierObject.value}`}
                     onClick={(event) => copyValue(event, this.identifierObject.value)}>Copy
                   </button>
@@ -343,7 +380,7 @@ export class DisplayMagic {
                                     }
                                     </span>
                                   <button
-                                    class={"bg-white border border-slate-500 text-slate-800 font-medium font-mono text-sm rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex-none max-h-min align-top mx-2"}
+                                    class={"bg-white border border-slate-500 text-slate-800 font-medium font-mono text-sm rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex-none h-7 align-top mx-2"}
                                     id={`copyButton-${value.value}`}
                                     onClick={(event) => copyValue(event, value.value)}>Copy
                                   </button>

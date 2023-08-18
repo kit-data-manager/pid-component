@@ -4,7 +4,6 @@
 export class DataCache {
   private readonly name: string;
   private cacheInstance: Cache = undefined;
-  private mapInstance: Map<string, any> = new Map();
 
   /**
    * Creates a new DataCache instance.
@@ -38,27 +37,21 @@ export class DataCache {
       const response = await this.cacheInstance.match(url);
       if (response) {
         // If the resource is cached, return it.
-        console.log(`Cache ${this.name} hit for ${url}`, response);
+        // console.log(`Cache ${this.name} hit for ${url}`, response);
         return response.json();
       } else {
         // If the resource is not cached, fetch it from the network, cache and return it.
-        console.log(`Cache ${this.name} miss for ${url} - fetching from network`)
+        // console.log(`Cache ${this.name} miss for ${url} - fetching from network`)
         const response = await fetch(url, init);
         await this.cacheInstance.put(url, response.clone());
-        console.log(`Cache ${this.name} updated for ${url}`, response);
+        // console.log(`Cache ${this.name} updated for ${url}`, response);
         return response.json();
       }
-    } else if (this.mapInstance) {
-      // If there is no cache available, check if the resource is cached in the map.
-      const result = await this.mapInstance.get(url);
-      if (result !== undefined) return result.json();
-      else {
-        // If the resource is not cached, fetch it from the network, cache and return it.
-        console.log(`Cache ${this.name} miss for ${url} - fetching from network`)
-        const response = await fetch(url, init);
-        this.mapInstance.set(url, response.clone());
-        return response.json();
-      }
+    } else {
+      // If there is no cache available, fetch the resource from the network.
+      // console.log("No caching available - fetching from network");
+      const response = await fetch(url, init);
+      return response.json();
     }
   }
 }
