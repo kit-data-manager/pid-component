@@ -78,13 +78,13 @@ export class BeautifulOrcid {
             ?
             <span class="flex-nowrap font-mono text-sm px-1.5 font-medium hover:text-blue-400 divide-x">
               {this.orcidInfo.familyName}, {this.orcidInfo.givenNames}
-              {this.orcidInfo.getAffiliationAt(this.affiliationAt) !== undefined && this.showAffiliation
-                ? ` (${this.orcidInfo.getAffiliationAtString(this.affiliationAt, this.showDepartment)}${this.showOrcid ? ", " : ""}`
+              {this.orcidInfo.getAffiliationsAt(this.affiliationAt) !== undefined && this.showAffiliation
+                ? ` (${this.orcidInfo.getAffiliationAsString(this.orcidInfo.getAffiliationsAt(this.affiliationAt)[0], this.showDepartment)}${this.showOrcid ? ", " : ""}`
                 : this.showOrcid ? " (" : ""}
               {this.showOrcid
                 ? <span class={"hover:text-[#A6CE39]"}>{this.orcidInfo.orcid}</span>
                 : ""}
-              {(this.orcidInfo.getAffiliationAt(this.affiliationAt) !== undefined && this.showAffiliation) || this.showOrcid ? ")" : ""}
+              {(this.orcidInfo.getAffiliationAsString(this.orcidInfo.getAffiliationsAt(this.affiliationAt)[0]) !== undefined && this.showAffiliation) || this.showOrcid ? ")" : ""}
             </span>
             : ""
         }

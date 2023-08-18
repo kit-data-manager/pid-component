@@ -1,3 +1,5 @@
+import {init} from "./DataCache";
+
 /**
  * This file contains the ORCIDInfo class, which is used to store information about an ORCiD.
  */
@@ -247,21 +249,31 @@ export class ORCIDInfo {
    * Outputs the employment object of the person at a given date.
    * @param date The date to check.
    */
-  getAffiliationAt(date: Date): {
+  getAffiliationsAt(date: Date): {
     startDate: Date,
     endDate: Date | null,
     organization: string,
     department: string,
-  } | undefined {
+  }[] {
+    let affiliations: {
+      startDate: Date,
+      endDate: Date | null,
+      organization: string,
+      department: string,
+    }[] = [];
     for (const employment of this._employments) {
-      if (employment.startDate <= date && employment.endDate === null) return employment;
-      if (employment.startDate <= date && employment.endDate !== null && employment.endDate >= date) return employment;
+      if (employment.startDate <= date && employment.endDate === null) affiliations.push(employment);
+      if (employment.startDate <= date && employment.endDate !== null && employment.endDate >= date) affiliations.push(employment);
     }
-    return undefined;
+    return affiliations;
   }
 
-  getAffiliationAtString(date: Date, showDepartment: boolean = true): string | undefined {
-    const affiliation = this.getAffiliationAt(date);
+  getAffiliationAsString(affiliation: {
+    startDate: Date,
+    endDate: Date | null,
+    organization: string,
+    department: string,
+  }, showDepartment: boolean = true): string | undefined {
     if (affiliation === undefined || affiliation.organization === null) return undefined;
     else {
       if (showDepartment && affiliation.department !== null) return `${affiliation.organization} [${affiliation.department}]`;
@@ -274,7 +286,7 @@ export class ORCIDInfo {
    * @param text The string to check.
    */
   static isORCiD(text: string): boolean {
-    return text.match("^[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]$") !== null;
+    return text.match("^(https:\/\/orcid.org\/)?[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]$") !== null;
   }
 
   /**
@@ -284,14 +296,13 @@ export class ORCIDInfo {
   static async getORCiDInfo(orcid: string): Promise<ORCIDInfo> {
     if (!ORCIDInfo.isORCiD(orcid)) throw new Error("Invalid input");
 
-    console.log("Fetching ORCID data for " + orcid);
-    const response = await fetch(`https://pub.orcid.org/v3.0/${orcid}`, {
+    if (orcid.match("^(https:\/\/orcid.org\/)?[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]$") !== null) orcid = orcid.replace("https://orcid.org/", "");
+    const dataCache = await init("pid-component");
+    const rawOrcidJSON = await dataCache.fetch(`https://pub.orcid.org/v3.0/${orcid}`, {
       headers: {
-        "Accept": "application/json",
-        // "Access-Control-Allow-Origin": "orcid.org"
+        "Accept": "application/json"
       }
     })
-    const rawOrcidJSON = await response.json();
 
     // Parse family name and given names
     const familyName = rawOrcidJSON["person"]["name"]["family-name"]["value"];
@@ -305,20 +316,23 @@ export class ORCIDInfo {
       organization: string,
       department: string,
     }[] = [];
-    for (let i = 0; i < affiliations.length; i++) {
-      const employmentSummary = affiliations[i]["summaries"][0]["employment-summary"];
-      let employment = {
-        startDate: new Date(),
-        endDate: null,
-        organization: null,
-        department: null
-      }
-      if (employmentSummary["start-date"] !== null) employment.startDate = new Date(employmentSummary["start-date"]["year"]["value"], employmentSummary["start-date"]["month"]["value"], employmentSummary["start-date"]["day"]["value"]);
-      if (employmentSummary["end-date"] !== null) employment.endDate = new Date(employmentSummary["end-date"]["year"]["value"], employmentSummary["end-date"]["month"]["value"], employmentSummary["end-date"]["day"]["value"]);
-      employment.organization = employmentSummary["organization"]["name"];
-      employment.department = employmentSummary["department-name"];
+    try {
+      for (let i = 0; i < affiliations.length; i++) {
+        const employmentSummary = affiliations[i]["summaries"][0]["employment-summary"];
+        let employment = {
+          startDate: new Date(),
+          endDate: null,
+          organization: null,
+          department: null
+        }
+        if (employmentSummary["start-date"] !== null) employment.startDate = new Date(employmentSummary["start-date"]["year"]["value"], employmentSummary["start-date"]["month"]["value"], employmentSummary["start-date"]["day"]["value"]);
+        if (employmentSummary["end-date"] !== null) employment.endDate = new Date(employmentSummary["end-date"]["year"]["value"], employmentSummary["end-date"]["month"]["value"], employmentSummary["end-date"]["day"]["value"]);
+        employment.organization = employmentSummary["organization"]["name"];
+        employment.department = employmentSummary["department-name"];
 
-      employments.push(employment);
+        employments.push(employment);
+      }
+    } catch (e) {
     }
 
     // Parse preferred locale, if available

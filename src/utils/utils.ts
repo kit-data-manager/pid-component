@@ -3,6 +3,10 @@ import {PIDDataType} from "./PIDDataType";
 import {PIDRecord} from "./PIDRecord";
 
 /**
+ * A cache of all fetched data.
+ */
+
+/**
  * A map of all PID data types and their PIDs.
  * @type {Map<PID, PIDDataType>}
  */
@@ -20,8 +24,6 @@ export const handleMap: Map<PID, PIDRecord> = new Map();
 export const unresolvables: Set<PID> = new Set();
 
 export function getLocaleDetail(locale: string, type: "region" | "language"): string {
-  console.log("getLocaleDetail", locale, type);
-
   const friendlyName = new Intl.DisplayNames(['en'], {type: type}).of(locale.toUpperCase());
   if (type === "language") return friendlyName;
 
@@ -32,3 +34,5 @@ export function getLocaleDetail(locale: string, type: "region" | "language"): st
   const flag = String.fromCodePoint(...codePoints);
   return `${flag} ${friendlyName}`;
 }
+
+// export const dataCache = await init("pid-component")

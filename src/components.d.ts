@@ -35,6 +35,47 @@ export namespace Components {
          */
         "showOrcid": boolean;
     }
+    interface DisplayMagic {
+        /**
+          * The amount of items to show in the table per page. Defaults to 10. (optional)
+          * @type {number}
+         */
+        "amountOfItems": number;
+        /**
+          * Determines whether the colors of the table inside the component should change or not. Defaults to true. (optional)
+          * @type {boolean}
+         */
+        "changingColors": boolean;
+        /**
+          * The current level of subcomponents. Defaults to 0. (optional)
+          * @type {number}
+         */
+        "currentLevelOfSubcomponents": number;
+        /**
+          * The total amount of levels of subcomponents to show. Defaults to 1. (optional)
+          * @type {number}
+         */
+        "levelOfSubcomponents": number;
+        /**
+          * Determines whether the component is open or not by default. Defaults to false. (optional)
+          * @type {boolean}
+         */
+        "openStatus": boolean;
+        /**
+          * A stringified JSON object containing settings for this component. The resulting object is passed to every subcomponent, so that every component has the same settings. Values and the according type are defined by the components themselves. (optional)  Schema: ```typescript {  type: string,  values: {   name: string,   value: any  }[] }[] ```
+          * @type {string}
+         */
+        "settings": string;
+        /**
+          * Determines whether subcomponents should generally be shown or not. If set to true but the total level of subcomponents is reached, subcomponents will not be shown. Defaults to true. (optional)
+         */
+        "showSubcomponents": boolean;
+        /**
+          * The value to parse, evaluate and render.
+          * @type {string}
+         */
+        "value": string;
+    }
     interface FoldableComponent {
         "actions": FoldableAction[];
         /**
@@ -146,6 +187,12 @@ declare global {
         prototype: HTMLBeautifulOrcidElement;
         new (): HTMLBeautifulOrcidElement;
     };
+    interface HTMLDisplayMagicElement extends Components.DisplayMagic, HTMLStencilElement {
+    }
+    var HTMLDisplayMagicElement: {
+        prototype: HTMLDisplayMagicElement;
+        new (): HTMLDisplayMagicElement;
+    };
     interface HTMLFoldableComponentElement extends Components.FoldableComponent, HTMLStencilElement {
     }
     var HTMLFoldableComponentElement: {
@@ -176,6 +223,7 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "beautiful-orcid": HTMLBeautifulOrcidElement;
+        "display-magic": HTMLDisplayMagicElement;
         "foldable-component": HTMLFoldableComponentElement;
         "handle-highlight": HTMLHandleHighlightElement;
         "intelligent-handle": HTMLIntelligentHandleElement;
@@ -209,6 +257,47 @@ declare namespace LocalJSX {
           * @type {boolean}
          */
         "showOrcid"?: boolean;
+    }
+    interface DisplayMagic {
+        /**
+          * The amount of items to show in the table per page. Defaults to 10. (optional)
+          * @type {number}
+         */
+        "amountOfItems"?: number;
+        /**
+          * Determines whether the colors of the table inside the component should change or not. Defaults to true. (optional)
+          * @type {boolean}
+         */
+        "changingColors"?: boolean;
+        /**
+          * The current level of subcomponents. Defaults to 0. (optional)
+          * @type {number}
+         */
+        "currentLevelOfSubcomponents"?: number;
+        /**
+          * The total amount of levels of subcomponents to show. Defaults to 1. (optional)
+          * @type {number}
+         */
+        "levelOfSubcomponents"?: number;
+        /**
+          * Determines whether the component is open or not by default. Defaults to false. (optional)
+          * @type {boolean}
+         */
+        "openStatus"?: boolean;
+        /**
+          * A stringified JSON object containing settings for this component. The resulting object is passed to every subcomponent, so that every component has the same settings. Values and the according type are defined by the components themselves. (optional)  Schema: ```typescript {  type: string,  values: {   name: string,   value: any  }[] }[] ```
+          * @type {string}
+         */
+        "settings"?: string;
+        /**
+          * Determines whether subcomponents should generally be shown or not. If set to true but the total level of subcomponents is reached, subcomponents will not be shown. Defaults to true. (optional)
+         */
+        "showSubcomponents"?: boolean;
+        /**
+          * The value to parse, evaluate and render.
+          * @type {string}
+         */
+        "value"?: string;
     }
     interface FoldableComponent {
         "actions"?: FoldableAction[];
@@ -315,6 +404,7 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "beautiful-orcid": BeautifulOrcid;
+        "display-magic": DisplayMagic;
         "foldable-component": FoldableComponent;
         "handle-highlight": HandleHighlight;
         "intelligent-handle": IntelligentHandle;
@@ -326,6 +416,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "beautiful-orcid": LocalJSX.BeautifulOrcid & JSXBase.HTMLAttributes<HTMLBeautifulOrcidElement>;
+            "display-magic": LocalJSX.DisplayMagic & JSXBase.HTMLAttributes<HTMLDisplayMagicElement>;
             "foldable-component": LocalJSX.FoldableComponent & JSXBase.HTMLAttributes<HTMLFoldableComponentElement>;
             /**
              * This component highlights a handle and links to the FAIR DO Scope.
