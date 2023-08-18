@@ -58,7 +58,7 @@ export class BeautifulOrcid {
     return <Host>
       <a href={`https://orcid.org/${this.orcid}`}
          class={"bg-white hover:bg-gray-50 border shadow-md rounded-md inline-flex flex-row flex-nowrap items-center text-clip align-bottom"}
-         target={"_blank"}>
+         target={"_blank"} rel={"noopener noreferrer"}>
         <span class={"border-r px-0.5 rounded bg-white"}>
           <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"
                class={"h-5 p-0.5 items-center self-stretch"}>

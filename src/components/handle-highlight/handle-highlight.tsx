@@ -1,7 +1,6 @@
-import {Component, Host, h, Prop, State} from '@stencil/core';
-// import {HSLColor, generateColor} from '../../utils/utils';
-import {PID} from "../../utils/PID";
-import {HSLColor} from "../../utils/HSLColor";
+import { Component, Host, h, Prop, State } from '@stencil/core';
+import { PID } from '../../utils/PID';
+import { HSLColor } from '../../utils/HSLColor';
 
 /**
  * This component highlights a handle and links to the FAIR DO Scope.
@@ -22,7 +21,7 @@ export class HandleHighlight {
   /**
    * The private state where this component should link to.
    */
-  @State() link: string = "";
+  @State() link: string = '';
 
   /**
    * The Handle to highlight and link in this component.
@@ -32,7 +31,7 @@ export class HandleHighlight {
   /**
    * An optional custom link to use instead of the default one which links to the FAIR DO Scope.
    */
-  @Prop() linkTo: "disable" | "fairdoscope" | "resolveRef" = "fairdoscope";
+  @Prop() linkTo: 'disable' | 'fairdoscope' | 'resolveRef' = 'fairdoscope';
 
   /**
    * Whether the component should use the filled or the outlined design.
@@ -52,63 +51,63 @@ export class HandleHighlight {
     this.parts = [{
       text: pid.prefix,
       color: await HSLColor.generateColor(pid.prefix),
-      nextExists: true
+      nextExists: true,
     }, {
       text: pid.suffix,
       color: await HSLColor.generateColor(pid.suffix),
-      nextExists: false
-    }]
+      nextExists: false,
+    }];
 
-    if (this.linkTo === "fairdoscope") this.link = `https://kit-data-manager.github.io/fairdoscope/?pid=${this.handle}`;
-    else if (this.linkTo === "resolveRef") this.link = `https://hdl.handle.net/${this.handle}#resolve`;
-    else if (this.linkTo === "disable") this.link = "";
+    if (this.linkTo === 'fairdoscope') this.link = `https://kit-data-manager.github.io/fairdoscope/?pid=${this.handle}`;
+    else if (this.linkTo === 'resolveRef') this.link = `https://hdl.handle.net/${this.handle}#resolve`;
+    else if (this.linkTo === 'disable') this.link = '';
 
-    console.log(this.link)
-    console.log(this.linkTo)
+    console.log(this.link);
+    console.log(this.linkTo);
   }
 
   render() {
     return (
       <Host>
         <a href={this.link} onClick={(el) => {
-          if (this.link === "" || this.linkTo === "disable") el.preventDefault()
-        }} target={"_blank"}>
+          if (this.link === '' || this.linkTo === 'disable') el.preventDefault();
+        }} target={'_blank'} rel={'noopener noreferrer'}>
           {this.filled ?
-            <span class={"inline p-0.5 bg-gray-100 shadow-sm rounded-md text-clip align-baseline leading-relaxed"}>
+            <span class={'inline p-0.5 bg-gray-100 shadow-sm rounded-md text-clip align-baseline leading-relaxed'}>
             {
               this.parts.map((element) => {
                 return (
                   <span>
                   <span
                     style={{
-                      backgroundColor: "hsl(" + element.color.hue + "," + element.color.sat + "%," + element.color.lum + "%)",
+                      backgroundColor: 'hsl(' + element.color.hue + ',' + element.color.sat + '%,' + element.color.lum + '%)',
                     }}
-                    class={`font-mono p-0.5 rounded-md ${element.color.lum > 50 ? "text-gray-800" : "text-gray-200"}`}>
+                    class={`font-mono p-0.5 rounded-md ${element.color.lum > 50 ? 'text-gray-800' : 'text-gray-200'}`}>
                     {element.text}
                   </span>
-                  <span class={"font-mono text-gray-800"}>{element.nextExists ? "/" : ""}</span>
+                  <span class={'font-mono text-gray-800'}>{element.nextExists ? '/' : ''}</span>
                 </span>
-                )
+                );
               })
             }
           </span>
             :
             <span
-              class={"border bg-gray-100 rounded-md shadow-sm inline p-0.5 text-clip align-baseline leading-relaxed"}>
+              class={'border bg-gray-100 rounded-md shadow-sm inline p-0.5 text-clip align-baseline leading-relaxed'}>
             {
               this.parts.map((element) => {
                 return (
                   <span>
                     <span
                       style={{
-                        backgroundColor: "hsl(" + element.color.hue + "," + element.color.sat + "%," + element.color.lum + "%)",
+                        backgroundColor: 'hsl(' + element.color.hue + ',' + element.color.sat + '%,' + element.color.lum + '%)',
                       }}
                       class={`font-mono font-bold p-0.5 rounded-md text-transparent bg-clip-text`}>
                       {element.text}
                     </span>
-                    <span class={"font-bold text-gray-800"}>{element.nextExists ? "/" : ""}</span>
+                    <span class={'font-bold text-gray-800'}>{element.nextExists ? '/' : ''}</span>
                   </span>
-                )
+                );
               })
             }
           </span>
