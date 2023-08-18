@@ -1,7 +1,32 @@
 {
-  "name": "pidcomponent",
+  "name": "@kit-data-manager/pid-component",
   "version": "0.0.1",
+  "license": "Apache-2.0",
   "description": "The PID-Component is a web component that can be used to display PIDs, ORCiDs, and possibly other identifiers in a user-friendly way. It is easily extensible to support other identifier types.",
+  "author": "Maximilian Inckmann <maximilian.inckmann@kit.edu> (https://orcid.org/0009-0005-2800-4833)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maximilianiKIT/pid-component.git"
+  },
+  "bugs": {
+    "url": "https://github.com/maximilianiKIT/pid-component/issues"
+  },
+  "homepage": "https://maximilianiKIT.github.io/pid-component",
+  "keywords": [
+    "stencil",
+    "webcomponent",
+    "webcomponents",
+    "pid",
+    "datatyperegistry",
+    "handle.net",
+    "orcid",
+    "identifier",
+    "kitdm",
+    "kit-data-manager",
+    "typescript",
+    "storybook",
+    "tailwindcss"
+  ],
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
   "es2015": "dist/esm/index.mjs",
@@ -10,11 +35,6 @@
   "collection": "dist/collection/collection-manifest.json",
   "collection:main": "dist/collection/index.js",
   "unpkg": "dist/pidcomponent/pidcomponent.esm.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/maximilianiKIT/pid-component.git"
-  },
-  "homepage": "https://maximilianiKIT.github.io/pid-component",
   "files": [
     "dist/",
     "loader/"
@@ -57,6 +77,5 @@
     "storybook": "^7.1.1",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.1.6"
-  },
-  "license": "Apache-2.0"
+  }
 }
