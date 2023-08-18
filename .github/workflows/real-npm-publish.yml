@@ -1,10 +1,8 @@
 # Derived from: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
-
-name: Node.js Package
-
+name: Node.js Package to npmjs.com
 on:
   release:
-    types: [published]
+    types: [ published ]
 
 jobs:
   publish-npm:
