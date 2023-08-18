@@ -1,4 +1,4 @@
-import {dataCache} from "./utils";
+import {init} from "./DataCache";
 
 /**
  * This file contains the ORCIDInfo class, which is used to store information about an ORCiD.
@@ -297,14 +297,23 @@ export class ORCIDInfo {
         if (!ORCIDInfo.isORCiD(orcid)) throw new Error("Invalid input");
 
         if (orcid.match("^(https:\/\/orcid.org\/)?[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]$") !== null) orcid = orcid.replace("https://orcid.org/", "");
-
+        const dataCache = await init("pid-component");
         const response = await dataCache.fetch(`https://pub.orcid.org/v3.0/${orcid}`, {
             headers: {
                 "Accept": "application/json"
             }
         })
+      // console.log("ResponseOld", responseOld)
+      //
+      //   const response = await fetch(`https://pub.orcid.org/v3.0/${orcid}`, {
+      //       headers: {
+      //           "Accept": "application/json"
+      //       }
+      //   })
 
-        const rawOrcidJSON = await response.json();
+        // const rawOrcidJSON = await response.json();
+      console.log("Response", response)
+      const rawOrcidJSON = await response;
 
         // Parse family name and given names
         const familyName = rawOrcidJSON["person"]["name"]["family-name"]["value"];

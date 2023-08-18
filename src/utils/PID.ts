@@ -1,6 +1,7 @@
 import {PIDRecord} from "./PIDRecord";
 import {PIDDataType} from "./PIDDataType";
-import {unresolvables, handleMap, dataCache} from "./utils";
+import {unresolvables, handleMap} from "./utils";
+import {init} from "./DataCache";
 
 /**
  * This class represents the PID itself.
@@ -54,7 +55,13 @@ export class PID {
      * @returns {boolean} True if the string could be a PID, false if not.
      */
     public static isPID(text: string): boolean {
-        return new RegExp("^([0-9,A-Za-z])+(\.([0-9,A-Za-z])+)*\/([!-~])+$").test(text);
+        const startTime = Date.now();
+        const regex = new RegExp("^([0-9,A-Za-z])+(\.([0-9,A-Za-z])+)*\/([!-~])+$");
+        const result = text.match(regex) !== null;
+        const endTime = Date.now();
+        console.log(`PID.isPID took ${endTime - startTime}ms for ${text}`);
+        return result;
+        // return new RegExp("^([0-9,A-Za-z])+(\.([0-9,A-Za-z])+)*\/([!-~])+$").test(text);
         // return text.match("^([0-9,A-Z,a-z])+(\.([0-9,A-Z,a-z])+)*\/([!-~])+$") !== null;
     }
 
@@ -88,15 +95,19 @@ export class PID {
         if (unresolvables.has(this)) return undefined;
         else if (handleMap.has(this)) return handleMap.get(this);
         else {
+            const dataCache = await init("pid-component");
             const raw = await dataCache.fetch(`https://hdl.handle.net/api/handles/${this.prefix}/${this.suffix}#resolve`);
-            if (raw.status !== 200) {
-                console.log(`PID ${this.toString()} probably doesn't exist`);
-                unresolvables.add(this);
-                return undefined;
-            }
-            const rawJson = await raw.json();
+            // if (!raw.status) console.log("Unknown status PID l.92", raw)
+            // if (raw.status !== 200) {
+            //     console.log(`PID ${this.toString()} probably doesn't exist`);
+            //     unresolvables.add(this);
+            //     return undefined;
+            // }
+            // const rawJson = await raw.json();
+            console.log("raw", raw);
+            const rawJson = raw;
             const record = new PIDRecord(this);
-            for (let value of rawJson.values) {
+            for (let value of rawJson.values){
                 let type = (PID.isPID(value.type)) ? PID.getPIDFromString(value.type) : value.type;
                 if (type instanceof PID) {
                     const dataType = await PIDDataType.resolveDataType(type)

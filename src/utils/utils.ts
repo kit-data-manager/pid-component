@@ -1,7 +1,12 @@
 import {PID} from "./PID";
 import {PIDDataType} from "./PIDDataType";
 import {PIDRecord} from "./PIDRecord";
-import {DataCache} from "./DataCache";
+// import {init} from "./DataCache";
+
+/**
+ * A cache of all fetched data.
+ */
+// export const dataCache = await DataCache.init("pid-component");
 
 /**
  * A map of all PID data types and their PIDs.
@@ -20,11 +25,6 @@ export const handleMap: Map<PID, PIDRecord> = new Map();
  */
 export const unresolvables: Set<PID> = new Set();
 
-/**
- * A cache of all fetched data.
- */
-export const dataCache = new DataCache("pid-component");
-
 export function getLocaleDetail(locale: string, type: "region" | "language"): string {
   const friendlyName = new Intl.DisplayNames(['en'], {type: type}).of(locale.toUpperCase());
   if (type === "language") return friendlyName;
@@ -36,3 +36,5 @@ export function getLocaleDetail(locale: string, type: "region" | "language"): st
   const flag = String.fromCodePoint(...codePoints);
   return `${flag} ${friendlyName}`;
 }
+
+// export const dataCache = await init("pid-component")

@@ -47,7 +47,7 @@ export class ORCIDType extends GenericIdentifierType {
       for (let data of affiliations) {
         const affiliation = parsed.getAffiliationAsString(data);
         if (affiliation !== undefined && affiliation.length > 2) this.items.push(
-          new FoldableItem(50, "Current Affiliation", affiliation, "The current affiliation of the person."),
+          new FoldableItem(50, "Current Affiliation", affiliation, "The current affiliation of the person.", undefined, undefined, false, true),
         )
       }
     } catch (e) {
@@ -63,10 +63,9 @@ export class ORCIDType extends GenericIdentifierType {
           year: "numeric",
           month: "numeric",
           day: "numeric"
-        }), affiliation, "The affiliation of the person at the given date."))
+        }), affiliation, "The affiliation of the person at the given date.", undefined, undefined, false, true))
       }
     }
-
     if (parsed.emails) {
       let primary = parsed.emails.filter((email) => email.primary)[0];
       let other = parsed.emails.filter((email) => !email.primary);
@@ -80,17 +79,17 @@ export class ORCIDType extends GenericIdentifierType {
       // If there are other e-mail addresses, generate an item with a list of them
       if (other.length > 0) this.items.push(new FoldableItem(70, "Other E-Mail addresses", other.map((email) => email.email).join(", "), "All other e-mail addresses of the person."))
 
-      if (parsed.preferredLocale) this.items.push(new FoldableItem(25, "Preferred Language", getLocaleDetail(parsed.preferredLocale, "language"), "The preferred locale/language of the person."))
+      if (parsed.preferredLocale) this.items.push(new FoldableItem(25, "Preferred Language", getLocaleDetail(parsed.preferredLocale, "language"), "The preferred locale/language of the person.", undefined, undefined, false, true))
 
       for (let url of parsed.researcherUrls) {
         this.items.push(new FoldableItem(100, url.name, url.url, "A link to a website specified by the person."))
       }
 
-      if (parsed.keywords.length > 50) this.items.push(new FoldableItem(60, "Keywords", parsed.keywords.map((keyword) => keyword.content).join(", "), "Keywords specified by the person."))
+      if (parsed.keywords.length > 50) this.items.push(new FoldableItem(60, "Keywords", parsed.keywords.map((keyword) => keyword.content).join(", "), "Keywords specified by the person.", undefined, undefined, false, true))
 
-      if (parsed.biography) this.items.push(new FoldableItem(200, "Biography", parsed.biography, "The biography of the person."))
+      if (parsed.biography) this.items.push(new FoldableItem(200, "Biography", parsed.biography, "The biography of the person.", undefined, undefined, false, true))
 
-      if (parsed.country) this.items.push(new FoldableItem(30, "Country", getLocaleDetail(parsed.country, "region"), "The country of the person."))
+      if (parsed.country) this.items.push(new FoldableItem(30, "Country", getLocaleDetail(parsed.country, "region"), "The country of the person.", undefined, undefined, false, true))
 
       console.log(this._orcidInfo);
     }
@@ -102,7 +101,7 @@ export class ORCIDType extends GenericIdentifierType {
 
   renderPreview(): FunctionalComponent<any> {
     return (
-      <span class={"inline-flex items-center font-mono px-1 flex-nowrap align-top max-w-md truncate"}>
+      <span class={"inline-flex items-center font-mono px-1 flex-nowrap align-top max-w-md truncate overflow-x-scroll"}>
           <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"
                class={"h-5 p-0.5 mr-2 flex-none"}>
             <style type="text/css">
@@ -119,7 +118,7 @@ export class ORCIDType extends GenericIdentifierType {
                         C84.2,46.7,88.7,51.3,88.7,56.8z"/>
             </g>
           </svg>
-          <span class={"flex-none overflow-x-hidden max-w-lg truncate"}>
+          <span class={"flex-none overflow-x-scroll max-w-lg truncate"}>
              {this._orcidInfo.familyName}, {this._orcidInfo.givenNames} {
             this.showAffiliation && this._orcidInfo.getAffiliationsAt(new Date()).length > 0
               ? `(${this._orcidInfo.getAffiliationAsString(this._orcidInfo.getAffiliationsAt(new Date())[0], false)

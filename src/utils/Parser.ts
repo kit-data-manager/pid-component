@@ -14,7 +14,7 @@ export class Parser {
      * Array of all component objects that can be used to parse a given value, ordered by priority (lower is better)
      * @private
      */
-    private static readonly _dataTypes: (new(value: string, settings?: {
+    static readonly _dataTypes: (new(value: string, settings?: {
         name: string,
         value: any
     }[]) => GenericIdentifierType)[] = [
@@ -56,7 +56,7 @@ export class Parser {
         // default to fallback
         let bestFit = new this._dataTypes[this._dataTypes.length - 1](value)
 
-        // find best fit in _dataTypes array with highest priority (lowest index has highest priority) and correct format
+        // find best fit in _dataTypes array with the highest priority (lowest index has highest priority) and correct format
         for (let i = this._dataTypes.length - 1; i >= 0; i--) {
             const obj = new this._dataTypes[i](value);
             if (obj.hasCorrectFormat()) bestFit = obj;
