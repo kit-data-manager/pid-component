@@ -1,0 +1,85 @@
+import { Canvas, Controls, Meta } from '@storybook/blocks';
+
+import * as DisplayMagicStories from './display-magic.stories';
+
+<Meta of={DisplayMagicStories} />
+
+# Display-magic
+
+The `display-magic` component is the most versatile component in this package.
+It dynamically renders a component based on the value of the `value` property.
+Depending on the value, it decides which component to render, what priority to give it, and what props to pass to it.
+It also renders itself recursively for all its children when unfolded.
+You can set the maximum depth of recursion with the `levelOfSubcomponents` property.
+By default, it is set to 1, which means that it will only render the first level of children, but not their children.
+You can prohibit unfolding of the component by setting the `currentlevelOfSubcomponents` to the same value as the `levelOfSubcomponents` property.
+
+## Default
+<Canvas of={DisplayMagicStories.Default} />
+
+## ORCiD in record
+You can even use this component to render different kinds of components inside a single component.
+Notice here that the ORCiDs are rendered with as a usual ORCiD component, the dates and urls are also nicely formatted and styled.
+<Canvas of={DisplayMagicStories.ORCIDInRecord} />
+
+## Settings
+Different components need different settings.
+You can pass these settings to the component via the 'settings' property.
+e.g., The ORCiD component enables you to decide whether you want to show the affilliation in the summary or not.
+It also enables you to show the affilliation at a certain point of time.
+This results in the following settings JSON that you have to provide in a stringified form:
+```json
+[
+  {
+    "type":"ORCIDConfig",
+    "values": [
+      {
+        "name":"affiliationAt",
+        "value":949363200000
+      },
+      {
+        "name":"showAffiliation",
+        "value":true
+      }
+    ]
+  }
+]
+```
+
+## Available types (for now)
+The component can render the following types of components:
+
+- PIDs (resolvable via [handle.net](handle.net))
+- ORCiDs (resolvable via [orcid.org](orcid.org))
+- URLs (starting with http:// or https://)
+- Dates
+- Everything else is rendered as a simple string (aka. fallback).
+
+
+You can easily add a new type by simply implementing the abstract class `GenericIdentifierType` and adding it to the `Parser`.
+
+### PID
+<Canvas of={DisplayMagicStories.Handle} />
+
+### ORCiD
+<Canvas of={DisplayMagicStories.ORCID} />
+
+### URL
+<Canvas of={DisplayMagicStories.URL} />
+
+### Date
+<Canvas of={DisplayMagicStories.Date} />
+
+### Fallback (string)
+<Canvas of={DisplayMagicStories.Fallback} />
+
+
+## Controls
+Here you can play around with the component and see how it behaves.
+<Controls />
+
+## Inside a text
+You can also use the component in text.
+It will be rendered in line while folded and will take up the whole width of the container when unfolded.
+<Canvas of={DisplayMagicStories.HandleInText} />
+<Canvas of={DisplayMagicStories.ORCIDInText} />

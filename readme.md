@@ -9,7 +9,7 @@ To use the component, simply import the package and add the following tag to you
 <display-magic value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"></display-magic>
 ```
 
-You can try this web component in the [demo](https://kit-data-manager.github.io/pid-component).
+You can try this web component in the [demo](https://kit-data-manager.github.io/pid-component/?path=/docs/display-magic--docs).
 
 TODO: Add more information
 
