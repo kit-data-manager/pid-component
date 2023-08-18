@@ -1,5 +1,7 @@
 import {Component, Host, h, Prop, State} from '@stencil/core';
-import {HSLColor, generateColor} from '../../utils/utils';
+// import {HSLColor, generateColor} from '../../utils/utils';
+import {PID} from "../../utils/PID";
+import {HSLColor} from "../../utils/HSLColor";
 
 /**
  * This component highlights a handle and links to the FAIR DO Scope.
@@ -42,19 +44,21 @@ export class HandleHighlight {
    * It generates the colors for the parts of the handle and stores them in the state.
    * Since the generation of the colors is asynchronous, the parts are added to the state as soon as they are generated.
    */
-  connectedCallback() {
-    const handleParts = this.handle.split("/");
-    for (let i = 0; i < handleParts.length; i++) {
-      const color = generateColor(handleParts[i])
-      color.then((color) => {
-        const newVal = {
-          text: handleParts[i],
-          color: color,
-          nextExists: !(i == handleParts.length - 1)
-        }
-        this.parts = [...this.parts, newVal]
-      })
-    }
+  async connectedCallback() {
+    // Parse the PID
+    const pid = PID.getPIDFromString(this.handle);
+
+    // Generate the colors for the parts of the PID
+    this.parts = [{
+      text: pid.prefix,
+      color: await HSLColor.generateColor(pid.prefix),
+      nextExists: true
+    }, {
+      text: pid.suffix,
+      color: await HSLColor.generateColor(pid.suffix),
+      nextExists: false
+    }]
+
     if (this.linkTo === "fairdoscope") this.link = `https://kit-data-manager.github.io/fairdoscope/?pid=${this.handle}`;
     else if (this.linkTo === "resolveRef") this.link = `https://hdl.handle.net/${this.handle}#resolve`;
     else if (this.linkTo === "disable") this.link = "";
@@ -68,7 +72,7 @@ export class HandleHighlight {
       <Host>
         <a href={this.link} onClick={(el) => {
           if (this.link === "" || this.linkTo === "disable") el.preventDefault()
-        }}>
+        }} target={"_blank"}>
           {this.filled ?
             <span class={"inline p-0.5 bg-gray-100 shadow-sm rounded-md text-clip align-baseline leading-relaxed"}>
             {
@@ -78,7 +82,6 @@ export class HandleHighlight {
                   <span
                     style={{
                       backgroundColor: "hsl(" + element.color.hue + "," + element.color.sat + "%," + element.color.lum + "%)",
-                      // color: element.color.lum > 50 ? "black" : "white"
                     }}
                     class={`font-mono p-0.5 rounded-md ${element.color.lum > 50 ? "text-gray-800" : "text-gray-200"}`}>
                     {element.text}

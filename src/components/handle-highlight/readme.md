@@ -19,6 +19,21 @@ It automatically generates colors for the parts of the handle (prefix and suffix
 | `linkTo`              | `link-to` | An optional custom link to use instead of the default one which links to the FAIR DO Scope. | `"disable" \| "fairdoscope" \| "resolveRef"` | `"fairdoscope"` |
 
 
+## Dependencies
+
+### Used by
+
+ - [foldable-component](../foldable-component)
+ - [intelligent-handle](../intelligent-handle)
+
+### Graph
+```mermaid
+graph TD;
+  foldable-component --> handle-highlight
+  intelligent-handle --> handle-highlight
+  style handle-highlight fill:#f9f,stroke:#333,stroke-width:4px
+```
+
 ----------------------------------------------
 
 *Built with [StencilJS](https://stenciljs.com/)*
