@@ -6,12 +6,12 @@
   "author": "Maximilian Inckmann <maximilian.inckmann@kit.edu> (https://orcid.org/0009-0005-2800-4833)",
   "repository": {
     "type": "git",
-    "url": "https://github.com/maximilianiKIT/pid-component.git"
+    "url": "https://github.com/kit-data-manager/pid-component.git"
   },
   "bugs": {
-    "url": "https://github.com/maximilianiKIT/pid-component/issues"
+    "url": "https://github.com/kit-data-manager/pid-component/issues"
   },
-  "homepage": "https://maximilianiKIT.github.io/pid-component",
+  "homepage": "https://kit-data-manager.github.io/pid-component",
   "keywords": [
     "stencil",
     "webcomponent",
