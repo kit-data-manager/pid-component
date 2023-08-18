@@ -34,7 +34,7 @@ jobs:
       - name: Deploy Storybook to GitHub Pages
         # You may pin to the exact commit or the version.
         # uses: bitovi/github-actions-storybook-to-github-pages@c7d2a479f2ec3d87d1131357f328e0e40c60da20
-        uses: bitovi/github-actions-storybook-to-github-pages@v1.0.
+        uses: bitovi/github-actions-storybook-to-github-pages@v1.0.0
     #  - name: Deploy
      #   uses: JamesIves/github-pages-deploy-action@3.6.2
       #  with:
