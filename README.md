@@ -18,9 +18,11 @@ Then, you can use this component like this:
 ```html
 <display-magic value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"></display-magic>
 ```
-You can try this web component in the [demo](https://kit-data-manager.github.io/pid-component/?path=/docs/display-magic--docs).
+You can try this web component in the [demo](https://kit-data-manager.github.io/pid-component/?path=/docs/pid-component-display-magic--docs).
 
 **Only use the `display-magic` component! All the others are just for prototyping...**
+
+There are detailed docs for the `display-magic` component available [in the Storybook](https://kit-data-manager.github.io/pid-component/?path=/docs/pid-component-display-magic--docs) and in the [source code](src/components/display-magic/readme.md).
 
 TODO: Add more information
 

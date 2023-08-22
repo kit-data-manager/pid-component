@@ -2,7 +2,7 @@ import {Meta, StoryObj} from "@storybook/web-components"
 import {html} from "lit";
 
 const meta: Meta = {
-  title: "intelligent-handle",
+  title: "prototypes/intelligent-handle",
   component: "intelligent-handle",
   tags: ["autodocs"],
   argTypes: {

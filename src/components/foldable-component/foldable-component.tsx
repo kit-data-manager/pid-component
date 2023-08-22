@@ -188,7 +188,7 @@ export class FoldableComponent {
                         href={action.link}
                         class={style}
                         target={'_blank'}>
-                        rel={'noopener noreferrer'}
+                        rel="noopener noreferrer"
                         {action.title}
                       </a>
                     );

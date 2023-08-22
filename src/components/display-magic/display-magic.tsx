@@ -158,10 +158,7 @@ export class DisplayMagic {
       this.actions.sort((a, b) => a.priority - b.priority);
     }
     this.displayStatus = 'loaded';
-    console.log(this.identifierObject);
-    console.debug(this.items);
-    console.debug(this.actions);
-    console.log('Finished loading');
+    console.log('Finished loading for ', this.value, this.identifierObject);
   }
 
   /**
@@ -207,20 +204,7 @@ export class DisplayMagic {
     function copyValue(event: MouseEvent, value: string) {
       if ('clipboard' in navigator) {
         // Use the Async Clipboard API when available.
-        navigator.clipboard.writeText(value).then(() => {
-          // Show a success message for 1.5 seconds to the user
-          let el = event.target as HTMLButtonElement;
-          el.innerText = '✓ Copied!';
-          el.classList.remove('hover:bg-blue-200');
-          el.classList.remove('bg-white');
-          el.classList.add('bg-green-200');
-          setTimeout(() => {
-            el.innerText = 'Copy';
-            el.classList.remove('bg-green-200');
-            el.classList.add('hover:bg-blue-200');
-            el.classList.add('bg-white');
-          }, 1500);
-        });
+        navigator.clipboard.writeText(value).then(() => showSuccess());
       } else {
         // ...Otherwise, use document.execCommand() fallback.
         const textArea = document.createElement('textarea');
@@ -232,33 +216,56 @@ export class DisplayMagic {
         try {
           const success = document.execCommand('copy');
           console.log(`Deprecated Text copy was ${success ? 'successful' : 'unsuccessful'}.`);
-          // Show a success message for 1.5 seconds to the user
-          let el = event.target as HTMLButtonElement;
-          el.innerText = '✓ Copied!';
-          el.classList.remove('hover:bg-blue-200');
-          el.classList.remove('bg-white');
-          el.classList.add('bg-green-200');
-          setTimeout(() => {
-            el.innerText = 'Copy';
-            el.classList.remove('bg-green-200');
-            el.classList.add('hover:bg-blue-200');
-            el.classList.add('bg-white');
-          }, 1500);
+          showSuccess();
         } catch (err) {
           console.error(err.name, err.message);
         }
         document.body.removeChild(textArea);
       }
+
+      /**
+       * Shows the success message for 1.5 seconds.
+       */
+      function showSuccess() {
+        const el = event.target as HTMLButtonElement;
+        el.innerText = '✓ Copied!';
+        el.classList.remove('hover:bg-blue-200');
+        el.classList.remove('bg-white');
+        el.classList.add('bg-green-200');
+        setTimeout(() => {
+          el.innerText = 'Copy';
+          el.classList.remove('bg-green-200');
+          el.classList.add('hover:bg-blue-200');
+          el.classList.add('bg-white');
+        }, 1500);
+      }
     }
 
     return (
-      <Host class='inline flex-grow max-w-full font-sans flex-wrap align-top'>
+      <Host class='inline flex-grow max-w-full font-sans flex-wrap align-top items-center'>
         {
           // Check if there are any items or actions to show
-          this.items.length === 0 && this.actions.length === 0
-            ? this.identifierObject !== undefined && this.displayStatus === 'loaded'
+          (this.items.length === 0 && this.actions.length === 0) || this.hideSubcomponents
+            ? (this.identifierObject !== undefined && this.displayStatus === 'loaded')
               // If loaded but no items available render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
-              ? this.identifierObject.renderPreview()
+              ? <span
+                class={this.levelOfSubcomponents === 0 ? 'group rounded-md shadow-md border text-clip inline-flex flex-grow py-0.5 px-1 open:align-top open:w-full ease-in-out transition-all duration-200 overflow-y-hidden font-bold font-mono cursor-pointer list-none bg-white overflow-x-hidden space-x-3 flex-nowrap flex-shrink-0 items-center' : ''}>
+                <span class={'font-medium font-mono inline-flex flex-nowrap overflow-x-auto'}>{
+                  // Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
+                  this.identifierObject.renderPreview()
+                }
+                </span>
+                {
+                  // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
+                  this.currentLevelOfSubcomponents === 0
+                    ? <button
+                      class={'bg-white border border-slate-500 text-slate-800 font-medium font-mono text-sm rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 flex-none max-h-min items-center'}
+                      id={`copyButton-${this.identifierObject.value}`}
+                      onClick={(event) => copyValue(event, this.identifierObject.value)}>Copy
+                    </button>
+                    : ''
+                }
+              </span>
               : <span class={'inline-flex items-center transition ease-in-out'}>
                 <svg class='animate-spin -ml-1 mr-3 h-5 w-5 text-black'
                      xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'>
@@ -319,7 +326,7 @@ export class DisplayMagic {
                           }).map((value) => {
                             // Render a row for every item
                             return (
-                              <tr class={"odd:bg-slate-200 flex w-full"}>
+                              <tr class={'odd:bg-slate-200 flex w-full'}>
                                 <td class={'overflow-x-scroll p-1 w-1/4 font-mono'}>
                                   <a role='link'
                                      class='right-0 focus:outline-none focus:ring-gray-300 rounded-md focus:ring-offset-2 focus:ring-2 focus:bg-gray-200 relative md:mt-0 inline flex-nowrap'
@@ -354,20 +361,19 @@ export class DisplayMagic {
                                 <td class={'align-top overflow-x-scroll text-sm p-1 w-3/4 select-text flex '}>
                                   <span class={'flex-grow'}>
                                     {
-                                      // Load a foldable subcomponent if subcomponents are enabled (show subComponents) and the current level of subcomponents is not the total level of subcomponents. If the subcomponent is on the bottom level of the hierarchy render just a preview. If the value should not be resolved (isFoldable), just render the value as text.
+                                      // Load a foldable subcomponent if subcomponents are not disabled (hideSubcomponents), and the current level of subcomponents is not the total level of subcomponents. If the subcomponent is on the bottom level of the hierarchy, render just a preview. If the value should not be resolved (isFoldable), just render the value as text.
                                       this.loadSubcomponents && !this.hideSubcomponents && !value.doNOTFold && !value.defaultToText
                                         ? <display-magic value={value.value}
                                                          levelOfSubcomponents={this.levelOfSubcomponents}
                                                          currentLevelOfSubcomponents={this.currentLevelOfSubcomponents + 1}
                                                          amountOfItems={this.amountOfItems}
-                                                         hideSubcomponents={true}
                                                          settings={this.settings} />
                                         : !this.hideSubcomponents && this.currentLevelOfSubcomponents === this.levelOfSubcomponents && !value.doNOTFold && !value.defaultToText
                                           ? <display-magic value={value.value}
                                                            levelOfSubcomponents={this.currentLevelOfSubcomponents}
                                                            currentLevelOfSubcomponents={this.currentLevelOfSubcomponents}
                                                            amountOfItems={this.amountOfItems}
-                                                           settings={this.settings} />
+                                                           settings={this.settings} hideSubcomponents={true} />
                                           : value.value
                                     }
                                     </span>

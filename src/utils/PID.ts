@@ -55,7 +55,7 @@ export class PID {
    * @returns {boolean} True if the string could be a PID, false if not.
    */
   public static isPID(text: string): boolean {
-    return text.match("^([0-9,A-Z,a-z])+(\.([0-9,A-Z,a-z])+)*\/([!-~])+$") !== null;
+    return text.match("^([0-9A-Za-z])+(.([0-9A-Za-z])+)*\/([!-~])+$") !== null;
   }
 
   /**

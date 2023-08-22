@@ -14,13 +14,12 @@ export class DataCache {
     this.name = name;
   }
 
+  /**
+   * Checks whether the Cache API is available in the browser and opens the cache.
+   */
   async open() {
-    console.log(`Opening cache ${this.name}`);
     if ('caches' in self) {
-      this.cacheInstance = await caches.open(this.name)
-      console.log(`Cache ${this.name} opened`);
-    } else {
-      console.log(`Caching not supported in this browser.`);
+      this.cacheInstance = await caches.open(this.name);
     }
   }
 
@@ -37,7 +36,6 @@ export class DataCache {
       const response = await this.cacheInstance.match(url);
       if (response) {
         // If the resource is cached, return it.
-        // console.log(`Cache ${this.name} hit for ${url}`, response);
         return response.json();
       } else {
         // If the resource is not cached, fetch it from the network, cache and return it.
@@ -62,7 +60,6 @@ export class DataCache {
       }
     } else {
       // If there is no cache available, fetch the resource from the network.
-      // console.log("No caching available - fetching from network");
       const response = await fetch(url, init);
       return response.json();
     }
@@ -79,4 +76,4 @@ export const init = async (name: string) => {
   const dataCache = new DataCache(name);
   await dataCache.open();
   return dataCache;
-}
+};
