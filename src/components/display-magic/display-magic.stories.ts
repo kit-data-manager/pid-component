@@ -264,3 +264,23 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     },
   },
 };
+
+export const HandleWithoutSubcomponentInText: Story = {
+  args: {
+    value: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
+    hideSubcomponents: true,
+  },
+  decorators: [textDecorator],
+  parameters: {
+    docs: {
+      source: {
+        code: `
+<p class='align-middle items-center'>
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<display-magic value='21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343' hideSubcomponents></display-magic>
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute <display-magic value='21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343' hideSubcomponents></display-magic> irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+</p>
+        `,
+      },
+    },
+  },
+};
