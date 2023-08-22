@@ -2,7 +2,7 @@ import {Meta, StoryObj} from "@storybook/html"
 import {html} from "lit-html";
 
 const meta: Meta = {
-  title: "handle-highlight",
+  title: "prototypes/handle-highlight",
   component: "handle-highlight",
   tags: ["autodocs"],
   argTypes: {

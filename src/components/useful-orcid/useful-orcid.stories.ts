@@ -2,7 +2,7 @@ import {Meta, StoryObj} from "@storybook/web-components"
 import {html} from "lit";
 
 const meta: Meta = {
-  title: "useful-orcid",
+  title: "prototypes/useful-orcid",
   component: "useful-orcid",
   tags: ["autodocs"],
   argTypes: {

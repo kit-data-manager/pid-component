@@ -2,7 +2,7 @@ import {Meta, StoryObj} from "@storybook/web-components"
 import {html} from "lit";
 
 const meta: Meta = {
-  title: "foldable-component",
+  title: "prototypes/foldable-component",
   component: "foldable-component",
   tags: ["autodocs"],
   argTypes: {
