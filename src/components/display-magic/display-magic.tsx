@@ -249,7 +249,7 @@ export class DisplayMagic {
             ? (this.identifierObject !== undefined && this.displayStatus === 'loaded')
               // If loaded but no items available render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
               ? <span
-                class={this.levelOfSubcomponents === 0 ? 'group rounded-md shadow-md border text-clip inline-flex flex-grow py-0.5 px-1 open:align-top open:w-full ease-in-out transition-all duration-200 overflow-y-hidden font-bold font-mono cursor-pointer list-none bg-white overflow-x-hidden space-x-3 flex-nowrap flex-shrink-0 items-center' : ''}>
+                class={this.currentLevelOfSubcomponents === 0 ? 'group rounded-md shadow-md border text-clip inline-flex flex-grow py-0.5 px-1 open:align-top open:w-full ease-in-out transition-all duration-200 overflow-y-hidden font-bold font-mono cursor-pointer list-none bg-white overflow-x-hidden space-x-3 flex-nowrap flex-shrink-0 items-center' : ''}>
                 <span class={'font-medium font-mono inline-flex flex-nowrap overflow-x-auto'}>{
                   // Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
                   this.identifierObject.renderPreview()
@@ -259,7 +259,7 @@ export class DisplayMagic {
                   // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
                   this.currentLevelOfSubcomponents === 0
                     ? <button
-                      class={'bg-white border border-slate-500 text-slate-800 font-medium font-mono text-sm rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 flex-none max-h-min items-center'}
+                      class={'ml-2 bg-white border border-slate-500 text-slate-800 font-medium font-mono text-sm rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 flex-none max-h-min items-center'}
                       id={`copyButton-${this.identifierObject.value}`}
                       onClick={(event) => copyValue(event, this.identifierObject.value)}>Copy
                     </button>
