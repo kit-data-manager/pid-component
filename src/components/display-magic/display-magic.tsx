@@ -38,22 +38,13 @@ export class DisplayMagic {
 
   /**
    * Determines whether the component is open or not by default.
-   * Defaults to false.
    * (optional)
    * @type {boolean}
    */
-  @Prop() openStatus: boolean = false;
+  @Prop() openByDefault: boolean;
 
   /**
-   * Determines whether the colors of the table inside the component should change or not.
-   * Defaults to true.
-   * (optional)
-   * @type {boolean}
-   */
-  @Prop() changingColors: boolean = true;
-
-  /**
-   * The amount of items to show in the table per page.
+   * The number of items to show in the table per page.
    * Defaults to 10.
    * (optional)
    * @type {number}
@@ -61,7 +52,7 @@ export class DisplayMagic {
   @Prop() amountOfItems: number = 10;
 
   /**
-   * The total amount of levels of subcomponents to show.
+   * The total number of levels of subcomponents to show.
    * Defaults to 1.
    * (optional)
    * @type {number}
@@ -78,11 +69,12 @@ export class DisplayMagic {
 
   /**
    * Determines whether subcomponents should generally be shown or not.
-   * If set to true but the total level of subcomponents is reached, subcomponents will not be shown.
-   * Defaults to true.
+   * If set to true, the component won't show any subcomponents.
+   * If not set, the component will show subcomponents, if the current level of subcomponents is not the total level of subcomponents or greater.
    * (optional)
+   * @type {boolean}
    */
-  @Prop() showSubcomponents: boolean = true;
+  @Prop() doNOTShowSubcomponents: boolean;
 
   /**
    * Stores the parsed identifier object.
@@ -107,7 +99,7 @@ export class DisplayMagic {
   /**
    * The current status of the component.
    * Can be "loading", "loaded" or "error".
-   * Defaults to "loading".
+   * Default to "loading".
    */
   @State() displayStatus: 'loading' | 'loaded' | 'error' = 'loading';
 
@@ -149,7 +141,7 @@ export class DisplayMagic {
     this.identifierObject = obj;
 
     // Generate items and actions if subcomponents should be shown
-    if (this.showSubcomponents) {
+    if (!this.doNOTShowSubcomponents) {
       this.items = obj.items;
       this.items.sort((a, b) => {
 
@@ -175,7 +167,7 @@ export class DisplayMagic {
    * Toggles the loadSubcomponents property if the current level of subcomponents is not the total level of subcomponents.
    */
   private toggleSubcomponents = () => {
-    if (this.showSubcomponents && (this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0)) this.loadSubcomponents = !this.loadSubcomponents;
+    if (!this.doNOTShowSubcomponents && (this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0)) this.loadSubcomponents = !this.loadSubcomponents;
   };
 
   /**
@@ -277,7 +269,7 @@ export class DisplayMagic {
               </span>
             : <details
               class={'group rounded-md shadow-md bg-white border text-clip inline flex-grow font-sans py-0.5 px-1 open:align-top open:w-full ease-in-out transition-all duration-200'}
-              open={this.openStatus}
+              open={this.openByDefault}
               onToggle={this.toggleSubcomponents}>
               <summary
                 class='overflow-y-hidden font-bold font-mono cursor-pointer list-none bg-white overflow-x-hidden space-x-3 inline-flex flex-nowrap flex-shrink-0 items-center'>
@@ -326,7 +318,7 @@ export class DisplayMagic {
                           }).map((value) => {
                             // Render a row for every item
                             return (
-                              <tr class={this.changingColors ? 'odd:bg-slate-200 flex w-full' : 'flex w-full'}>
+                              <tr class={"odd:bg-slate-200 flex w-full"}>
                                 <td class={'overflow-x-scroll p-1 w-1/4 font-mono'}>
                                   <a role='link'
                                      class='right-0 focus:outline-none focus:ring-gray-300 rounded-md focus:ring-offset-2 focus:ring-2 focus:bg-gray-200 relative md:mt-0 inline flex-nowrap'
@@ -362,21 +354,18 @@ export class DisplayMagic {
                                   <span class={'flex-grow'}>
                                     {
                                       // Load a foldable subcomponent if subcomponents are enabled (show subComponents) and the current level of subcomponents is not the total level of subcomponents. If the subcomponent is on the bottom level of the hierarchy render just a preview. If the value should not be resolved (isFoldable), just render the value as text.
-                                      this.loadSubcomponents && this.showSubcomponents && !value.doNOTFold && !value.defaultToText
+                                      this.loadSubcomponents && !this.doNOTShowSubcomponents && !value.doNOTFold && !value.defaultToText
                                         ? <display-magic value={value.value}
-                                                         changingColors={this.changingColors}
                                                          levelOfSubcomponents={this.levelOfSubcomponents}
                                                          currentLevelOfSubcomponents={this.currentLevelOfSubcomponents + 1}
                                                          amountOfItems={this.amountOfItems}
-                                                         showSubcomponents={true}
+                                                         doNOTShowSubcomponents={true}
                                                          settings={this.settings} />
-                                        : this.showSubcomponents && this.currentLevelOfSubcomponents === this.levelOfSubcomponents && !value.doNOTFold && !value.defaultToText
+                                        : !this.doNOTShowSubcomponents && this.currentLevelOfSubcomponents === this.levelOfSubcomponents && !value.doNOTFold && !value.defaultToText
                                           ? <display-magic value={value.value}
-                                                           changingColors={this.changingColors}
                                                            levelOfSubcomponents={this.currentLevelOfSubcomponents}
                                                            currentLevelOfSubcomponents={this.currentLevelOfSubcomponents}
                                                            amountOfItems={this.amountOfItems}
-                                                           showSubcomponents={false}
                                                            settings={this.settings} />
                                           : value.value
                                     }

@@ -14,8 +14,20 @@ You can set the maximum depth of recursion with the `levelOfSubcomponents` prope
 By default, it is set to 1, which means that it will only render the first level of children, but not their children.
 You can prohibit unfolding of the component by setting the `currentlevelOfSubcomponents` to the same value as the `levelOfSubcomponents` property.
 
+You can find the source code of the component [on GitHub](https://github.com/kit-data-manager/pid-component).
+To import the component into your HTML page, use the following snippet:
+```html
+<head>
+  <script type="module" src="https://unpkg.com/@kit-data-manager/pid-component"></script>
+</head>
+```
+
 ## Default
 <Canvas of={DisplayMagicStories.Default} />
+
+## Controls
+Here you can play around with the component and see how it behaves.
+<Controls />
 
 ## ORCiD in record
 You can even use this component to render different kinds of components inside a single component.
@@ -45,6 +57,13 @@ This results in the following settings JSON that you have to provide in a string
   }
 ]
 ```
+This is an example where the settings above are passed to the component:
+<Canvas of={DisplayMagicStories.ORCIDInRecordWithSettings} />
+
+## No subcomponents
+You can also prohibit the unfolding of the component by setting the `currentlevelOfSubcomponents` to the same value as the `levelOfSubcomponents` property.
+Alternatively, simply set the attribute `doNOTShowSubcomponents`.
+<Canvas of={DisplayMagicStories.HandleWithoutSubcomponent} />
 
 ## Available types (for now)
 The component can render the following types of components:
@@ -72,11 +91,6 @@ You can easily add a new type by simply implementing the abstract class `Generic
 
 ### Fallback (string)
 <Canvas of={DisplayMagicStories.Fallback} />
-
-
-## Controls
-Here you can play around with the component and see how it behaves.
-<Controls />
 
 ## Inside a text
 You can also use the component in text.
