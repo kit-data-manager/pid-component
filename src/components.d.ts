@@ -47,10 +47,10 @@ export namespace Components {
          */
         "currentLevelOfSubcomponents": number;
         /**
-          * Determines whether subcomponents should generally be shown or not. If set to true, the component won't show any subcomponents. If not set, the component will show subcomponents, if the current level of subcomponents is not the total level of subcomponents or greater. (optional)
+          * Determines whether subcomponents should generally be shown or not. If set to true, the component won't show any subcomponents. If not set, the component will show subcomponents if the current level of subcomponents is not the total level of subcomponents or greater. (optional)
           * @type {boolean}
          */
-        "doNOTShowSubcomponents": boolean;
+        "hideSubcomponents": boolean;
         /**
           * The total number of levels of subcomponents to show. Defaults to 1. (optional)
           * @type {number}
@@ -266,10 +266,10 @@ declare namespace LocalJSX {
          */
         "currentLevelOfSubcomponents"?: number;
         /**
-          * Determines whether subcomponents should generally be shown or not. If set to true, the component won't show any subcomponents. If not set, the component will show subcomponents, if the current level of subcomponents is not the total level of subcomponents or greater. (optional)
+          * Determines whether subcomponents should generally be shown or not. If set to true, the component won't show any subcomponents. If not set, the component will show subcomponents if the current level of subcomponents is not the total level of subcomponents or greater. (optional)
           * @type {boolean}
          */
-        "doNOTShowSubcomponents"?: boolean;
+        "hideSubcomponents"?: boolean;
         /**
           * The total number of levels of subcomponents to show. Defaults to 1. (optional)
           * @type {number}

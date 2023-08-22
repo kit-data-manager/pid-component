@@ -70,11 +70,12 @@ export class DisplayMagic {
   /**
    * Determines whether subcomponents should generally be shown or not.
    * If set to true, the component won't show any subcomponents.
-   * If not set, the component will show subcomponents, if the current level of subcomponents is not the total level of subcomponents or greater.
+   * If not set, the component will show subcomponents
+   * if the current level of subcomponents is not the total level of subcomponents or greater.
    * (optional)
    * @type {boolean}
    */
-  @Prop() doNOTShowSubcomponents: boolean;
+  @Prop() hideSubcomponents: boolean;
 
   /**
    * Stores the parsed identifier object.
@@ -141,7 +142,7 @@ export class DisplayMagic {
     this.identifierObject = obj;
 
     // Generate items and actions if subcomponents should be shown
-    if (!this.doNOTShowSubcomponents) {
+    if (!this.hideSubcomponents) {
       this.items = obj.items;
       this.items.sort((a, b) => {
 
@@ -167,7 +168,7 @@ export class DisplayMagic {
    * Toggles the loadSubcomponents property if the current level of subcomponents is not the total level of subcomponents.
    */
   private toggleSubcomponents = () => {
-    if (!this.doNOTShowSubcomponents && (this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0)) this.loadSubcomponents = !this.loadSubcomponents;
+    if (!this.hideSubcomponents && (this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0)) this.loadSubcomponents = !this.loadSubcomponents;
   };
 
   /**
@@ -354,14 +355,14 @@ export class DisplayMagic {
                                   <span class={'flex-grow'}>
                                     {
                                       // Load a foldable subcomponent if subcomponents are enabled (show subComponents) and the current level of subcomponents is not the total level of subcomponents. If the subcomponent is on the bottom level of the hierarchy render just a preview. If the value should not be resolved (isFoldable), just render the value as text.
-                                      this.loadSubcomponents && !this.doNOTShowSubcomponents && !value.doNOTFold && !value.defaultToText
+                                      this.loadSubcomponents && !this.hideSubcomponents && !value.doNOTFold && !value.defaultToText
                                         ? <display-magic value={value.value}
                                                          levelOfSubcomponents={this.levelOfSubcomponents}
                                                          currentLevelOfSubcomponents={this.currentLevelOfSubcomponents + 1}
                                                          amountOfItems={this.amountOfItems}
                                                          doNOTShowSubcomponents={true}
                                                          settings={this.settings} />
-                                        : !this.doNOTShowSubcomponents && this.currentLevelOfSubcomponents === this.levelOfSubcomponents && !value.doNOTFold && !value.defaultToText
+                                        : !this.hideSubcomponents && this.currentLevelOfSubcomponents === this.levelOfSubcomponents && !value.doNOTFold && !value.defaultToText
                                           ? <display-magic value={value.value}
                                                            levelOfSubcomponents={this.currentLevelOfSubcomponents}
                                                            currentLevelOfSubcomponents={this.currentLevelOfSubcomponents}
