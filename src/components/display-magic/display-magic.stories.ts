@@ -4,7 +4,6 @@ import { html } from 'lit';
 const meta: Meta = {
   title: 'pid-component/display-magic',
   component: 'display-magic',
-  // tags: ["autodocs"],
   argTypes: {
     value: {
       description: 'The text to display (required)',
@@ -33,7 +32,7 @@ const meta: Meta = {
         type: 'number',
       },
     },
-    doNOTShowSubcomponents: {
+    hideSubcomponents: {
       description: 'Determines whether subcomponents should generally be shown or not. If set to true, the component won\'t show any subcomponents. If not set, the component will show subcomponents, if the current level of subcomponents is not the total level of subcomponents or greater.',
       defaultValue: false,
       control: {
@@ -61,7 +60,7 @@ const meta: Meta = {
     settings: '[]',
     openByDefault: false,
     amountOfItems: 10,
-    doNOTShowSubcomponents: false,
+    hideSubcomponents: false,
     levelOfSubcomponents: 1,
     currentLevelOfSubcomponents: 0,
   },
@@ -117,13 +116,13 @@ export const Handle: Story = {
 export const HandleWithoutSubcomponent: Story = {
   args: {
     value: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
-    doNOTShowSubcomponents: true,
+    hideSubcomponents: true,
   },
   parameters: {
     docs: {
       source: {
         code: `
-<display-magic value='21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343' doNOTShowSubcomponents></display-magic>
+<display-magic value='21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343' hideSubcomponents></display-magic>
         `,
       },
     },
