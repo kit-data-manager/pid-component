@@ -35,31 +35,27 @@
       "attributes": [
         {
           "name": "amount-of-items",
-          "description": "The amount of items to show in the table per page.\nDefaults to 10.\n(optional)"
-        },
-        {
-          "name": "changing-colors",
-          "description": "Determines whether the colors of the table inside the component should change or not.\nDefaults to true.\n(optional)"
+          "description": "The number of items to show in the table per page.\nDefaults to 10.\n(optional)"
         },
         {
           "name": "current-level-of-subcomponents",
           "description": "The current level of subcomponents.\nDefaults to 0.\n(optional)"
         },
         {
-          "name": "level-of-subcomponents",
-          "description": "The total amount of levels of subcomponents to show.\nDefaults to 1.\n(optional)"
+          "name": "do-n-o-t-show-subcomponents",
+          "description": "Determines whether subcomponents should generally be shown or not.\nIf set to true, the component won't show any subcomponents.\nIf not set, the component will show subcomponents, if the current level of subcomponents is not the total level of subcomponents or greater.\n(optional)"
         },
         {
-          "name": "open-status",
-          "description": "Determines whether the component is open or not by default.\nDefaults to false.\n(optional)"
+          "name": "level-of-subcomponents",
+          "description": "The total number of levels of subcomponents to show.\nDefaults to 1.\n(optional)"
+        },
+        {
+          "name": "open-by-default",
+          "description": "Determines whether the component is open or not by default.\n(optional)"
         },
         {
           "name": "settings",
           "description": "A stringified JSON object containing settings for this component.\nThe resulting object is passed to every subcomponent, so that every component has the same settings.\nValues and the according type are defined by the components themselves.\n(optional)\n\nSchema:\n```typescript\n{\n type: string,\n values: {\n  name: string,\n  value: any\n }[]\n}[]\n```"
-        },
-        {
-          "name": "show-subcomponents",
-          "description": "Determines whether subcomponents should generally be shown or not.\nIf set to true but the total level of subcomponents is reached, subcomponents will not be shown.\nDefaults to true.\n(optional)"
         },
         {
           "name": "value",

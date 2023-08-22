@@ -19,14 +19,7 @@ const meta: Meta = {
         type: 'text',
       },
     },
-    changingColors: {
-      description: 'Determines whether the integrated table changes colors every other row',
-      defaultValue: true,
-      control: {
-        type: 'boolean',
-      },
-    },
-    openStatus: {
+    openByDefault: {
       description: 'Determines whether the component is opened by default',
       defaultValue: false,
       control: {
@@ -40,9 +33,9 @@ const meta: Meta = {
         type: 'number',
       },
     },
-    showSubcomponents: {
-      description: 'Determines whether the subcomponents are shown',
-      defaultValue: true,
+    doNOTShowSubcomponents: {
+      description: 'Determines whether subcomponents should generally be shown or not. If set to true, the component won\'t show any subcomponents. If not set, the component will show subcomponents, if the current level of subcomponents is not the total level of subcomponents or greater.',
+      defaultValue: false,
       control: {
         type: 'boolean',
       },
@@ -66,10 +59,9 @@ const meta: Meta = {
   args: {
     value: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
     settings: '[]',
-    changingColors: true,
-    openStatus: false,
+    openByDefault: false,
     amountOfItems: 10,
-    showSubcomponents: true,
+    doNOTShowSubcomponents: false,
     levelOfSubcomponents: 1,
     currentLevelOfSubcomponents: 0,
   },
@@ -122,10 +114,26 @@ export const Handle: Story = {
   },
 };
 
+export const HandleWithoutSubcomponent: Story = {
+  args: {
+    value: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
+    doNOTShowSubcomponents: true,
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `
+<display-magic value='21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343' doNOTShowSubcomponents></display-magic>
+        `,
+      },
+    },
+  },
+};
+
 export const ORCID: Story = {
   args: {
     value: '0009-0005-2800-4833',
-    openStatus: true,
+    openByDefault: true,
   },
   parameters: {
     docs: {
@@ -200,7 +208,7 @@ export const ORCIDInRecordWithoutLimit = {
   parameters: {
     docs: {
       source: {
-        code: `<display-magic value='21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6' amountOfItems='100' openStatus></display-magic>`,
+        code: `<display-magic value='21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6' amountOfItems='100' openByDefault></display-magic>`,
       },
     },
   },

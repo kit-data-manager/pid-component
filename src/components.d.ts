@@ -37,39 +37,35 @@ export namespace Components {
     }
     interface DisplayMagic {
         /**
-          * The amount of items to show in the table per page. Defaults to 10. (optional)
+          * The number of items to show in the table per page. Defaults to 10. (optional)
           * @type {number}
          */
         "amountOfItems": number;
-        /**
-          * Determines whether the colors of the table inside the component should change or not. Defaults to true. (optional)
-          * @type {boolean}
-         */
-        "changingColors": boolean;
         /**
           * The current level of subcomponents. Defaults to 0. (optional)
           * @type {number}
          */
         "currentLevelOfSubcomponents": number;
         /**
-          * The total amount of levels of subcomponents to show. Defaults to 1. (optional)
+          * Determines whether subcomponents should generally be shown or not. If set to true, the component won't show any subcomponents. If not set, the component will show subcomponents, if the current level of subcomponents is not the total level of subcomponents or greater. (optional)
+          * @type {boolean}
+         */
+        "doNOTShowSubcomponents": boolean;
+        /**
+          * The total number of levels of subcomponents to show. Defaults to 1. (optional)
           * @type {number}
          */
         "levelOfSubcomponents": number;
         /**
-          * Determines whether the component is open or not by default. Defaults to false. (optional)
+          * Determines whether the component is open or not by default. (optional)
           * @type {boolean}
          */
-        "openStatus": boolean;
+        "openByDefault": boolean;
         /**
           * A stringified JSON object containing settings for this component. The resulting object is passed to every subcomponent, so that every component has the same settings. Values and the according type are defined by the components themselves. (optional)  Schema: ```typescript {  type: string,  values: {   name: string,   value: any  }[] }[] ```
           * @type {string}
          */
         "settings": string;
-        /**
-          * Determines whether subcomponents should generally be shown or not. If set to true but the total level of subcomponents is reached, subcomponents will not be shown. Defaults to true. (optional)
-         */
-        "showSubcomponents": boolean;
         /**
           * The value to parse, evaluate and render.
           * @type {string}
@@ -260,39 +256,35 @@ declare namespace LocalJSX {
     }
     interface DisplayMagic {
         /**
-          * The amount of items to show in the table per page. Defaults to 10. (optional)
+          * The number of items to show in the table per page. Defaults to 10. (optional)
           * @type {number}
          */
         "amountOfItems"?: number;
-        /**
-          * Determines whether the colors of the table inside the component should change or not. Defaults to true. (optional)
-          * @type {boolean}
-         */
-        "changingColors"?: boolean;
         /**
           * The current level of subcomponents. Defaults to 0. (optional)
           * @type {number}
          */
         "currentLevelOfSubcomponents"?: number;
         /**
-          * The total amount of levels of subcomponents to show. Defaults to 1. (optional)
+          * Determines whether subcomponents should generally be shown or not. If set to true, the component won't show any subcomponents. If not set, the component will show subcomponents, if the current level of subcomponents is not the total level of subcomponents or greater. (optional)
+          * @type {boolean}
+         */
+        "doNOTShowSubcomponents"?: boolean;
+        /**
+          * The total number of levels of subcomponents to show. Defaults to 1. (optional)
           * @type {number}
          */
         "levelOfSubcomponents"?: number;
         /**
-          * Determines whether the component is open or not by default. Defaults to false. (optional)
+          * Determines whether the component is open or not by default. (optional)
           * @type {boolean}
          */
-        "openStatus"?: boolean;
+        "openByDefault"?: boolean;
         /**
           * A stringified JSON object containing settings for this component. The resulting object is passed to every subcomponent, so that every component has the same settings. Values and the according type are defined by the components themselves. (optional)  Schema: ```typescript {  type: string,  values: {   name: string,   value: any  }[] }[] ```
           * @type {string}
          */
         "settings"?: string;
-        /**
-          * Determines whether subcomponents should generally be shown or not. If set to true but the total level of subcomponents is reached, subcomponents will not be shown. Defaults to true. (optional)
-         */
-        "showSubcomponents"?: boolean;
         /**
           * The value to parse, evaluate and render.
           * @type {string}
