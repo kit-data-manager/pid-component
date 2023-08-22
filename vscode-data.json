@@ -42,8 +42,8 @@
           "description": "The current level of subcomponents.\nDefaults to 0.\n(optional)"
         },
         {
-          "name": "do-n-o-t-show-subcomponents",
-          "description": "Determines whether subcomponents should generally be shown or not.\nIf set to true, the component won't show any subcomponents.\nIf not set, the component will show subcomponents, if the current level of subcomponents is not the total level of subcomponents or greater.\n(optional)"
+          "name": "hide-subcomponents",
+          "description": "Determines whether subcomponents should generally be shown or not.\nIf set to true, the component won't show any subcomponents.\nIf not set, the component will show subcomponents\nif the current level of subcomponents is not the total level of subcomponents or greater.\n(optional)"
         },
         {
           "name": "level-of-subcomponents",
