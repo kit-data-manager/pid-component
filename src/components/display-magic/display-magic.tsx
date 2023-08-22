@@ -360,7 +360,7 @@ export class DisplayMagic {
                                                          levelOfSubcomponents={this.levelOfSubcomponents}
                                                          currentLevelOfSubcomponents={this.currentLevelOfSubcomponents + 1}
                                                          amountOfItems={this.amountOfItems}
-                                                         doNOTShowSubcomponents={true}
+                                                         hideSubcomponents={true}
                                                          settings={this.settings} />
                                         : !this.hideSubcomponents && this.currentLevelOfSubcomponents === this.levelOfSubcomponents && !value.doNOTFold && !value.defaultToText
                                           ? <display-magic value={value.value}
