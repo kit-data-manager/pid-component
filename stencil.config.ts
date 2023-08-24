@@ -1,8 +1,8 @@
 import { Config } from '@stencil/core';
-import tailwind, {tailwindHMR} from "stencil-tailwind-plugin";
+import tailwind, { tailwindHMR } from 'stencil-tailwind-plugin';
 
 export const config: Config = {
-  namespace: 'pidcomponent',
+  namespace: 'pid-component',
   outputTargets: [
     {
       type: 'dist',
@@ -15,19 +15,12 @@ export const config: Config = {
       type: 'docs-readme',
     },
     {
-      type: 'docs-vscode',
-      file: 'vscode-data.json',
-    },
-    {
       type: 'www',
       serviceWorker: null, // disable service workers
     },
   ],
   testing: {
-    browserHeadless: "new",
+    browserHeadless: 'new',
   },
-  plugins: [
-    tailwind(),
-    tailwindHMR(),
-  ],
+  plugins: [tailwind(), tailwindHMR()],
 };

@@ -1,37 +1,59 @@
 # PID Component
+
 [![CodeQL](https://github.com/kit-data-manager/pid-component/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/kit-data-manager/pid-component/actions/workflows/github-code-scanning/codeql)
 
-The PID-Component is a web component that can be used to display PIDs, ORCiDs, and possibly other identifiers in a user-friendly way.
+The `pid-component` is an easily extensible web component that can be used to display PIDs, ORCiDs, and possibly other
+identifiers in a user-friendly way.
 It is easily extensible to support other identifier types.
 
+The `pid-component` dynamically renders a component based on the value of the `value` property.
+Depending on the value, it decides which component to render, what priority to give it, and what props to pass to it.
+It also renders itself recursively for all its children when unfolded.
+You can set the maximum depth of recursion with the `level-of-subcomponents` property.
+By default, it is set to 1, which means that it will only render the first level of children, but not their children.
+You can prohibit unfolding of the component by setting the `current-level-of-subcomponents` to the same value as
+the `level-of-subcomponents` property.
+
 To use the component, import the package via [unpkg](https://unpkg.com/):
+
 ```html
+
 <head>
-  <script type="module" src="https://unpkg.com/@kit-data-manager/pid-component"></script>
+  <script type='module' src='https://unpkg.com/@kit-data-manager/pid-component'></script>
 </head>
 ```
-Alternatively you can install the package via npm:
+
+Alternatively, you can install the package via npm:
+
 ```bash
 npm install @kit-data-manager/pid-component
 ```
+
 Then, you can use this component like this:
+
 ```html
-<display-magic value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"></display-magic>
+
+<pid-component value='21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6'></pid-component>
 ```
-You can try this web component in the [demo](https://kit-data-manager.github.io/pid-component/?path=/docs/pid-component-display-magic--docs).
 
-**Only use the `display-magic` component! All the others are just for prototyping...**
+You can try this web component in the [demo](https://kit-data-manager.github.io/pid-component).
 
-There are detailed docs for the `display-magic` component available [in the Storybook](https://kit-data-manager.github.io/pid-component/?path=/docs/pid-component-display-magic--docs) and in the [source code](src/components/display-magic/readme.md).
+**Only use the `pid-component` component! All the others are just for prototyping...**
 
-TODO: Add more information
+There are detailed docs for the `pid-component` component
+available [in the Storybook](https://kit-data-manager.github.io/pid-component) and in
+the [source code](src/components/pid-component/readme.md).
+
+**Please notice that you must use the hyphenated version of an attribute when using the component directly in HTML (
+e.g. `currentLevelOfSubcomponents` -> `current-level-of-subcomponents`).
+When using inside Stencil or with JSX/TSX syntax, you must use the camelCase version.**
 
 ## How to run when developing
 
 1. Clone the repo
 2. Run `npm install`
 
-For running storybook in dev mode, run theses commands in separate terminals:
+For running storybook in dev mode, run these commands in separate terminals:
 
 - `npm run buildWatch`
 - `npm run storybook`

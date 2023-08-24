@@ -12,11 +12,10 @@ import { HSLColor } from '../../utils/HSLColor';
   shadow: true,
 })
 export class HandleHighlight {
-
   /**
    The private state of the parts of the handle. Consists of the text, the color and a boolean whether a next part exists.
    */
-  @State() parts: { text: string, color: HSLColor, nextExists: boolean }[] = [];
+  @State() parts: { text: string; color: HSLColor; nextExists: boolean }[] = [];
 
   /**
    * The private state where this component should link to.
@@ -48,15 +47,18 @@ export class HandleHighlight {
     const pid = PID.getPIDFromString(this.handle);
 
     // Generate the colors for the parts of the PID
-    this.parts = [{
-      text: pid.prefix,
-      color: await HSLColor.generateColor(pid.prefix),
-      nextExists: true,
-    }, {
-      text: pid.suffix,
-      color: await HSLColor.generateColor(pid.suffix),
-      nextExists: false,
-    }];
+    this.parts = [
+      {
+        text: pid.prefix,
+        color: await HSLColor.generateColor(pid.prefix),
+        nextExists: true,
+      },
+      {
+        text: pid.suffix,
+        color: await HSLColor.generateColor(pid.suffix),
+        nextExists: false,
+      },
+    ];
 
     if (this.linkTo === 'fairdoscope') this.link = `https://kit-data-manager.github.io/fairdoscope/?pid=${this.handle}`;
     else if (this.linkTo === 'resolveRef') this.link = `https://hdl.handle.net/${this.handle}#resolve`;
@@ -69,49 +71,51 @@ export class HandleHighlight {
   render() {
     return (
       <Host>
-        <a href={this.link} onClick={(el) => {
-          if (this.link === '' || this.linkTo === 'disable') el.preventDefault();
-        }} target={'_blank'} rel={'noopener noreferrer'}>
-          {this.filled ?
+        <a
+          href={this.link}
+          onClick={el => {
+            if (this.link === '' || this.linkTo === 'disable') el.preventDefault();
+          }}
+          target={'_blank'}
+          rel={'noopener noreferrer'}
+        >
+          {this.filled ? (
             <span class={'inline p-0.5 bg-gray-100 shadow-sm rounded-md text-clip align-baseline leading-relaxed'}>
-            {
-              this.parts.map((element) => {
-                return (
-                  <span>
-                  <span
-                    style={{
-                      backgroundColor: 'hsl(' + element.color.hue + ',' + element.color.sat + '%,' + element.color.lum + '%)',
-                    }}
-                    class={`font-mono p-0.5 rounded-md ${element.color.lum > 50 ? 'text-gray-800' : 'text-gray-200'}`}>
-                    {element.text}
-                  </span>
-                  <span class={'font-mono text-gray-800'}>{element.nextExists ? '/' : ''}</span>
-                </span>
-                );
-              })
-            }
-          </span>
-            :
-            <span
-              class={'border bg-gray-100 rounded-md shadow-sm inline p-0.5 text-clip align-baseline leading-relaxed'}>
-            {
-              this.parts.map((element) => {
+              {this.parts.map(element => {
                 return (
                   <span>
                     <span
                       style={{
                         backgroundColor: 'hsl(' + element.color.hue + ',' + element.color.sat + '%,' + element.color.lum + '%)',
                       }}
-                      class={`font-mono font-bold p-0.5 rounded-md text-transparent bg-clip-text`}>
+                      class={`font-mono p-0.5 rounded-md ${element.color.lum > 50 ? 'text-gray-800' : 'text-gray-200'}`}
+                    >
+                      {element.text}
+                    </span>
+                    <span class={'font-mono text-gray-800'}>{element.nextExists ? '/' : ''}</span>
+                  </span>
+                );
+              })}
+            </span>
+          ) : (
+            <span class={'border bg-gray-100 rounded-md shadow-sm inline p-0.5 text-clip align-baseline leading-relaxed'}>
+              {this.parts.map(element => {
+                return (
+                  <span>
+                    <span
+                      style={{
+                        backgroundColor: 'hsl(' + element.color.hue + ',' + element.color.sat + '%,' + element.color.lum + '%)',
+                      }}
+                      class={`font-mono font-bold p-0.5 rounded-md text-transparent bg-clip-text`}
+                    >
                       {element.text}
                     </span>
                     <span class={'font-bold text-gray-800'}>{element.nextExists ? '/' : ''}</span>
                   </span>
                 );
-              })
-            }
-          </span>
-          }
+              })}
+            </span>
+          )}
         </a>
       </Host>
     );
