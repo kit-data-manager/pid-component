@@ -179,9 +179,7 @@ export class PIDDataType {
             if (newLocation.view === 'json') {
               const dataCache = await init('pid-component');
               // if view is json then fetch the data from the link (ePIC data type registry) and save them into the temp object
-              const res = await dataCache.fetch(newLocation.href);
-
-              newLocation.resolvedData = res;
+              newLocation.resolvedData = await dataCache.fetch(newLocation.href);
               tempDataType.ePICJSON = newLocation.resolvedData;
               tempDataType.name = newLocation.resolvedData['name'];
               tempDataType.description = newLocation.resolvedData['description'];
