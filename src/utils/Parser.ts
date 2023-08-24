@@ -55,7 +55,6 @@ export class Parser {
       }[];
     }[],
   ): Promise<GenericIdentifierType> {
-    console.log(this._dataTypes);
     // default to fallback
     let bestFit = new this._dataTypes[this._dataTypes.length - 1](value);
 
