@@ -1,29 +1,84 @@
+/**
+ * This class represents an action that will most likely be rendered as a button.
+ */
 export class FoldableAction {
-    private readonly _priority: number;
-    private readonly _title: string;
-    private readonly _link: string;
-    private readonly _style: "primary" | "secondary" | "danger";
+  /**
+   * The priority of the action in the list of actions.
+   * @type {number}
+   * @private
+   */
+  private readonly _priority: number;
 
-    constructor(priority: number, title: string, link: string, style: "primary" | "secondary" | "danger") {
-        this._priority = priority;
-        this._title = title;
-        this._link = link;
-        this._style = style;
-    }
+  /**
+   * The title of the action.
+   * Will be rendered as the text of the button.
+   * @type {string}
+   * @private
+   */
+  private readonly _title: string;
 
-    get priority(): number {
-        return this._priority;
-    }
+  /**
+   * The link of the action.
+   * Will be rendered as the link of the button.
+   * @type {string}
+   * @private
+   */
+  private readonly _link: string;
 
-    get title(): string {
-        return this._title;
-    }
+  /**
+   * The style of the action.
+   * primary: blue
+   * secondary: gray
+   * danger: red
+   * @type {'primary' | 'secondary' | 'danger'}
+   * @private
+   */
+  private readonly _style: 'primary' | 'secondary' | 'danger';
 
-    get link(): string {
-        return this._link;
-    }
+  /**
+   * Creates a new FoldableAction object.
+   * @param priority The priority of the action in the list of actions. (lower is better)
+   * @param title The title of the action.
+   * @param link The link of the action.
+   * @param style The style of the action.
+   * @constructor
+   */
+  constructor(priority: number, title: string, link: string, style: 'primary' | 'secondary' | 'danger') {
+    this._priority = priority;
+    this._title = title;
+    this._link = link;
+    this._style = style;
+  }
 
-    get style(): "primary" | "secondary" | "danger" {
-        return this._style;
-    }
+  /**
+   * Outputs the priority of the action.
+   * @returns {number} The priority of the action.
+   */
+  get priority(): number {
+    return this._priority;
+  }
+
+  /**
+   * Outputs the title of the action.
+   * @returns {string} The title of the action.
+   */
+  get title(): string {
+    return this._title;
+  }
+
+  /**
+   * Outputs the link of the action.
+   * @returns {string} The link of the action.
+   */
+  get link(): string {
+    return this._link;
+  }
+
+  /**
+   * Outputs the style of the action.
+   * @returns {'primary' | 'secondary' | 'danger'} The style of the action.
+   */
+  get style(): 'primary' | 'secondary' | 'danger' {
+    return this._style;
+  }
 }

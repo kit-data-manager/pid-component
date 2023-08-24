@@ -1,0 +1,7 @@
+# Ignore artifacts:
+.stencil
+.storybook
+dist
+loader
+node_modules
+www

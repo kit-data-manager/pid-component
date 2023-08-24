@@ -1,9 +1,9 @@
-import {FunctionalComponent} from "@stencil/core";
-import {FoldableItem} from "./FoldableItem";
-import {FoldableAction} from "./FoldableAction";
+import { FunctionalComponent } from '@stencil/core';
+import { FoldableItem } from './FoldableItem';
+import { FoldableAction } from './FoldableAction';
 
 /**
- * GenericIdentifierType is the base class for all identifier types that should be parsed and rendered into the display-magic component.
+ * GenericIdentifierType is the base class for all identifier types that should be parsed and rendered into the pid-component component.
  * It contains the basic structure of a component object and the abstract methods that need to be implemented by the child classes.
  */
 export abstract class GenericIdentifierType {
@@ -21,8 +21,8 @@ export abstract class GenericIdentifierType {
    * @type {{name: string, value: any}[]}
    */
   private _settings: {
-    name: string,
-    value: any
+    name: string;
+    value: any;
   }[] = [];
 
   /**
@@ -42,13 +42,15 @@ export abstract class GenericIdentifierType {
   /**
    * Creates a new GenericIdentifierType object
    * @param value The value that should be parsed and rendered
+   * @constructor
    */
-  constructor(value: string)
+  constructor(value: string);
 
   /**
    * Creates a new GenericIdentifierType object
    * @param value The value that should be parsed and rendered
    * @param settings The settings of the environment from which the settings for the component are extracted.
+   * @constructor
    */
   constructor(value: string, settings?: { name: string; value: any }[]) {
     this._value = value;
@@ -148,5 +150,5 @@ export abstract class GenericIdentifierType {
    */
   renderBody(): FunctionalComponent<any> | undefined {
     return undefined;
-  };
+  }
 }

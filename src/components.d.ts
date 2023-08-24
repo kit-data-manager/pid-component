@@ -5,37 +5,26 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { FoldableAction, FoldableItem } from "./components/foldable-component/foldable-component";
-export { FoldableAction, FoldableItem } from "./components/foldable-component/foldable-component";
 export namespace Components {
-    interface BeautifulOrcid {
+    /**
+     * This component highlights a handle and links to the FAIR DO Scope.
+     * It automatically generates colors for the parts of the handle (prefix and suffix) to make them easily distinguishable.
+     */
+    interface HandleHighlight {
         /**
-          * The date of the affiliation to display. (optional) Defaults to the current date.
-          * @type {Date}
+          * Whether the component should use the filled or the outlined design.
          */
-        "affiliationAt": Date;
+        "filled": boolean;
         /**
-          * The ORCiD to display, evaluate and link in this component. (required)
-          * @type {string}
+          * The Handle to highlight and link in this component.
          */
-        "orcid": string;
+        "handle": string;
         /**
-          * Whether to show the affiliation or not. (optional) Defaults to true.
-          * @type {boolean}
+          * An optional custom link to use instead of the default one which links to the FAIR DO Scope.
          */
-        "showAffiliation": boolean;
-        /**
-          * Whether to show the department of the affiliation or not. Depends internally on availability of the department in the ORCiD information. (optional) Defaults to false.
-          * @type {boolean}
-         */
-        "showDepartment": boolean;
-        /**
-          * Whether to show the ORCiD inline or not. (optional) Defaults to false.
-          * @type {boolean}
-         */
-        "showOrcid": boolean;
+        "linkTo": 'disable' | 'fairdoscope' | 'resolveRef';
     }
-    interface DisplayMagic {
+    interface PidComponent {
         /**
           * The number of items to show in the table per page. Defaults to 10. (optional)
           * @type {number}
@@ -46,6 +35,11 @@ export namespace Components {
           * @type {number}
          */
         "currentLevelOfSubcomponents": number;
+        /**
+          * Determines whether the cache should be deleted after the component on the top level is disconnected. Defaults to true. (optional)
+          * @type {boolean}
+         */
+        "deleteCacheAfterDisconnect": boolean;
         /**
           * Determines whether subcomponents should generally be shown or not. If set to true, the component won't show any subcomponents. If not set, the component will show subcomponents if the current level of subcomponents is not the total level of subcomponents or greater. (optional)
           * @type {boolean}
@@ -72,129 +66,8 @@ export namespace Components {
          */
         "value": string;
     }
-    interface FoldableComponent {
-        "actions": FoldableAction[];
-        /**
-          * Should the table inside the component change colors every other line?
-         */
-        "changingColors": boolean;
-        /**
-          * The current elevation level of the subcomponents. If the difference between the current level and the level of the subcomponents is 0, the subcomponents are not shown.
-         */
-        "currentLevelOfSubcomponents": number;
-        "items": FoldableItem[];
-        /**
-          * The maximum level of subcomponents to show.
-         */
-        "levelOfSubcomponents": number;
-        /**
-          * Should the details element be open by default?
-         */
-        "openStatus": boolean;
-        /**
-          * Should the subcomponents be shown?
-         */
-        "showSubcomponents": boolean;
-    }
-    /**
-     * This component highlights a handle and links to the FAIR DO Scope.
-     * It automatically generates colors for the parts of the handle (prefix and suffix) to make them easily distinguishable.
-     */
-    interface HandleHighlight {
-        /**
-          * Whether the component should use the filled or the outlined design.
-         */
-        "filled": boolean;
-        /**
-          * The Handle to highlight and link in this component.
-         */
-        "handle": string;
-        /**
-          * An optional custom link to use instead of the default one which links to the FAIR DO Scope.
-         */
-        "linkTo": 'disable' | 'fairdoscope' | 'resolveRef';
-    }
-    interface IntelligentHandle {
-        /**
-          * Should the table inside the component change colors every other line?
-         */
-        "changingColors": boolean;
-        /**
-          * The current elevation level of the subcomponents. If the difference between the current level and the level of the subcomponents is 0, the subcomponents are not shown.
-         */
-        "currentLevelOfSubcomponents": number;
-        /**
-          * The Handle to highlight and link in this component.
-         */
-        "handle": string;
-        /**
-          * The maximum level of subcomponents to show.
-         */
-        "levelOfSubcomponents": number;
-        /**
-          * Should the details element be open by default?
-         */
-        "openStatus": boolean;
-        /**
-          * Should the subcomponents be shown?
-         */
-        "showSubcomponents": boolean;
-    }
-    interface UsefulOrcid {
-        /**
-          * The date of the affiliation to display. (optional) Defaults to the current date.
-          * @type {Date}
-         */
-        "affiliationAt": Date;
-        /**
-          * Should the table inside the component change colors every other line?
-         */
-        "changingColors": boolean;
-        /**
-          * Should the details element be open by default?
-         */
-        "openStatus": boolean;
-        /**
-          * The ORCiD to display, evaluate and link in this component. (required)
-          * @type {string}
-         */
-        "orcid": string;
-        /**
-          * Whether to show the affiliation or not. (optional) Defaults to true.
-          * @type {boolean}
-         */
-        "showAffiliation": boolean;
-        /**
-          * Whether to show the department of the affiliation or not. Depends internally on availability of the department in the ORCiD information. (optional) Defaults to false.
-          * @type {boolean}
-         */
-        "showDepartment": boolean;
-        /**
-          * Whether to show the ORCiD inline or not. (optional) Defaults to false.
-          * @type {boolean}
-         */
-        "showOrcid": boolean;
-    }
 }
 declare global {
-    interface HTMLBeautifulOrcidElement extends Components.BeautifulOrcid, HTMLStencilElement {
-    }
-    var HTMLBeautifulOrcidElement: {
-        prototype: HTMLBeautifulOrcidElement;
-        new (): HTMLBeautifulOrcidElement;
-    };
-    interface HTMLDisplayMagicElement extends Components.DisplayMagic, HTMLStencilElement {
-    }
-    var HTMLDisplayMagicElement: {
-        prototype: HTMLDisplayMagicElement;
-        new (): HTMLDisplayMagicElement;
-    };
-    interface HTMLFoldableComponentElement extends Components.FoldableComponent, HTMLStencilElement {
-    }
-    var HTMLFoldableComponentElement: {
-        prototype: HTMLFoldableComponentElement;
-        new (): HTMLFoldableComponentElement;
-    };
     /**
      * This component highlights a handle and links to the FAIR DO Scope.
      * It automatically generates colors for the parts of the handle (prefix and suffix) to make them easily distinguishable.
@@ -205,56 +78,37 @@ declare global {
         prototype: HTMLHandleHighlightElement;
         new (): HTMLHandleHighlightElement;
     };
-    interface HTMLIntelligentHandleElement extends Components.IntelligentHandle, HTMLStencilElement {
+    interface HTMLPidComponentElement extends Components.PidComponent, HTMLStencilElement {
     }
-    var HTMLIntelligentHandleElement: {
-        prototype: HTMLIntelligentHandleElement;
-        new (): HTMLIntelligentHandleElement;
-    };
-    interface HTMLUsefulOrcidElement extends Components.UsefulOrcid, HTMLStencilElement {
-    }
-    var HTMLUsefulOrcidElement: {
-        prototype: HTMLUsefulOrcidElement;
-        new (): HTMLUsefulOrcidElement;
+    var HTMLPidComponentElement: {
+        prototype: HTMLPidComponentElement;
+        new (): HTMLPidComponentElement;
     };
     interface HTMLElementTagNameMap {
-        "beautiful-orcid": HTMLBeautifulOrcidElement;
-        "display-magic": HTMLDisplayMagicElement;
-        "foldable-component": HTMLFoldableComponentElement;
         "handle-highlight": HTMLHandleHighlightElement;
-        "intelligent-handle": HTMLIntelligentHandleElement;
-        "useful-orcid": HTMLUsefulOrcidElement;
+        "pid-component": HTMLPidComponentElement;
     }
 }
 declare namespace LocalJSX {
-    interface BeautifulOrcid {
+    /**
+     * This component highlights a handle and links to the FAIR DO Scope.
+     * It automatically generates colors for the parts of the handle (prefix and suffix) to make them easily distinguishable.
+     */
+    interface HandleHighlight {
         /**
-          * The date of the affiliation to display. (optional) Defaults to the current date.
-          * @type {Date}
+          * Whether the component should use the filled or the outlined design.
          */
-        "affiliationAt"?: Date;
+        "filled"?: boolean;
         /**
-          * The ORCiD to display, evaluate and link in this component. (required)
-          * @type {string}
+          * The Handle to highlight and link in this component.
          */
-        "orcid": string;
+        "handle": string;
         /**
-          * Whether to show the affiliation or not. (optional) Defaults to true.
-          * @type {boolean}
+          * An optional custom link to use instead of the default one which links to the FAIR DO Scope.
          */
-        "showAffiliation"?: boolean;
-        /**
-          * Whether to show the department of the affiliation or not. Depends internally on availability of the department in the ORCiD information. (optional) Defaults to false.
-          * @type {boolean}
-         */
-        "showDepartment"?: boolean;
-        /**
-          * Whether to show the ORCiD inline or not. (optional) Defaults to false.
-          * @type {boolean}
-         */
-        "showOrcid"?: boolean;
+        "linkTo"?: 'disable' | 'fairdoscope' | 'resolveRef';
     }
-    interface DisplayMagic {
+    interface PidComponent {
         /**
           * The number of items to show in the table per page. Defaults to 10. (optional)
           * @type {number}
@@ -265,6 +119,11 @@ declare namespace LocalJSX {
           * @type {number}
          */
         "currentLevelOfSubcomponents"?: number;
+        /**
+          * Determines whether the cache should be deleted after the component on the top level is disconnected. Defaults to true. (optional)
+          * @type {boolean}
+         */
+        "deleteCacheAfterDisconnect"?: boolean;
         /**
           * Determines whether subcomponents should generally be shown or not. If set to true, the component won't show any subcomponents. If not set, the component will show subcomponents if the current level of subcomponents is not the total level of subcomponents or greater. (optional)
           * @type {boolean}
@@ -291,132 +150,21 @@ declare namespace LocalJSX {
          */
         "value"?: string;
     }
-    interface FoldableComponent {
-        "actions"?: FoldableAction[];
-        /**
-          * Should the table inside the component change colors every other line?
-         */
-        "changingColors"?: boolean;
-        /**
-          * The current elevation level of the subcomponents. If the difference between the current level and the level of the subcomponents is 0, the subcomponents are not shown.
-         */
-        "currentLevelOfSubcomponents"?: number;
-        "items"?: FoldableItem[];
-        /**
-          * The maximum level of subcomponents to show.
-         */
-        "levelOfSubcomponents"?: number;
-        /**
-          * Should the details element be open by default?
-         */
-        "openStatus"?: boolean;
-        /**
-          * Should the subcomponents be shown?
-         */
-        "showSubcomponents"?: boolean;
-    }
-    /**
-     * This component highlights a handle and links to the FAIR DO Scope.
-     * It automatically generates colors for the parts of the handle (prefix and suffix) to make them easily distinguishable.
-     */
-    interface HandleHighlight {
-        /**
-          * Whether the component should use the filled or the outlined design.
-         */
-        "filled"?: boolean;
-        /**
-          * The Handle to highlight and link in this component.
-         */
-        "handle": string;
-        /**
-          * An optional custom link to use instead of the default one which links to the FAIR DO Scope.
-         */
-        "linkTo"?: 'disable' | 'fairdoscope' | 'resolveRef';
-    }
-    interface IntelligentHandle {
-        /**
-          * Should the table inside the component change colors every other line?
-         */
-        "changingColors"?: boolean;
-        /**
-          * The current elevation level of the subcomponents. If the difference between the current level and the level of the subcomponents is 0, the subcomponents are not shown.
-         */
-        "currentLevelOfSubcomponents"?: number;
-        /**
-          * The Handle to highlight and link in this component.
-         */
-        "handle": string;
-        /**
-          * The maximum level of subcomponents to show.
-         */
-        "levelOfSubcomponents"?: number;
-        /**
-          * Should the details element be open by default?
-         */
-        "openStatus"?: boolean;
-        /**
-          * Should the subcomponents be shown?
-         */
-        "showSubcomponents"?: boolean;
-    }
-    interface UsefulOrcid {
-        /**
-          * The date of the affiliation to display. (optional) Defaults to the current date.
-          * @type {Date}
-         */
-        "affiliationAt"?: Date;
-        /**
-          * Should the table inside the component change colors every other line?
-         */
-        "changingColors"?: boolean;
-        /**
-          * Should the details element be open by default?
-         */
-        "openStatus"?: boolean;
-        /**
-          * The ORCiD to display, evaluate and link in this component. (required)
-          * @type {string}
-         */
-        "orcid": string;
-        /**
-          * Whether to show the affiliation or not. (optional) Defaults to true.
-          * @type {boolean}
-         */
-        "showAffiliation"?: boolean;
-        /**
-          * Whether to show the department of the affiliation or not. Depends internally on availability of the department in the ORCiD information. (optional) Defaults to false.
-          * @type {boolean}
-         */
-        "showDepartment"?: boolean;
-        /**
-          * Whether to show the ORCiD inline or not. (optional) Defaults to false.
-          * @type {boolean}
-         */
-        "showOrcid"?: boolean;
-    }
     interface IntrinsicElements {
-        "beautiful-orcid": BeautifulOrcid;
-        "display-magic": DisplayMagic;
-        "foldable-component": FoldableComponent;
         "handle-highlight": HandleHighlight;
-        "intelligent-handle": IntelligentHandle;
-        "useful-orcid": UsefulOrcid;
+        "pid-component": PidComponent;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "beautiful-orcid": LocalJSX.BeautifulOrcid & JSXBase.HTMLAttributes<HTMLBeautifulOrcidElement>;
-            "display-magic": LocalJSX.DisplayMagic & JSXBase.HTMLAttributes<HTMLDisplayMagicElement>;
-            "foldable-component": LocalJSX.FoldableComponent & JSXBase.HTMLAttributes<HTMLFoldableComponentElement>;
             /**
              * This component highlights a handle and links to the FAIR DO Scope.
              * It automatically generates colors for the parts of the handle (prefix and suffix) to make them easily distinguishable.
              */
             "handle-highlight": LocalJSX.HandleHighlight & JSXBase.HTMLAttributes<HTMLHandleHighlightElement>;
-            "intelligent-handle": LocalJSX.IntelligentHandle & JSXBase.HTMLAttributes<HTMLIntelligentHandleElement>;
-            "useful-orcid": LocalJSX.UsefulOrcid & JSXBase.HTMLAttributes<HTMLUsefulOrcidElement>;
+            "pid-component": LocalJSX.PidComponent & JSXBase.HTMLAttributes<HTMLPidComponentElement>;
         }
     }
 }

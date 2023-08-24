@@ -2,7 +2,18 @@
  * This class is a wrapper around the Cache API.
  */
 export class DataCache {
+  /**
+   * The name of the cache.
+   * @type {string}
+   * @private
+   */
   private readonly name: string;
+
+  /**
+   * The opened cache instance from the Cache API.
+   * @type {Cache}
+   * @private
+   */
   private cacheInstance: Cache = undefined;
 
   /**
@@ -16,6 +27,7 @@ export class DataCache {
 
   /**
    * Checks whether the Cache API is available in the browser and opens the cache.
+   * @async
    */
   async open() {
     if ('caches' in self) {
@@ -72,8 +84,8 @@ export class DataCache {
  * @returns {Promise<DataCache>} The initialized DataCache instance.
  * @async
  */
-export const init = async (name: string) => {
+export async function init(name: string): Promise<DataCache> {
   const dataCache = new DataCache(name);
   await dataCache.open();
   return dataCache;
-};
+}
