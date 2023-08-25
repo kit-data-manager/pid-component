@@ -123,7 +123,7 @@ export class ORCIDType extends GenericIdentifierType {
 
       // If there are other e-mail addresses, generate an item with a list of them
       if (other.length > 0)
-        this.items.push(new FoldableItem(70, 'Other E-Mail addresses', other.map(email => email.email).join(', '), 'All other e-mail addresses of the person.'));
+        this.items.push(new FoldableItem(70, 'Other E-Mail addresses', other.map(email => email.email).join(', '), 'All other e-mail addresses of the person.', undefined, undefined, false));
 
       if (parsed.preferredLocale)
         this.items.push(

@@ -1,6 +1,6 @@
 {
   "name": "@kit-data-manager/pid-component",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "license": "Apache-2.0",
   "description": "The PID-Component is a easily extensible web component that can be used to display PIDs, ORCiDs, and possibly other identifiers in a user-friendly way. It is easily extensible to support other identifier types.",
   "author": "Maximilian Inckmann <maximilian.inckmann@kit.edu> (https://orcid.org/0009-0005-2800-4833)",
@@ -49,7 +49,8 @@
     "test.watch": "stencil test --spec --e2e --watchAll",
     "generate": "stencil generate",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "storybook-docs": "storybook dev --docs"
   },
   "dependencies": {
     "@stencil/core": "^4.0.0"
