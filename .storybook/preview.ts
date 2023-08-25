@@ -1,6 +1,9 @@
 import '../src/tailwind.css';
 import {defineCustomElements} from '../loader';
 
+defineCustomElements();
+
+
 const preview = {
   parameters: {
     actions: { argTypesRegex: '^on[A-Z].*' },
@@ -12,6 +15,5 @@ const preview = {
     },
   },
 };
-defineCustomElements();
 
 export default preview;
