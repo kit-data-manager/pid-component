@@ -1,8 +1,7 @@
 import '../src/tailwind.css';
-import {defineCustomElements} from '../loader';
+import { defineCustomElements } from '../loader';
 
 defineCustomElements();
-
 
 const preview = {
   parameters: {
