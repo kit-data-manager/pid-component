@@ -1,11 +1,11 @@
-import { HSLColor } from './HSLColor';
-import { PIDRecord } from './PIDRecord';
-import { PID } from './PID';
-import { PIDDataType } from './PIDDataType';
-import { FunctionalComponent, h } from '@stencil/core';
-import { GenericIdentifierType } from './GenericIdentifierType';
-import { FoldableItem } from './FoldableItem';
-import { FoldableAction } from './FoldableAction';
+import {HSLColor} from './HSLColor';
+import {PIDRecord} from './PIDRecord';
+import {PID} from './PID';
+import {PIDDataType} from './PIDDataType';
+import {FunctionalComponent, h} from '@stencil/core';
+import {GenericIdentifierType} from './GenericIdentifierType';
+import {FoldableItem} from './FoldableItem';
+import {FoldableAction} from './FoldableAction';
 
 /**
  * This class specifies a custom renderer for handles.
@@ -85,7 +85,7 @@ export class HandleType extends GenericIdentifierType {
 
   renderPreview(): FunctionalComponent<any> {
     return (
-      <span class={'font-mono font-bold bg-white p-0.5 rounded-md'}>
+      <span class={'font-mono font-bold p-0.5 rounded-md'}>
         {this._parts.map(element => {
           return (
             <span class={'font-bold font-mono'}>

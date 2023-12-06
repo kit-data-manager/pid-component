@@ -257,7 +257,7 @@ export class PidComponent {
               <span
                 class={
                   this.currentLevelOfSubcomponents === 0
-                    ? 'group rounded-md shadow-md border text-clip inline-flex flex-grow py-0.5 px-1 open:align-top open:w-full ease-in-out transition-all duration-200 overflow-y-hidden font-bold font-mono cursor-pointer list-none bg-white overflow-x-hidden space-x-3 flex-nowrap flex-shrink-0 items-center'
+                    ? 'group text-clip inline-flex flex-grow py-0.5 px-1 open:align-top open:w-full ease-in-out transition-all duration-200 overflow-y-hidden font-bold font-mono cursor-pointer list-none overflow-x-hidden space-x-3 flex-nowrap flex-shrink-0 items-center'
                     : ''
                 }
               >
@@ -270,15 +270,16 @@ export class PidComponent {
                 {
                   // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
                   this.currentLevelOfSubcomponents === 0 ? (
-                    <button
-                      class={
-                        'ml-2 bg-white border border-slate-500 text-slate-800 font-medium font-mono text-sm rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 flex-none max-h-min items-center'
-                      }
-                      id={`copyButton-${this.identifierObject.value}`}
-                      onClick={event => copyValue(event, this.identifierObject.value)}
-                    >
-                      Copy
-                    </button>
+                    //<button
+                    //  class={
+                    //    'ml-2 bg-white border border-slate-500 text-slate-800 font-medium font-mono text-sm rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 flex-none max-h-min items-center'
+                    //  }
+                    //  id={`copyButton-${this.identifierObject.value}`}
+                    //  onClick={event => copyValue(event, this.identifierObject.value)}
+                   // >
+                    //  Copy
+                   // </button>
+                    ''
                   ) : (
                     ''
                   )
@@ -300,26 +301,26 @@ export class PidComponent {
           ) : (
             <details
               class={
-                'group rounded-md shadow-md bg-white border text-clip inline flex-grow font-sans py-0.5 px-1 open:align-top open:w-full ease-in-out transition-all duration-200'
+                'group text-clip inline flex-grow font-sans py-0.5 px-1 open:align-top open:w-full ease-in-out transition-all duration-200'
               }
               open={this.openByDefault}
               onToggle={this.toggleSubcomponents}
             >
-              <summary class="overflow-y-hidden font-bold font-mono cursor-pointer list-none bg-white overflow-x-hidden space-x-3 inline-flex flex-nowrap flex-shrink-0 items-center">
+              <summary class="overflow-y-hidden font-bold font-mono cursor-pointer list-none overflow-x-hidden inline-flex flex-nowrap flex-shrink-0 items-center">
                 <span class={'inline-flex flex-nowrap overflow-x-auto pr-1 items-center'}>
                   <svg
                     class="transition group-open:-rotate-180"
                     fill="none"
-                    height="24"
+                    height="12"
                     shape-rendering="geometricPrecision"
                     stroke="currentColor"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="1.5"
-                    viewBox="0 0 24 24"
-                    width="24"
+                    viewBox="0 0 12 12"
+                    width="12"
                   >
-                    <path d="M6 9l6 6 6-6"></path>
+                    <path d="M 2 2 l 4 8 l 4 -8"></path>
                   </svg>
                   <span class={'font-medium font-mono inline-flex flex-nowrap overflow-x-auto'}>
                     {
@@ -331,14 +332,15 @@ export class PidComponent {
                 {
                   // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
                   this.currentLevelOfSubcomponents === 0 ? (
-                    <button
-                      class={
-                        'bg-white border border-slate-500 text-slate-800 font-medium font-mono text-sm rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 flex-none max-h-min items-center'
-                      }
-                      onClick={event => copyValue(event, this.identifierObject.value)}
-                    >
-                      Copy
-                    </button>
+                    //<button
+                    //  class={
+                    //    'bg-white border border-slate-500 text-slate-500 font-medium font-mono text-sm rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 flex-none max-h-min items-center'
+                     // }
+                    //  onClick={event => copyValue(event, this.identifierObject.value)}
+                   // >
+                    //  Copy
+                    //</button>
+                    ''
                   ) : (
                     ''
                   )
@@ -366,7 +368,7 @@ export class PidComponent {
                               // Render a row for every item
                               return (
                                 <tr class={'odd:bg-slate-200 flex w-full'}>
-                                  <td class={'overflow-x-scroll p-1 w-1/4 font-mono'}>
+                                  <td class={'overflow-x-auto p-1 w-1/4 font-mono'}>
                                     <a
                                       role="link"
                                       class="right-0 focus:outline-none focus:ring-gray-300 rounded-md focus:ring-offset-2 focus:ring-2 focus:bg-gray-200 relative md:mt-0 inline flex-nowrap"
@@ -405,7 +407,7 @@ export class PidComponent {
                                       </p>
                                     </a>
                                   </td>
-                                  <td class={'align-top overflow-x-scroll text-sm p-1 w-3/4 select-text flex '}>
+                                  <td class={'align-top overflow-x-auto text-sm p-1 w-3/4 select-text flex '}>
                                     <span class={'flex-grow'}>
                                       {
                                         // Load a foldable subcomponent if subcomponents are not disabled (hideSubcomponents), and the current level of subcomponents is not the total level of subcomponents. If the subcomponent is on the bottom level of the hierarchy, render just a preview. If the value should not be resolved (isFoldable), just render the value as text.

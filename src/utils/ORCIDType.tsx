@@ -161,7 +161,7 @@ export class ORCIDType extends GenericIdentifierType {
 
   renderPreview(): FunctionalComponent<any> {
     return (
-      <span class={'inline-flex items-center font-mono px-1 flex-nowrap align-top max-w-md truncate overflow-x-scroll'}>
+      <span class={'inline-flex items-center font-mono px-1 flex-nowrap align-top max-w-md truncate overflow-x-auto'}>
         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" class={'h-5 p-0.5 mr-2 flex-none'}>
           <style type="text/css">
             {`.st0{fill:#A6CE39;}`}
@@ -182,7 +182,7 @@ export class ORCIDType extends GenericIdentifierType {
             />
           </g>
         </svg>
-        <span class={'flex-none overflow-x-scroll max-w-lg truncate'}>
+        <span class={'flex-none overflow-x-auto max-w-lg truncate'}>
           {this._orcidInfo.familyName}, {this._orcidInfo.givenNames}{' '}
           {this.showAffiliation && this._orcidInfo.getAffiliationsAt(new Date()).length > 0
             ? `(${this._orcidInfo.getAffiliationAsString(this._orcidInfo.getAffiliationsAt(new Date())[0], false)}${
