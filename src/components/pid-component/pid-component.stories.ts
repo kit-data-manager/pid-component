@@ -67,6 +67,23 @@ const meta: Meta = {
         },
       },
     },
+    emphasizeComponent: {
+      name: 'emphasize-component',
+      description:
+        ' Determines whether components should be emphasized towards their surrounding by border and shadow.',
+      defaultValue: true,
+      control: {
+        type: 'boolean',
+      },
+      table: {
+        defaultValue: {
+          summary: true,
+        },
+        type: {
+          summary: 'boolean',
+        },
+      },
+    },
     levelOfSubcomponents: {
       name: 'level-of-subcomponents',
       description: 'The maximum level of subcomponents to show. ',
@@ -122,6 +139,7 @@ const meta: Meta = {
     openByDefault: false,
     amountOfItems: 10,
     hideSubcomponents: false,
+    emphasizeComponent: true,
     levelOfSubcomponents: 1,
     currentLevelOfSubcomponents: 0,
     deleteCacheAfterDisconnect: false,

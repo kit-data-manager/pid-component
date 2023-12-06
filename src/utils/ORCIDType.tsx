@@ -82,7 +82,7 @@ export class ORCIDType extends GenericIdentifierType {
           this.items.push(new FoldableItem(50, 'Current Affiliation', affiliation, 'The current affiliation of the person.', undefined, undefined, false));
       }
     } catch (e) {
-      console.log(e);
+      console.log("Failed to obtain affiliations from ORCiD record.", e);
     }
 
     if (

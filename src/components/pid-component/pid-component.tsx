@@ -78,6 +78,15 @@ export class PidComponent {
   @Prop() hideSubcomponents: boolean;
 
   /**
+   * Determines whether components should be emphasized towards their surrounding by border and shadow.
+   * If set to true, border and shadows will be shown around the component.
+   * It not set, the component won't be surrounded by border and shadow.
+   * (optional)
+   * @type {boolean}
+   */
+  @Prop() emphasizeComponent: boolean;
+
+  /**
    * Determines whether the cache should be deleted after the component on the top level is disconnected.
    * Defaults to true.
    * (optional)
@@ -142,7 +151,9 @@ export class PidComponent {
 
     try {
       settings = JSON.parse(this.settings);
-    } catch (e) {}
+    } catch (e) {
+      console.error("Failed to parse settings.", e)
+    }
 
     // Get an object from the best fitting class implementing GenericIdentifierType
     const obj = await Parser.getBestFit(this.value, settings);
@@ -257,7 +268,8 @@ export class PidComponent {
               <span
                 class={
                   this.currentLevelOfSubcomponents === 0
-                    ? 'group text-clip inline-flex flex-grow py-0.5 px-1 open:align-top open:w-full ease-in-out transition-all duration-200 overflow-y-hidden font-bold font-mono cursor-pointer list-none overflow-x-hidden space-x-3 flex-nowrap flex-shrink-0 items-center'
+                    //(w/o sub components)
+                    ? 'group ' + (this.emphasizeComponent? 'rounded-md shadow-md border ' : '') + 'bg-white/40 text-clip inline-flex flex-grow py-0.5 px-1 open:align-top open:w-full ease-in-out transition-all duration-200 overflow-y-hidden font-bold font-mono cursor-pointer list-none bg-white overflow-x-hidden space-x-3 flex-nowrap flex-shrink-0 items-center'
                     : ''
                 }
               >
@@ -270,16 +282,15 @@ export class PidComponent {
                 {
                   // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
                   this.currentLevelOfSubcomponents === 0 ? (
-                    //<button
-                    //  class={
-                    //    'ml-2 bg-white border border-slate-500 text-slate-800 font-medium font-mono text-sm rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 flex-none max-h-min items-center'
-                    //  }
-                    //  id={`copyButton-${this.identifierObject.value}`}
-                    //  onClick={event => copyValue(event, this.identifierObject.value)}
-                   // >
-                    //  Copy
-                   // </button>
-                    ''
+                    <button
+                      class={
+                        'ml-2 bg-white border border-slate-500 text-slate-800 font-medium text-xs font-mono text-sm rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 flex-none max-h-min items-center'
+                      }
+                      id={`copyButton-${this.identifierObject.value}`}
+                      onClick={event => copyValue(event, this.identifierObject.value)}
+                    >
+                      Copy
+                    </button>
                   ) : (
                     ''
                   )
@@ -301,7 +312,8 @@ export class PidComponent {
           ) : (
             <details
               class={
-                'group text-clip inline flex-grow font-sans py-0.5 px-1 open:align-top open:w-full ease-in-out transition-all duration-200'
+                //(/w sub components)
+                'group ' + (this.emphasizeComponent? 'rounded-md shadow-md border ' : '') +  'bg-white/40 text-clip inline flex-grow font-sans py-0.5 px-1 open:align-top open:w-full ease-in-out transition-all duration-200'
               }
               open={this.openByDefault}
               onToggle={this.toggleSubcomponents}
@@ -320,7 +332,7 @@ export class PidComponent {
                     viewBox="0 0 12 12"
                     width="12"
                   >
-                    <path d="M 2 2 l 4 8 l 4 -8"></path>
+                    <path d="M 2 3 l 4 6 l 4 -6"></path>
                   </svg>
                   <span class={'font-medium font-mono inline-flex flex-nowrap overflow-x-auto'}>
                     {
@@ -332,15 +344,14 @@ export class PidComponent {
                 {
                   // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
                   this.currentLevelOfSubcomponents === 0 ? (
-                    //<button
-                    //  class={
-                    //    'bg-white border border-slate-500 text-slate-500 font-medium font-mono text-sm rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 flex-none max-h-min items-center'
-                     // }
-                    //  onClick={event => copyValue(event, this.identifierObject.value)}
-                   // >
-                    //  Copy
-                    //</button>
-                    ''
+                    <button
+                      class={
+                        'bg-white border border-slate-500 text-slate-500 font-medium text-xs font-mono text-sm rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 flex-none max-h-min items-center'
+                      }
+                      onClick={event => copyValue(event, this.identifierObject.value)}
+                    >
+                      Copy
+                    </button>
                   ) : (
                     ''
                   )
@@ -415,6 +426,7 @@ export class PidComponent {
                                           <pid-component
                                             value={value.value}
                                             levelOfSubcomponents={this.levelOfSubcomponents}
+                                            emphasizeComponent={this.emphasizeComponent}
                                             currentLevelOfSubcomponents={this.currentLevelOfSubcomponents + 1}
                                             amountOfItems={this.amountOfItems}
                                             settings={this.settings}
@@ -423,6 +435,7 @@ export class PidComponent {
                                           <pid-component
                                             value={value.value}
                                             levelOfSubcomponents={this.currentLevelOfSubcomponents}
+                                            emphasizeComponent={this.emphasizeComponent}
                                             currentLevelOfSubcomponents={this.currentLevelOfSubcomponents}
                                             amountOfItems={this.amountOfItems}
                                             settings={this.settings}
@@ -435,7 +448,7 @@ export class PidComponent {
                                     </span>
                                     <button
                                       class={
-                                        'bg-white border border-slate-500 text-slate-800 font-medium font-mono text-sm rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex-none h-7 align-top mx-2'
+                                        'bg-white border border-slate-500 text-slate-800 font-medium text-xs font-mono text-sm rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex-none h-7 align-top mx-2'
                                       }
                                       onClick={event => copyValue(event, value.value)}
                                     >
