@@ -41,6 +41,11 @@ export namespace Components {
          */
         "deleteCacheAfterDisconnect": boolean;
         /**
+          * Determines whether components should be emphasized towards their surrounding by border and shadow. If set to true, border and shadows will be shown around the component. It not set, the component won't be surrounded by border and shadow. (optional)
+          * @type {boolean}
+         */
+        "emphasizeComponent": boolean;
+        /**
           * Determines whether subcomponents should generally be shown or not. If set to true, the component won't show any subcomponents. If not set, the component will show subcomponents if the current level of subcomponents is not the total level of subcomponents or greater. (optional)
           * @type {boolean}
          */
@@ -124,6 +129,11 @@ declare namespace LocalJSX {
           * @type {boolean}
          */
         "deleteCacheAfterDisconnect"?: boolean;
+        /**
+          * Determines whether components should be emphasized towards their surrounding by border and shadow. If set to true, border and shadows will be shown around the component. It not set, the component won't be surrounded by border and shadow. (optional)
+          * @type {boolean}
+         */
+        "emphasizeComponent"?: boolean;
         /**
           * Determines whether subcomponents should generally be shown or not. If set to true, the component won't show any subcomponents. If not set, the component will show subcomponents if the current level of subcomponents is not the total level of subcomponents or greater. (optional)
           * @type {boolean}
