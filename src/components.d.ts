@@ -66,6 +66,11 @@ export namespace Components {
          */
         "settings": string;
         /**
+          * Determines whether on the top level the copy button is shown. If set to true, the copy button is shown also on the top level. It not set, the copy button is only shown for sub-components. (optional)
+          * @type {boolean}
+         */
+        "showTopLevelCopy": boolean;
+        /**
           * The value to parse, evaluate and render.
           * @type {string}
          */
@@ -154,6 +159,11 @@ declare namespace LocalJSX {
           * @type {string}
          */
         "settings"?: string;
+        /**
+          * Determines whether on the top level the copy button is shown. If set to true, the copy button is shown also on the top level. It not set, the copy button is only shown for sub-components. (optional)
+          * @type {boolean}
+         */
+        "showTopLevelCopy"?: boolean;
         /**
           * The value to parse, evaluate and render.
           * @type {string}
