@@ -322,28 +322,30 @@ export class PidComponent {
             <details
               class={
                 //(/w sub components)
-                'group ' + (this.emphasizeComponent? 'rounded-md shadow-md border py-0.5 px-1 p-0.5 ' : '') +  'bg-white/40 text-clip inline flex-grow font-sans open:align-top open:w-full ease-in-out transition-all duration-200'
+                'group ' + (this.emphasizeComponent? 'rounded-md border shadow-sm px-1' : '') +  'bg-white/40 text-clip inline flex-grow font-sans open:align-top open:w-full ease-in-out transition-all duration-200'
               }
               open={this.openByDefault}
               onToggle={this.toggleSubcomponents}
             >
               <summary class="overflow-y-hidden font-bold font-mono cursor-pointer list-none overflow-x-hidden inline-flex flex-nowrap flex-shrink-0 items-center">
                 <span class={'inline-flex flex-nowrap overflow-x-auto pr-1 items-center'}>
-                  <svg
-                    class="transition group-open:-rotate-180"
-                    fill="none"
-                    height="12"
-                    shape-rendering="geometricPrecision"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                    viewBox="0 0 12 12"
-                    width="12"
-                  >
-                    <path d="M 2 3 l 4 6 l 4 -6"></path>
-                  </svg>
-                  <span class={'font-medium font-mono inline-flex flex-nowrap overflow-x-auto'}>
+                  <span class={'flex-shrink-0 px-1'}>
+                    <svg
+                      class="transition group-open:-rotate-180"
+                      fill="none"
+                      height="12"
+                      shape-rendering="geometricPrecision"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.5"
+                      viewBox="0 0 12 12"
+                      width="12"
+                    >
+                      <path d="M 2 3 l 4 6 l 4 -6"></path>
+                    </svg>
+                  </span>
+                  <span class={'font-medium font-mono inline-flex flex-nowrap overflow-x-auto text-sm shrink-0'}>
                     {
                       // Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
                       this.identifierObject.renderPreview()
@@ -355,7 +357,7 @@ export class PidComponent {
                   this.currentLevelOfSubcomponents === 0  && this.showTopLevelCopy ? (
                     <button
                       class={
-                        'bg-white border border-slate-500 text-slate-500 font-medium text-xs font-mono text-sm rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 flex-none max-h-min items-center'
+                        'bg-white border border-slate-500 text-slate-500 font-medium text-xs font-mono rounded-md px-1 py-0.5 hover:bg-blue-200 hover:text-slate-900 flex-none max-h-min items-center'
                       }
                       onClick={event => copyValue(event, this.identifierObject.value)}
                     >
