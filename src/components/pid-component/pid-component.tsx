@@ -84,7 +84,16 @@ export class PidComponent {
    * (optional)
    * @type {boolean}
    */
-  @Prop() emphasizeComponent: boolean;
+  @Prop() emphasizeComponent: boolean = true;
+
+  /**
+   * Determines whether on the top level the copy button is shown.
+   * If set to true, the copy button is shown also on the top level.
+   * It not set, the copy button is only shown for sub-components.
+   * (optional)
+   * @type {boolean}
+   */
+  @Prop() showTopLevelCopy: boolean = true;
 
   /**
    * Determines whether the cache should be deleted after the component on the top level is disconnected.
@@ -269,7 +278,7 @@ export class PidComponent {
                 class={
                   this.currentLevelOfSubcomponents === 0
                     //(w/o sub components)
-                    ? 'group ' + (this.emphasizeComponent? 'rounded-md shadow-md border ' : '') + 'bg-white/40 text-clip inline-flex flex-grow py-0.5 px-1 open:align-top open:w-full ease-in-out transition-all duration-200 overflow-y-hidden font-bold font-mono cursor-pointer list-none bg-white overflow-x-hidden space-x-3 flex-nowrap flex-shrink-0 items-center'
+                    ? 'group ' + (this.emphasizeComponent? 'rounded-md shadow-md border py-0.5 px-1 p-0.5 ' : '') + 'bg-white/40 text-clip inline-flex flex-grow open:align-top open:w-full ease-in-out transition-all duration-200 overflow-y-hidden font-bold font-mono cursor-pointer list-none bg-white overflow-x-hidden space-x-3 flex-nowrap flex-shrink-0 items-center'
                     : ''
                 }
               >
@@ -281,7 +290,7 @@ export class PidComponent {
                 </span>
                 {
                   // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
-                  this.currentLevelOfSubcomponents === 0 ? (
+                  this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy ? (
                     <button
                       class={
                         'ml-2 bg-white border border-slate-500 text-slate-800 font-medium text-xs font-mono text-sm rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 flex-none max-h-min items-center'
@@ -313,28 +322,30 @@ export class PidComponent {
             <details
               class={
                 //(/w sub components)
-                'group ' + (this.emphasizeComponent? 'rounded-md shadow-md border ' : '') +  'bg-white/40 text-clip inline flex-grow font-sans py-0.5 px-1 open:align-top open:w-full ease-in-out transition-all duration-200'
+                'group ' + (this.emphasizeComponent? 'rounded-md border shadow-sm px-1' : '') +  'bg-white/40 text-clip inline flex-grow font-sans open:align-top open:w-full ease-in-out transition-all duration-200'
               }
               open={this.openByDefault}
               onToggle={this.toggleSubcomponents}
             >
               <summary class="overflow-y-hidden font-bold font-mono cursor-pointer list-none overflow-x-hidden inline-flex flex-nowrap flex-shrink-0 items-center">
                 <span class={'inline-flex flex-nowrap overflow-x-auto pr-1 items-center'}>
-                  <svg
-                    class="transition group-open:-rotate-180"
-                    fill="none"
-                    height="12"
-                    shape-rendering="geometricPrecision"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                    viewBox="0 0 12 12"
-                    width="12"
-                  >
-                    <path d="M 2 3 l 4 6 l 4 -6"></path>
-                  </svg>
-                  <span class={'font-medium font-mono inline-flex flex-nowrap overflow-x-auto'}>
+                  <span class={'flex-shrink-0 px-1'}>
+                    <svg
+                      class="transition group-open:-rotate-180"
+                      fill="none"
+                      height="12"
+                      shape-rendering="geometricPrecision"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.5"
+                      viewBox="0 0 12 12"
+                      width="12"
+                    >
+                      <path d="M 2 3 l 4 6 l 4 -6"></path>
+                    </svg>
+                  </span>
+                  <span class={'font-medium font-mono inline-flex flex-nowrap overflow-x-auto text-sm shrink-0'}>
                     {
                       // Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
                       this.identifierObject.renderPreview()
@@ -343,10 +354,10 @@ export class PidComponent {
                 </span>
                 {
                   // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
-                  this.currentLevelOfSubcomponents === 0 ? (
+                  this.currentLevelOfSubcomponents === 0  && this.showTopLevelCopy ? (
                     <button
                       class={
-                        'bg-white border border-slate-500 text-slate-500 font-medium text-xs font-mono text-sm rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 flex-none max-h-min items-center'
+                        'bg-white border border-slate-500 text-slate-500 font-medium text-xs font-mono rounded-md px-1 py-0.5 hover:bg-blue-200 hover:text-slate-900 flex-none max-h-min items-center'
                       }
                       onClick={event => copyValue(event, this.identifierObject.value)}
                     >

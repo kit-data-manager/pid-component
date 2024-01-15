@@ -70,7 +70,24 @@ const meta: Meta = {
     emphasizeComponent: {
       name: 'emphasize-component',
       description:
-        ' Determines whether components should be emphasized towards their surrounding by border and shadow.',
+        'Determines whether components should be emphasized towards their surrounding by border and shadow.',
+      defaultValue: true,
+      control: {
+        type: 'boolean',
+      },
+      table: {
+        defaultValue: {
+          summary: true,
+        },
+        type: {
+          summary: 'boolean',
+        },
+      },
+    },
+    showTopLevelCopy: {
+      name: 'show-top-level-copy',
+      description:
+        ' Determines whether on the top level the copy button is shown.',
       defaultValue: true,
       control: {
         type: 'boolean',
