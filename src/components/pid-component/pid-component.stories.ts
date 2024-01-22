@@ -267,6 +267,19 @@ export const URL: Story = {
   },
 };
 
+export const Email: Story = {
+  args: {
+    value: 'someone@example.com',
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `<pid-component value='someone@example.com'></pid-component>`,
+      },
+    },
+  },
+};
+
 export const Fallback: Story = {
   args: {
     value: 'This is a fallback test',

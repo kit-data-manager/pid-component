@@ -4,6 +4,7 @@ import { FallbackType } from './FallbackType';
 import { ORCIDType } from './ORCIDType';
 import { DateType } from './DateType';
 import { URLType } from './URLType';
+import { EmailType } from "./EmailType";
 
 /**
  * Class that handles the parsing of a given value and returns the best fitting component object
@@ -20,7 +21,7 @@ export class Parser {
       name: string;
       value: any;
     }[],
-  ) => GenericIdentifierType)[] = [DateType, ORCIDType, HandleType, URLType, FallbackType];
+  ) => GenericIdentifierType)[] = [DateType, ORCIDType, HandleType, EmailType, URLType, FallbackType];
 
   /**
    * Returns the priority of the best fitting component object for a given value (lower is better)
