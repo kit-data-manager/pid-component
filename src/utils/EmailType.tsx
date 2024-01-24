@@ -1,3 +1,4 @@
+import React from 'react';
 import { GenericIdentifierType } from './GenericIdentifierType';
 import { FunctionalComponent, h } from '@stencil/core';
 
@@ -7,13 +8,12 @@ import { FunctionalComponent, h } from '@stencil/core';
  */
 export class EmailType extends GenericIdentifierType {
   getSettingsKey(): string {
-    return 'DateType';
+    return 'EmailType';
   }
 
   hasCorrectFormat(): boolean {
-    return true;
-    //const regex = new RegExp('(\w|\(|\)|\.|\"|\(|\)|,|:|;|<|>|@|\[|\]|\\|!|#|\$|%|&|\'|\*|\+|-|/|\?|\^|`|{|\||}|~)+@((((\(.*\))?\w+(\(.*\))?\.)+(\(.*\))?\w+(\(.*\))?\w+)|(\[((IPv6:((\w+:+)+\w+))|(\d+\.)+\d+)\]))$');
-    //return regex.test(this.value);
+    const regex = /^((\(.*\))?(\w|-|\+|_|\.)+(\(.*\))?@((((\(.*\))?\w+(\(.*\))?\.)+(\(.*\))?\w+(\(.*\))?\w+)|(\[((IPv6:((\w+:+)+\w+))|(\d+\.)+\d+)\]))\s*(,|$)\s*)+$/
+    return regex.test(this.value);
   }
 
   init(): Promise<void> {
@@ -26,9 +26,16 @@ export class EmailType extends GenericIdentifierType {
 
   renderPreview(): FunctionalComponent<any> {
     return (
-      <a href={'mailto:' + this.value} target="_blank" class={'font-mono text-sm text-blue-400'}>
-        {this.value}
-      </a>
+      <span>
+        {React.Children.map(this.value.split(new RegExp(/\s*,\s*/)), (email, i) => {
+          return <span> 
+              {i > 0 && ", "}
+              <a href={'mailto:' + email} target="_blank" class={'font-mono text-sm text-blue-400'}>
+                {email}
+              </a>
+            </span>;
+        })}
+      </span>
     );
   }
 }
