@@ -1,8 +1,8 @@
-import { Component, Host, h, Prop, State, Watch } from '@stencil/core';
-import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
-import { FoldableItem } from '../../utils/FoldableItem';
-import { FoldableAction } from '../../utils/FoldableAction';
-import { Parser } from '../../utils/Parser';
+import {Component, Host, h, Prop, State, Watch} from '@stencil/core';
+import {GenericIdentifierType} from '../../utils/GenericIdentifierType';
+import {FoldableItem} from '../../utils/FoldableItem';
+import {FoldableAction} from '../../utils/FoldableAction';
+import {Parser} from '../../utils/Parser';
 
 @Component({
   tag: 'pid-component',
@@ -136,6 +136,11 @@ export class PidComponent {
   @State() tablePage: number = 0;
 
   /**
+   * Determines whether the component should be temporarily visible or not.
+   */
+  @State() temporarilyEmphasized: boolean = this.emphasizeComponent;
+
+  /**
    * Watches the value property and calls connectedCallback() if it changes.
    * This is important for the different pages inside the table, since the magic-display components are not rerendered by default on value or state change.
    */
@@ -144,6 +149,14 @@ export class PidComponent {
     this.displayStatus = 'loading';
     // this.identifierObject = undefined;
     await this.connectedCallback();
+  }
+
+  /**
+   * Watches the loadSubcomponents property and sets the temporarilyEmphasized property to the value of loadSubcomponents.
+   */
+  @Watch('loadSubcomponents')
+  async watchLoadSubcomponents() {
+    this.temporarilyEmphasized = this.loadSubcomponents
   }
 
   /**
@@ -259,16 +272,16 @@ export class PidComponent {
         el.classList.remove('bg-white');
         el.classList.add('bg-green-200');
         setTimeout(() => {
-          el.innerText = 'Copy';
           el.classList.remove('bg-green-200');
           el.classList.add('hover:bg-blue-200');
           el.classList.add('bg-white');
+          el.innerText = 'Copy';
         }, 1500);
       }
     }
 
     return (
-      <Host class="inline flex-grow max-w-full font-sans flex-wrap align-top items-center">
+      <Host class="inline flex-grow max-w-full font-sans flex-wrap align-top items-center text-xs dark:text-white">
         {
           // Check if there are any items or actions to show
           (this.items.length === 0 && this.actions.length === 0) || this.hideSubcomponents ? (
@@ -278,22 +291,22 @@ export class PidComponent {
                 class={
                   this.currentLevelOfSubcomponents === 0
                     //(w/o sub components)
-                    ? 'group ' + (this.emphasizeComponent? 'rounded-md shadow-md border py-0.5 px-1 p-0.5 ' : '') + 'bg-white/40 text-clip inline-flex flex-grow open:align-top open:w-full ease-in-out transition-all duration-200 overflow-y-hidden font-bold font-mono cursor-pointer list-none bg-white overflow-x-hidden space-x-3 flex-nowrap flex-shrink-0 items-center'
+                    ? 'group ' + (this.emphasizeComponent || this.temporarilyEmphasized ? 'rounded-md shadow-md border px-1 bg-white ' : 'bg-white/40') + 'text-xs text-clip inline-flex flex-grow open:align-top open:w-full ease-in-out transition-all duration-200 overflow-y-hidden font-bold font-mono cursor-pointer list-none overflow-x-hidden space-x-3 flex-nowrap flex-shrink-0 items-center'
                     : ''
                 }
               >
-                <span class={'font-medium font-mono inline-flex flex-nowrap overflow-x-auto'}>
-                  {
-                    // Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
-                    this.identifierObject.renderPreview()
-                  }
+                <span class={'font-medium font-mono inline-flex flex-nowrap overflow-x-auto text-xs select-all'}>
+                    {
+                      // Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
+                      this.identifierObject.renderPreview()
+                    }
                 </span>
                 {
                   // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
-                  this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy ? (
+                  this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy && this.emphasizeComponent ? (
                     <button
                       class={
-                        'ml-2 bg-white border border-slate-500 text-slate-800 font-medium text-xs font-mono text-sm rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 flex-none max-h-min items-center'
+                        'ml-2 bg-white border border-slate-500 text-slate-800 font-medium text-xs font-mono rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 flex-none max-h-min items-center'
                       }
                       id={`copyButton-${this.identifierObject.value}`}
                       onClick={event => copyValue(event, this.identifierObject.value)}
@@ -307,8 +320,9 @@ export class PidComponent {
               </span>
             ) : (
               <span class={'inline-flex items-center transition ease-in-out'}>
-                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                <svg class="animate-spin ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none"
+                     viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
                   <path
                     class="opacity-75"
                     fill="currentColor"
@@ -321,31 +335,35 @@ export class PidComponent {
           ) : (
             <details
               class={
-                //(/w sub components)
-                'group ' + (this.emphasizeComponent? 'rounded-md border shadow-sm px-1' : '') +  'bg-white/40 text-clip inline flex-grow font-sans open:align-top open:w-full ease-in-out transition-all duration-200'
+                'group ' + (this.emphasizeComponent || this.temporarilyEmphasized ? 'rounded-md border pl-0.5 py-0 bg-white bg-opacity-0' : 'bg-white/60') + 'text-clip inline flex-grow font-sans open:align-top open:w-full ease-in-out transition-all duration-200'
               }
               open={this.openByDefault}
               onToggle={this.toggleSubcomponents}
             >
-              <summary class="overflow-y-hidden font-bold font-mono cursor-pointer list-none overflow-x-hidden inline-flex flex-nowrap flex-shrink-0 items-center">
+              <summary
+                class="overflow-y-hidden font-bold font-mono cursor-pointer list-none overflow-x-hidden inline-flex flex-nowrap flex-shrink-0 items-center">
                 <span class={'inline-flex flex-nowrap overflow-x-auto pr-1 items-center'}>
-                  <span class={'flex-shrink-0 px-1'}>
-                    <svg
-                      class="transition group-open:-rotate-180"
-                      fill="none"
-                      height="12"
-                      shape-rendering="geometricPrecision"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="1.5"
-                      viewBox="0 0 12 12"
-                      width="12"
-                    >
-                      <path d="M 2 3 l 4 6 l 4 -6"></path>
-                    </svg>
-                  </span>
-                  <span class={'font-medium font-mono inline-flex flex-nowrap overflow-x-auto text-sm shrink-0'}>
+                  {
+                    this.emphasizeComponent || this.temporarilyEmphasized ? (
+                      <span class={'flex-shrink-0 pr-1'}>
+                      <svg
+                        class="transition group-open:-rotate-180"
+                        fill="none"
+                        height="12"
+                        shape-rendering="geometricPrecision"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.5"
+                        viewBox="0 0 12 12"
+                        width="10"
+                      >
+                        <path d="M 2 3 l 4 6 l 4 -6"></path>
+                      </svg>
+                    </span>
+                    ) : ('')
+                  }
+                  <span class={'font-medium font-mono inline-flex flex-nowrap overflow-x-auto text-sm select-all'}>
                     {
                       // Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
                       this.identifierObject.renderPreview()
@@ -354,7 +372,7 @@ export class PidComponent {
                 </span>
                 {
                   // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
-                  this.currentLevelOfSubcomponents === 0  && this.showTopLevelCopy ? (
+                  this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy && (this.emphasizeComponent || this.temporarilyEmphasized) ? (
                     <button
                       class={
                         'bg-white border border-slate-500 text-slate-500 font-medium text-xs font-mono rounded-md px-1 py-0.5 hover:bg-blue-200 hover:text-slate-900 flex-none max-h-min items-center'
@@ -372,64 +390,67 @@ export class PidComponent {
                 // If there are any items to show, render the table
                 this.items.length > 0 ? (
                   <div>
-                    <div class="resize-y divide-y text-sm leading-6 bg-gray-100 m-1 p-0.5 h-64 max-h-fit overflow-y-scroll border rounded min-h-[4rem]">
+                    <div
+                      class="resize-y divide-y text-sm leading-6 bg-gray-100 m-1 p-0.5 h-64 max-h-fit overflow-y-scroll border rounded min-h-[4rem]">
                       <table class="text-left w-full text-sm font-sans select-text">
                         <thead class="bg-slate-600 flex text-slate-200 w-full rounded-t">
-                          <tr class="flex w-full rounded font-semibold">
-                            <th class="px-1 w-1/4">Key</th>
-                            <th class="px-1 w-3/4">Value</th>
-                          </tr>
+                        <tr class="flex w-full rounded font-semibold">
+                          <th class="px-1 w-1/4">Key</th>
+                          <th class="px-1 w-3/4">Value</th>
+                        </tr>
                         </thead>
-                        <tbody class="bg-grey-100 flex flex-col items-center justify-between overflow-y-scroll w-full rounded-b">
-                          {this.items
-                            .filter((_, index) => {
-                              // Filter out items that are not on the current page
-                              return index >= this.tablePage * this.amountOfItems && index < this.tablePage * this.amountOfItems + this.amountOfItems;
-                            })
-                            .map(value => {
-                              // Render a row for every item
-                              return (
-                                <tr class={'odd:bg-slate-200 flex w-full'}>
-                                  <td class={'overflow-x-auto p-1 w-1/4 font-mono'}>
-                                    <a
-                                      role="link"
-                                      class="right-0 focus:outline-none focus:ring-gray-300 rounded-md focus:ring-offset-2 focus:ring-2 focus:bg-gray-200 relative md:mt-0 inline flex-nowrap"
-                                      onMouseOver={this.showTooltip}
-                                      onFocus={this.showTooltip}
-                                      onMouseOut={this.hideTooltip}
-                                    >
-                                      <div class="cursor-pointer align-top justify-between flex-nowrap">
-                                        <a href={value.keyLink} target={'_blank'} rel={'noopener noreferrer'} class={'mr-2 text-blue-400 justify-start float-left'}>
-                                          {value.keyTitle}
-                                        </a>
-                                        <svg
-                                          aria-haspopup="true"
-                                          xmlns="http://www.w3.org/2000/svg"
-                                          class="icon icon-tabler icon-tabler-info-circle justify-end min-w-[1rem] min-h-[1rem] flex-none float-right"
-                                          width="25"
-                                          height="25"
-                                          viewBox="0 0 24 24"
-                                          stroke-width="1.5"
-                                          stroke="#A0AEC0"
-                                          fill="none"
-                                          stroke-linecap="round"
-                                          stroke-linejoin="round"
-                                        >
-                                          <path stroke="none" d="M0 0h24v24H0z" />
-                                          <circle cx="12" cy="12" r="9" />
-                                          <line x1="12" y1="8" x2="12.01" y2="8" />
-                                          <polyline points="11 12 12 12 12 16 13 16" />
-                                        </svg>
-                                      </div>
-                                      <p
-                                        role="tooltip"
-                                        class="hidden z-20 mt-1 transition duration-100 ease-in-out shadow-md bg-white rounded text-xs text-gray-600 p-1 flex-wrap overflow-clip"
+                        <tbody
+                          class="bg-grey-100 flex flex-col items-center justify-between overflow-y-scroll w-full rounded-b">
+                        {this.items
+                          .filter((_, index) => {
+                            // Filter out items that are not on the current page
+                            return index >= this.tablePage * this.amountOfItems && index < this.tablePage * this.amountOfItems + this.amountOfItems;
+                          })
+                          .map(value => {
+                            // Render a row for every item
+                            return (
+                              <tr class={'odd:bg-slate-200 flex w-full'}>
+                                <td class={'overflow-x-auto p-1 w-1/4 font-mono'}>
+                                  <a
+                                    role="link"
+                                    class="right-0 focus:outline-none focus:ring-gray-300 rounded-md focus:ring-offset-2 focus:ring-2 focus:bg-gray-200 relative md:mt-0 inline flex-nowrap"
+                                    onMouseOver={this.showTooltip}
+                                    onFocus={this.showTooltip}
+                                    onMouseOut={this.hideTooltip}
+                                  >
+                                    <div class="cursor-pointer align-top justify-between flex-nowrap">
+                                      <a href={value.keyLink} target={'_blank'} rel={'noopener noreferrer'}
+                                         class={'mr-2 text-blue-400 justify-start float-left'}>
+                                        {value.keyTitle}
+                                      </a>
+                                      <svg
+                                        aria-haspopup="true"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        class="icon icon-tabler icon-tabler-info-circle justify-end min-w-[1rem] min-h-[1rem] flex-none float-right"
+                                        width="25"
+                                        height="25"
+                                        viewBox="0 0 24 24"
+                                        stroke-width="1.5"
+                                        stroke="#A0AEC0"
+                                        fill="none"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
                                       >
-                                        {value.keyTooltip}
-                                      </p>
-                                    </a>
-                                  </td>
-                                  <td class={'align-top overflow-x-auto text-sm p-1 w-3/4 select-text flex '}>
+                                        <path stroke="none" d="M0 0h24v24H0z"/>
+                                        <circle cx="12" cy="12" r="9"/>
+                                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                                        <polyline points="11 12 12 12 12 16 13 16"/>
+                                      </svg>
+                                    </div>
+                                    <p
+                                      role="tooltip"
+                                      class="hidden z-20 mt-1 transition duration-100 ease-in-out shadow-md bg-white rounded text-xs text-gray-600 p-1 flex-wrap overflow-clip"
+                                    >
+                                      {value.keyTooltip}
+                                    </p>
+                                  </a>
+                                </td>
+                                <td class={'align-top overflow-x-auto text-sm p-1 w-3/4 select-text flex '}>
                                     <span class={'flex-grow'}>
                                       {
                                         // Load a foldable subcomponent if subcomponents are not disabled (hideSubcomponents), and the current level of subcomponents is not the total level of subcomponents. If the subcomponent is on the bottom level of the hierarchy, render just a preview. If the value should not be resolved (isFoldable), just render the value as text.
@@ -437,7 +458,7 @@ export class PidComponent {
                                           <pid-component
                                             value={value.value}
                                             levelOfSubcomponents={this.levelOfSubcomponents}
-                                            emphasizeComponent={this.emphasizeComponent}
+                                            // emphasizeComponent={this.emphasizeComponent}
                                             currentLevelOfSubcomponents={this.currentLevelOfSubcomponents + 1}
                                             amountOfItems={this.amountOfItems}
                                             settings={this.settings}
@@ -446,7 +467,7 @@ export class PidComponent {
                                           <pid-component
                                             value={value.value}
                                             levelOfSubcomponents={this.currentLevelOfSubcomponents}
-                                            emphasizeComponent={this.emphasizeComponent}
+                                            // emphasizeComponent={this.emphasizeComponent}
                                             currentLevelOfSubcomponents={this.currentLevelOfSubcomponents}
                                             amountOfItems={this.amountOfItems}
                                             settings={this.settings}
@@ -457,29 +478,31 @@ export class PidComponent {
                                         )
                                       }
                                     </span>
-                                    <button
-                                      class={
-                                        'bg-white border border-slate-500 text-slate-800 font-medium text-xs font-mono text-sm rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex-none h-7 align-top mx-2'
-                                      }
-                                      onClick={event => copyValue(event, value.value)}
-                                    >
-                                      Copy
-                                    </button>
-                                  </td>
-                                </tr>
-                              );
-                            })}
+                                  <button
+                                    class={
+                                      'bg-white border border-slate-500 text-slate-800 font-medium text-xs font-mono rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex-none h-7 align-top mx-2'
+                                    }
+                                    onClick={event => copyValue(event, value.value)}
+                                  >
+                                    Copy
+                                  </button>
+                                </td>
+                              </tr>
+                            );
+                          })}
                         </tbody>
                       </table>
                     </div>
-                    <div class="flex items-center justify-between border-t border-gray-200 bg-white px-1 py-1 sm:px-1 max-h-12">
+                    <div
+                      class="flex items-center justify-between border-t border-gray-200 bg-white px-1 py-1 sm:px-1 max-h-12">
                       <div class="hidden sm:flex sm:flex-1 sm:flex-nowrap sm:items-center sm:justify-between text-sm">
                         <div class={''}>
                           <p class="text-sm text-gray-700">
                             Showing
                             <span class="font-medium"> {1 + this.tablePage * this.amountOfItems} </span>
                             to
-                            <span class="font-medium"> {Math.min(this.tablePage * this.amountOfItems + this.amountOfItems, this.items.length)} </span>
+                            <span
+                              class="font-medium"> {Math.min(this.tablePage * this.amountOfItems + this.amountOfItems, this.items.length)} </span>
                             of
                             <span class="font-medium"> {this.items.length} </span>
                             entries

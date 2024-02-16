@@ -86,6 +86,7 @@ The component can render the following types of components:
 - PIDs (resolvable via [handle.net](handle.net))
 - ORCiDs (resolvable via [orcid.org](orcid.org))
 - URLs (starting with http:// or https://)
+- Emails (separated by comma)
 - Dates
 - Everything else is rendered as a simple string (aka. fallback).
 
@@ -103,6 +104,13 @@ You can easily add a new type by simply implementing the abstract class `Generic
 
 <Canvas of={PIDComponentStories.URL} />
 
+### E-Mail addresses
+
+<Canvas of={PIDComponentStories.Email} />
+
+You can also render multiple e-mail addresses separated by a comma.
+<Canvas of={PIDComponentStories.commaSeperatedMails} />
+
 ### Date
 
 <Canvas of={PIDComponentStories.Date} />
@@ -118,7 +126,10 @@ It will be rendered in line while folded and will take up the whole width of the
 
 <Canvas of={PIDComponentStories.HandleInText} />
 
-This is an example where the subcomponents are hidden.
+You can make the component even smaller by setting the `emphasize-component` attribute to `false`.
+<Canvas of={PIDComponentStories.HandleInTextNotEmphasized} />
+
+This is an example where the subcomponents are hidden and the component is not emphasized.
 
 <Canvas of={PIDComponentStories.HandleWithoutSubcomponentInText} />
 

@@ -7,7 +7,7 @@ import { FunctionalComponent, h } from '@stencil/core';
  */
 export class URLType extends GenericIdentifierType {
   getSettingsKey(): string {
-    return 'DateType';
+    return 'URLType';
   }
 
   hasCorrectFormat(): boolean {
