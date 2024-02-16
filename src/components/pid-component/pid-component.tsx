@@ -281,7 +281,7 @@ export class PidComponent {
     }
 
     return (
-      <Host class="inline flex-grow max-w-full font-sans flex-wrap align-top items-center text-xs dark:text-white">
+      <Host class="inline flex-grow max-w-full font-sans flex-wrap align-top items-center text-xs">
         {
           // Check if there are any items or actions to show
           (this.items.length === 0 && this.actions.length === 0) || this.hideSubcomponents ? (
