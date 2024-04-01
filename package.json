@@ -60,7 +60,7 @@
     "@storybook/addon-links": "^7.6.16",
     "@storybook/blocks": "^7.6.16",
     "@storybook/web-components": "^7.6.16",
-    "@storybook/web-components-vite": "^7.6.16",
+    "@storybook/web-components-vite": "^8.0.5",
     "@types/jest": "^29.5.4",
     "@types/node": "^20.11.19",
     "jest": "^29.6.4",
