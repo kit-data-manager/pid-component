@@ -56,7 +56,7 @@
     "@stencil/core": "^4.12.2"
   },
   "devDependencies": {
-    "@storybook/addon-essentials": "^7.6.16",
+    "@storybook/addon-essentials": "^8.0.6",
     "@storybook/addon-links": "^7.6.16",
     "@storybook/blocks": "^7.6.16",
     "@storybook/web-components": "^7.6.16",
