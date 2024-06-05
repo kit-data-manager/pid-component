@@ -1,0 +1,37 @@
+[project]
+name = "pid-component"
+version = "0.1.0"
+description = "The PID-Component is a web component that can be used to display PIDs, ORCiDs, and possibly other identifiers in a user-friendly way. It is easily extensible to support other identifier types."
+license = "Apache-2.0"
+repository = "https://github.com/kit-data-manager/pid-component"
+keywords = [
+  "stencil",
+  "webcomponent",
+  "webcomponents",
+  "pid",
+  "datatyperegistry",
+  "handle.net",
+  "orcid",
+  "identifier",
+  "kit-data-manager",
+  "typescript",
+  "storybook",
+  "tailwindcss",
+  "fair",
+  "fairdata",
+  "fairdo",
+  "fairdigitalobject"
+]
+
+# This is you, the proud author of your project:
+[[project.people]]
+given-names = "Maximilian"
+family-names = "Inckmann"
+email = "maximilian.inckmann@kit.edu"
+orcid = "https://orcid.org/0009-0005-2800-4833"
+affiliation = "Karlsruhe Institute of Technology (KIT)"
+author = true      # is a full author of the project (i.e. appears in citations)
+maintainer = true  # currently maintains the project (i.e. is a contact person)
+
+[config]
+verbose = true     # show detailed information about what somesy is doing
