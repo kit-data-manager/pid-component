@@ -17,7 +17,7 @@
       "affiliation": "Karlsruhe Institute of Technology (KIT)"
     }
   ],
-  "name": "pid-component",
+  "name": "@kit-data-manager/pid-component",
   "description": "The PID-Component is a web component that can be used to display PIDs, ORCiDs, and possibly other identifiers in a user-friendly way. It is easily extensible to support other identifier types.",
   "version": "0.1.0",
   "keywords": [
@@ -51,5 +51,8 @@
   "license": [
     "https://spdx.org/licenses/Apache-2.0"
   ],
-  "codeRepository": "https://github.com/kit-data-manager/pid-component"
+  "softwareHelp": "https://kit-data-manager.github.io/pid-component",
+  "codeRepository": "https://github.com/kit-data-manager/pid-component",
+  "buildInstructions": "https://kit-data-manager.github.io/pid-component",
+  "url": "https://kit-data-manager.github.io/pid-component"
 }
