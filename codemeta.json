@@ -1,0 +1,55 @@
+{
+  "@context": [
+    "https://doi.org/10.5063/schema/codemeta-2.0",
+    "https://w3id.org/software-iodata",
+    "https://raw.githubusercontent.com/jantman/repostatus.org/master/badges/latest/ontology.jsonld",
+    "https://schema.org",
+    "https://w3id.org/software-types"
+  ],
+  "@type": "SoftwareSourceCode",
+  "author": [
+    {
+      "@type": "Person",
+      "givenName": "Maximilian",
+      "familyName": "Inckmann",
+      "email": "maximilian.inckmann@kit.edu",
+      "@id": "https://orcid.org/0009-0005-2800-4833",
+      "affiliation": "Karlsruhe Institute of Technology (KIT)"
+    }
+  ],
+  "name": "pid-component",
+  "description": "The PID-Component is a web component that can be used to display PIDs, ORCiDs, and possibly other identifiers in a user-friendly way. It is easily extensible to support other identifier types.",
+  "version": "0.1.0",
+  "keywords": [
+    "stencil",
+    "webcomponent",
+    "webcomponents",
+    "pid",
+    "datatyperegistry",
+    "handle.net",
+    "orcid",
+    "identifier",
+    "kit-data-manager",
+    "typescript",
+    "storybook",
+    "tailwindcss",
+    "fair",
+    "fairdata",
+    "fairdo",
+    "fairdigitalobject"
+  ],
+  "maintainer": [
+    {
+      "@type": "Person",
+      "givenName": "Maximilian",
+      "familyName": "Inckmann",
+      "email": "maximilian.inckmann@kit.edu",
+      "@id": "https://orcid.org/0009-0005-2800-4833",
+      "affiliation": "Karlsruhe Institute of Technology (KIT)"
+    }
+  ],
+  "license": [
+    "https://spdx.org/licenses/Apache-2.0"
+  ],
+  "codeRepository": "https://github.com/kit-data-manager/pid-component"
+}
