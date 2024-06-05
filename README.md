@@ -14,7 +14,7 @@ By default, it is set to 1, which means that it will only render the first level
 You can prohibit unfolding of the component by setting the `current-level-of-subcomponents` to the same value as
 the `level-of-subcomponents` property.
 
-To use the component, import the package via [unpkg](https://unpkg.com/):
+To use the component, import the [npm-package](https://www.npmjs.com/package/@kit-data-manager/pid-component) via [unpkg](https://unpkg.com/):
 
 ```html
 
