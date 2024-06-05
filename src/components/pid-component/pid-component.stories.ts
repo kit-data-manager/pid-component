@@ -27,7 +27,7 @@ const meta: Meta = {
       },
       table: {
         defaultValue: {
-          summary: false,
+          summary: "false",
         },
         type: {
           summary: 'boolean',
@@ -43,7 +43,7 @@ const meta: Meta = {
       },
       table: {
         defaultValue: {
-          summary: 10,
+          summary: "10",
         },
         type: {
           summary: 'number',
@@ -60,7 +60,7 @@ const meta: Meta = {
       },
       table: {
         defaultValue: {
-          summary: false,
+          summary: "false",
         },
         type: {
           summary: 'boolean',
@@ -77,7 +77,7 @@ const meta: Meta = {
       },
       table: {
         defaultValue: {
-          summary: true,
+          summary: "true",
         },
         type: {
           summary: 'boolean',
@@ -94,7 +94,7 @@ const meta: Meta = {
       },
       table: {
         defaultValue: {
-          summary: true,
+          summary: "true",
         },
         type: {
           summary: 'boolean',
@@ -110,7 +110,7 @@ const meta: Meta = {
       },
       table: {
         defaultValue: {
-          summary: 1,
+          summary: "1",
         },
         type: {
           summary: 'number',
@@ -126,7 +126,7 @@ const meta: Meta = {
       },
       table: {
         defaultValue: {
-          summary: 0,
+          summary: "0",
         },
         type: {
           summary: 'number',
@@ -142,7 +142,7 @@ const meta: Meta = {
       },
       table: {
         defaultValue: {
-          summary: true,
+          summary: "true",
         },
         type: {
           summary: 'boolean',
