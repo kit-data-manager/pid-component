@@ -2,10 +2,10 @@ cff-version: 1.2.0
 message: If you use this software, please cite it using these metadata.
 type: software
 title: '@kit-data-manager/pid-component'
-abstract: The PID-Component is a web component that can be used to display PIDs, ORCiDs,
-  and possibly other identifiers in a user-friendly way. It is easily extensible to
-  support other identifier types.
-version: 0.1.0
+abstract: The PID-Component is a web component that can be used to evaluate and display
+  FAIR Digital Objects, PIDs, ORCiDs, and possibly other identifiers in a user-friendly
+  way. It is easily extensible to support other identifier types.
+version: 0.1.1
 keywords:
 - stencil
 - webcomponent
