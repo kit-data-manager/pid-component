@@ -76,7 +76,7 @@
     "lit": "^3.1.4",
     "prettier": "^3.3.2",
     "prettier-plugin-tailwindcss": "^0.6.5",
-    "puppeteer": "^22.11.2",
+    "puppeteer": "^23.2.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "stencil-tailwind-plugin": "^1.8.0",
