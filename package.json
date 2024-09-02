@@ -1,6 +1,6 @@
 {
   "name": "@kit-data-manager/pid-component",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "license": "Apache-2.0",
   "description": "The PID-Component is a web component that can be used to evaluate and display FAIR Digital Objects, PIDs, ORCiDs, and possibly other identifiers in a user-friendly way. It is easily extensible to support other identifier types.",
   "author": {
@@ -64,25 +64,23 @@
     "storybook-docs": "storybook dev --docs"
   },
   "dependencies": {
-    "@stencil/core": "^4.18.3"
+    "@stencil/core": "^4.21.0"
   },
   "devDependencies": {
-    "@storybook/addon-essentials": "^8.1.10",
-    "@storybook/addon-links": "^8.1.10",
-    "@storybook/blocks": "^8.1.10",
-    "@storybook/web-components": "^8.1.10",
-    "@storybook/web-components-vite": "^8.1.10",
-    "@types/node": "^20.14.6",
-    "lit": "^3.1.4",
-    "prettier": "^3.3.2",
-    "prettier-plugin-tailwindcss": "^0.6.5",
-    "puppeteer": "^22.11.2",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "@storybook/addon-essentials": "^8.2.9",
+    "@storybook/addon-links": "^8.2.9",
+    "@storybook/blocks": "^8.2.9",
+    "@storybook/web-components": "^8.2.9",
+    "@storybook/web-components-vite": "^8.2.9",
+    "@types/node": "^22.5.2",
+    "lit": "^3.2.0",
+    "prettier": "^3.3.3",
+    "prettier-plugin-tailwindcss": "^0.6.6",
+    "puppeteer": "^23.2.1",
     "stencil-tailwind-plugin": "^1.8.0",
-    "storybook": "^8.1.10",
-    "tailwindcss": "^3.4.4",
-    "typescript": "^5.4.5"
+    "storybook": "^8.2.9",
+    "tailwindcss": "^3.4.10",
+    "typescript": "^5.5.4"
   },
   "maintainers": [
     {
