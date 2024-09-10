@@ -1,6 +1,6 @@
-import { locationType, PID } from './PID';
-import { typeMap, unresolvables } from './utils';
-import { init } from './DataCache';
+import {locationType, PID} from './PID';
+import {typeMap, unresolvables} from "../../utils/utils";
+import {init} from "../../utils/DataCache";
 
 /**
  * This class represents a PID data type.
@@ -145,7 +145,7 @@ export class PIDDataType {
       regex?: RegExp;
       redirectURL: string;
       ePICJSON: object;
-    } = { name: '', description: '', redirectURL: '', ePICJSON: {} };
+    } = {name: '', description: '', redirectURL: '', ePICJSON: {}};
 
     // Check if there is a reference to a ePIC instance via a 10320/Loc type and resolve it
     for (let i = 0; i < pidRecord.values.length; i++) {
@@ -167,12 +167,14 @@ export class PIDDataType {
           // Extract weight
           try {
             newLocation.weight = parseInt(xmlLocations[j].getAttribute('weight'));
-          } catch (ignored) {}
+          } catch (ignored) {
+          }
 
           // Extract view e.g. json or html
           try {
             newLocation.view = xmlLocations[j].getAttribute('view');
-          } catch (ignored) {}
+          } catch (ignored) {
+          }
 
           // Try to resolve the data from the link
           try {
@@ -187,7 +189,8 @@ export class PIDDataType {
               // if view is html set the redirect URL (activated on user click) to the link
               tempDataType.redirectURL = newLocation.href;
             }
-          } catch (ignored) {}
+          } catch (ignored) {
+          }
         }
       }
     }

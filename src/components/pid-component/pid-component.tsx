@@ -7,7 +7,7 @@ import {Parser} from '../../utils/Parser';
 @Component({
   tag: 'pid-component',
   styleUrl: 'pid-component.css',
-  shadow: true,
+  shadow: false,
 })
 export class PidComponent {
   /**

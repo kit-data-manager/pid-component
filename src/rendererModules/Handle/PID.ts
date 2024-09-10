@@ -1,7 +1,8 @@
-import { PIDRecord } from './PIDRecord';
-import { PIDDataType } from './PIDDataType';
-import { handleMap, unresolvables } from './utils';
-import { init } from './DataCache';
+import {PIDRecord} from './PIDRecord';
+import {PIDDataType} from './PIDDataType';
+import {handleMap, unresolvables} from "../../utils/utils";
+import {init} from "../../utils/DataCache";
+
 
 /**
  * This class represents the PID itself.

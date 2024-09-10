@@ -1,10 +1,11 @@
-import { GenericIdentifierType } from './GenericIdentifierType';
-import { HandleType } from './HandleType';
-import { FallbackType } from './FallbackType';
-import { ORCIDType } from './ORCIDType';
-import { DateType } from './DateType';
-import { URLType } from './URLType';
-import { EmailType } from "./EmailType";
+import {GenericIdentifierType} from './GenericIdentifierType';
+import {DateType} from "../rendererModules/DateType";
+import {ORCIDType} from "../rendererModules/ORCiD/ORCIDType";
+import {HandleType} from "../rendererModules/Handle/HandleType";
+import {EmailType} from "../rendererModules/EmailType";
+import {URLType} from "../rendererModules/URLType";
+import {FallbackType} from "../rendererModules/FallbackType";
+
 
 /**
  * Class that handles the parsing of a given value and returns the best fitting component object
@@ -70,7 +71,8 @@ export class Parser {
       const settingsKey = bestFit.getSettingsKey();
       const settingsValues = settings.find(value => value.type === settingsKey)?.values;
       if (settingsValues) bestFit.settings = settingsValues;
-    } catch (_) {}
+    } catch (_) {
+    }
 
     // initialize and return the object
     await bestFit.init();

@@ -6,24 +6,6 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
-    /**
-     * This component highlights a handle and links to the FAIR DO Scope.
-     * It automatically generates colors for the parts of the handle (prefix and suffix) to make them easily distinguishable.
-     */
-    interface HandleHighlight {
-        /**
-          * Whether the component should use the filled or the outlined design.
-         */
-        "filled": boolean;
-        /**
-          * The Handle to highlight and link in this component.
-         */
-        "handle": string;
-        /**
-          * An optional custom link to use instead of the default one which links to the FAIR DO Scope.
-         */
-        "linkTo": 'disable' | 'fairdoscope' | 'resolveRef';
-    }
     interface PidComponent {
         /**
           * The number of items to show in the table per page. Defaults to 10. (optional)
@@ -78,16 +60,6 @@ export namespace Components {
     }
 }
 declare global {
-    /**
-     * This component highlights a handle and links to the FAIR DO Scope.
-     * It automatically generates colors for the parts of the handle (prefix and suffix) to make them easily distinguishable.
-     */
-    interface HTMLHandleHighlightElement extends Components.HandleHighlight, HTMLStencilElement {
-    }
-    var HTMLHandleHighlightElement: {
-        prototype: HTMLHandleHighlightElement;
-        new (): HTMLHandleHighlightElement;
-    };
     interface HTMLPidComponentElement extends Components.PidComponent, HTMLStencilElement {
     }
     var HTMLPidComponentElement: {
@@ -95,29 +67,10 @@ declare global {
         new (): HTMLPidComponentElement;
     };
     interface HTMLElementTagNameMap {
-        "handle-highlight": HTMLHandleHighlightElement;
         "pid-component": HTMLPidComponentElement;
     }
 }
 declare namespace LocalJSX {
-    /**
-     * This component highlights a handle and links to the FAIR DO Scope.
-     * It automatically generates colors for the parts of the handle (prefix and suffix) to make them easily distinguishable.
-     */
-    interface HandleHighlight {
-        /**
-          * Whether the component should use the filled or the outlined design.
-         */
-        "filled"?: boolean;
-        /**
-          * The Handle to highlight and link in this component.
-         */
-        "handle": string;
-        /**
-          * An optional custom link to use instead of the default one which links to the FAIR DO Scope.
-         */
-        "linkTo"?: 'disable' | 'fairdoscope' | 'resolveRef';
-    }
     interface PidComponent {
         /**
           * The number of items to show in the table per page. Defaults to 10. (optional)
@@ -171,7 +124,6 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     interface IntrinsicElements {
-        "handle-highlight": HandleHighlight;
         "pid-component": PidComponent;
     }
 }
@@ -179,11 +131,6 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            /**
-             * This component highlights a handle and links to the FAIR DO Scope.
-             * It automatically generates colors for the parts of the handle (prefix and suffix) to make them easily distinguishable.
-             */
-            "handle-highlight": LocalJSX.HandleHighlight & JSXBase.HTMLAttributes<HTMLHandleHighlightElement>;
             "pid-component": LocalJSX.PidComponent & JSXBase.HTMLAttributes<HTMLPidComponentElement>;
         }
     }

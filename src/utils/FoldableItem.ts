@@ -1,4 +1,4 @@
-import { Parser } from './Parser';
+import {Parser} from './Parser';
 
 /**
  * This is a class that is used to represent every line in the pid-component.

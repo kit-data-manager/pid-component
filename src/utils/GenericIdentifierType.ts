@@ -1,6 +1,6 @@
-import { FunctionalComponent } from '@stencil/core';
-import { FoldableItem } from './FoldableItem';
-import { FoldableAction } from './FoldableAction';
+import {FunctionalComponent} from '@stencil/core';
+import {FoldableItem} from './FoldableItem';
+import {FoldableAction} from './FoldableAction';
 
 /**
  * GenericIdentifierType is the base class for all identifier types that should be parsed and rendered into the pid-component component.
@@ -14,30 +14,6 @@ export abstract class GenericIdentifierType {
    * @type {string}
    */
   private readonly _value: string;
-
-  /**
-   * The settings of the environment from which the settings for the component are extracted.
-   * @private
-   * @type {{name: string, value: any}[]}
-   */
-  private _settings: {
-    name: string;
-    value: any;
-  }[] = [];
-
-  /**
-   * The list of items that should be rendered in the component.
-   * @private
-   * @type {FoldableItem[]}
-   */
-  private _items: FoldableItem[] = [];
-
-  /**
-   * The list of actions that should be rendered in the component.
-   * @private
-   * @type {FoldableAction[]}
-   */
-  private _actions: FoldableAction[] = [];
 
   /**
    * Creates a new GenericIdentifierType object
@@ -58,12 +34,14 @@ export abstract class GenericIdentifierType {
   }
 
   /**
-   * Returns the value that should be parsed and rendered
-   * @returns {string} The value that should be parsed and rendered
+   * The settings of the environment from which the settings for the component are extracted.
+   * @private
+   * @type {{name: string, value: any}[]}
    */
-  get value(): string {
-    return this._value;
-  }
+  private _settings: {
+    name: string;
+    value: any;
+  }[] = [];
 
   /**
    * Returns the settings of the environment from which the settings for the component are extracted.
@@ -82,6 +60,13 @@ export abstract class GenericIdentifierType {
   }
 
   /**
+   * The list of items that should be rendered in the component.
+   * @private
+   * @type {FoldableItem[]}
+   */
+  private _items: FoldableItem[] = [];
+
+  /**
    * Returns the list of items that should be rendered in the component.
    * @returns {FoldableItem[]} The list of items that should be rendered in the component.
    */
@@ -90,11 +75,26 @@ export abstract class GenericIdentifierType {
   }
 
   /**
+   * The list of actions that should be rendered in the component.
+   * @private
+   * @type {FoldableAction[]}
+   */
+  private _actions: FoldableAction[] = [];
+
+  /**
    * Sets the list of items that should be rendered in the component.
    * @return {FoldableItem[]} The list of items that should be rendered in the component.
    */
   get actions(): FoldableAction[] {
     return this._actions;
+  }
+
+  /**
+   * Returns the value that should be parsed and rendered
+   * @returns {string} The value that should be parsed and rendered
+   */
+  get value(): string {
+    return this._value;
   }
 
   /**

@@ -1,9 +1,10 @@
-import { FunctionalComponent, h } from '@stencil/core';
-import { GenericIdentifierType } from './GenericIdentifierType';
-import { FoldableItem } from './FoldableItem';
-import { FoldableAction } from './FoldableAction';
-import { ORCIDInfo } from './ORCIDInfo';
-import { getLocaleDetail } from './utils';
+import {FunctionalComponent, h} from '@stencil/core';
+import {GenericIdentifierType} from "../../utils/GenericIdentifierType";
+import {ORCIDInfo} from "./ORCIDInfo";
+import {FoldableItem} from "../../utils/FoldableItem";
+import {FoldableAction} from "../../utils/FoldableAction";
+import {getLocaleDetail} from "../../utils/utils";
+
 
 /**
  * This class specifies a custom renderer for ORCiDs.
@@ -97,11 +98,11 @@ export class ORCIDType extends GenericIdentifierType {
           new FoldableItem(
             49,
             'Affiliation at ' +
-              this.affiliationAt.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'numeric',
-                day: 'numeric',
-              }),
+            this.affiliationAt.toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'numeric',
+              day: 'numeric',
+            }),
             affiliation,
             'The affiliation of the person at the given date.',
             undefined,
@@ -162,14 +163,16 @@ export class ORCIDType extends GenericIdentifierType {
   renderPreview(): FunctionalComponent<any> {
     return (
       <span class={'inline-flex items-center font-mono flex-nowrap align-top'}>
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" class={'h-5 p-0.5 mr-1 flex-none items-center'}>
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"
+             class={'h-5 p-0.5 mr-1 flex-none items-center'}>
           <style type="text/css">
             {`.st0{fill:#A6CE39;}`}
             {`.st1{fill:#FFFFFF;}`}
           </style>
-          <path class="st0" d="M256,128c0,70.7-57.3,128-128,128C57.3,256,0,198.7,0,128C0,57.3,57.3,0,128,0C198.7,0,256,57.3,256,128z" />
+          <path class="st0"
+                d="M256,128c0,70.7-57.3,128-128,128C57.3,256,0,198.7,0,128C0,57.3,57.3,0,128,0C198.7,0,256,57.3,256,128z"/>
           <g>
-            <path class="st1" d="M86.3,186.2H70.9V79.1h15.4v48.4V186.2z" />
+            <path class="st1" d="M86.3,186.2H70.9V79.1h15.4v48.4V186.2z"/>
             <path
               class="st1"
               d="M108.9,79.1h41.6c39.6,0,57,28.3,57,53.6c0,27.5-21.5,53.6-56.8,53.6h-41.8V79.1z M124.3,172.4h24.5
@@ -186,12 +189,12 @@ export class ORCIDType extends GenericIdentifierType {
           {this._orcidInfo.familyName}, {this._orcidInfo.givenNames}{' '}
           {this.showAffiliation && this._orcidInfo.getAffiliationsAt(new Date()).length > 0
             ? `(${this._orcidInfo.getAffiliationAsString(this._orcidInfo.getAffiliationsAt(new Date())[0], false)}${
-                this._orcidInfo.getAffiliationsAt(this.affiliationAt).length > 0 &&
-                this.affiliationAt.toLocaleDateString() !== new Date().toLocaleDateString() &&
-                this._orcidInfo.getAffiliationsAt(this.affiliationAt)[0].organization !== this._orcidInfo.getAffiliationsAt(new Date())[0].organization
-                  ? `, then: ${this._orcidInfo.getAffiliationsAt(this.affiliationAt)[0].organization}`
-                  : ''
-              })`
+              this._orcidInfo.getAffiliationsAt(this.affiliationAt).length > 0 &&
+              this.affiliationAt.toLocaleDateString() !== new Date().toLocaleDateString() &&
+              this._orcidInfo.getAffiliationsAt(this.affiliationAt)[0].organization !== this._orcidInfo.getAffiliationsAt(new Date())[0].organization
+                ? `, then: ${this._orcidInfo.getAffiliationsAt(this.affiliationAt)[0].organization}`
+                : ''
+            })`
             : ''}
         </span>
       </span>

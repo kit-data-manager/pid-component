@@ -1,6 +1,6 @@
-import { PID } from './PID';
-import { PIDDataType } from './PIDDataType';
-import { PIDRecord } from './PIDRecord';
+import {PID} from "../rendererModules/Handle/PID";
+import {PIDDataType} from "../rendererModules/Handle/PIDDataType";
+import {PIDRecord} from "../rendererModules/Handle/PIDRecord";
 
 /**
  * A map of all PID data types and their PIDs.
@@ -29,7 +29,7 @@ export const unresolvables: Set<PID> = new Set();
  * @returns {string} The user-friendly name of the locale.
  */
 export function getLocaleDetail(locale: string, type: 'region' | 'language'): string {
-  const friendlyName = new Intl.DisplayNames(['en'], { type: type }).of(locale.toUpperCase());
+  const friendlyName = new Intl.DisplayNames(['en'], {type: type}).of(locale.toUpperCase());
   if (type === 'language') return friendlyName;
 
   const codePoints = locale

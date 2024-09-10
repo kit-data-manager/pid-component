@@ -1,5 +1,5 @@
-import {GenericIdentifierType} from './GenericIdentifierType';
 import {FunctionalComponent, h} from '@stencil/core';
+import {GenericIdentifierType} from "../utils/GenericIdentifierType";
 
 /**
  * This class specifies a custom renderer for Email addresses.

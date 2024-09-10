@@ -1,4 +1,4 @@
-import { init } from './DataCache';
+import {init} from "../../utils/DataCache";
 
 /**
  * This file contains the ORCIDInfo class, which is used to store information about an ORCiD.
@@ -414,7 +414,8 @@ export class ORCIDInfo {
 
         employments.push(employment);
       }
-    } catch (e) {}
+    } catch (e) {
+    }
 
     // Parse preferred locale, if available
     let preferredLocale: string | undefined = rawOrcidJSON['preferences']['locale'] !== null ? rawOrcidJSON['preferences']['locale'] : undefined;

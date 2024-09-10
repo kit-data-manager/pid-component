@@ -1,6 +1,6 @@
 [project]
 name = "@kit-data-manager/pid-component"
-version = "0.1.3"
+version = "0.1.4"
 description = "The PID-Component is a web component that can be used to evaluate and display FAIR Digital Objects, PIDs, ORCiDs, and possibly other identifiers in a user-friendly way. It is easily extensible to support other identifier types."
 license = "Apache-2.0"
 repository = "https://github.com/kit-data-manager/pid-component"
@@ -43,12 +43,6 @@ affiliation = "Karlsruhe Institute of Technology (KIT)"
 author = true      # is a full author of the project (i.e. appears in citations)
 maintainer = false  # currently maintains the project (i.e. is a contact person)
 publication_author = true
-contribution_types = [
-  "ideas",
-  "mentoring",
-  "research",
-  "review"
-]
 
 [[project.people]]
 given-names = "Thomas"
