@@ -6,6 +6,13 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
+    interface ColorHighlight {
+        /**
+          * The text to highlight.
+          * @type {string}
+         */
+        "text": string;
+    }
     interface PidComponent {
         /**
           * The number of items to show in the table per page. Defaults to 10. (optional)
@@ -60,6 +67,12 @@ export namespace Components {
     }
 }
 declare global {
+    interface HTMLColorHighlightElement extends Components.ColorHighlight, HTMLStencilElement {
+    }
+    var HTMLColorHighlightElement: {
+        prototype: HTMLColorHighlightElement;
+        new (): HTMLColorHighlightElement;
+    };
     interface HTMLPidComponentElement extends Components.PidComponent, HTMLStencilElement {
     }
     var HTMLPidComponentElement: {
@@ -67,10 +80,18 @@ declare global {
         new (): HTMLPidComponentElement;
     };
     interface HTMLElementTagNameMap {
+        "color-highlight": HTMLColorHighlightElement;
         "pid-component": HTMLPidComponentElement;
     }
 }
 declare namespace LocalJSX {
+    interface ColorHighlight {
+        /**
+          * The text to highlight.
+          * @type {string}
+         */
+        "text"?: string;
+    }
     interface PidComponent {
         /**
           * The number of items to show in the table per page. Defaults to 10. (optional)
@@ -124,6 +145,7 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     interface IntrinsicElements {
+        "color-highlight": ColorHighlight;
         "pid-component": PidComponent;
     }
 }
@@ -131,6 +153,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "color-highlight": LocalJSX.ColorHighlight & JSXBase.HTMLAttributes<HTMLColorHighlightElement>;
             "pid-component": LocalJSX.PidComponent & JSXBase.HTMLAttributes<HTMLPidComponentElement>;
         }
     }

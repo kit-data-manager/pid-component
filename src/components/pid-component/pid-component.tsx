@@ -1,13 +1,13 @@
-import {Component, Host, h, Prop, State, Watch} from '@stencil/core';
+import {Component, h, Host, Prop, State, Watch} from '@stencil/core';
 import {GenericIdentifierType} from '../../utils/GenericIdentifierType';
 import {FoldableItem} from '../../utils/FoldableItem';
 import {FoldableAction} from '../../utils/FoldableAction';
-import {Parser} from '../../utils/Parser';
+import {getEntity} from "../../utils/IndexedDBUtil";
 
 @Component({
   tag: 'pid-component',
   styleUrl: 'pid-component.css',
-  shadow: false,
+  shadow: true,
 })
 export class PidComponent {
   /**
@@ -177,13 +177,35 @@ export class PidComponent {
       console.error("Failed to parse settings.", e)
     }
 
-    // Get an object from the best fitting class implementing GenericIdentifierType
-    const obj = await Parser.getBestFit(this.value, settings);
-    this.identifierObject = obj;
+    // Get an object from the indexedDB if it exists
+    await getEntity(this.value, settings).then(renderer => {
+      this.identifierObject = renderer
+    })
+    // this.identifierObject = await getEntity(this.value, settings).then(async renderer => {
+    //   if (renderer != undefined) {
+    //     console.log('Found in indexedDB: ', this.value, renderer)
+    //     return renderer
+    //   }
+    //   console.log('Not found in indexedDB: ', this.value)
+    //   // If no such object exists, get an object from the best fitting class implementing GenericIdentifierType
+    //   this.identifierObject = await Parser.getBestFit(this.value, settings);
+    //   console.log('Got from parser: ', this.value, this.identifierObject)
+    //   // if (this.identifierObject != undefined) {
+    //     // Add the object to the indexedDB, if it is not undefined
+    //     await addEntity({value: this.value, renderer: this.identifierObject})
+    //     console.log('Added to indexedDB: ', this.value, this.identifierObject)
+    //   // }
+    //   return this.identifierObject
+    // })
+
+
+    // Get an object from the best fitting class implementing GenericIdentifierTypse
+    // const obj = await Parser.getBestFit(this.value, settings);
+    // this.identifierObject = obj;
 
     // Generate items and actions if subcomponents should be shown
     if (!this.hideSubcomponents) {
-      this.items = obj.items;
+      this.items = this.identifierObject.items;
       this.items.sort((a, b) => {
         // Sort by priority defined in the specific implementation of GenericIdentifierType (lower is better)
         if (a.priority > b.priority) return 1;
@@ -193,7 +215,7 @@ export class PidComponent {
         if (a.estimatedTypePriority > b.estimatedTypePriority) return 1;
         if (a.estimatedTypePriority < b.estimatedTypePriority) return -1;
       });
-      this.actions = obj.actions;
+      this.actions = this.identifierObject.actions;
       this.actions.sort((a, b) => a.priority - b.priority);
     }
     this.displayStatus = 'loaded';

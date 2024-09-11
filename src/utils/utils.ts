@@ -1,6 +1,70 @@
 import {PID} from "../rendererModules/Handle/PID";
 import {PIDDataType} from "../rendererModules/Handle/PIDDataType";
 import {PIDRecord} from "../rendererModules/Handle/PIDRecord";
+import {GenericIdentifierType} from "./GenericIdentifierType";
+import {DateType} from "../rendererModules/DateType";
+import {ORCIDType} from "../rendererModules/ORCiD/ORCIDType";
+import {HandleType} from "../rendererModules/Handle/HandleType";
+import {EmailType} from "../rendererModules/EmailType";
+import {URLType} from "../rendererModules/URLType";
+import {FallbackType} from "../rendererModules/FallbackType";
+
+/**
+ * Array of all component objects that can be used to parse a given value, ordered by priority (lower is better)
+ * @type {(new(value: string, settings?: {name: string, value: any}[]) => GenericIdentifierType)[]}
+ * @readonly
+ */
+// export const renderers: (new (
+//   value: string,
+//   settings?: {
+//     name: string;
+//     value: any;
+//   }[],
+// ) => GenericIdentifierType)[] = [
+//   DateType,
+//   ORCIDType,
+//   HandleType,
+//   EmailType,
+//   URLType,
+//   FallbackType
+// ];
+
+export const renderers: ({
+  priority: number;
+  key: string;
+  constructor: new (value: string, settings?: { name: string; value: any }[]) => GenericIdentifierType;
+})[] = [
+  {
+    priority: 0,
+    key: 'DateType',
+    constructor: DateType,
+  },
+  {
+    priority: 1,
+    key: 'ORCIDType',
+    constructor: ORCIDType,
+  },
+  {
+    priority: 2,
+    key: 'HandleType',
+    constructor: HandleType,
+  },
+  {
+    priority: 3,
+    key: 'EmailType',
+    constructor: EmailType,
+  },
+  {
+    priority: 4,
+    key: 'URLType',
+    constructor: URLType,
+  },
+  {
+    priority: 5,
+    key: 'FallbackType',
+    constructor: FallbackType,
+  },
+];
 
 /**
  * A map of all PID data types and their PIDs.

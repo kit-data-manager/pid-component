@@ -202,6 +202,6 @@ export class ORCIDType extends GenericIdentifierType {
   }
 
   getSettingsKey(): string {
-    return 'ORCIDConfig';
+    return 'ORCIDType';
   }
 }

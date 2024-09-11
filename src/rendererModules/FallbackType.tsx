@@ -23,6 +23,6 @@ export class FallbackType extends GenericIdentifierType {
   }
 
   getSettingsKey(): string {
-    return '';
+    return 'FallbackType';
   }
 }

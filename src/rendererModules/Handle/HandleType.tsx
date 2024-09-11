@@ -1,4 +1,3 @@
-import {HSLColor} from './HSLColor';
 import {PIDRecord} from './PIDRecord';
 import {PID} from './PID';
 import {PIDDataType} from './PIDDataType';
@@ -25,12 +24,6 @@ export class HandleType extends GenericIdentifierType {
     text: string;
 
     /**
-     * The generated color for the part.
-     * @type {HSLColor}
-     */
-    color: HSLColor;
-
-    /**
      * Whether there is a next part.
      * @type {boolean}
      */
@@ -52,18 +45,16 @@ export class HandleType extends GenericIdentifierType {
     const pid = PID.getPIDFromString(this.value);
 
     // Generate the colors for the parts of the PID
-    this._parts = [
+    this._parts = await Promise.all([
       {
         text: pid.prefix,
-        color: await HSLColor.generateColor(pid.prefix),
         nextExists: true,
       },
       {
         text: pid.suffix,
-        color: await HSLColor.generateColor(pid.suffix),
         nextExists: false,
       },
-    ];
+    ]);
 
     // Resolve the PID
     const resolved = await pid.resolve();
@@ -89,14 +80,7 @@ export class HandleType extends GenericIdentifierType {
         {this._parts.map(element => {
           return (
             <span class={'font-bold font-mono'}>
-              <span
-                style={{
-                  color: 'hsl(' + element.color.hue + ',' + element.color.sat + '%,' + element.color.lum + '%)',
-                }}
-                class={`font-mono font-bold rounded-md`}
-              >
-                {element.text}
-              </span>
+              <color-highlight text={element.text}/>
               <span class={'font-mono font-bold text-gray-800 mx-0.5'}>{element.nextExists ? '/' : ''}</span>
             </span>
           );
@@ -106,6 +90,6 @@ export class HandleType extends GenericIdentifierType {
   }
 
   getSettingsKey(): string {
-    return 'HandleConfig';
+    return 'HandleType';
   }
 }

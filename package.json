@@ -74,7 +74,8 @@
     "storybook-docs": "storybook dev --docs"
   },
   "dependencies": {
-    "@stencil/core": "^4.21.0"
+    "@stencil/core": "^4.21.0",
+    "idb": "^8.0.0"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^8.2.9",
