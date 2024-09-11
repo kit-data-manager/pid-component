@@ -7,7 +7,7 @@ import {getEntity} from "../../utils/IndexedDBUtil";
 @Component({
   tag: 'pid-component',
   styleUrl: 'pid-component.css',
-  shadow: true,
+  shadow: false,
 })
 export class PidComponent {
   /**
@@ -177,31 +177,10 @@ export class PidComponent {
       console.error("Failed to parse settings.", e)
     }
 
-    // Get an object from the indexedDB if it exists
+    // Get the renderer for the value
     await getEntity(this.value, settings).then(renderer => {
       this.identifierObject = renderer
     })
-    // this.identifierObject = await getEntity(this.value, settings).then(async renderer => {
-    //   if (renderer != undefined) {
-    //     console.log('Found in indexedDB: ', this.value, renderer)
-    //     return renderer
-    //   }
-    //   console.log('Not found in indexedDB: ', this.value)
-    //   // If no such object exists, get an object from the best fitting class implementing GenericIdentifierType
-    //   this.identifierObject = await Parser.getBestFit(this.value, settings);
-    //   console.log('Got from parser: ', this.value, this.identifierObject)
-    //   // if (this.identifierObject != undefined) {
-    //     // Add the object to the indexedDB, if it is not undefined
-    //     await addEntity({value: this.value, renderer: this.identifierObject})
-    //     console.log('Added to indexedDB: ', this.value, this.identifierObject)
-    //   // }
-    //   return this.identifierObject
-    // })
-
-
-    // Get an object from the best fitting class implementing GenericIdentifierTypse
-    // const obj = await Parser.getBestFit(this.value, settings);
-    // this.identifierObject = obj;
 
     // Generate items and actions if subcomponents should be shown
     if (!this.hideSubcomponents) {
@@ -257,53 +236,9 @@ export class PidComponent {
    * Renders the component.
    */
   render() {
-    /**
-     * Copies the given value to the clipboard and changes the text of the button to "✓ Copied!" for 1.5 seconds.
-     * @param event The event that triggered this function.
-     * @param value The value to copy to the clipboard.
-     */
-    function copyValue(event: MouseEvent, value: string) {
-      if ('clipboard' in navigator) {
-        // Use the Async Clipboard API when available.
-        navigator.clipboard.writeText(value).then(() => showSuccess());
-      } else {
-        // ...Otherwise, use document.execCommand() fallback.
-        const textArea = document.createElement('textarea');
-        textArea.value = value;
-        textArea.style.opacity = '0';
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        try {
-          const success = document.execCommand('copy');
-          console.log(`Deprecated Text copy was ${success ? 'successful' : 'unsuccessful'}.`);
-          showSuccess();
-        } catch (err) {
-          console.error(err.name, err.message);
-        }
-        document.body.removeChild(textArea);
-      }
-
-      /**
-       * Shows the success message for 1.5 seconds.
-       */
-      function showSuccess() {
-        const el = event.target as HTMLButtonElement;
-        el.innerText = '✓ Copied!';
-        el.classList.remove('hover:bg-blue-200');
-        el.classList.remove('bg-white');
-        el.classList.add('bg-green-200');
-        setTimeout(() => {
-          el.classList.remove('bg-green-200');
-          el.classList.add('hover:bg-blue-200');
-          el.classList.add('bg-white');
-          el.innerText = 'Copy';
-        }, 1500);
-      }
-    }
 
     return (
-      <Host class="inline flex-grow max-w-full font-sans flex-wrap align-top items-center text-xs">
+      <Host class="inline flex-grow max-w-full font-sans flex-wrap align-baseline items-center text-xs">
         {
           // Check if there are any items or actions to show
           (this.items.length === 0 && this.actions.length === 0) || this.hideSubcomponents ? (
@@ -326,15 +261,7 @@ export class PidComponent {
                 {
                   // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
                   this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy && this.emphasizeComponent ? (
-                    <button
-                      class={
-                        'ml-2 bg-white border border-slate-500 text-slate-800 font-medium text-xs font-mono rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 flex-none max-h-min items-center'
-                      }
-                      id={`copyButton-${this.identifierObject.value}`}
-                      onClick={event => copyValue(event, this.identifierObject.value)}
-                    >
-                      Copy
-                    </button>
+                    <copy-button value={this.identifierObject.value}/>
                   ) : (
                     ''
                   )
@@ -395,14 +322,7 @@ export class PidComponent {
                 {
                   // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
                   this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy && (this.emphasizeComponent || this.temporarilyEmphasized) ? (
-                    <button
-                      class={
-                        'bg-white border border-slate-500 text-slate-500 font-medium text-xs font-mono rounded-md px-1 py-0.5 hover:bg-blue-200 hover:text-slate-900 flex-none max-h-min items-center'
-                      }
-                      onClick={event => copyValue(event, this.identifierObject.value)}
-                    >
-                      Copy
-                    </button>
+                    <copy-button value={this.identifierObject.value}/>
                   ) : (
                     ''
                   )
@@ -500,14 +420,7 @@ export class PidComponent {
                                         )
                                       }
                                     </span>
-                                  <button
-                                    class={
-                                      'bg-white border border-slate-500 text-slate-800 font-medium text-xs font-mono rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex-none h-7 align-top mx-2'
-                                    }
-                                    onClick={event => copyValue(event, value.value)}
-                                  >
-                                    Copy
-                                  </button>
+                                  <copy-button value={value.value}/>
                                 </td>
                               </tr>
                             );

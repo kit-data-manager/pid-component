@@ -4,7 +4,7 @@ import {HSLColor} from "./HSLColor";
 @Component({
   tag: 'color-highlight',
   styleUrl: 'color-highlight.css',
-  shadow: true,
+  shadow: false,
 })
 export class ColorHighlight {
 
@@ -12,7 +12,7 @@ export class ColorHighlight {
    * The text to highlight.
    * @type {string}
    */
-  @Prop() text: string;
+  @Prop() text!: string;
 
   /**
    * The color of the text.
@@ -32,7 +32,7 @@ export class ColorHighlight {
           style={{
             color: 'hsl(' + this.color.hue + ',' + this.color.sat + '%,' + this.color.lum + '%)',
           }}
-          class={`font-mono font-bold rounded-md`}
+          class={`m-0 p-0 inline-block align-baseline font-mono font-bold leading-none`}
         >
           {this.text}
         </span>

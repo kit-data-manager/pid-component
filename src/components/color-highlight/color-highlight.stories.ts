@@ -50,9 +50,9 @@ export const Default: Story = {
 };
 
 
-export const HandleWithoutSubcomponentInText: Story = {
+export const HighlightedTextInText: Story = {
   args: {
-    text: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
+    text: '21.11152',
   },
   decorators: [textDecorator],
   parameters: {

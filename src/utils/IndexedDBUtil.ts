@@ -63,8 +63,7 @@ export async function addEntity(param: { value: string, renderer: GenericIdentif
   }).catch((reason) => {
     if (reason.name === "ConstraintError") {
       console.log("Entity already exists")
-    }
-    else console.error("Could not add entity", reason)
+    } else console.error("Could not add entity", reason)
   })
   console.log("added entity", param)
 
@@ -107,40 +106,15 @@ export const getEntity = async function (
   const context = document.documentURI
   const db = await dbPromise
   let entity: { value: string, rendererKey: string, context: string } | undefined = await db.get("entities", value);
-  // return await db.get("entities", value).then(async (e) => {
-  //   console.log("got entity for value in db", value, e)
-  //   if (e !== undefined) {
-  //     if (e.context === context) {
-  //       console.log("Found entity for context and value in db", e, context, value)
-  //       let renderer = new (renderers.find(renderer => renderer.key === e.rendererKey).constructor)(value)
-  //       if (renderer.hasCorrectFormat()) {
-  //         renderer.settings = settings.find(value => value.type === renderer.getSettingsKey())?.values
-  //         await renderer.init()
-  //         return renderer
-  //       }
-  //     }
-  //   }
-  // }).catch(async () => {
-  //   console.log("No entity found for context and value in db", context, value)
-  //   let renderer = await Parser.getBestFit(value, settings);
-  //   console.log("best fit", renderer)
-  //   renderer.settings = settings.find(value => value.type === renderer.getSettingsKey())?.values
-  //   await renderer.init()
-  //   await addEntity({value: value, renderer: renderer})
-  //   console.log("added entity to db", value, renderer)
-  //   return renderer
-  // })
 
   if (entity !== undefined) {
-    // if (entity.context === context) {
-      console.log("Found entity for context and value in db", entity, context, value)
-      let renderer = new (renderers.find(renderer => renderer.key === entity.rendererKey).constructor)(value)
-      if (renderer.hasCorrectFormat()) {
-        renderer.settings = settings.find(value => value.type === renderer.getSettingsKey())?.values
-        await renderer.init()
-        return renderer
-      }
-    // }
+    console.log("Found entity for context and value in db", entity, context, value)
+    let renderer = new (renderers.find(renderer => renderer.key === entity.rendererKey).constructor)(value)
+    if (renderer.hasCorrectFormat()) {
+      renderer.settings = settings.find(value => value.type === renderer.getSettingsKey())?.values
+      await renderer.init()
+      return renderer
+    }
   }
 
   console.log("No entity found for context and value in db", entity, context, value)

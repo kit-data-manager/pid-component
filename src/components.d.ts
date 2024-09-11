@@ -13,6 +13,14 @@ export namespace Components {
          */
         "text": string;
     }
+    interface CopyButton {
+        /**
+          * The value to copy to the clipboard.
+          * @type {string}
+          * @public
+         */
+        "value": string;
+    }
     interface PidComponent {
         /**
           * The number of items to show in the table per page. Defaults to 10. (optional)
@@ -73,6 +81,12 @@ declare global {
         prototype: HTMLColorHighlightElement;
         new (): HTMLColorHighlightElement;
     };
+    interface HTMLCopyButtonElement extends Components.CopyButton, HTMLStencilElement {
+    }
+    var HTMLCopyButtonElement: {
+        prototype: HTMLCopyButtonElement;
+        new (): HTMLCopyButtonElement;
+    };
     interface HTMLPidComponentElement extends Components.PidComponent, HTMLStencilElement {
     }
     var HTMLPidComponentElement: {
@@ -81,6 +95,7 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "color-highlight": HTMLColorHighlightElement;
+        "copy-button": HTMLCopyButtonElement;
         "pid-component": HTMLPidComponentElement;
     }
 }
@@ -90,7 +105,15 @@ declare namespace LocalJSX {
           * The text to highlight.
           * @type {string}
          */
-        "text"?: string;
+        "text": string;
+    }
+    interface CopyButton {
+        /**
+          * The value to copy to the clipboard.
+          * @type {string}
+          * @public
+         */
+        "value": string;
     }
     interface PidComponent {
         /**
@@ -146,6 +169,7 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "color-highlight": ColorHighlight;
+        "copy-button": CopyButton;
         "pid-component": PidComponent;
     }
 }
@@ -154,6 +178,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "color-highlight": LocalJSX.ColorHighlight & JSXBase.HTMLAttributes<HTMLColorHighlightElement>;
+            "copy-button": LocalJSX.CopyButton & JSXBase.HTMLAttributes<HTMLCopyButtonElement>;
             "pid-component": LocalJSX.PidComponent & JSXBase.HTMLAttributes<HTMLPidComponentElement>;
         }
     }

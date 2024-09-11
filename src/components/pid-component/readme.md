@@ -27,6 +27,7 @@
 
 ### Depends on
 
+- [copy-button](../copy-button)
 - [pid-component](.)
 
 ### Graph
