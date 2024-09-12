@@ -98,12 +98,22 @@ export abstract class GenericIdentifierType {
   }
 
   /**
+   * Returns the data that is being rendered in the component.
+   * By default, it returns undefined, which means that there is no meaningful data.
+   * @returns {any} The data that is needed for rendering the component.
+   */
+  get data(): any {
+    return undefined;
+  }
+
+  /**
    * This asynchronous method is called when the component is initialized.
    * It should be used to fetch data from external sources and generate the items and actions that should be rendered in the component.
    * It must be implemented by the child classes as it is abstract.
+   * @param data The data that is needed for rendering the component.
    * @abstract
    */
-  abstract init(): Promise<void>;
+  abstract init(data?:any): Promise<void>;
 
   /**
    * This method indicates if a value is resolvable or not.

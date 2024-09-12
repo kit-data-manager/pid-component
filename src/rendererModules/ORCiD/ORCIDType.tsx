@@ -38,9 +38,21 @@ export class ORCIDType extends GenericIdentifierType {
     return ORCIDInfo.isORCiD(this.value);
   }
 
-  async init(): Promise<void> {
-    let parsed = await ORCIDInfo.getORCiDInfo(this.value);
-    this._orcidInfo = parsed;
+  get data(): string {
+    console.log("get data ORCIDType.toObject()", this._orcidInfo.toObject());
+    return JSON.stringify(this._orcidInfo.toObject());
+  }
+
+  async init(data?: string): Promise<void> {
+    console.log("init ORCIDType", data, typeof data);
+    if (data !== undefined) {
+      // this._orcidInfo = new ORCIDInfo(data.orcid, data.ORCiDJSON, data.familyName, data.givenNames, data.employments, data.preferredLocale, data.biography, data.emails, data.keywords, data.researcherUrls, data.country);
+      this._orcidInfo = ORCIDInfo.fromJSON(data);
+      console.log("reload ORCIDInfo from data", this._orcidInfo);
+    } else {
+      this._orcidInfo = await ORCIDInfo.getORCiDInfo(this.value);
+      console.log("load ORCIDInfo from API", this._orcidInfo);
+    }
 
     if (this.settings) {
       for (let i of this.settings) {
@@ -56,29 +68,37 @@ export class ORCIDType extends GenericIdentifierType {
     }
 
     // Generate items and actions
-
     this.items.push(
       ...[
         new FoldableItem(
           0,
           'ORCiD',
-          parsed.orcid,
+          this._orcidInfo.orcid,
           'ORCiD is a free service for researchers to distinguish themselves by creating a unique personal identifier.',
           'https://orcid.org',
           undefined,
           true,
         ),
-        new FoldableItem(1, 'Family Name', parsed.familyName, 'The family name of the person.'),
-        new FoldableItem(2, 'Given Names', parsed.givenNames.toString(), 'The given names of the person.'),
+        new FoldableItem(1, 'Family Name', this._orcidInfo.familyName, 'The family name of the person.'),
       ],
     );
 
-    this.actions.push(new FoldableAction(0, 'Open ORCiD profile', `https://orcid.org/${parsed.orcid}`, 'primary'));
+    try {
+      const givenNames = this._orcidInfo.givenNames;
+      if (givenNames) {
+        new FoldableItem(2, 'Given Names', this._orcidInfo.givenNames.toString(), 'The given names of the person.');
+      }
+    } catch (e) {
+      console.log("Failed to obtain given names from ORCiD record.", e);
+    }
+
+    this.actions.push(new FoldableAction(0, 'Open ORCiD profile', `https://orcid.org/${this._orcidInfo.orcid}`, 'primary'));
 
     try {
-      const affiliations = parsed.getAffiliationsAt(new Date(Date.now()));
+      const affiliations = this._orcidInfo.getAffiliationsAt(new Date(Date.now()));
+      console.log("Affiliations", affiliations);
       for (let data of affiliations) {
-        const affiliation = parsed.getAffiliationAsString(data);
+        const affiliation = this._orcidInfo.getAffiliationAsString(data);
         if (affiliation !== undefined && affiliation.length > 2)
           this.items.push(new FoldableItem(50, 'Current Affiliation', affiliation, 'The current affiliation of the person.', undefined, undefined, false));
       }
@@ -87,13 +107,13 @@ export class ORCIDType extends GenericIdentifierType {
     }
 
     if (
-      parsed.getAffiliationsAt(this.affiliationAt) !== parsed.getAffiliationsAt(new Date()) &&
+      this._orcidInfo.getAffiliationsAt(this.affiliationAt) !== this._orcidInfo.getAffiliationsAt(new Date()) &&
       this.affiliationAt.toLocaleDateString('en-US') !== new Date().toLocaleDateString('en-US')
     ) {
-      const affiliationsThen = parsed.getAffiliationsAt(this.affiliationAt);
+      const affiliationsThen = this._orcidInfo.getAffiliationsAt(this.affiliationAt);
 
       for (let data of affiliationsThen) {
-        const affiliation = parsed.getAffiliationAsString(data);
+        const affiliation = this._orcidInfo.getAffiliationAsString(data);
         this.items.push(
           new FoldableItem(
             49,
@@ -112,9 +132,9 @@ export class ORCIDType extends GenericIdentifierType {
         );
       }
     }
-    if (parsed.emails) {
-      let primary = parsed.emails.filter(email => email.primary)[0];
-      let other = parsed.emails.filter(email => !email.primary);
+    if (this._orcidInfo.emails) {
+      let primary = this._orcidInfo.emails.filter(email => email.primary)[0];
+      let other = this._orcidInfo.emails.filter(email => !email.primary);
 
       // If there is a primary e-mail address, generate an item and an action to send email
       if (primary) {
@@ -126,12 +146,12 @@ export class ORCIDType extends GenericIdentifierType {
       if (other.length > 0)
         this.items.push(new FoldableItem(70, 'Other E-Mail addresses', other.map(email => email.email).join(', '), 'All other e-mail addresses of the person.', undefined, undefined, false));
 
-      if (parsed.preferredLocale)
+      if (this._orcidInfo.preferredLocale)
         this.items.push(
           new FoldableItem(
             25,
             'Preferred Language',
-            getLocaleDetail(parsed.preferredLocale, 'language'),
+            getLocaleDetail(this._orcidInfo.preferredLocale, 'language'),
             'The preferred locale/language of the person.',
             undefined,
             undefined,
@@ -139,18 +159,18 @@ export class ORCIDType extends GenericIdentifierType {
           ),
         );
 
-      for (let url of parsed.researcherUrls) {
+      for (let url of this._orcidInfo.researcherUrls) {
         this.items.push(new FoldableItem(100, url.name, url.url, 'A link to a website specified by the person.'));
       }
 
-      if (parsed.keywords.length > 50)
+      if (this._orcidInfo.keywords.length > 50)
         this.items.push(
-          new FoldableItem(60, 'Keywords', parsed.keywords.map(keyword => keyword.content).join(', '), 'Keywords specified by the person.', undefined, undefined, false),
+          new FoldableItem(60, 'Keywords', this._orcidInfo.keywords.map(keyword => keyword.content).join(', '), 'Keywords specified by the person.', undefined, undefined, false),
         );
 
-      if (parsed.biography) this.items.push(new FoldableItem(200, 'Biography', parsed.biography, 'The biography of the person.', undefined, undefined, false));
+      if (this._orcidInfo.biography) this.items.push(new FoldableItem(200, 'Biography', this._orcidInfo.biography, 'The biography of the person.', undefined, undefined, false));
 
-      if (parsed.country) this.items.push(new FoldableItem(30, 'Country', getLocaleDetail(parsed.country, 'region'), 'The country of the person.', undefined, undefined, false));
+      if (this._orcidInfo.country) this.items.push(new FoldableItem(30, 'Country', getLocaleDetail(this._orcidInfo.country, 'region'), 'The country of the person.', undefined, undefined, false));
 
       console.log(this._orcidInfo);
     }

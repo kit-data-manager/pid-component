@@ -1,10 +1,11 @@
 import {DBSchema, openDB} from 'idb';
 import {GenericIdentifierType} from "./GenericIdentifierType";
-import {renderers} from "./utils";
 import {Parser} from "./Parser";
+import {renderers} from "./utils";
 
 const dbName: string = "pid-component";
 const dbVersion: number = undefined;
+
 
 interface PIDComponentDB extends DBSchema {
   entities: {
@@ -12,7 +13,9 @@ interface PIDComponentDB extends DBSchema {
     value: {
       value: string,
       rendererKey: string,
-      context: string
+      context: string,
+      lastAccess: Date,
+      lastData: any
     }
     indexes: {
       "by-context": string
@@ -24,8 +27,7 @@ interface PIDComponentDB extends DBSchema {
     value: {
       start: string,
       description: string,
-      end: string,
-      // connectionType: "none" | "startToEnd" | "bidirectional"
+      end: string
     }
     indexes: {
       "by-start": string,
@@ -51,28 +53,29 @@ const dbPromise = openDB<PIDComponentDB>(dbName, dbVersion, {
   },
 });
 
-export async function addEntity(param: { value: string, renderer: GenericIdentifierType }) {
-  const renderer = param.renderer.getSettingsKey()
+export async function addEntity(renderer: GenericIdentifierType) {
   const context = document.documentURI
   const db = await dbPromise
 
   await db.add("entities", {
-    value: param.value,
-    rendererKey: renderer,
-    context: context
+    value: renderer.value,
+    rendererKey: renderer.getSettingsKey(),
+    context: context,
+    lastAccess: new Date(),
+    lastData: renderer.data
   }).catch((reason) => {
     if (reason.name === "ConstraintError") {
       console.log("Entity already exists")
     } else console.error("Could not add entity", reason)
   })
-  console.log("added entity", param)
+  console.log("added entity", renderer)
 
   const tx = db.transaction("relations", "readwrite")
   const promises = []
 
-  for (const item of param.renderer.items) {
+  for (const item of renderer.items) {
     const relation = {
-      start: param.value,
+      start: renderer.value,
       description: item.keyTitle,
       end: item.value,
       // connectionType: "startToEnd"
@@ -103,25 +106,68 @@ export const getEntity = async function (
     }[];
   }[]): Promise<GenericIdentifierType> {
 
-  const context = document.documentURI
   const db = await dbPromise
-  let entity: { value: string, rendererKey: string, context: string } | undefined = await db.get("entities", value);
+  let entity: {
+    value: string,
+    rendererKey: string,
+    context: string,
+    lastAccess: Date,
+    lastData: any
+  } | undefined = await db.get("entities", value);
 
   if (entity !== undefined) {
-    console.log("Found entity for context and value in db", entity, context, value)
-    let renderer = new (renderers.find(renderer => renderer.key === entity.rendererKey).constructor)(value)
-    if (renderer.hasCorrectFormat()) {
-      renderer.settings = settings.find(value => value.type === renderer.getSettingsKey())?.values
-      await renderer.init()
+    console.log("Found entity for value in db", entity, value)
+    console.log("settings", settings)
+    const entitySettings = settings.find(value => value.type === entity.rendererKey)?.values
+    const ttl = entitySettings?.find(value => value.name === "ttl")
+    console.log("entitySettings", entitySettings)
+
+    if (ttl != undefined && ttl.value != undefined && (new Date().getTime() - entity.lastAccess.getTime() > ttl.value || ttl.value === 0)) {
+      console.log("TTL expired! Deleting entry in db", ttl.value, new Date().getTime() - entity.lastAccess.getTime())
+      await deleteEntity(value)
+    } else {
+      console.log("TTL not expired or undefined", new Date().getTime() - entity.lastAccess.getTime())
+      let renderer = new (renderers.find(renderer => renderer.key === entity.rendererKey).constructor)(value, entitySettings)
+      // if (renderer.hasCorrectFormat()) {
+      renderer.settings = entitySettings
+      await renderer.init(entity.lastData)
       return renderer
+      // }
     }
   }
 
-  console.log("No entity found for context and value in db", entity, context, value)
+  console.log("No valid entity found for value in db", entity, value)
   let renderer = await Parser.getBestFit(value, settings);
-  renderer.settings = settings.find(value => value.type === renderer.getSettingsKey())?.values
-  await renderer.init()
-  await addEntity({value: value, renderer: renderer})
+  // renderer.settings = settings.find(value => value.type === renderer.getSettingsKey())?.values
+  // await renderer.init()
+  await addEntity(renderer)
   console.log("added entity to db", value, renderer)
   return renderer
+}
+
+export async function deleteEntity(value: string) {
+  const db = await dbPromise
+  await db.delete("entities", value)
+  const tx = db.transaction("relations", "readwrite")
+  const index = tx.store.index("by-start")
+  let cursor = await index.openCursor()
+  while (cursor) {
+    if (cursor.value.start === value || cursor.value.end === value) {
+      await tx.store.delete(cursor.primaryKey)
+    }
+    cursor = await cursor.continue()
+  }
+  console.log("deleted entity", value)
+  await tx.done
+}
+
+export async function deleteAllByContext(context: string) {
+  const db = await dbPromise
+  const tx = db.transaction("entities", "readwrite")
+  const entities = await tx.store.index("by-context").getAll(context)
+  for (const entity of entities) {
+    await deleteEntity(entity.value)
+  }
+  console.log("deleted all entities for context", context)
+  await tx.done
 }

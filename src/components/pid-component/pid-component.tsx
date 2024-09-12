@@ -194,6 +194,7 @@ export class PidComponent {
         if (a.estimatedTypePriority > b.estimatedTypePriority) return 1;
         if (a.estimatedTypePriority < b.estimatedTypePriority) return -1;
       });
+
       this.actions = this.identifierObject.actions;
       this.actions.sort((a, b) => a.priority - b.priority);
     }
@@ -416,7 +417,7 @@ export class PidComponent {
                                             hideSubcomponents={true}
                                           />
                                         ) : (
-                                          value.value
+                                          <span class={'font-mono text-sm'}>{value.value}</span>
                                         )
                                       }
                                     </span>

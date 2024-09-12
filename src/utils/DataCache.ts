@@ -76,6 +76,12 @@ export class DataCache {
       return response.json();
     }
   }
+
+  async delete(url: string) {
+    if (this.cacheInstance) {
+      await this.cacheInstance.delete(url);
+    }
+  }
 }
 
 /**

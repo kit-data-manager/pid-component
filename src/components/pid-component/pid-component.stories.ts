@@ -338,7 +338,7 @@ export const ORCIDInRecordWithoutLimit = {
 export const ORCIDInRecordWithSettings = {
   args: {
     value: '21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6',
-    settings: '[{"type":"ORCIDConfig","values":[{"name":"affiliationAt","value":949363200000},{"name":"showAffiliation","value":true}]}]',
+    settings: '[{"type":"ORCIDType","values":[{"name":"affiliationAt","value":949363200000},{"name":"showAffiliation","value":true}]}]',
   },
   parameters: {
     docs: {

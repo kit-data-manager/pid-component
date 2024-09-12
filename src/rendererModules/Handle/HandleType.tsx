@@ -41,31 +41,51 @@ export class HandleType extends GenericIdentifierType {
     return PID.isPID(this.value);
   }
 
-  async init(): Promise<void> {
-    const pid = PID.getPIDFromString(this.value);
+  get data(): PIDRecord {
+    return this._pidRecord;
+  }
 
-    // Generate the colors for the parts of the PID
-    this._parts = await Promise.all([
-      {
-        text: pid.prefix,
-        nextExists: true,
-      },
-      {
-        text: pid.suffix,
-        nextExists: false,
-      },
-    ]);
+  async init(data?: any): Promise<void> {
+    if (data !== undefined && data instanceof PIDRecord) {
+      this._pidRecord = (data as PIDRecord);
+      this._parts = await Promise.all([
+        {
+          text: this._pidRecord.pid.prefix,
+          nextExists: true,
+        },
+        {
+          text: this._pidRecord.pid.suffix,
+          nextExists: false,
+        },
+      ]);
+      console.log("reload PIDRecord from data", this._pidRecord);
+    } else {
+      const pid = PID.getPIDFromString(this.value);
 
-    // Resolve the PID
-    const resolved = await pid.resolve();
-    this._pidRecord = resolved;
-    for (const value of resolved.values) {
+      // Generate the colors for the parts of the PID
+      this._parts = await Promise.all([
+        {
+          text: pid.prefix,
+          nextExists: true,
+        },
+        {
+          text: pid.suffix,
+          nextExists: false,
+        },
+      ]);
+
+      // Resolve the PID
+      const resolved = await pid.resolve();
+      this._pidRecord = resolved;
+    }
+
+    for (const value of this._pidRecord.values) {
       if (value.type instanceof PIDDataType) {
         this.items.push(new FoldableItem(0, value.type.name, value.data.value, value.type.description, value.type.redirectURL, value.type.regex));
       }
     }
 
-    this.actions.push(new FoldableAction(0, 'Open in FAIR-DOscope', `https://kit-data-manager.github.io/fairdoscope/?pid=${resolved.pid.toString()}`, 'primary'));
+    this.actions.push(new FoldableAction(0, 'Open in FAIR-DOscope', `https://kit-data-manager.github.io/fairdoscope/?pid=${this._pidRecord.pid.toString()}`, 'primary'));
 
     return;
   }
