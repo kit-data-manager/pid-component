@@ -1,10 +1,10 @@
-import {PIDRecord} from './PIDRecord';
-import {PID} from './PID';
-import {PIDDataType} from './PIDDataType';
-import {FunctionalComponent, h} from '@stencil/core';
-import {GenericIdentifierType} from "../../utils/GenericIdentifierType";
-import {FoldableItem} from "../../utils/FoldableItem";
-import {FoldableAction} from "../../utils/FoldableAction";
+import { PIDRecord } from './PIDRecord';
+import { PID } from './PID';
+import { PIDDataType } from './PIDDataType';
+import { FunctionalComponent, h } from '@stencil/core';
+import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
+import { FoldableItem } from '../../utils/FoldableItem';
+import { FoldableAction } from '../../utils/FoldableAction';
 
 /**
  * This class specifies a custom renderer for handles.
@@ -42,12 +42,10 @@ export class HandleType extends GenericIdentifierType {
   }
 
   get data(): string {
-    console.log("get data PIDRecord.toObject()", this._pidRecord.toObject());
     return JSON.stringify(this._pidRecord.toObject());
   }
 
   async init(data?: string): Promise<void> {
-    console.log("init HandleType", data, typeof data);
     if (data !== undefined) {
       this._pidRecord = PIDRecord.fromJSON(data);
       this._parts = await Promise.all([
@@ -60,7 +58,7 @@ export class HandleType extends GenericIdentifierType {
           nextExists: false,
         },
       ]);
-      console.log("reload PIDRecord from data", this._pidRecord);
+      console.debug('reload PIDRecord from data', this._pidRecord);
     } else {
       const pid = PID.getPIDFromString(this.value);
 
@@ -77,8 +75,8 @@ export class HandleType extends GenericIdentifierType {
       ]);
 
       // Resolve the PID
-      const resolved = await pid.resolve();
-      this._pidRecord = resolved;
+      this._pidRecord = await pid.resolve();
+      console.debug('load PIDRecord from API', this._pidRecord);
     }
 
     for (const value of this._pidRecord.values) {
@@ -102,7 +100,7 @@ export class HandleType extends GenericIdentifierType {
         {this._parts.map(element => {
           return (
             <span class={'font-bold font-mono'}>
-              <color-highlight text={element.text}/>
+              <color-highlight text={element.text} />
               <span class={'font-mono font-bold text-gray-800 mx-0.5'}>{element.nextExists ? '/' : ''}</span>
             </span>
           );

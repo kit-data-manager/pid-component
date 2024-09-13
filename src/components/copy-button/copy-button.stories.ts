@@ -1,4 +1,4 @@
-import {Meta, StoryObj} from '@storybook/web-components';
+import { Meta, StoryObj } from '@storybook/web-components';
 
 const meta: Meta = {
   title: 'copy-button',
@@ -10,7 +10,7 @@ const meta: Meta = {
         required: true,
         type: 'text',
       },
-    }
+    },
   },
   args: {
     value: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',

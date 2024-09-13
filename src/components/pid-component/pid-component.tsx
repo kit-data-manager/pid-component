@@ -1,8 +1,8 @@
-import {Component, h, Host, Prop, State, Watch} from '@stencil/core';
-import {GenericIdentifierType} from '../../utils/GenericIdentifierType';
-import {FoldableItem} from '../../utils/FoldableItem';
-import {FoldableAction} from '../../utils/FoldableAction';
-import {getEntity} from "../../utils/IndexedDBUtil";
+import { Component, h, Host, Prop, State, Watch } from '@stencil/core';
+import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
+import { FoldableItem } from '../../utils/FoldableItem';
+import { FoldableAction } from '../../utils/FoldableAction';
+import { getEntity } from '../../utils/IndexedDBUtil';
 
 @Component({
   tag: 'pid-component',
@@ -95,13 +95,16 @@ export class PidComponent {
    */
   @Prop() showTopLevelCopy: boolean = true;
 
+
   /**
-   * Determines whether the cache should be deleted after the component on the top level is disconnected.
-   * Defaults to true.
+   * Determines the default time to live (TTL) for entries in the IndexedDB.
+   * Defaults to 24 hours.
+   * Units are in milliseconds.
    * (optional)
-   * @type {boolean}
+   * @type {number}
+   * @default 24 * 60 * 60 * 1000
    */
-  @Prop() deleteCacheAfterDisconnect: boolean = true;
+  @Prop() defaultTTL: number = 24 * 60 * 60 * 1000;
 
   /**
    * Stores the parsed identifier object.
@@ -156,7 +159,7 @@ export class PidComponent {
    */
   @Watch('loadSubcomponents')
   async watchLoadSubcomponents() {
-    this.temporarilyEmphasized = this.loadSubcomponents
+    this.temporarilyEmphasized = this.loadSubcomponents;
   }
 
   /**
@@ -174,13 +177,18 @@ export class PidComponent {
     try {
       settings = JSON.parse(this.settings);
     } catch (e) {
-      console.error("Failed to parse settings.", e)
+      console.error('Failed to parse settings.', e);
     }
+    settings.forEach(value => {
+      if (!value.values.some(v => v.name === 'ttl')) {
+        value.values.push({ name: 'ttl', value: this.defaultTTL });
+      }
+    });
 
     // Get the renderer for the value
     await getEntity(this.value, settings).then(renderer => {
-      this.identifierObject = renderer
-    })
+      this.identifierObject = renderer;
+    });
 
     // Generate items and actions if subcomponents should be shown
     if (!this.hideSubcomponents) {
@@ -262,7 +270,7 @@ export class PidComponent {
                 {
                   // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
                   this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy && this.emphasizeComponent ? (
-                    <copy-button value={this.identifierObject.value}/>
+                    <copy-button value={this.identifierObject.value} />
                   ) : (
                     ''
                   )
@@ -272,7 +280,7 @@ export class PidComponent {
               <span class={'inline-flex items-center transition ease-in-out'}>
                 <svg class="animate-spin ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none"
                      viewBox="0 0 24 24">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
                   <path
                     class="opacity-75"
                     fill="currentColor"
@@ -323,7 +331,7 @@ export class PidComponent {
                 {
                   // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
                   this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy && (this.emphasizeComponent || this.temporarilyEmphasized) ? (
-                    <copy-button value={this.identifierObject.value}/>
+                    <copy-button value={this.identifierObject.value} />
                   ) : (
                     ''
                   )
@@ -379,10 +387,10 @@ export class PidComponent {
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
                                       >
-                                        <path stroke="none" d="M0 0h24v24H0z"/>
-                                        <circle cx="12" cy="12" r="9"/>
-                                        <line x1="12" y1="8" x2="12.01" y2="8"/>
-                                        <polyline points="11 12 12 12 12 16 13 16"/>
+                                        <path stroke="none" d="M0 0h24v24H0z" />
+                                        <circle cx="12" cy="12" r="9" />
+                                        <line x1="12" y1="8" x2="12.01" y2="8" />
+                                        <polyline points="11 12 12 12 12 16 13 16" />
                                       </svg>
                                     </div>
                                     <p
@@ -421,7 +429,7 @@ export class PidComponent {
                                         )
                                       }
                                     </span>
-                                  <copy-button value={value.value}/>
+                                  <copy-button value={value.value} />
                                 </td>
                               </tr>
                             );
@@ -537,10 +545,5 @@ export class PidComponent {
         }
       </Host>
     );
-  }
-
-  disconnectedCallback() {
-    console.log('Disconnected');
-    if (this.deleteCacheAfterDisconnect && caches && this.currentLevelOfSubcomponents === 0) caches.delete('pid-component').then(() => console.log('Cache deleted'));
   }
 }

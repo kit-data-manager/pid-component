@@ -1,18 +1,18 @@
-import {PID} from "../rendererModules/Handle/PID";
-import {PIDDataType} from "../rendererModules/Handle/PIDDataType";
-import {PIDRecord} from "../rendererModules/Handle/PIDRecord";
-import {GenericIdentifierType} from "./GenericIdentifierType";
-import {DateType} from "../rendererModules/DateType";
-import {ORCIDType} from "../rendererModules/ORCiD/ORCIDType";
-import {HandleType} from "../rendererModules/Handle/HandleType";
-import {EmailType} from "../rendererModules/EmailType";
-import {URLType} from "../rendererModules/URLType";
-import {FallbackType} from "../rendererModules/FallbackType";
+import { PID } from '../rendererModules/Handle/PID';
+import { PIDDataType } from '../rendererModules/Handle/PIDDataType';
+import { PIDRecord } from '../rendererModules/Handle/PIDRecord';
+import { GenericIdentifierType } from './GenericIdentifierType';
+import { DateType } from '../rendererModules/DateType';
+import { ORCIDType } from '../rendererModules/ORCiD/ORCIDType';
+import { HandleType } from '../rendererModules/Handle/HandleType';
+import { EmailType } from '../rendererModules/EmailType';
+import { URLType } from '../rendererModules/URLType';
+import { FallbackType } from '../rendererModules/FallbackType';
 
 /**
  * Array of all component objects that can be used to parse a given value, ordered by priority (lower is better)
-  * @type {Array<{priority: number, key: string, constructor: GenericIdentifierType}>}
-  */
+ * @type {Array<{priority: number, key: string, constructor: GenericIdentifierType}>}
+ */
 export const renderers: ({
   priority: number;
   key: string;
@@ -77,7 +77,7 @@ export const unresolvables: Set<PID> = new Set();
  * @returns {string} The user-friendly name of the locale.
  */
 export function getLocaleDetail(locale: string, type: 'region' | 'language'): string {
-  const friendlyName = new Intl.DisplayNames(['en'], {type: type}).of(locale.toUpperCase());
+  const friendlyName = new Intl.DisplayNames(['en'], { type: type }).of(locale.toUpperCase());
   if (type === 'language') return friendlyName;
 
   const codePoints = locale

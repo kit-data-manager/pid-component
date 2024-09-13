@@ -1,5 +1,5 @@
-import {GenericIdentifierType} from './GenericIdentifierType';
-import {renderers} from "./utils";
+import { GenericIdentifierType } from './GenericIdentifierType';
+import { renderers } from './utils';
 
 /**
  * Class that handles the parsing of a given value and returns the best fitting component object

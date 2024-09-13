@@ -1,6 +1,6 @@
-import {FunctionalComponent} from '@stencil/core';
-import {FoldableItem} from './FoldableItem';
-import {FoldableAction} from './FoldableAction';
+import { FunctionalComponent } from '@stencil/core';
+import { FoldableItem } from './FoldableItem';
+import { FoldableAction } from './FoldableAction';
 
 /**
  * GenericIdentifierType is the base class for all identifier types that should be parsed and rendered into the pid-component component.
@@ -113,7 +113,7 @@ export abstract class GenericIdentifierType {
    * @param data The data that is needed for rendering the component.
    * @abstract
    */
-  abstract init(data?:any): Promise<void>;
+  abstract init(data?: any): Promise<void>;
 
   /**
    * This method indicates if a value is resolvable or not.

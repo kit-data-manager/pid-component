@@ -33,10 +33,11 @@ export namespace Components {
          */
         "currentLevelOfSubcomponents": number;
         /**
-          * Determines whether the cache should be deleted after the component on the top level is disconnected. Defaults to true. (optional)
-          * @type {boolean}
+          * Determines the default time to live (TTL) for entries in the IndexedDB. Defaults to 24 hours. Units are in milliseconds. (optional)
+          * @type {number}
+          * @default 24 * 60 * 60 * 1000
          */
-        "deleteCacheAfterDisconnect": boolean;
+        "defaultTTL": number;
         /**
           * Determines whether components should be emphasized towards their surrounding by border and shadow. If set to true, border and shadows will be shown around the component. It not set, the component won't be surrounded by border and shadow. (optional)
           * @type {boolean}
@@ -127,10 +128,11 @@ declare namespace LocalJSX {
          */
         "currentLevelOfSubcomponents"?: number;
         /**
-          * Determines whether the cache should be deleted after the component on the top level is disconnected. Defaults to true. (optional)
-          * @type {boolean}
+          * Determines the default time to live (TTL) for entries in the IndexedDB. Defaults to 24 hours. Units are in milliseconds. (optional)
+          * @type {number}
+          * @default 24 * 60 * 60 * 1000
          */
-        "deleteCacheAfterDisconnect"?: boolean;
+        "defaultTTL"?: number;
         /**
           * Determines whether components should be emphasized towards their surrounding by border and shadow. If set to true, border and shadows will be shown around the component. It not set, the component won't be surrounded by border and shadow. (optional)
           * @type {boolean}

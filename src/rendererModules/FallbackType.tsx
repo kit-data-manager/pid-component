@@ -1,5 +1,5 @@
 import { FunctionalComponent, h } from '@stencil/core';
-import {GenericIdentifierType} from "../utils/GenericIdentifierType";
+import { GenericIdentifierType } from '../utils/GenericIdentifierType';
 
 /**
  * This class specifies a custom renderer that is used as a fallback for all types that are not supported.

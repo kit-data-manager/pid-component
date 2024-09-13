@@ -48,13 +48,30 @@ Different components need different settings.
 You can pass these settings to the component via the 'settings' property.
 E.g., The ORCiD component enables you to decide whether you want to show the affilliation in the summary or not.
 It also enables you to show the affilliation at a certain point of time.
+
+For better performance, the pid-component stores fetched data in the IndexedDB.
+To ensure that the data and representation are up-to-date, you can set a time-to-live (TTL) for each type.
+The TTL is the time in milliseconds after which the data is considered outdated and will be fetched again.
+In the example below, the TTL for the HandleType is set to 1 hour (3600000 ms) and for the ORCIDType to 1 day (86400000 ms).
 This results in the following settings JSON that you have to provide in a stringified form:
 
 ```json
 [
   {
+    "type": "HandleType",
+    "values": [
+      {
+        "name": "ttl",
+        "value": 3600000
+      }
+  },
+  {
     "type": "ORCIDType",
     "values": [
+      {
+        "name": "ttl",
+        "value": 86400000
+      },
       {
         "name": "affiliationAt",
         "value": 949363200000

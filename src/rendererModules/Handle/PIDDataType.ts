@@ -1,6 +1,5 @@
-import {locationType, PID} from './PID';
-import {typeMap, unresolvables} from "../../utils/utils";
-import {init} from "../../utils/DataCache";
+import { locationType, PID } from './PID';
+import { typeMap, unresolvables } from '../../utils/utils';
 
 /**
  * This class represents a PID data type.
@@ -126,14 +125,14 @@ export class PIDDataType {
 
     // Check if PID is resolvable
     if (!pid.isResolvable()) {
-      console.debug(`PID ${pid.toString()} is not resolvable`);
+      console.debug(`PID ${pid.toString()} has been marked as unresolvable`);
       return undefined;
     }
 
     // Resolve PID and make sure it isn't undefined
     const pidRecord = await pid.resolve();
     if (pidRecord === undefined) {
-      console.debug(`PID ${pid.toString()} could not be resolved`);
+      console.debug(`PID ${pid.toString()} could not be resolved via the API`);
       unresolvables.add(pid);
       return undefined;
     }
@@ -145,7 +144,7 @@ export class PIDDataType {
       regex?: RegExp;
       redirectURL: string;
       ePICJSON: object;
-    } = {name: '', description: '', redirectURL: '', ePICJSON: {}};
+    } = { name: '', description: '', redirectURL: '', ePICJSON: {} };
 
     // Check if there is a reference to a ePIC instance via a 10320/Loc type and resolve it
     for (let i = 0; i < pidRecord.values.length; i++) {
@@ -179,9 +178,8 @@ export class PIDDataType {
           // Try to resolve the data from the link
           try {
             if (newLocation.view === 'json') {
-              const dataCache = await init('pid-component');
               // if view is json then fetch the data from the link (ePIC data type registry) and save them into the temp object
-              newLocation.resolvedData = await dataCache.fetch(newLocation.href);
+              newLocation.resolvedData = await fetch(newLocation.href).then(response => response.json());
               tempDataType.ePICJSON = newLocation.resolvedData;
               tempDataType.name = newLocation.resolvedData['name'];
               tempDataType.description = newLocation.resolvedData['description'];
@@ -213,12 +211,12 @@ export class PIDDataType {
       description: this._description,
       redirectURL: this._redirectURL,
       ePICJSON: JSON.stringify(this._ePICJSON),
-      regex: this._regex
-    }
+      regex: this._regex,
+    };
   }
 
   static fromJSON(serialized: string): PIDDataType {
-    const data: ReturnType<PIDDataType["toObject"]> = JSON.parse(serialized);
+    const data: ReturnType<PIDDataType['toObject']> = JSON.parse(serialized);
     return new PIDDataType(PID.fromJSON(data.pid), data.name, data.description, data.redirectURL, JSON.parse(data.ePICJSON), data.regex);
   }
 }

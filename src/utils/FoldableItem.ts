@@ -1,5 +1,5 @@
-import {Parser} from './Parser';
-import {renderers} from "./utils";
+import { Parser } from './Parser';
+import { renderers } from './utils';
 
 /**
  * This is a class that is used to represent every line in the pid-component.

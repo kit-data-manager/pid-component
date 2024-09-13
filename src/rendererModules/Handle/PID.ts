@@ -1,8 +1,6 @@
-import {PIDRecord} from './PIDRecord';
-import {PIDDataType} from './PIDDataType';
-import {handleMap, unresolvables} from "../../utils/utils";
-import {init} from "../../utils/DataCache";
-
+import { PIDRecord } from './PIDRecord';
+import { PIDDataType } from './PIDDataType';
+import { handleMap, unresolvables } from '../../utils/utils';
 
 /**
  * This class represents the PID itself.
@@ -96,8 +94,7 @@ export class PID {
     if (unresolvables.has(this)) return undefined;
     else if (handleMap.has(this)) return handleMap.get(this);
     else {
-      const dataCache = await init('pid-component');
-      const rawJson = await dataCache.fetch(`https://hdl.handle.net/api/handles/${this.prefix}/${this.suffix}#resolve`);
+      const rawJson = await fetch(`https://hdl.handle.net/api/handles/${this.prefix}/${this.suffix}#resolve`).then(response => response.json());
       const values = [];
       for (let value of rawJson.values) {
         let type = PID.isPID(value.type) ? PID.getPIDFromString(value.type) : value.type;
@@ -122,12 +119,12 @@ export class PID {
   toObject() {
     return {
       prefix: this.prefix,
-      suffix: this.suffix
-    }
+      suffix: this.suffix,
+    };
   }
 
   static fromJSON(serialized: string): PID {
-    const data: ReturnType<PID["toObject"]> = JSON.parse(serialized);
+    const data: ReturnType<PID['toObject']> = JSON.parse(serialized);
     return new PID(data.prefix, data.suffix);
   }
 }

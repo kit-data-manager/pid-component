@@ -1,5 +1,3 @@
-import {init} from "../../utils/DataCache";
-
 /**
  * This file contains the ORCIDInfo class, which is used to store information about an ORCiD.
  */
@@ -278,8 +276,6 @@ export class ORCIDInfo {
   getAffiliationsAt(date: Date): Employment[] {
     let affiliations: Employment[] = [];
     for (const employment of this._employments) {
-      console.log(employment.startDate, date, employment.endDate);
-      console.log(employment.startDate.getTime(), date.getTime())
       if (employment.startDate <= date && employment.endDate === null) affiliations.push(employment);
       if (employment.startDate <= date && employment.endDate !== null && employment.endDate >= date) affiliations.push(employment);
     }
@@ -309,7 +305,7 @@ export class ORCIDInfo {
    * @returns {boolean} True if the string could be an ORCiD, false if not.
    */
   static isORCiD(text: string): boolean {
-    const regex = new RegExp('^(https://orcid.org/)?[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]$')
+    const regex = new RegExp('^(https://orcid.org/)?[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]$');
     return regex.test(text);
   }
 
@@ -322,12 +318,11 @@ export class ORCIDInfo {
     if (!ORCIDInfo.isORCiD(orcid)) throw new Error('Invalid input');
 
     if (orcid.match('^(https://orcid.org/)?[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]$') !== null) orcid = orcid.replace('https://orcid.org/', '');
-    const dataCache = await init('pid-component');
-    const rawOrcidJSON = await dataCache.fetch(`https://pub.orcid.org/v3.0/${orcid}`, {
+    const rawOrcidJSON = await fetch(`https://pub.orcid.org/v3.0/${orcid}`, {
       headers: {
         Accept: 'application/json',
       },
-    });
+    }).then(response => response.json());
 
     // Parse family name and given names
     const familyName = rawOrcidJSON['person']['name']['family-name']['value'];
@@ -422,16 +417,14 @@ export class ORCIDInfo {
       emails: this._emails,
       keywords: this._keywords,
       researcherUrls: this._researcherUrls,
-      country: this._country
-    }
+      country: this._country,
+    };
   }
 
   static fromJSON(serialized: string): ORCIDInfo {
-    const data: ReturnType<ORCIDInfo["toObject"]> = JSON.parse(serialized);
-    const employments = data.employments.map(employment => Employment.fromJSON(employment))
-    const result = new ORCIDInfo(data.orcid, data.ORCiDJSON, data.familyName, data.givenNames, employments, data.preferredLocale, data.biography, data.emails, data.keywords, data.researcherUrls, data.country)
-    console.log("Created from JSON: Affils", result.getAffiliationsAt(new Date()))
-    return result;
+    const data: ReturnType<ORCIDInfo['toObject']> = JSON.parse(serialized);
+    const employments = data.employments.map(employment => Employment.fromJSON(employment));
+    return new ORCIDInfo(data.orcid, data.ORCiDJSON, data.familyName, data.givenNames, employments, data.preferredLocale, data.biography, data.emails, data.keywords, data.researcherUrls, data.country);
   }
 
 }
@@ -466,7 +459,7 @@ class Employment {
     startDate: Date,
     endDate: Date | null,
     organization: string,
-    department: string
+    department: string,
   ) {
     this.startDate = startDate;
     this.endDate = endDate;
@@ -479,14 +472,14 @@ class Employment {
       startDate: this.startDate,
       endDate: this.endDate,
       organization: this.organization,
-      department: this.department
-    }
+      department: this.department,
+    };
   }
 
   static fromJSON(serialized: string): Employment {
-    const data: ReturnType<Employment["toObject"]> = JSON.parse(serialized);
+    const data: ReturnType<Employment['toObject']> = JSON.parse(serialized);
     const startDate = new Date(data.startDate);
     const endDate = data.endDate === null ? null : new Date(data.endDate);
-    return new Employment(startDate, endDate, data.organization, data.department)
+    return new Employment(startDate, endDate, data.organization, data.department);
   }
 }

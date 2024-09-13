@@ -27,7 +27,7 @@ const meta: Meta = {
       },
       table: {
         defaultValue: {
-          summary: "false",
+          summary: 'false',
         },
         type: {
           summary: 'boolean',
@@ -43,7 +43,7 @@ const meta: Meta = {
       },
       table: {
         defaultValue: {
-          summary: "10",
+          summary: '10',
         },
         type: {
           summary: 'number',
@@ -60,7 +60,7 @@ const meta: Meta = {
       },
       table: {
         defaultValue: {
-          summary: "false",
+          summary: 'false',
         },
         type: {
           summary: 'boolean',
@@ -77,7 +77,7 @@ const meta: Meta = {
       },
       table: {
         defaultValue: {
-          summary: "true",
+          summary: 'true',
         },
         type: {
           summary: 'boolean',
@@ -94,7 +94,7 @@ const meta: Meta = {
       },
       table: {
         defaultValue: {
-          summary: "true",
+          summary: 'true',
         },
         type: {
           summary: 'boolean',
@@ -110,7 +110,7 @@ const meta: Meta = {
       },
       table: {
         defaultValue: {
-          summary: "1",
+          summary: '1',
         },
         type: {
           summary: 'number',
@@ -126,26 +126,26 @@ const meta: Meta = {
       },
       table: {
         defaultValue: {
-          summary: "0",
+          summary: '0',
         },
         type: {
           summary: 'number',
         },
       },
     },
-    deleteCacheAfterDisconnect: {
-      name: 'delete-cache-after-disconnect',
-      description: 'Determines whether the cache should be deleted after the top level component is disconnected from the DOM.',
-      defaultValue: true,
+    defaultTTL: {
+      name: 'default-TTL',
+      description: 'The default TTL for entries in the IndexedDB. Is used if no TTL is set in the settings.',
+      defaultValue: 24*60*60*1000,
       control: {
-        type: 'boolean',
+        type: 'number',
       },
       table: {
         defaultValue: {
-          summary: "true",
+          summary: '24*60*60*1000'
         },
         type: {
-          summary: 'boolean',
+          summary: 'number',
         },
       },
     },
@@ -159,7 +159,7 @@ const meta: Meta = {
     emphasizeComponent: true,
     levelOfSubcomponents: 1,
     currentLevelOfSubcomponents: 0,
-    deleteCacheAfterDisconnect: false,
+    defaultTTL: 24*60*60*1000,
   },
 };
 const textDecorator = story =>

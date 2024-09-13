@@ -1,5 +1,5 @@
-import {Component, h, Host, Prop, State} from '@stencil/core';
-import {HSLColor} from "./HSLColor";
+import { Component, h, Host, Prop, State } from '@stencil/core';
+import { HSLColor } from './HSLColor';
 
 @Component({
   tag: 'color-highlight',

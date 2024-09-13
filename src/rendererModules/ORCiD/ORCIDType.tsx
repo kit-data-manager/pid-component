@@ -1,9 +1,9 @@
-import {FunctionalComponent, h} from '@stencil/core';
-import {GenericIdentifierType} from "../../utils/GenericIdentifierType";
-import {ORCIDInfo} from "./ORCIDInfo";
-import {FoldableItem} from "../../utils/FoldableItem";
-import {FoldableAction} from "../../utils/FoldableAction";
-import {getLocaleDetail} from "../../utils/utils";
+import { FunctionalComponent, h } from '@stencil/core';
+import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
+import { ORCIDInfo } from './ORCIDInfo';
+import { FoldableItem } from '../../utils/FoldableItem';
+import { FoldableAction } from '../../utils/FoldableAction';
+import { getLocaleDetail } from '../../utils/utils';
 
 
 /**
@@ -34,24 +34,22 @@ export class ORCIDType extends GenericIdentifierType {
    */
   private showAffiliation: boolean = true;
 
+  get data(): string {
+    return JSON.stringify(this._orcidInfo.toObject());
+  }
+
   hasCorrectFormat(): boolean {
     return ORCIDInfo.isORCiD(this.value);
   }
 
-  get data(): string {
-    console.log("get data ORCIDType.toObject()", this._orcidInfo.toObject());
-    return JSON.stringify(this._orcidInfo.toObject());
-  }
-
   async init(data?: string): Promise<void> {
-    console.log("init ORCIDType", data, typeof data);
     if (data !== undefined) {
       // this._orcidInfo = new ORCIDInfo(data.orcid, data.ORCiDJSON, data.familyName, data.givenNames, data.employments, data.preferredLocale, data.biography, data.emails, data.keywords, data.researcherUrls, data.country);
       this._orcidInfo = ORCIDInfo.fromJSON(data);
-      console.log("reload ORCIDInfo from data", this._orcidInfo);
+      console.debug('reload ORCIDInfo from data', this._orcidInfo);
     } else {
       this._orcidInfo = await ORCIDInfo.getORCiDInfo(this.value);
-      console.log("load ORCIDInfo from API", this._orcidInfo);
+      console.debug('load ORCIDInfo from API', this._orcidInfo);
     }
 
     if (this.settings) {
@@ -89,21 +87,20 @@ export class ORCIDType extends GenericIdentifierType {
         new FoldableItem(2, 'Given Names', this._orcidInfo.givenNames.toString(), 'The given names of the person.');
       }
     } catch (e) {
-      console.log("Failed to obtain given names from ORCiD record.", e);
+      console.log('Failed to obtain given names from ORCiD record.', e);
     }
 
     this.actions.push(new FoldableAction(0, 'Open ORCiD profile', `https://orcid.org/${this._orcidInfo.orcid}`, 'primary'));
 
     try {
       const affiliations = this._orcidInfo.getAffiliationsAt(new Date(Date.now()));
-      console.log("Affiliations", affiliations);
       for (let data of affiliations) {
         const affiliation = this._orcidInfo.getAffiliationAsString(data);
         if (affiliation !== undefined && affiliation.length > 2)
           this.items.push(new FoldableItem(50, 'Current Affiliation', affiliation, 'The current affiliation of the person.', undefined, undefined, false));
       }
     } catch (e) {
-      console.log("Failed to obtain affiliations from ORCiD record.", e);
+      console.log('Failed to obtain affiliations from ORCiD record.', e);
     }
 
     if (
@@ -171,8 +168,6 @@ export class ORCIDType extends GenericIdentifierType {
       if (this._orcidInfo.biography) this.items.push(new FoldableItem(200, 'Biography', this._orcidInfo.biography, 'The biography of the person.', undefined, undefined, false));
 
       if (this._orcidInfo.country) this.items.push(new FoldableItem(30, 'Country', getLocaleDetail(this._orcidInfo.country, 'region'), 'The country of the person.', undefined, undefined, false));
-
-      console.log(this._orcidInfo);
     }
   }
 
@@ -190,9 +185,9 @@ export class ORCIDType extends GenericIdentifierType {
             {`.st1{fill:#FFFFFF;}`}
           </style>
           <path class="st0"
-                d="M256,128c0,70.7-57.3,128-128,128C57.3,256,0,198.7,0,128C0,57.3,57.3,0,128,0C198.7,0,256,57.3,256,128z"/>
+                d="M256,128c0,70.7-57.3,128-128,128C57.3,256,0,198.7,0,128C0,57.3,57.3,0,128,0C198.7,0,256,57.3,256,128z" />
           <g>
-            <path class="st1" d="M86.3,186.2H70.9V79.1h15.4v48.4V186.2z"/>
+            <path class="st1" d="M86.3,186.2H70.9V79.1h15.4v48.4V186.2z" />
             <path
               class="st1"
               d="M108.9,79.1h41.6c39.6,0,57,28.3,57,53.6c0,27.5-21.5,53.6-56.8,53.6h-41.8V79.1z M124.3,172.4h24.5

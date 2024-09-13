@@ -1,5 +1,5 @@
-import {PIDDataType} from './PIDDataType';
-import {PID} from './PID';
+import { PIDDataType } from './PIDDataType';
+import { PID } from './PID';
 
 /**
  * This class represents a PID record.
@@ -152,17 +152,17 @@ export class PIDRecord {
         type: JSON.stringify({
           pid: value.type instanceof PID ? JSON.stringify(value.type.toObject()) : undefined,
           pidDataType: value.type instanceof PIDDataType ? JSON.stringify(value.type.toObject()) : undefined,
-          string: typeof value.type == "string" ? value.type : undefined
+          string: typeof value.type == 'string' ? value.type : undefined,
         }),
         data: JSON.stringify(value.data),
         ttl: value.ttl,
-        timestamp: value.timestamp
-      })))
-    }
+        timestamp: value.timestamp,
+      }))),
+    };
   }
 
   static fromJSON(serialized: string): PIDRecord {
-    const data: ReturnType<PIDRecord["toObject"]> = JSON.parse(serialized);
+    const data: ReturnType<PIDRecord['toObject']> = JSON.parse(serialized);
 
     const values: {
       index: number;
@@ -174,7 +174,7 @@ export class PIDRecord {
       ttl: number;
       timestamp: number;
     }[] = data.values.map(value => {
-      const parsed:{
+      const parsed: {
         index: number;
         type: string;
         data: string;
@@ -204,7 +204,7 @@ export class PIDRecord {
           data: data,
           ttl: parsed.ttl,
           timestamp: parsed.timestamp,
-        })
+        });
     });
     return new PIDRecord(PID.fromJSON(data.pid), values);
   }
