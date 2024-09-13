@@ -1,6 +1,6 @@
 import { locationType, PID } from './PID';
 import { typeMap, unresolvables } from '../../utils/utils';
-
+import { fetch } from '../../utils/DataCache';
 /**
  * This class represents a PID data type.
  */

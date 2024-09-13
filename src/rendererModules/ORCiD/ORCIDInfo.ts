@@ -1,3 +1,4 @@
+import { fetch } from '../../utils/DataCache';
 /**
  * This file contains the ORCIDInfo class, which is used to store information about an ORCiD.
  */

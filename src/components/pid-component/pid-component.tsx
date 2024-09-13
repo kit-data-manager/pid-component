@@ -3,6 +3,7 @@ import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
 import { FoldableItem } from '../../utils/FoldableItem';
 import { FoldableAction } from '../../utils/FoldableAction';
 import { getEntity } from '../../utils/IndexedDBUtil';
+import { clearCache } from '../../utils/DataCache';
 
 @Component({
   tag: 'pid-component',
@@ -208,6 +209,7 @@ export class PidComponent {
     }
     this.displayStatus = 'loaded';
     console.log('Finished loading for ', this.value, this.identifierObject);
+    await clearCache();
   }
 
   /**
@@ -245,7 +247,6 @@ export class PidComponent {
    * Renders the component.
    */
   render() {
-
     return (
       <Host class="inline flex-grow max-w-full font-sans flex-wrap align-baseline items-center text-xs">
         {
@@ -352,56 +353,57 @@ export class PidComponent {
                         </thead>
                         <tbody
                           class="bg-grey-100 flex flex-col items-center justify-between overflow-y-scroll w-full rounded-b">
-                        {this.items
-                          .filter((_, index) => {
-                            // Filter out items that are not on the current page
-                            return index >= this.tablePage * this.amountOfItems && index < this.tablePage * this.amountOfItems + this.amountOfItems;
-                          })
-                          .map(value => {
-                            // Render a row for every item
-                            return (
-                              <tr class={'odd:bg-slate-200 flex w-full'}>
-                                <td class={'overflow-x-auto p-1 w-1/4 font-mono'}>
-                                  <a
-                                    role="link"
-                                    class="right-0 focus:outline-none focus:ring-gray-300 rounded-md focus:ring-offset-2 focus:ring-2 focus:bg-gray-200 relative md:mt-0 inline flex-nowrap"
-                                    onMouseOver={this.showTooltip}
-                                    onFocus={this.showTooltip}
-                                    onMouseOut={this.hideTooltip}
-                                  >
-                                    <div class="cursor-pointer align-top justify-between flex-nowrap">
-                                      <a href={value.keyLink} target={'_blank'} rel={'noopener noreferrer'}
-                                         class={'mr-2 text-blue-400 justify-start float-left'}>
-                                        {value.keyTitle}
-                                      </a>
-                                      <svg
-                                        aria-haspopup="true"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        class="icon icon-tabler icon-tabler-info-circle justify-end min-w-[1rem] min-h-[1rem] flex-none float-right"
-                                        width="25"
-                                        height="25"
-                                        viewBox="0 0 24 24"
-                                        stroke-width="1.5"
-                                        stroke="#A0AEC0"
-                                        fill="none"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                      >
-                                        <path stroke="none" d="M0 0h24v24H0z" />
-                                        <circle cx="12" cy="12" r="9" />
-                                        <line x1="12" y1="8" x2="12.01" y2="8" />
-                                        <polyline points="11 12 12 12 12 16 13 16" />
-                                      </svg>
-                                    </div>
-                                    <p
-                                      role="tooltip"
-                                      class="hidden z-20 mt-1 transition duration-100 ease-in-out shadow-md bg-white rounded text-xs text-gray-600 p-1 flex-wrap overflow-clip"
+                        {
+                          this.items
+                            .filter((_, index) => {
+                              // Filter out items that are not on the current page
+                              return index >= this.tablePage * this.amountOfItems && index < this.tablePage * this.amountOfItems + this.amountOfItems;
+                            })
+                            .map(value => (
+                                // Render a row for every item
+                                // return (
+                                <tr class={'odd:bg-slate-200 flex w-full'}>
+                                  <td class={'overflow-x-auto p-1 w-1/4 font-mono'}>
+                                    <a
+                                      role="link"
+                                      class="right-0 focus:outline-none focus:ring-gray-300 rounded-md focus:ring-offset-2 focus:ring-2 focus:bg-gray-200 relative md:mt-0 inline flex-nowrap"
+                                      onMouseOver={this.showTooltip}
+                                      onFocus={this.showTooltip}
+                                      onMouseOut={this.hideTooltip}
                                     >
-                                      {value.keyTooltip}
-                                    </p>
-                                  </a>
-                                </td>
-                                <td class={'align-top overflow-x-auto text-sm p-1 w-3/4 select-text flex '}>
+                                      <div class="cursor-pointer align-top justify-between flex-nowrap">
+                                        <a href={value.keyLink} target={'_blank'} rel={'noopener noreferrer'}
+                                           class={'mr-2 text-blue-400 justify-start float-left'}>
+                                          {value.keyTitle}
+                                        </a>
+                                        <svg
+                                          aria-haspopup="true"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          class="icon icon-tabler icon-tabler-info-circle justify-end min-w-[1rem] min-h-[1rem] flex-none float-right"
+                                          width="25"
+                                          height="25"
+                                          viewBox="0 0 24 24"
+                                          stroke-width="1.5"
+                                          stroke="#A0AEC0"
+                                          fill="none"
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                        >
+                                          <path stroke="none" d="M0 0h24v24H0z" />
+                                          <circle cx="12" cy="12" r="9" />
+                                          <line x1="12" y1="8" x2="12.01" y2="8" />
+                                          <polyline points="11 12 12 12 12 16 13 16" />
+                                        </svg>
+                                      </div>
+                                      <p
+                                        role="tooltip"
+                                        class="hidden z-20 mt-1 transition duration-100 ease-in-out shadow-md bg-white rounded text-xs text-gray-600 p-1 flex-wrap overflow-clip"
+                                      >
+                                        {value.keyTooltip}
+                                      </p>
+                                    </a>
+                                  </td>
+                                  <td class={'align-top overflow-x-auto text-sm p-1 w-3/4 select-text flex '}>
                                     <span class={'flex-grow'}>
                                       {
                                         // Load a foldable subcomponent if subcomponents are not disabled (hideSubcomponents), and the current level of subcomponents is not the total level of subcomponents. If the subcomponent is on the bottom level of the hierarchy, render just a preview. If the value should not be resolved (isFoldable), just render the value as text.
@@ -429,11 +431,13 @@ export class PidComponent {
                                         )
                                       }
                                     </span>
-                                  <copy-button value={value.value} />
-                                </td>
-                              </tr>
-                            );
-                          })}
+                                    <copy-button value={value.value} />
+                                  </td>
+                                </tr>
+                              ),
+                            )
+
+                        }
                         </tbody>
                       </table>
                     </div>

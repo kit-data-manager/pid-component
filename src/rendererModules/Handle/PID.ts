@@ -1,6 +1,7 @@
 import { PIDRecord } from './PIDRecord';
 import { PIDDataType } from './PIDDataType';
 import { handleMap, unresolvables } from '../../utils/utils';
+import { fetch } from '../../utils/DataCache';
 
 /**
  * This class represents the PID itself.
@@ -95,21 +96,45 @@ export class PID {
     else if (handleMap.has(this)) return handleMap.get(this);
     else {
       const rawJson = await fetch(`https://hdl.handle.net/api/handles/${this.prefix}/${this.suffix}#resolve`).then(response => response.json());
-      const values = [];
-      for (let value of rawJson.values) {
-        let type = PID.isPID(value.type) ? PID.getPIDFromString(value.type) : value.type;
-        if (type instanceof PID) {
-          const dataType = await PIDDataType.resolveDataType(type);
-          if (dataType instanceof PIDDataType) type = dataType;
-        }
-        values.push({
+      const valuePromises = rawJson.values.map(async (value: {
+        index: number;
+        type: string;
+        data: string;
+        ttl: number;
+        timestamp: string;
+      }) => {
+        const type: Promise<PIDDataType | PID | string> = (async () => {
+          if (PID.isPID(value.type)) {
+            const pid = PID.getPIDFromString(value.type);
+            const dataType = await PIDDataType.resolveDataType(pid);
+            return dataType instanceof PIDDataType ? dataType : pid;
+          }
+          return value.type;
+        })();
+        return {
           index: value.index,
-          type: type,
+          type: await type,
           data: value.data,
           ttl: value.ttl,
           timestamp: Date.parse(value.timestamp),
-        });
-      }
+        };
+      });
+      const values = await Promise.all(valuePromises);
+
+      // for (const value of rawJson.values) {
+      //   let type = PID.isPID(value.type) ? PID.getPIDFromString(value.type) : value.type;
+      //   if (type instanceof PID) {
+      //     const dataType = await PIDDataType.resolveDataType(type);
+      //     if (dataType instanceof PIDDataType) type = dataType;
+      //   }
+      //   values.push({
+      //     index: value.index,
+      //     type: type,
+      //     data: value.data,
+      //     ttl: value.ttl,
+      //     timestamp: Date.parse(value.timestamp),
+      //   });
+      // }
       const record = new PIDRecord(this, values);
       handleMap.set(this, record);
       return record;

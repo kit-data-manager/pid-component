@@ -63,7 +63,7 @@ export class HandleType extends GenericIdentifierType {
       const pid = PID.getPIDFromString(this.value);
 
       // Generate the colors for the parts of the PID
-      this._parts = await Promise.all([
+      this._parts = [
         {
           text: pid.prefix,
           nextExists: true,
@@ -72,7 +72,7 @@ export class HandleType extends GenericIdentifierType {
           text: pid.suffix,
           nextExists: false,
         },
-      ]);
+      ];
 
       // Resolve the PID
       this._pidRecord = await pid.resolve();
