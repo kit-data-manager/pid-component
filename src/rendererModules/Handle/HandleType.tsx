@@ -41,13 +41,15 @@ export class HandleType extends GenericIdentifierType {
     return PID.isPID(this.value);
   }
 
-  get data(): PIDRecord {
-    return this._pidRecord;
+  get data(): string {
+    console.log("get data PIDRecord.toObject()", this._pidRecord.toObject());
+    return JSON.stringify(this._pidRecord.toObject());
   }
 
-  async init(data?: any): Promise<void> {
-    if (data !== undefined && data instanceof PIDRecord) {
-      this._pidRecord = (data as PIDRecord);
+  async init(data?: string): Promise<void> {
+    console.log("init HandleType", data, typeof data);
+    if (data !== undefined) {
+      this._pidRecord = PIDRecord.fromJSON(data);
       this._parts = await Promise.all([
         {
           text: this._pidRecord.pid.prefix,

@@ -205,4 +205,20 @@ export class PIDDataType {
       return undefined;
     }
   }
+
+  toObject() {
+    return {
+      pid: JSON.stringify(this._pid.toObject()),
+      name: this._name,
+      description: this._description,
+      redirectURL: this._redirectURL,
+      ePICJSON: JSON.stringify(this._ePICJSON),
+      regex: this._regex
+    }
+  }
+
+  static fromJSON(serialized: string): PIDDataType {
+    const data: ReturnType<PIDDataType["toObject"]> = JSON.parse(serialized);
+    return new PIDDataType(PID.fromJSON(data.pid), data.name, data.description, data.redirectURL, JSON.parse(data.ePICJSON), data.regex);
+  }
 }

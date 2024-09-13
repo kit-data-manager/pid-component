@@ -11,24 +11,8 @@ import {FallbackType} from "../rendererModules/FallbackType";
 
 /**
  * Array of all component objects that can be used to parse a given value, ordered by priority (lower is better)
- * @type {(new(value: string, settings?: {name: string, value: any}[]) => GenericIdentifierType)[]}
- * @readonly
- */
-// export const renderers: (new (
-//   value: string,
-//   settings?: {
-//     name: string;
-//     value: any;
-//   }[],
-// ) => GenericIdentifierType)[] = [
-//   DateType,
-//   ORCIDType,
-//   HandleType,
-//   EmailType,
-//   URLType,
-//   FallbackType
-// ];
-
+  * @type {Array<{priority: number, key: string, constructor: GenericIdentifierType}>}
+  */
 export const renderers: ({
   priority: number;
   key: string;

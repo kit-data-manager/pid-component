@@ -98,14 +98,14 @@ export class PID {
     else {
       const dataCache = await init('pid-component');
       const rawJson = await dataCache.fetch(`https://hdl.handle.net/api/handles/${this.prefix}/${this.suffix}#resolve`);
-      const record = new PIDRecord(this);
+      const values = [];
       for (let value of rawJson.values) {
         let type = PID.isPID(value.type) ? PID.getPIDFromString(value.type) : value.type;
         if (type instanceof PID) {
           const dataType = await PIDDataType.resolveDataType(type);
           if (dataType instanceof PIDDataType) type = dataType;
         }
-        record.values.push({
+        values.push({
           index: value.index,
           type: type,
           data: value.data,
@@ -113,9 +113,22 @@ export class PID {
           timestamp: Date.parse(value.timestamp),
         });
       }
+      const record = new PIDRecord(this, values);
       handleMap.set(this, record);
       return record;
     }
+  }
+
+  toObject() {
+    return {
+      prefix: this.prefix,
+      suffix: this.suffix
+    }
+  }
+
+  static fromJSON(serialized: string): PID {
+    const data: ReturnType<PID["toObject"]> = JSON.parse(serialized);
+    return new PID(data.prefix, data.suffix);
   }
 }
 
