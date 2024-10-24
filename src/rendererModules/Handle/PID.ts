@@ -1,7 +1,7 @@
 import { PIDRecord } from './PIDRecord';
 import { PIDDataType } from './PIDDataType';
 import { handleMap, unresolvables } from '../../utils/utils';
-import { fetch } from '../../utils/DataCache';
+import { cachedFetch } from '../../utils/DataCache';
 
 /**
  * This class represents the PID itself.
@@ -95,7 +95,9 @@ export class PID {
     if (unresolvables.has(this)) return undefined;
     else if (handleMap.has(this)) return handleMap.get(this);
     else {
-      const rawJson = await fetch(`https://hdl.handle.net/api/handles/${this.prefix}/${this.suffix}#resolve`).then(response => response.json());
+      const rawJson = await cachedFetch(`https://hdl.handle.net/api/handles/${this.prefix}/${this.suffix}#resolve`)
+        // .then(response => response.json);
+      console.log(rawJson);
       const valuePromises = rawJson.values.map(async (value: {
         index: number;
         type: string;

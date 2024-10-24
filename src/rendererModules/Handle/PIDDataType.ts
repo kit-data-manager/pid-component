@@ -1,6 +1,6 @@
 import { locationType, PID } from './PID';
 import { typeMap, unresolvables } from '../../utils/utils';
-import { fetch } from '../../utils/DataCache';
+import { cachedFetch } from '../../utils/DataCache';
 /**
  * This class represents a PID data type.
  */
@@ -178,8 +178,9 @@ export class PIDDataType {
           // Try to resolve the data from the link
           try {
             if (newLocation.view === 'json') {
-              // if view is json then fetch the data from the link (ePIC data type registry) and save them into the temp object
-              newLocation.resolvedData = await fetch(newLocation.href).then(response => response.json());
+              // if view is json then cachedFetch the data from the link (ePIC data type registry) and save them into the temp object
+              newLocation.resolvedData = await cachedFetch(newLocation.href)
+                // .then(response => response.json());
               tempDataType.ePICJSON = newLocation.resolvedData;
               tempDataType.name = newLocation.resolvedData['name'];
               tempDataType.description = newLocation.resolvedData['description'];

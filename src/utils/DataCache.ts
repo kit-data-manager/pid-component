@@ -1,8 +1,8 @@
-let cacheInstance: Cache = await open();
+let cacheInstance: Cache;
 
 async function open() {
   if ('caches' in self) {
-    return await caches.open('pid-component');
+    cacheInstance = await caches.open('pid-component');
   }
 }
 
@@ -13,7 +13,8 @@ async function open() {
  * @param init The options for the fetch request.
  * @returns {Promise<Response>} The response of the fetch request.
  */
-export async function fetch(url: string, init?: any): Promise<any> {
+export async function cachedFetch(url: string, init?: any): Promise<any> {
+  await open();
   if (cacheInstance) {
     // If there is a cache available, check if the resource is cached.
     const response = await cacheInstance.match(url);

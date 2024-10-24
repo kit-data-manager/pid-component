@@ -145,15 +145,16 @@ export class ORCIDType extends GenericIdentifierType {
 
       if (this._orcidInfo.preferredLocale)
         this.items.push(
-          new FoldableItem(
-            25,
-            'Preferred Language',
-            getLocaleDetail(this._orcidInfo.preferredLocale, 'language'),
-            'The preferred locale/language of the person.',
-            undefined,
-            undefined,
-            false,
-          ),
+          new FoldableItem(25, "Preferred Language", this._orcidInfo.preferredLocale, "The preferred locale/language of the person.")
+          // new FoldableItem(
+          //   25,
+          //   'Preferred Language',
+          //   getLocaleDetail(this._orcidInfo.preferredLocale, 'language'),
+          //   'The preferred locale/language of the person.',
+          //   undefined,
+          //   undefined,
+          //   false,
+          // ),
         );
 
       for (let url of this._orcidInfo.researcherUrls) {

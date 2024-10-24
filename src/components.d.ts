@@ -21,6 +21,20 @@ export namespace Components {
          */
         "value": string;
     }
+    interface LocaleVisualization {
+        /**
+          * The locale to visualize.
+          * @type {string}
+          * @public
+         */
+        "locale": string;
+        /**
+          * Whether to show the flag of the region.
+          * @type {boolean}
+          * @public
+         */
+        "showFlag": boolean;
+    }
     interface PidComponent {
         /**
           * The number of items to show in the table per page. Defaults to 10. (optional)
@@ -88,6 +102,12 @@ declare global {
         prototype: HTMLCopyButtonElement;
         new (): HTMLCopyButtonElement;
     };
+    interface HTMLLocaleVisualizationElement extends Components.LocaleVisualization, HTMLStencilElement {
+    }
+    var HTMLLocaleVisualizationElement: {
+        prototype: HTMLLocaleVisualizationElement;
+        new (): HTMLLocaleVisualizationElement;
+    };
     interface HTMLPidComponentElement extends Components.PidComponent, HTMLStencilElement {
     }
     var HTMLPidComponentElement: {
@@ -97,6 +117,7 @@ declare global {
     interface HTMLElementTagNameMap {
         "color-highlight": HTMLColorHighlightElement;
         "copy-button": HTMLCopyButtonElement;
+        "locale-visualization": HTMLLocaleVisualizationElement;
         "pid-component": HTMLPidComponentElement;
     }
 }
@@ -115,6 +136,20 @@ declare namespace LocalJSX {
           * @public
          */
         "value": string;
+    }
+    interface LocaleVisualization {
+        /**
+          * The locale to visualize.
+          * @type {string}
+          * @public
+         */
+        "locale": string;
+        /**
+          * Whether to show the flag of the region.
+          * @type {boolean}
+          * @public
+         */
+        "showFlag"?: boolean;
     }
     interface PidComponent {
         /**
@@ -172,6 +207,7 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "color-highlight": ColorHighlight;
         "copy-button": CopyButton;
+        "locale-visualization": LocaleVisualization;
         "pid-component": PidComponent;
     }
 }
@@ -181,6 +217,7 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "color-highlight": LocalJSX.ColorHighlight & JSXBase.HTMLAttributes<HTMLColorHighlightElement>;
             "copy-button": LocalJSX.CopyButton & JSXBase.HTMLAttributes<HTMLCopyButtonElement>;
+            "locale-visualization": LocalJSX.LocaleVisualization & JSXBase.HTMLAttributes<HTMLLocaleVisualizationElement>;
             "pid-component": LocalJSX.PidComponent & JSXBase.HTMLAttributes<HTMLPidComponentElement>;
         }
     }

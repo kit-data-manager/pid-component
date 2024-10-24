@@ -106,35 +106,39 @@ export const getEntity = async function(
     }[];
   }[]): Promise<GenericIdentifierType> {
 
-  const db = await dbPromise;
-  let entity: {
-    value: string,
-    rendererKey: string,
-    context: string,
-    lastAccess: Date,
-    lastData: any
-  } | undefined = await db.get('entities', value);
+  try {
+    const db = await dbPromise;
+    let entity: {
+      value: string,
+      rendererKey: string,
+      context: string,
+      lastAccess: Date,
+      lastData: any
+    } | undefined = await db.get('entities', value);
 
-  if (entity !== undefined) {
-    console.debug('Found entity for value in db', entity, value);
-    const entitySettings = settings.find(value => value.type === entity.rendererKey)?.values;
-    const ttl = entitySettings?.find(value => value.name === 'ttl');
+    if (entity !== undefined) {
+      console.debug('Found entity for value in db', entity, value);
+      const entitySettings = settings.find(value => value.type === entity.rendererKey)?.values;
+      const ttl = entitySettings?.find(value => value.name === 'ttl');
 
-    if (ttl != undefined && ttl.value != undefined && (new Date().getTime() - entity.lastAccess.getTime() > ttl.value || ttl.value === 0)) {
-      console.log('TTL expired! Deleting entry in db', ttl.value, new Date().getTime() - entity.lastAccess.getTime());
-      await deleteEntity(value);
-    } else {
-      console.log('TTL not expired or undefined', new Date().getTime() - entity.lastAccess.getTime());
-      let renderer = new (renderers.find(renderer => renderer.key === entity.rendererKey).constructor)(value, entitySettings);
-      // if (renderer.hasCorrectFormat()) {
-      renderer.settings = entitySettings;
-      await renderer.init(entity.lastData);
-      return renderer;
-      // }
+      if (ttl != undefined && ttl.value != undefined && (new Date().getTime() - entity.lastAccess.getTime() > ttl.value || ttl.value === 0)) {
+        console.log('TTL expired! Deleting entry in db', ttl.value, new Date().getTime() - entity.lastAccess.getTime());
+        await deleteEntity(value);
+      } else {
+        console.log('TTL not expired or undefined', new Date().getTime() - entity.lastAccess.getTime());
+        let renderer = new (renderers.find(renderer => renderer.key === entity.rendererKey).constructor)(value, entitySettings);
+        // if (renderer.hasCorrectFormat()) {
+        renderer.settings = entitySettings;
+        await renderer.init(entity.lastData);
+        return renderer;
+        // }
+      }
     }
+  } catch (error) {
+    console.error('Could not get entity from db', error);
   }
 
-  console.debug('No valid entity found for value in db', entity, value);
+  console.debug('No valid entity found for value in db', value);
   let renderer = await Parser.getBestFit(value, settings);
   // renderer.settings = settings.find(value => value.type === renderer.getSettingsKey())?.values
   // await renderer.init()

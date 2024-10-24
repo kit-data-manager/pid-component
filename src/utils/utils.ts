@@ -8,6 +8,7 @@ import { HandleType } from '../rendererModules/Handle/HandleType';
 import { EmailType } from '../rendererModules/EmailType';
 import { URLType } from '../rendererModules/URLType';
 import { FallbackType } from '../rendererModules/FallbackType';
+import { LocaleType } from '../rendererModules/LocaleType';
 
 /**
  * Array of all component objects that can be used to parse a given value, ordered by priority (lower is better)
@@ -42,6 +43,11 @@ export const renderers: ({
     priority: 4,
     key: 'URLType',
     constructor: URLType,
+  },
+  {
+    priority: 5,
+    key: "LocaleType",
+    constructor: LocaleType,
   },
   {
     priority: 5,
