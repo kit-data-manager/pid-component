@@ -9,6 +9,7 @@
 |----------------------|-----------|-------------------------------------|----------|-------------|
 | `value` _(required)_ | `value`   | The value to copy to the clipboard. | `string` | `undefined` |
 
+
 ## Dependencies
 
 ### Used by

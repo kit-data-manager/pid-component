@@ -1,8 +1,8 @@
 # Ignore artifacts:
-.stencil
-.storybook
-dist
-loader
-node_modules
-www
 /src/index.html
+/www/
+/node_modules/
+/dist/
+/loader/
+/.storybook/
+/.stencil/
