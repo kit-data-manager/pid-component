@@ -1,7 +1,7 @@
-import { DBSchema, openDB } from 'idb';
 import { GenericIdentifierType } from './GenericIdentifierType';
 import { Parser } from './Parser';
 import { renderers } from './utils';
+import { DBSchema, openDB } from '@tempfix/idb';
 
 const dbName: string = 'pid-component';
 const dbVersion: number = undefined;

@@ -13,7 +13,7 @@ const meta: Meta = {
     },
   },
   args: {
-    value: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
+    value: 'Hello world!',
   },
 };
 export default meta;
@@ -21,13 +21,13 @@ type Story = StoryObj;
 
 export const Default: Story = {
   args: {
-    value: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
+    value: 'Hello world!',
   },
   parameters: {
     docs: {
       source: {
         code: `
-<copy-button value="21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343"></copy-button>
+<copy-button value="Hello world!"></copy-button>
         `,
       },
     },
