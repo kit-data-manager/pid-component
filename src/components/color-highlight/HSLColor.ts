@@ -34,14 +34,6 @@ export class HSLColor {
   }
 
   /**
-   * Returns the color as a CSS string.
-   * @returns {string} The color as a CSS string.
-   */
-  toString(): string {
-    return `hsl(${this.hue}, ${this.sat}%, ${this.lum}%)`;
-  }
-
-  /**
    * Generates a color based on the SHA-256 value of a text.
    * @param text The text to generate the color from.
    * @returns {Promise<HSLColor>} The generated color.
@@ -67,5 +59,13 @@ export class HSLColor {
       const sat: number = (parseInt(hexText, 36) % 250) / 10;
       return new HSLColor(hue, 50 + sat, 30 + lum);
     }
+  }
+
+  /**
+   * Returns the color as a CSS string.
+   * @returns {string} The color as a CSS string.
+   */
+  toString(): string {
+    return `hsl(${this.hue}, ${this.sat}%, ${this.lum}%)`;
   }
 }

@@ -53,7 +53,7 @@ const meta: Meta = {
     hideSubcomponents: {
       name: 'hide-subcomponents',
       description:
-        'Determines whether subcomponents should generally be shown or not. If set to true, the component won\'t show any subcomponents. If not set, the component will show subcomponents, if the current level of subcomponents is not the total level of subcomponents or greater.',
+        "Determines whether subcomponents should generally be shown or not. If set to true, the component won't show any subcomponents. If not set, the component will show subcomponents, if the current level of subcomponents is not the total level of subcomponents or greater.",
       defaultValue: false,
       control: {
         type: 'boolean',
@@ -69,8 +69,7 @@ const meta: Meta = {
     },
     emphasizeComponent: {
       name: 'emphasize-component',
-      description:
-        'Determines whether components should be emphasized towards their surrounding by border and shadow.',
+      description: 'Determines whether components should be emphasized towards their surrounding by border and shadow.',
       defaultValue: true,
       control: {
         type: 'boolean',
@@ -86,8 +85,7 @@ const meta: Meta = {
     },
     showTopLevelCopy: {
       name: 'show-top-level-copy',
-      description:
-        ' Determines whether on the top level the copy button is shown.',
+      description: ' Determines whether on the top level the copy button is shown.',
       defaultValue: true,
       control: {
         type: 'boolean',
@@ -136,13 +134,13 @@ const meta: Meta = {
     defaultTTL: {
       name: 'default-TTL',
       description: 'The default TTL for entries in the IndexedDB. Is used if no TTL is set in the settings.',
-      defaultValue: 24*60*60*1000,
+      defaultValue: 24 * 60 * 60 * 1000,
       control: {
         type: 'number',
       },
       table: {
         defaultValue: {
-          summary: '24*60*60*1000'
+          summary: '24*60*60*1000',
         },
         type: {
           summary: 'number',
@@ -159,21 +157,16 @@ const meta: Meta = {
     emphasizeComponent: true,
     levelOfSubcomponents: 1,
     currentLevelOfSubcomponents: 0,
-    defaultTTL: 24*60*60*1000,
+    defaultTTL: 24 * 60 * 60 * 1000,
   },
 };
 const textDecorator = story =>
-  html`<p class='items-center align-middle'>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-    ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
-    esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-    occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. ${story()} Lorem
-    ipsum dolor sit amet, consectetur adipiscing elit, sed do
-    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-    ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis
-    aute ${story()} irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+  html`<p class="items-center align-middle">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+    ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+    occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. ${story()} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis
+    aute ${story()} irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
     officia deserunt mollit anim id est laborum.
   </p>`;
 export default meta;

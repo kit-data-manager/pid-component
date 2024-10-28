@@ -1,6 +1,7 @@
 import { locationType, PID } from './PID';
 import { typeMap, unresolvables } from '../../utils/utils';
 import { cachedFetch } from '../../utils/DataCache';
+
 /**
  * This class represents a PID data type.
  */
@@ -166,21 +167,19 @@ export class PIDDataType {
           // Extract weight
           try {
             newLocation.weight = parseInt(xmlLocations[j].getAttribute('weight'));
-          } catch (ignored) {
-          }
+          } catch (ignored) {}
 
           // Extract view e.g. json or html
           try {
             newLocation.view = xmlLocations[j].getAttribute('view');
-          } catch (ignored) {
-          }
+          } catch (ignored) {}
 
           // Try to resolve the data from the link
           try {
             if (newLocation.view === 'json') {
               // if view is json then cachedFetch the data from the link (ePIC data type registry) and save them into the temp object
-              newLocation.resolvedData = await cachedFetch(newLocation.href)
-                // .then(response => response.json());
+              newLocation.resolvedData = await cachedFetch(newLocation.href);
+              // .then(response => response.json());
               tempDataType.ePICJSON = newLocation.resolvedData;
               tempDataType.name = newLocation.resolvedData['name'];
               tempDataType.description = newLocation.resolvedData['description'];
@@ -188,8 +187,7 @@ export class PIDDataType {
               // if view is html set the redirect URL (activated on user click) to the link
               tempDataType.redirectURL = newLocation.href;
             }
-          } catch (ignored) {
-          }
+          } catch (ignored) {}
         }
       }
     }
@@ -205,6 +203,11 @@ export class PIDDataType {
     }
   }
 
+  static fromJSON(serialized: string): PIDDataType {
+    const data: ReturnType<PIDDataType['toObject']> = JSON.parse(serialized);
+    return new PIDDataType(PID.fromJSON(data.pid), data.name, data.description, data.redirectURL, JSON.parse(data.ePICJSON), data.regex);
+  }
+
   toObject() {
     return {
       pid: JSON.stringify(this._pid.toObject()),
@@ -214,10 +217,5 @@ export class PIDDataType {
       ePICJSON: JSON.stringify(this._ePICJSON),
       regex: this._regex,
     };
-  }
-
-  static fromJSON(serialized: string): PIDDataType {
-    const data: ReturnType<PIDDataType['toObject']> = JSON.parse(serialized);
-    return new PIDDataType(PID.fromJSON(data.pid), data.name, data.description, data.redirectURL, JSON.parse(data.ePICJSON), data.regex);
   }
 }

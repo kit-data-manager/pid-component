@@ -7,7 +7,6 @@ import { HSLColor } from './HSLColor';
   shadow: false,
 })
 export class ColorHighlight {
-
   /**
    * The text to highlight.
    * @type {string}

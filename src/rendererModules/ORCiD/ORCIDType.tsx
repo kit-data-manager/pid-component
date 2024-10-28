@@ -5,7 +5,6 @@ import { FoldableItem } from '../../utils/FoldableItem';
 import { FoldableAction } from '../../utils/FoldableAction';
 import { getLocaleDetail } from '../../utils/utils';
 
-
 /**
  * This class specifies a custom renderer for ORCiDs.
  * @extends GenericIdentifierType
@@ -115,11 +114,11 @@ export class ORCIDType extends GenericIdentifierType {
           new FoldableItem(
             49,
             'Affiliation at ' +
-            this.affiliationAt.toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'numeric',
-              day: 'numeric',
-            }),
+              this.affiliationAt.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+              }),
             affiliation,
             'The affiliation of the person at the given date.',
             undefined,
@@ -141,11 +140,13 @@ export class ORCIDType extends GenericIdentifierType {
 
       // If there are other e-mail addresses, generate an item with a list of them
       if (other.length > 0)
-        this.items.push(new FoldableItem(70, 'Other E-Mail addresses', other.map(email => email.email).join(', '), 'All other e-mail addresses of the person.', undefined, undefined, false));
+        this.items.push(
+          new FoldableItem(70, 'Other E-Mail addresses', other.map(email => email.email).join(', '), 'All other e-mail addresses of the person.', undefined, undefined, false),
+        );
 
       if (this._orcidInfo.preferredLocale)
         this.items.push(
-          new FoldableItem(25, "Preferred Language", this._orcidInfo.preferredLocale, "The preferred locale/language of the person.")
+          new FoldableItem(25, 'Preferred Language', this._orcidInfo.preferredLocale, 'The preferred locale/language of the person.'),
           // new FoldableItem(
           //   25,
           //   'Preferred Language',
@@ -168,7 +169,8 @@ export class ORCIDType extends GenericIdentifierType {
 
       if (this._orcidInfo.biography) this.items.push(new FoldableItem(200, 'Biography', this._orcidInfo.biography, 'The biography of the person.', undefined, undefined, false));
 
-      if (this._orcidInfo.country) this.items.push(new FoldableItem(30, 'Country', getLocaleDetail(this._orcidInfo.country, 'region'), 'The country of the person.', undefined, undefined, false));
+      if (this._orcidInfo.country)
+        this.items.push(new FoldableItem(30, 'Country', getLocaleDetail(this._orcidInfo.country, 'region'), 'The country of the person.', undefined, undefined, false));
     }
   }
 
@@ -179,14 +181,12 @@ export class ORCIDType extends GenericIdentifierType {
   renderPreview(): FunctionalComponent<any> {
     return (
       <span class={'inline-flex items-center font-mono flex-nowrap align-top'}>
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"
-             class={'h-5 p-0.5 mr-1 flex-none items-center'}>
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" class={'h-5 p-0.5 mr-1 flex-none items-center'}>
           <style type="text/css">
             {`.st0{fill:#A6CE39;}`}
             {`.st1{fill:#FFFFFF;}`}
           </style>
-          <path class="st0"
-                d="M256,128c0,70.7-57.3,128-128,128C57.3,256,0,198.7,0,128C0,57.3,57.3,0,128,0C198.7,0,256,57.3,256,128z" />
+          <path class="st0" d="M256,128c0,70.7-57.3,128-128,128C57.3,256,0,198.7,0,128C0,57.3,57.3,0,128,0C198.7,0,256,57.3,256,128z" />
           <g>
             <path class="st1" d="M86.3,186.2H70.9V79.1h15.4v48.4V186.2z" />
             <path
@@ -205,12 +205,12 @@ export class ORCIDType extends GenericIdentifierType {
           {this._orcidInfo.familyName}, {this._orcidInfo.givenNames}{' '}
           {this.showAffiliation && this._orcidInfo.getAffiliationsAt(new Date()).length > 0
             ? `(${this._orcidInfo.getAffiliationAsString(this._orcidInfo.getAffiliationsAt(new Date())[0], false)}${
-              this._orcidInfo.getAffiliationsAt(this.affiliationAt).length > 0 &&
-              this.affiliationAt.toLocaleDateString() !== new Date().toLocaleDateString() &&
-              this._orcidInfo.getAffiliationsAt(this.affiliationAt)[0].organization !== this._orcidInfo.getAffiliationsAt(new Date())[0].organization
-                ? `, then: ${this._orcidInfo.getAffiliationsAt(this.affiliationAt)[0].organization}`
-                : ''
-            })`
+                this._orcidInfo.getAffiliationsAt(this.affiliationAt).length > 0 &&
+                this.affiliationAt.toLocaleDateString() !== new Date().toLocaleDateString() &&
+                this._orcidInfo.getAffiliationsAt(this.affiliationAt)[0].organization !== this._orcidInfo.getAffiliationsAt(new Date())[0].organization
+                  ? `, then: ${this._orcidInfo.getAffiliationsAt(this.affiliationAt)[0].organization}`
+                  : ''
+              })`
             : ''}
         </span>
       </span>

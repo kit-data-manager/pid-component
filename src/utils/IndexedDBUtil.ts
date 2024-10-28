@@ -6,34 +6,33 @@ import { DBSchema, openDB } from '@tempfix/idb';
 const dbName: string = 'pid-component';
 const dbVersion: number = undefined;
 
-
 interface PIDComponentDB extends DBSchema {
   entities: {
-    key: string,
+    key: string;
     value: {
-      value: string,
-      rendererKey: string,
-      context: string,
-      lastAccess: Date,
-      lastData: any
-    }
+      value: string;
+      rendererKey: string;
+      context: string;
+      lastAccess: Date;
+      lastData: any;
+    };
     indexes: {
-      'by-context': string
-    }
+      'by-context': string;
+    };
   };
 
   relations: {
-    key: string,
+    key: string;
     value: {
-      start: string,
-      description: string,
-      end: string
-    }
+      start: string;
+      description: string;
+      end: string;
+    };
     indexes: {
-      'by-start': string,
-      'by-end': string,
-      'by-description': string
-    }
+      'by-start': string;
+      'by-end': string;
+      'by-description': string;
+    };
   };
 }
 
@@ -57,17 +56,19 @@ export async function addEntity(renderer: GenericIdentifierType) {
   const context = document.documentURI;
   const db = await dbPromise;
 
-  await db.add('entities', {
-    value: renderer.value,
-    rendererKey: renderer.getSettingsKey(),
-    context: context,
-    lastAccess: new Date(),
-    lastData: renderer.data,
-  }).catch((reason) => {
-    if (reason.name === 'ConstraintError') {
-      console.debug('Entity already exists', reason);
-    } else console.error('Could not add entity', reason);
-  });
+  await db
+    .add('entities', {
+      value: renderer.value,
+      rendererKey: renderer.getSettingsKey(),
+      context: context,
+      lastAccess: new Date(),
+      lastData: renderer.data,
+    })
+    .catch(reason => {
+      if (reason.name === 'ConstraintError') {
+        console.debug('Entity already exists', reason);
+      } else console.error('Could not add entity', reason);
+    });
   console.debug('added entity', renderer);
 
   const tx = db.transaction('relations', 'readwrite');
@@ -96,7 +97,7 @@ export async function addEntity(renderer: GenericIdentifierType) {
   console.debug('added relations', promises);
 }
 
-export const getEntity = async function(
+export const getEntity = async function (
   value: string,
   settings: {
     type: string;
@@ -104,17 +105,19 @@ export const getEntity = async function(
       name: string;
       value: any;
     }[];
-  }[]): Promise<GenericIdentifierType> {
-
+  }[],
+): Promise<GenericIdentifierType> {
   try {
     const db = await dbPromise;
-    let entity: {
-      value: string,
-      rendererKey: string,
-      context: string,
-      lastAccess: Date,
-      lastData: any
-    } | undefined = await db.get('entities', value);
+    let entity:
+      | {
+          value: string;
+          rendererKey: string;
+          context: string;
+          lastAccess: Date;
+          lastData: any;
+        }
+      | undefined = await db.get('entities', value);
 
     if (entity !== undefined) {
       console.debug('Found entity for value in db', entity, value);

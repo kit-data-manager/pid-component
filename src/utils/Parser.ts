@@ -5,7 +5,6 @@ import { renderers } from './utils';
  * Class that handles the parsing of a given value and returns the best fitting component object
  */
 export class Parser {
-
   /**
    * Returns the priority of the best fitting component object for a given value (lower is better)
    * @param value String value to parse and evaluate
@@ -53,8 +52,7 @@ export class Parser {
       const settingsKey = bestFit.getSettingsKey();
       const settingsValues = settings.find(value => value.type === settingsKey)?.values;
       if (settingsValues) bestFit.settings = settingsValues;
-    } catch (_) {
-    }
+    } catch (_) {}
 
     // initialize and return the object
     await bestFit.init();

@@ -85,27 +85,33 @@ export class PIDRecord {
    */
   constructor(pid: PID);
 
-  constructor(pid: PID, values: {
-    index: number;
-    type: string | PID | PIDDataType;
-    data: {
-      format: string;
-      value: string
-    };
-    ttl: number;
-    timestamp: number
-  }[]);
+  constructor(
+    pid: PID,
+    values: {
+      index: number;
+      type: string | PID | PIDDataType;
+      data: {
+        format: string;
+        value: string;
+      };
+      ttl: number;
+      timestamp: number;
+    }[],
+  );
 
-  constructor(pid: PID, values?: {
-    index: number;
-    type: string | PID | PIDDataType;
-    data: {
-      format: string;
-      value: string;
-    };
-    ttl: number;
-    timestamp: number;
-  }[]) {
+  constructor(
+    pid: PID,
+    values?: {
+      index: number;
+      type: string | PID | PIDDataType;
+      data: {
+        format: string;
+        value: string;
+      };
+      ttl: number;
+      timestamp: number;
+    }[],
+  ) {
     this._pid = pid;
     this._values = values;
   }
@@ -144,23 +150,6 @@ export class PIDRecord {
     return this._values;
   }
 
-  toObject() {
-    return {
-      pid: JSON.stringify(this._pid.toObject()),
-      values: this._values.map(value => (JSON.stringify({
-        index: value.index,
-        type: JSON.stringify({
-          pid: value.type instanceof PID ? JSON.stringify(value.type.toObject()) : undefined,
-          pidDataType: value.type instanceof PIDDataType ? JSON.stringify(value.type.toObject()) : undefined,
-          string: typeof value.type == 'string' ? value.type : undefined,
-        }),
-        data: JSON.stringify(value.data),
-        ttl: value.ttl,
-        timestamp: value.timestamp,
-      }))),
-    };
-  }
-
   static fromJSON(serialized: string): PIDRecord {
     const data: ReturnType<PIDRecord['toObject']> = JSON.parse(serialized);
 
@@ -197,15 +186,33 @@ export class PIDRecord {
         value: string;
       } = JSON.parse(parsed.data);
 
-      return (
-        {
-          index: parsed.index,
-          type: type,
-          data: data,
-          ttl: parsed.ttl,
-          timestamp: parsed.timestamp,
-        });
+      return {
+        index: parsed.index,
+        type: type,
+        data: data,
+        ttl: parsed.ttl,
+        timestamp: parsed.timestamp,
+      };
     });
     return new PIDRecord(PID.fromJSON(data.pid), values);
+  }
+
+  toObject() {
+    return {
+      pid: JSON.stringify(this._pid.toObject()),
+      values: this._values.map(value =>
+        JSON.stringify({
+          index: value.index,
+          type: JSON.stringify({
+            pid: value.type instanceof PID ? JSON.stringify(value.type.toObject()) : undefined,
+            pidDataType: value.type instanceof PIDDataType ? JSON.stringify(value.type.toObject()) : undefined,
+            string: typeof value.type == 'string' ? value.type : undefined,
+          }),
+          data: JSON.stringify(value.data),
+          ttl: value.ttl,
+          timestamp: value.timestamp,
+        }),
+      ),
+    };
   }
 }

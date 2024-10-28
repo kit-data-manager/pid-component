@@ -14,11 +14,11 @@ import { LocaleType } from '../rendererModules/LocaleType';
  * Array of all component objects that can be used to parse a given value, ordered by priority (lower is better)
  * @type {Array<{priority: number, key: string, constructor: GenericIdentifierType}>}
  */
-export const renderers: ({
+export const renderers: {
   priority: number;
   key: string;
   constructor: new (value: string, settings?: { name: string; value: any }[]) => GenericIdentifierType;
-})[] = [
+}[] = [
   {
     priority: 0,
     key: 'DateType',
@@ -46,7 +46,7 @@ export const renderers: ({
   },
   {
     priority: 5,
-    key: "LocaleType",
+    key: 'LocaleType',
     constructor: LocaleType,
   },
   {

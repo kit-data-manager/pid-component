@@ -49,28 +49,12 @@ export class PID {
   }
 
   /**
-   * Outputs the PID as a string.
-   * @returns {string} as "prefix/suffix"
-   */
-  toString(): string {
-    return `${this.prefix}/${this.suffix}`;
-  }
-
-  /**
    * Checks if a string has the format of a PID.
    * @param text The string to check.
    * @returns {boolean} True if the string could be a PID, false if not.
    */
   public static isPID(text: string): boolean {
-    return new RegExp('^([0-9A-Za-z])+\.([0-9A-Za-z])+/([!-~])+$').test(text);
-  }
-
-  /**
-   * Checks if this PID is resolvable, by checking if it is in the unresolvables set or on the "forbidden" list.
-   * @returns {boolean} True if the PID is resolvable, false if not.
-   */
-  isResolvable(): boolean {
-    return !unresolvables.has(this) && !this.prefix.toUpperCase().match('^(0$|0\\.|HS_|10320$)');
+    return new RegExp('^([0-9A-Za-z])+.([0-9A-Za-z])+/([!-~])+$').test(text);
   }
 
   /**
@@ -85,6 +69,27 @@ export class PID {
     return new PID(pidSplit[0], pidSplit[1]);
   }
 
+  static fromJSON(serialized: string): PID {
+    const data: ReturnType<PID['toObject']> = JSON.parse(serialized);
+    return new PID(data.prefix, data.suffix);
+  }
+
+  /**
+   * Outputs the PID as a string.
+   * @returns {string} as "prefix/suffix"
+   */
+  toString(): string {
+    return `${this.prefix}/${this.suffix}`;
+  }
+
+  /**
+   * Checks if this PID is resolvable, by checking if it is in the unresolvables set or on the "forbidden" list.
+   * @returns {boolean} True if the PID is resolvable, false if not.
+   */
+  isResolvable(): boolean {
+    return !unresolvables.has(this) && !this.prefix.toUpperCase().match('^(0$|0\\.|HS_|10320$)');
+  }
+
   /**
    * Resolves the PID to a PIDRecord and saves it in the handleMap.
    * @returns {Promise<PIDRecord | undefined>} The PIDRecord of the PID.
@@ -95,16 +100,10 @@ export class PID {
     if (unresolvables.has(this)) return undefined;
     else if (handleMap.has(this)) return handleMap.get(this);
     else {
-      const rawJson = await cachedFetch(`https://hdl.handle.net/api/handles/${this.prefix}/${this.suffix}#resolve`)
-        // .then(response => response.json);
+      const rawJson = await cachedFetch(`https://hdl.handle.net/api/handles/${this.prefix}/${this.suffix}#resolve`);
+      // .then(response => response.json);
       console.log(rawJson);
-      const valuePromises = rawJson.values.map(async (value: {
-        index: number;
-        type: string;
-        data: string;
-        ttl: number;
-        timestamp: string;
-      }) => {
+      const valuePromises = rawJson.values.map(async (value: { index: number; type: string; data: string; ttl: number; timestamp: string }) => {
         const type: Promise<PIDDataType | PID | string> = (async () => {
           if (PID.isPID(value.type)) {
             const pid = PID.getPIDFromString(value.type);
@@ -148,11 +147,6 @@ export class PID {
       prefix: this.prefix,
       suffix: this.suffix,
     };
-  }
-
-  static fromJSON(serialized: string): PID {
-    const data: ReturnType<PID['toObject']> = JSON.parse(serialized);
-    return new PID(data.prefix, data.suffix);
   }
 }
 

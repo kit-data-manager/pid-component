@@ -20,7 +20,6 @@ export class LocaleVisualization {
   @Prop() showFlag: boolean = true;
 
   render() {
-
     const getLocaleDetail = (locale: string): string => {
       const userLocale = [navigator.language.split('-')[0]];
       const type = locale.split('-').length > 1 ? 'language' : 'region';
@@ -35,8 +34,8 @@ export class LocaleVisualization {
       return `${generateFlag(locale)}${friendlyName}`;
     };
 
-  const generateFlag = (locale: string): string => {
-    if (this.showFlag === false) return '';
+    const generateFlag = (locale: string): string => {
+      if (this.showFlag === false) return '';
       const codePoints = locale
         .toUpperCase()
         .split('')
@@ -46,9 +45,7 @@ export class LocaleVisualization {
 
     return (
       <Host>
-        <span>
-          {getLocaleDetail(this.locale)}
-        </span>
+        <span>{getLocaleDetail(this.locale)}</span>
       </Host>
     );
   }

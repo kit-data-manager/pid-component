@@ -59,9 +59,7 @@ export class CopyButton {
     }
 
     return (
-      <Host class={
-        'inline-block align-baseline text-xs'
-      }>
+      <Host class={'inline-block align-baseline text-xs'}>
         <button
           class={
             'bg-white border border-slate-500 text-slate-800 font-medium font-mono rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 flex-none max-h-min items-center'

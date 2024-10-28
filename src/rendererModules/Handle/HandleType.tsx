@@ -37,12 +37,12 @@ export class HandleType extends GenericIdentifierType {
    */
   private _pidRecord: PIDRecord;
 
-  hasCorrectFormat(): boolean {
-    return PID.isPID(this.value);
-  }
-
   get data(): string {
     return JSON.stringify(this._pidRecord.toObject());
+  }
+
+  hasCorrectFormat(): boolean {
+    return PID.isPID(this.value);
   }
 
   async init(data?: string): Promise<void> {

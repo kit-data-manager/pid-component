@@ -11,8 +11,7 @@ export class LocaleType extends GenericIdentifierType {
   }
 
   hasCorrectFormat(): boolean {
-    // const regex = /^[A-Za-z]{2,4}([_-][A-Za-z]{4})?([_-]([A-Za-z]{2}|[0-9]{3}))?$/
-    const regex = /^[a-z]{2}(-[A-Z]{2})?$/
+    const regex = /^[a-z]{2}(-[A-Z]{2})?$/;
     return regex.test(this.value);
   }
 
@@ -26,8 +25,6 @@ export class LocaleType extends GenericIdentifierType {
 
   renderPreview(): FunctionalComponent<any> {
     // mail icon from: https://heroicons.com/ (MIT license)
-    return (
-      <locale-visualization locale={this.value} showFlag={true}></locale-visualization>
-    );
+    return <locale-visualization locale={this.value} showFlag={true}></locale-visualization>;
   }
 }

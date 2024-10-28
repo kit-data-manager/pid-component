@@ -96,7 +96,6 @@ export class PidComponent {
    */
   @Prop() showTopLevelCopy: boolean = true;
 
-
   /**
    * Determines the default time to live (TTL) for entries in the IndexedDB.
    * Defaults to 24 hours.
@@ -213,37 +212,6 @@ export class PidComponent {
   }
 
   /**
-   * Toggles the loadSubcomponents property if the current level of subcomponents is not the total level of subcomponents.
-   */
-  private toggleSubcomponents = () => {
-    if (!this.hideSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) this.loadSubcomponents = !this.loadSubcomponents;
-  };
-
-  /**
-   * Shows the tooltip of the hovered element.
-   * @param event The event that triggered this function.
-   */
-  private showTooltip = (event: Event) => {
-    let target = event.target as HTMLElement;
-    do {
-      target = target.parentElement as HTMLElement;
-    } while (target !== null && target.tagName !== 'A');
-    if (target !== null) target.children[1].classList.remove('hidden');
-  };
-
-  /**
-   * Hides the tooltip of the hovered element.
-   * @param event The event that triggered this function.
-   */
-  private hideTooltip = (event: Event) => {
-    let target = event.target as HTMLElement;
-    do {
-      target = target.parentElement as HTMLElement;
-    } while (target !== null && target.tagName !== 'A');
-    if (target !== null) target.children[1].classList.add('hidden');
-  };
-
-  /**
    * Renders the component.
    */
   render() {
@@ -257,30 +225,27 @@ export class PidComponent {
               <span
                 class={
                   this.currentLevelOfSubcomponents === 0
-                    //(w/o sub components)
-                    ? 'group ' + (this.emphasizeComponent || this.temporarilyEmphasized ? 'rounded-md shadow-md border px-1 bg-white ' : 'bg-white/40') + 'text-xs text-clip inline-flex flex-grow open:align-top open:w-full ease-in-out transition-all duration-200 overflow-y-hidden font-bold font-mono cursor-pointer list-none overflow-x-hidden space-x-3 flex-nowrap flex-shrink-0 items-center'
+                    ? //(w/o sub components)
+                      'group ' +
+                      (this.emphasizeComponent || this.temporarilyEmphasized ? 'rounded-md shadow-md border px-1 bg-white ' : 'bg-white/40') +
+                      'text-xs text-clip inline-flex flex-grow open:align-top open:w-full ease-in-out transition-all duration-200 overflow-y-hidden font-bold font-mono cursor-pointer list-none overflow-x-hidden space-x-3 flex-nowrap flex-shrink-0 items-center'
                     : ''
                 }
               >
                 <span class={'font-medium font-mono inline-flex flex-nowrap overflow-x-auto text-xs select-all'}>
-                    {
-                      // Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
-                      this.identifierObject.renderPreview()
-                    }
+                  {
+                    // Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
+                    this.identifierObject.renderPreview()
+                  }
                 </span>
                 {
                   // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
-                  this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy && this.emphasizeComponent ? (
-                    <copy-button value={this.identifierObject.value} />
-                  ) : (
-                    ''
-                  )
+                  this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy && this.emphasizeComponent ? <copy-button value={this.identifierObject.value} /> : ''
                 }
               </span>
             ) : (
               <span class={'inline-flex items-center transition ease-in-out'}>
-                <svg class="animate-spin ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none"
-                     viewBox="0 0 24 24">
+                <svg class="animate-spin ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
                   <path
                     class="opacity-75"
@@ -294,17 +259,17 @@ export class PidComponent {
           ) : (
             <details
               class={
-                'group ' + (this.emphasizeComponent || this.temporarilyEmphasized ? 'rounded-md border pl-0.5 py-0 bg-white bg-opacity-0' : 'bg-white/60') + 'text-clip inline flex-grow font-sans open:align-top open:w-full ease-in-out transition-all duration-200'
+                'group ' +
+                (this.emphasizeComponent || this.temporarilyEmphasized ? 'rounded-md border pl-0.5 py-0 bg-white bg-opacity-0' : 'bg-white/60') +
+                'text-clip inline flex-grow font-sans open:align-top open:w-full ease-in-out transition-all duration-200'
               }
               open={this.openByDefault}
               onToggle={this.toggleSubcomponents}
             >
-              <summary
-                class="overflow-y-hidden font-bold font-mono cursor-pointer list-none overflow-x-hidden inline-flex flex-nowrap flex-shrink-0 items-center">
+              <summary class="overflow-y-hidden font-bold font-mono cursor-pointer list-none overflow-x-hidden inline-flex flex-nowrap flex-shrink-0 items-center">
                 <span class={'inline-flex flex-nowrap overflow-x-auto pr-1 items-center'}>
-                  {
-                    this.emphasizeComponent || this.temporarilyEmphasized ? (
-                      <span class={'flex-shrink-0 pr-1'}>
+                  {this.emphasizeComponent || this.temporarilyEmphasized ? (
+                    <span class={'flex-shrink-0 pr-1'}>
                       <svg
                         class="transition group-open:-rotate-180"
                         fill="none"
@@ -320,8 +285,9 @@ export class PidComponent {
                         <path d="M 2 3 l 4 6 l 4 -6"></path>
                       </svg>
                     </span>
-                    ) : ('')
-                  }
+                  ) : (
+                    ''
+                  )}
                   <span class={'font-medium font-mono inline-flex flex-nowrap overflow-x-auto text-sm select-all'}>
                     {
                       // Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
@@ -342,115 +308,106 @@ export class PidComponent {
                 // If there are any items to show, render the table
                 this.items.length > 0 ? (
                   <div>
-                    <div
-                      class="resize-y divide-y text-sm leading-6 bg-gray-100 m-1 p-0.5 h-64 max-h-fit overflow-y-scroll border rounded min-h-[4rem]">
+                    <div class="resize-y divide-y text-sm leading-6 bg-gray-100 m-1 p-0.5 h-64 max-h-fit overflow-y-scroll border rounded min-h-[4rem]">
                       <table class="text-left w-full text-sm font-sans select-text">
                         <thead class="bg-slate-600 flex text-slate-200 w-full rounded-t">
-                        <tr class="flex w-full rounded font-semibold">
-                          <th class="px-1 w-1/4">Key</th>
-                          <th class="px-1 w-3/4">Value</th>
-                        </tr>
+                          <tr class="flex w-full rounded font-semibold">
+                            <th class="px-1 w-1/4">Key</th>
+                            <th class="px-1 w-3/4">Value</th>
+                          </tr>
                         </thead>
-                        <tbody
-                          class="bg-grey-100 flex flex-col items-center justify-between overflow-y-scroll w-full rounded-b">
-                        {
-                          this.items
+                        <tbody class="bg-grey-100 flex flex-col items-center justify-between overflow-y-scroll w-full rounded-b">
+                          {this.items
                             .filter((_, index) => {
                               // Filter out items that are not on the current page
                               return index >= this.tablePage * this.amountOfItems && index < this.tablePage * this.amountOfItems + this.amountOfItems;
                             })
                             .map(value => (
-                                // Render a row for every item
-                                // return (
-                                <tr class={'odd:bg-slate-200 flex w-full'}>
-                                  <td class={'overflow-x-auto p-1 w-1/4 font-mono'}>
-                                    <a
-                                      role="link"
-                                      class="right-0 focus:outline-none focus:ring-gray-300 rounded-md focus:ring-offset-2 focus:ring-2 focus:bg-gray-200 relative md:mt-0 inline flex-nowrap"
-                                      onMouseOver={this.showTooltip}
-                                      onFocus={this.showTooltip}
-                                      onMouseOut={this.hideTooltip}
-                                    >
-                                      <div class="cursor-pointer align-top justify-between flex-nowrap">
-                                        <a href={value.keyLink} target={'_blank'} rel={'noopener noreferrer'}
-                                           class={'mr-2 text-blue-400 justify-start float-left'}>
-                                          {value.keyTitle}
-                                        </a>
-                                        <svg
-                                          aria-haspopup="true"
-                                          xmlns="http://www.w3.org/2000/svg"
-                                          class="icon icon-tabler icon-tabler-info-circle justify-end min-w-[1rem] min-h-[1rem] flex-none float-right"
-                                          width="25"
-                                          height="25"
-                                          viewBox="0 0 24 24"
-                                          stroke-width="1.5"
-                                          stroke="#A0AEC0"
-                                          fill="none"
-                                          stroke-linecap="round"
-                                          stroke-linejoin="round"
-                                        >
-                                          <path stroke="none" d="M0 0h24v24H0z" />
-                                          <circle cx="12" cy="12" r="9" />
-                                          <line x1="12" y1="8" x2="12.01" y2="8" />
-                                          <polyline points="11 12 12 12 12 16 13 16" />
-                                        </svg>
-                                      </div>
-                                      <p
-                                        role="tooltip"
-                                        class="hidden z-20 mt-1 transition duration-100 ease-in-out shadow-md bg-white rounded text-xs text-gray-600 p-1 flex-wrap overflow-clip"
+                              // Render a row for every item
+                              // return (
+                              <tr class={'odd:bg-slate-200 flex w-full'}>
+                                <td class={'overflow-x-auto p-1 w-1/4 font-mono'}>
+                                  <a
+                                    role="link"
+                                    class="right-0 focus:outline-none focus:ring-gray-300 rounded-md focus:ring-offset-2 focus:ring-2 focus:bg-gray-200 relative md:mt-0 inline flex-nowrap"
+                                    onMouseOver={this.showTooltip}
+                                    onFocus={this.showTooltip}
+                                    onMouseOut={this.hideTooltip}
+                                  >
+                                    <div class="cursor-pointer align-top justify-between flex-nowrap">
+                                      <a href={value.keyLink} target={'_blank'} rel={'noopener noreferrer'} class={'mr-2 text-blue-400 justify-start float-left'}>
+                                        {value.keyTitle}
+                                      </a>
+                                      <svg
+                                        aria-haspopup="true"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        class="icon icon-tabler icon-tabler-info-circle justify-end min-w-[1rem] min-h-[1rem] flex-none float-right"
+                                        width="25"
+                                        height="25"
+                                        viewBox="0 0 24 24"
+                                        stroke-width="1.5"
+                                        stroke="#A0AEC0"
+                                        fill="none"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
                                       >
-                                        {value.keyTooltip}
-                                      </p>
-                                    </a>
-                                  </td>
-                                  <td class={'align-top overflow-x-auto text-sm p-1 w-3/4 select-text flex '}>
-                                    <span class={'flex-grow'}>
-                                      {
-                                        // Load a foldable subcomponent if subcomponents are not disabled (hideSubcomponents), and the current level of subcomponents is not the total level of subcomponents. If the subcomponent is on the bottom level of the hierarchy, render just a preview. If the value should not be resolved (isFoldable), just render the value as text.
-                                        this.loadSubcomponents && !this.hideSubcomponents && !value.renderDynamically ? (
-                                          <pid-component
-                                            value={value.value}
-                                            levelOfSubcomponents={this.levelOfSubcomponents}
-                                            // emphasizeComponent={this.emphasizeComponent}
-                                            currentLevelOfSubcomponents={this.currentLevelOfSubcomponents + 1}
-                                            amountOfItems={this.amountOfItems}
-                                            settings={this.settings}
-                                          />
-                                        ) : !this.hideSubcomponents && this.currentLevelOfSubcomponents === this.levelOfSubcomponents && !value.renderDynamically ? (
-                                          <pid-component
-                                            value={value.value}
-                                            levelOfSubcomponents={this.currentLevelOfSubcomponents}
-                                            // emphasizeComponent={this.emphasizeComponent}
-                                            currentLevelOfSubcomponents={this.currentLevelOfSubcomponents}
-                                            amountOfItems={this.amountOfItems}
-                                            settings={this.settings}
-                                            hideSubcomponents={true}
-                                          />
-                                        ) : (
-                                          <span class={'font-mono text-sm'}>{value.value}</span>
-                                        )
-                                      }
-                                    </span>
-                                    <copy-button value={value.value} />
-                                  </td>
-                                </tr>
-                              ),
-                            )
-
-                        }
+                                        <path stroke="none" d="M0 0h24v24H0z" />
+                                        <circle cx="12" cy="12" r="9" />
+                                        <line x1="12" y1="8" x2="12.01" y2="8" />
+                                        <polyline points="11 12 12 12 12 16 13 16" />
+                                      </svg>
+                                    </div>
+                                    <p
+                                      role="tooltip"
+                                      class="hidden z-20 mt-1 transition duration-100 ease-in-out shadow-md bg-white rounded text-xs text-gray-600 p-1 flex-wrap overflow-clip"
+                                    >
+                                      {value.keyTooltip}
+                                    </p>
+                                  </a>
+                                </td>
+                                <td class={'align-top overflow-x-auto text-sm p-1 w-3/4 select-text flex '}>
+                                  <span class={'flex-grow'}>
+                                    {
+                                      // Load a foldable subcomponent if subcomponents are not disabled (hideSubcomponents), and the current level of subcomponents is not the total level of subcomponents. If the subcomponent is on the bottom level of the hierarchy, render just a preview. If the value should not be resolved (isFoldable), just render the value as text.
+                                      this.loadSubcomponents && !this.hideSubcomponents && !value.renderDynamically ? (
+                                        <pid-component
+                                          value={value.value}
+                                          levelOfSubcomponents={this.levelOfSubcomponents}
+                                          // emphasizeComponent={this.emphasizeComponent}
+                                          currentLevelOfSubcomponents={this.currentLevelOfSubcomponents + 1}
+                                          amountOfItems={this.amountOfItems}
+                                          settings={this.settings}
+                                        />
+                                      ) : !this.hideSubcomponents && this.currentLevelOfSubcomponents === this.levelOfSubcomponents && !value.renderDynamically ? (
+                                        <pid-component
+                                          value={value.value}
+                                          levelOfSubcomponents={this.currentLevelOfSubcomponents}
+                                          // emphasizeComponent={this.emphasizeComponent}
+                                          currentLevelOfSubcomponents={this.currentLevelOfSubcomponents}
+                                          amountOfItems={this.amountOfItems}
+                                          settings={this.settings}
+                                          hideSubcomponents={true}
+                                        />
+                                      ) : (
+                                        <span class={'font-mono text-sm'}>{value.value}</span>
+                                      )
+                                    }
+                                  </span>
+                                  <copy-button value={value.value} />
+                                </td>
+                              </tr>
+                            ))}
                         </tbody>
                       </table>
                     </div>
-                    <div
-                      class="flex items-center justify-between border-t border-gray-200 bg-white px-1 py-1 sm:px-1 max-h-12">
+                    <div class="flex items-center justify-between border-t border-gray-200 bg-white px-1 py-1 sm:px-1 max-h-12">
                       <div class="hidden sm:flex sm:flex-1 sm:flex-nowrap sm:items-center sm:justify-between text-sm">
                         <div class={''}>
                           <p class="text-sm text-gray-700">
                             Showing
                             <span class="font-medium"> {1 + this.tablePage * this.amountOfItems} </span>
                             to
-                            <span
-                              class="font-medium"> {Math.min(this.tablePage * this.amountOfItems + this.amountOfItems, this.items.length)} </span>
+                            <span class="font-medium"> {Math.min(this.tablePage * this.amountOfItems + this.amountOfItems, this.items.length)} </span>
                             of
                             <span class="font-medium"> {this.items.length} </span>
                             entries
@@ -550,4 +507,35 @@ export class PidComponent {
       </Host>
     );
   }
+
+  /**
+   * Toggles the loadSubcomponents property if the current level of subcomponents is not the total level of subcomponents.
+   */
+  private toggleSubcomponents = () => {
+    if (!this.hideSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) this.loadSubcomponents = !this.loadSubcomponents;
+  };
+
+  /**
+   * Shows the tooltip of the hovered element.
+   * @param event The event that triggered this function.
+   */
+  private showTooltip = (event: Event) => {
+    let target = event.target as HTMLElement;
+    do {
+      target = target.parentElement as HTMLElement;
+    } while (target !== null && target.tagName !== 'A');
+    if (target !== null) target.children[1].classList.remove('hidden');
+  };
+
+  /**
+   * Hides the tooltip of the hovered element.
+   * @param event The event that triggered this function.
+   */
+  private hideTooltip = (event: Event) => {
+    let target = event.target as HTMLElement;
+    do {
+      target = target.parentElement as HTMLElement;
+    } while (target !== null && target.tagName !== 'A');
+    if (target !== null) target.children[1].classList.add('hidden');
+  };
 }

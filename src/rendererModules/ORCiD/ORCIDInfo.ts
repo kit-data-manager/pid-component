@@ -1,4 +1,5 @@
 import { cachedFetch } from '../../utils/DataCache';
+
 /**
  * This file contains the ORCIDInfo class, which is used to store information about an ORCiD.
  */
@@ -270,37 +271,6 @@ export class ORCIDInfo {
   }
 
   /**
-   * Outputs the employment object of the person at a given date.
-   * @param date The date to check.
-   * @returns {{startDate: Date, endDate: Date | null, organization: string, department: string} | undefined} The employment object of the person at the given date.
-   */
-  getAffiliationsAt(date: Date): Employment[] {
-    let affiliations: Employment[] = [];
-    for (const employment of this._employments) {
-      if (employment.startDate <= date && employment.endDate === null) affiliations.push(employment);
-      if (employment.startDate <= date && employment.endDate !== null && employment.endDate >= date) affiliations.push(employment);
-    }
-    return affiliations;
-  }
-
-  /**
-   * Outputs a string representation of an affiliation object.
-   * @param affiliation The affiliation object to convert to a string.
-   * @param showDepartment Whether to show the department in the string.
-   * @returns {string | undefined} The string representation of the affiliation object.
-   */
-  getAffiliationAsString(
-    affiliation: Employment,
-    showDepartment: boolean = true,
-  ): string | undefined {
-    if (affiliation === undefined || affiliation.organization === null) return undefined;
-    else {
-      if (showDepartment && affiliation.department !== null) return `${affiliation.organization} [${affiliation.department}]`;
-      else return affiliation.organization;
-    }
-  }
-
-  /**
    * Checks if a string has the format of an ORCiD.
    * @param text The string to check.
    * @returns {boolean} True if the string could be an ORCiD, false if not.
@@ -323,8 +293,8 @@ export class ORCIDInfo {
       headers: {
         Accept: 'application/json',
       },
-    })
-      // .then(response => response.json());
+    });
+    // .then(response => response.json());
 
     // Parse family name and given names
     const familyName = rawOrcidJSON['person']['name']['family-name']['value'];
@@ -354,8 +324,7 @@ export class ORCIDInfo {
 
         employments.push(employment);
       }
-    } catch (e) {
-    }
+    } catch (e) {}
 
     // Parse preferred locale, if available
     let preferredLocale: string | undefined = rawOrcidJSON['preferences']['locale'] !== null ? rawOrcidJSON['preferences']['locale'] : undefined;
@@ -407,6 +376,52 @@ export class ORCIDInfo {
     return new ORCIDInfo(orcid, rawOrcidJSON, familyName, givenNames, employments, preferredLocale, biography, emails, keywords, researcherUrls, country);
   }
 
+  static fromJSON(serialized: string): ORCIDInfo {
+    const data: ReturnType<ORCIDInfo['toObject']> = JSON.parse(serialized);
+    const employments = data.employments.map(employment => Employment.fromJSON(employment));
+    return new ORCIDInfo(
+      data.orcid,
+      data.ORCiDJSON,
+      data.familyName,
+      data.givenNames,
+      employments,
+      data.preferredLocale,
+      data.biography,
+      data.emails,
+      data.keywords,
+      data.researcherUrls,
+      data.country,
+    );
+  }
+
+  /**
+   * Outputs the employment object of the person at a given date.
+   * @param date The date to check.
+   * @returns {{startDate: Date, endDate: Date | null, organization: string, department: string} | undefined} The employment object of the person at the given date.
+   */
+  getAffiliationsAt(date: Date): Employment[] {
+    let affiliations: Employment[] = [];
+    for (const employment of this._employments) {
+      if (employment.startDate <= date && employment.endDate === null) affiliations.push(employment);
+      if (employment.startDate <= date && employment.endDate !== null && employment.endDate >= date) affiliations.push(employment);
+    }
+    return affiliations;
+  }
+
+  /**
+   * Outputs a string representation of an affiliation object.
+   * @param affiliation The affiliation object to convert to a string.
+   * @param showDepartment Whether to show the department in the string.
+   * @returns {string | undefined} The string representation of the affiliation object.
+   */
+  getAffiliationAsString(affiliation: Employment, showDepartment: boolean = true): string | undefined {
+    if (affiliation === undefined || affiliation.organization === null) return undefined;
+    else {
+      if (showDepartment && affiliation.department !== null) return `${affiliation.organization} [${affiliation.department}]`;
+      else return affiliation.organization;
+    }
+  }
+
   toObject() {
     return {
       orcid: this._orcid,
@@ -422,13 +437,6 @@ export class ORCIDInfo {
       country: this._country,
     };
   }
-
-  static fromJSON(serialized: string): ORCIDInfo {
-    const data: ReturnType<ORCIDInfo['toObject']> = JSON.parse(serialized);
-    const employments = data.employments.map(employment => Employment.fromJSON(employment));
-    return new ORCIDInfo(data.orcid, data.ORCiDJSON, data.familyName, data.givenNames, employments, data.preferredLocale, data.biography, data.emails, data.keywords, data.researcherUrls, data.country);
-  }
-
 }
 
 class Employment {
@@ -457,16 +465,18 @@ class Employment {
    */
   department: string;
 
-  constructor(
-    startDate: Date,
-    endDate: Date | null,
-    organization: string,
-    department: string,
-  ) {
+  constructor(startDate: Date, endDate: Date | null, organization: string, department: string) {
     this.startDate = startDate;
     this.endDate = endDate;
     this.organization = organization;
     this.department = department;
+  }
+
+  static fromJSON(serialized: string): Employment {
+    const data: ReturnType<Employment['toObject']> = JSON.parse(serialized);
+    const startDate = new Date(data.startDate);
+    const endDate = data.endDate === null ? null : new Date(data.endDate);
+    return new Employment(startDate, endDate, data.organization, data.department);
   }
 
   toObject() {
@@ -476,12 +486,5 @@ class Employment {
       organization: this.organization,
       department: this.department,
     };
-  }
-
-  static fromJSON(serialized: string): Employment {
-    const data: ReturnType<Employment['toObject']> = JSON.parse(serialized);
-    const startDate = new Date(data.startDate);
-    const endDate = data.endDate === null ? null : new Date(data.endDate);
-    return new Employment(startDate, endDate, data.organization, data.department);
   }
 }
