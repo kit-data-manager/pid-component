@@ -71,27 +71,40 @@
     "generate": "stencil generate",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "storybook-docs": "storybook dev --docs"
+    "storybook-docs": "storybook dev --docs",
+    "lint": "eslint --ext .ts,.tsx,.js,.jsx .",
+    "lint:fix": "eslint --ext .ts,.tsx,.js,.jsx . --fix",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,mdx}\"",
+    "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,md,mdx}\""
   },
   "dependencies": {
     "@stencil/core": "^4.22.2",
     "@tempfix/idb": "^8.0.3"
   },
   "devDependencies": {
+    "@eslint/js": "^9.13.0",
     "@storybook/addon-essentials": "^8.3.6",
     "@storybook/addon-links": "^8.3.6",
     "@storybook/blocks": "^8.3.6",
     "@storybook/web-components": "^8.3.6",
     "@storybook/web-components-vite": "^8.3.6",
+    "@types/eslint__js": "^8.42.3",
+    "@types/eslint-config-prettier": "^6.11.3",
     "@types/node": "^22.8.1",
+    "@typescript-eslint/eslint-plugin": "^8.11.0",
+    "@typescript-eslint/parser": "^8.11.0",
+    "eslint": "^9.13.0",
+    "eslint-config-prettier": "^9.1.0",
+    "globals": "^15.11.0",
     "lit": "^3.2.1",
-    "prettier": "^3.3.3",
+    "prettier": "3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.8",
     "puppeteer": "^23.6.0",
     "stencil-tailwind-plugin": "^1.8.0",
     "storybook": "^8.3.6",
     "tailwindcss": "^3.4.14",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.11.0"
   },
   "maintainers": [
     {

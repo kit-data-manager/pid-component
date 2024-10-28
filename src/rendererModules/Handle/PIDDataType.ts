@@ -58,7 +58,7 @@ export class PIDDataType {
    * @param regex An optional regex to check if a value matches this data type.
    * @constructor
    */
-  constructor(pid: PID, name: string, description: string, redirectURL: string, ePICJSON: Object, regex?: RegExp) {
+  constructor(pid: PID, name: string, description: string, redirectURL: string, ePICJSON: object, regex?: RegExp) {
     this._pid = pid;
     this._name = name;
     this._description = description;
@@ -139,7 +139,7 @@ export class PIDDataType {
     }
 
     // Create a temporary object to store the information
-    let tempDataType: {
+    const tempDataType: {
       name: string;
       description: string;
       regex?: RegExp;
@@ -157,7 +157,7 @@ export class PIDDataType {
         const xmlLocations = xmlDoc.getElementsByTagName('location');
         for (let j = 0; j < xmlLocations.length; j++) {
           // Extract link
-          let newLocation = {
+          const newLocation = {
             href: xmlLocations[j].getAttribute('href'),
             weight: undefined,
             view: undefined,

@@ -52,7 +52,7 @@ export class ORCIDType extends GenericIdentifierType {
     }
 
     if (this.settings) {
-      for (let i of this.settings) {
+      for (const i of this.settings) {
         switch (i['name']) {
           case 'affiliationAt':
             this.affiliationAt = new Date(i['value']);
@@ -93,7 +93,7 @@ export class ORCIDType extends GenericIdentifierType {
 
     try {
       const affiliations = this._orcidInfo.getAffiliationsAt(new Date(Date.now()));
-      for (let data of affiliations) {
+      for (const data of affiliations) {
         const affiliation = this._orcidInfo.getAffiliationAsString(data);
         if (affiliation !== undefined && affiliation.length > 2)
           this.items.push(new FoldableItem(50, 'Current Affiliation', affiliation, 'The current affiliation of the person.', undefined, undefined, false));
@@ -108,7 +108,7 @@ export class ORCIDType extends GenericIdentifierType {
     ) {
       const affiliationsThen = this._orcidInfo.getAffiliationsAt(this.affiliationAt);
 
-      for (let data of affiliationsThen) {
+      for (const data of affiliationsThen) {
         const affiliation = this._orcidInfo.getAffiliationAsString(data);
         this.items.push(
           new FoldableItem(
@@ -129,8 +129,8 @@ export class ORCIDType extends GenericIdentifierType {
       }
     }
     if (this._orcidInfo.emails) {
-      let primary = this._orcidInfo.emails.filter(email => email.primary)[0];
-      let other = this._orcidInfo.emails.filter(email => !email.primary);
+      const primary = this._orcidInfo.emails.filter(email => email.primary)[0];
+      const other = this._orcidInfo.emails.filter(email => !email.primary);
 
       // If there is a primary e-mail address, generate an item and an action to send email
       if (primary) {
@@ -158,7 +158,7 @@ export class ORCIDType extends GenericIdentifierType {
           // ),
         );
 
-      for (let url of this._orcidInfo.researcherUrls) {
+      for (const url of this._orcidInfo.researcherUrls) {
         this.items.push(new FoldableItem(100, url.name, url.url, 'A link to a website specified by the person.'));
       }
 

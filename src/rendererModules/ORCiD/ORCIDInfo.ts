@@ -302,11 +302,11 @@ export class ORCIDInfo {
 
     // Parse employments, if available
     const affiliations = rawOrcidJSON['activities-summary']['employments']['affiliation-group'];
-    let employments: Employment[] = [];
+    const employments: Employment[] = [];
     try {
       for (let i = 0; i < affiliations.length; i++) {
         const employmentSummary = affiliations[i]['summaries'][0]['employment-summary'];
-        let employment = new Employment(new Date(), null, '', '');
+        const employment = new Employment(new Date(), null, '', '');
         if (employmentSummary['start-date'] !== null)
           employment.startDate = new Date(
             employmentSummary['start-date']['year']['value'],
@@ -327,13 +327,13 @@ export class ORCIDInfo {
     } catch (e) {}
 
     // Parse preferred locale, if available
-    let preferredLocale: string | undefined = rawOrcidJSON['preferences']['locale'] !== null ? rawOrcidJSON['preferences']['locale'] : undefined;
+    const preferredLocale: string | undefined = rawOrcidJSON['preferences']['locale'] !== null ? rawOrcidJSON['preferences']['locale'] : undefined;
 
     // Parse biography, if available
-    let biography: string | undefined = rawOrcidJSON['person']['biography'] !== null ? rawOrcidJSON['person']['biography']['content'] : undefined;
+    const biography: string | undefined = rawOrcidJSON['person']['biography'] !== null ? rawOrcidJSON['person']['biography']['content'] : undefined;
 
     // Parse e-mail addresses, if available
-    let emails: { email: string; primary: boolean; verified: boolean }[] | undefined = [];
+    const emails: { email: string; primary: boolean; verified: boolean }[] | undefined = [];
     if (rawOrcidJSON['person']['emails']['email'] !== null) {
       for (const email of rawOrcidJSON['person']['emails']['email']) {
         emails.push({
@@ -345,7 +345,7 @@ export class ORCIDInfo {
     }
 
     // Parse keywords, if available, and sort them by index
-    let keywords: { content: string; index: number }[] | undefined = [];
+    const keywords: { content: string; index: number }[] | undefined = [];
     if (rawOrcidJSON['person']['keywords']['keyword'] !== null) {
       for (const keyword of rawOrcidJSON['person']['keywords']['keyword']) {
         keywords.push({
@@ -357,7 +357,7 @@ export class ORCIDInfo {
     }
 
     // Parse researcher URLs, if available, and sort them by index
-    let researcherUrls: { url: string; name: string; index: number }[] | undefined = [];
+    const researcherUrls: { url: string; name: string; index: number }[] | undefined = [];
     if (rawOrcidJSON['person']['researcher-urls']['researcher-url'] !== null) {
       for (const researcherUrl of rawOrcidJSON['person']['researcher-urls']['researcher-url']) {
         researcherUrls.push({
@@ -370,7 +370,8 @@ export class ORCIDInfo {
     }
 
     // Parse country, if available
-    let country: string | undefined = rawOrcidJSON['person']['addresses']['address'].length > 0 ? rawOrcidJSON['person']['addresses']['address'][0]['country']['value'] : undefined;
+    const country: string | undefined =
+      rawOrcidJSON['person']['addresses']['address'].length > 0 ? rawOrcidJSON['person']['addresses']['address'][0]['country']['value'] : undefined;
 
     // Return the ORCIDInfo object
     return new ORCIDInfo(orcid, rawOrcidJSON, familyName, givenNames, employments, preferredLocale, biography, emails, keywords, researcherUrls, country);
@@ -400,7 +401,7 @@ export class ORCIDInfo {
    * @returns {{startDate: Date, endDate: Date | null, organization: string, department: string} | undefined} The employment object of the person at the given date.
    */
   getAffiliationsAt(date: Date): Employment[] {
-    let affiliations: Employment[] = [];
+    const affiliations: Employment[] = [];
     for (const employment of this._employments) {
       if (employment.startDate <= date && employment.endDate === null) affiliations.push(employment);
       if (employment.startDate <= date && employment.endDate !== null && employment.endDate >= date) affiliations.push(employment);

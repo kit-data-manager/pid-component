@@ -5,3 +5,4 @@ dist
 loader
 node_modules
 www
+/src/index.html

@@ -109,7 +109,7 @@ export const getEntity = async function (
 ): Promise<GenericIdentifierType> {
   try {
     const db = await dbPromise;
-    let entity:
+    const entity:
       | {
           value: string;
           rendererKey: string;
@@ -129,7 +129,7 @@ export const getEntity = async function (
         await deleteEntity(value);
       } else {
         console.log('TTL not expired or undefined', new Date().getTime() - entity.lastAccess.getTime());
-        let renderer = new (renderers.find(renderer => renderer.key === entity.rendererKey).constructor)(value, entitySettings);
+        const renderer = new (renderers.find(renderer => renderer.key === entity.rendererKey).constructor)(value, entitySettings);
         // if (renderer.hasCorrectFormat()) {
         renderer.settings = entitySettings;
         await renderer.init(entity.lastData);
@@ -142,7 +142,7 @@ export const getEntity = async function (
   }
 
   console.debug('No valid entity found for value in db', value);
-  let renderer = await Parser.getBestFit(value, settings);
+  const renderer = await Parser.getBestFit(value, settings);
   // renderer.settings = settings.find(value => value.type === renderer.getSettingsKey())?.values
   // await renderer.init()
   await addEntity(renderer);
