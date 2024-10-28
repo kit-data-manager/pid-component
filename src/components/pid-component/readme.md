@@ -2,7 +2,6 @@
 
 <!-- Auto Generated Below -->
 
-
 ## Properties
 
 | Property                      | Attribute                        | Description                                                                                                                                                                                                                                                                                                                                            | Type      | Default               |
@@ -18,7 +17,6 @@
 | `showTopLevelCopy`            | `show-top-level-copy`            | Determines whether on the top level the copy button is shown. If set to true, the copy button is shown also on the top level. It not set, the copy button is only shown for sub-components. (optional)                                                                                                                                                 | `boolean` | `true`                |
 | `value`                       | `value`                          | The value to parse, evaluate and render.                                                                                                                                                                                                                                                                                                               | `string`  | `undefined`           |
 
-
 ## Dependencies
 
 ### Used by
@@ -31,6 +29,7 @@
 - [pid-component](.)
 
 ### Graph
+
 ```mermaid
 graph TD;
   pid-component --> pid-component

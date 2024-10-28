@@ -273,7 +273,7 @@ export const Email: Story = {
   },
 };
 
-export const commaSeperatedMails: Story = {
+export const CommaSeperatedMails: Story = {
   args: {
     value: 'someone@example.com, john.doe@demo.example',
   },

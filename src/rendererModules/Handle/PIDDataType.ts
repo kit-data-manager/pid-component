@@ -35,13 +35,6 @@ export class PIDDataType {
   private readonly _redirectURL: string;
 
   /**
-   * The raw JSON object from the ePIC data type registry.
-   * @private
-   * @type {object}
-   */
-  private readonly _ePICJSON: object;
-
-  /**
    * An optional regex to check if a value matches this data type.
    * @private
    * @type {RegExp}
@@ -54,17 +47,15 @@ export class PIDDataType {
    * @param name The name of the data type.
    * @param description The description of the data type.
    * @param redirectURL The redirect URL of a user-friendly website.
-   * @param ePICJSON The raw JSON object from the ePIC data type registry.
    * @param regex An optional regex to check if a value matches this data type.
    * @constructor
    */
-  constructor(pid: PID, name: string, description: string, redirectURL: string, ePICJSON: object, regex?: RegExp) {
+  constructor(pid: PID, name: string, description: string, redirectURL: string, regex?: RegExp) {
     this._pid = pid;
     this._name = name;
     this._description = description;
     this._regex = regex;
     this._redirectURL = redirectURL;
-    this._ePICJSON = ePICJSON;
   }
 
   /**
@@ -97,14 +88,6 @@ export class PIDDataType {
    */
   get redirectURL(): string {
     return this._redirectURL;
-  }
-
-  /**
-   * Outputs the raw JSON object from the ePIC data type registry.
-   * @returns {object} The raw JSON object from the ePIC data type registry.
-   */
-  get ePICJSON(): object {
-    return this._ePICJSON;
   }
 
   /**
@@ -194,7 +177,7 @@ export class PIDDataType {
 
     // Create a new PIDDataType object from the temp object
     try {
-      const type = new PIDDataType(pid, tempDataType.name, tempDataType.description, tempDataType.redirectURL, tempDataType.ePICJSON, tempDataType.regex);
+      const type = new PIDDataType(pid, tempDataType.name, tempDataType.description, tempDataType.redirectURL, tempDataType.regex);
       typeMap.set(pid, type);
       return type;
     } catch (e) {
@@ -205,7 +188,7 @@ export class PIDDataType {
 
   static fromJSON(serialized: string): PIDDataType {
     const data: ReturnType<PIDDataType['toObject']> = JSON.parse(serialized);
-    return new PIDDataType(PID.fromJSON(data.pid), data.name, data.description, data.redirectURL, JSON.parse(data.ePICJSON), data.regex);
+    return new PIDDataType(PID.fromJSON(data.pid), data.name, data.description, data.redirectURL, data.regex);
   }
 
   toObject() {
@@ -214,7 +197,6 @@ export class PIDDataType {
       name: this._name,
       description: this._description,
       redirectURL: this._redirectURL,
-      ePICJSON: JSON.stringify(this._ePICJSON),
       regex: this._regex,
     };
   }

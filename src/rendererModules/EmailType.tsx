@@ -11,7 +11,7 @@ export class EmailType extends GenericIdentifierType {
   }
 
   hasCorrectFormat(): boolean {
-    const regex = /^(([\w\-\.]+@([\w-]+\.)+[\w-]{2,})(\s*,\s*)?)*$/gm;
+    const regex = /^(([\w\-.]+@([\w-]+\.)+[\w-]{2,})(\s*,\s*)?)*$/gm;
     return regex.test(this.value);
   }
 

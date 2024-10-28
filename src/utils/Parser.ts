@@ -52,7 +52,9 @@ export class Parser {
       const settingsKey = bestFit.getSettingsKey();
       const settingsValues = settings.find(value => value.type === settingsKey)?.values;
       if (settingsValues) bestFit.settings = settingsValues;
-    } catch (_) {}
+    } catch (e) {
+      console.warn('Error while adding settings to object:', e);
+    }
 
     // initialize and return the object
     await bestFit.init();

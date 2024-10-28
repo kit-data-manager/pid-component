@@ -324,7 +324,9 @@ export class ORCIDInfo {
 
         employments.push(employment);
       }
-    } catch (e) {}
+    } catch (e) {
+      console.debug(e);
+    }
 
     // Parse preferred locale, if available
     const preferredLocale: string | undefined = rawOrcidJSON['preferences']['locale'] !== null ? rawOrcidJSON['preferences']['locale'] : undefined;

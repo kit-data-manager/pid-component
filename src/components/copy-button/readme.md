@@ -2,13 +2,11 @@
 
 <!-- Auto Generated Below -->
 
-
 ## Properties
 
 | Property             | Attribute | Description                         | Type     | Default     |
 |----------------------|-----------|-------------------------------------|----------|-------------|
 | `value` _(required)_ | `value`   | The value to copy to the clipboard. | `string` | `undefined` |
-
 
 ## Dependencies
 
@@ -17,6 +15,7 @@
 - [pid-component](../pid-component)
 
 ### Graph
+
 ```mermaid
 graph TD;
   pid-component --> copy-button
