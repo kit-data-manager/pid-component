@@ -2,11 +2,13 @@
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property            | Attribute | Description            | Type     | Default     |
-|---------------------|-----------|------------------------|----------|-------------|
+| ------------------- | --------- | ---------------------- | -------- | ----------- |
 | `text` _(required)_ | `text`    | The text to highlight. | `string` | `undefined` |
+
 
 ----------------------------------------------
 

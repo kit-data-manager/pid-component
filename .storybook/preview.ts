@@ -3,7 +3,7 @@ import { defineCustomElements } from '../loader';
 
 defineCustomElements();
 
-const preview = {
+export default {
   parameters: {
     controls: {
       matchers: {
@@ -13,5 +13,3 @@ const preview = {
     },
   },
 };
-
-export default preview;

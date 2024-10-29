@@ -3,7 +3,6 @@ import tailwind, { tailwindHMR } from 'stencil-tailwind-plugin';
 
 export const config: Config = {
   namespace: 'pid-component',
-  bundles: [{ components: ['pid-component', 'copy-button', 'locale-visualization', 'color-highlight'] }],
   outputTargets: [
     {
       type: 'dist',
@@ -17,7 +16,6 @@ export const config: Config = {
     },
     {
       type: 'www',
-      serviceWorker: null, // disable service workers
     },
   ],
   testing: {

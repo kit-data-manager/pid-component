@@ -1,14 +1,14 @@
-const config = {
+export default {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
   addons: ['@storybook/addon-links', '@storybook/addon-essentials'],
   staticDirs: [{ from: '../dist', to: '/assets' }, { from: '../loader', to: '/assets' }],
-  framework: {
-    name: '@storybook/web-components-vite',
-    options: {},
+  framework: '@storybook/web-components-vite',
+  docs: {
+    source: {
+      type: 'code',
+    },
   },
-  docs: {},
   core: {
     disableTelemetry: true,
   },
 };
-export default config;
