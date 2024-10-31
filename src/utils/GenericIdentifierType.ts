@@ -116,15 +116,6 @@ export abstract class GenericIdentifierType {
   abstract init(data?: any): Promise<void>;
 
   /**
-   * This method indicates if a value is resolvable or not.
-   * It could be used to resolve the value via an external API and check if the returned value is valid or even existing.
-   * It must be implemented by the child classes as it is abstract.
-   * @returns {boolean} Whether the value is resolvable or not.
-   * @abstract
-   */
-  abstract isResolvable(): boolean;
-
-  /**
    * This method indicates if a value has the correct format or not.
    * It is heavily recommended to use a regular expression to check the format.
    * It must be implemented by the child classes as it is abstract.

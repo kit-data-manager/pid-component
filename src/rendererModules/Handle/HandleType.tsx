@@ -86,6 +86,7 @@ export class HandleType extends GenericIdentifierType {
     }
 
     this.actions.push(new FoldableAction(0, 'Open in FAIR-DOscope', `https://kit-data-manager.github.io/fairdoscope/?pid=${this._pidRecord.pid.toString()}`, 'primary'));
+    this.actions.push(new FoldableAction(0, 'View in Handle.net registry', `https://hdl.handle.net/${this._pidRecord.pid.toString()}`, 'secondary'));
 
     return;
   }

@@ -32,7 +32,7 @@ export class CopyButton {
         textArea.select();
         try {
           const success = document.execCommand('copy');
-          console.log(`Deprecated Text copy was ${success ? 'successful' : 'unsuccessful'}.`);
+          console.debug(`Deprecated Text copy was ${success ? 'successful' : 'unsuccessful'}.`);
           showSuccess();
         } catch (err) {
           console.error(err.name, err.message);
@@ -49,6 +49,8 @@ export class CopyButton {
         el.classList.remove('hover:bg-blue-200');
         el.classList.remove('bg-white');
         el.classList.add('bg-green-200');
+
+        // Reset the button after 1.5 seconds.
         setTimeout(() => {
           el.classList.remove('bg-green-200');
           el.classList.add('hover:bg-blue-200');
@@ -64,7 +66,6 @@ export class CopyButton {
           class={
             'bg-white border border-slate-500 text-slate-800 font-medium font-mono rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 flex-none max-h-min items-center'
           }
-          id={`copyButton-${this.value}`}
           onClick={event => copyValue(event, this.value)}
         >
           Copy

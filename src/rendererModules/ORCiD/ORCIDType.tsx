@@ -3,7 +3,6 @@ import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
 import { ORCIDInfo } from './ORCIDInfo';
 import { FoldableItem } from '../../utils/FoldableItem';
 import { FoldableAction } from '../../utils/FoldableAction';
-import { getLocaleDetail } from '../../utils/utils';
 
 /**
  * This class specifies a custom renderer for ORCiDs.
@@ -145,18 +144,7 @@ export class ORCIDType extends GenericIdentifierType {
         );
 
       if (this._orcidInfo.preferredLocale)
-        this.items.push(
-          new FoldableItem(25, 'Preferred Language', this._orcidInfo.preferredLocale, 'The preferred locale/language of the person.'),
-          // new FoldableItem(
-          //   25,
-          //   'Preferred Language',
-          //   getLocaleDetail(this._orcidInfo.preferredLocale, 'language'),
-          //   'The preferred locale/language of the person.',
-          //   undefined,
-          //   undefined,
-          //   false,
-          // ),
-        );
+        this.items.push(new FoldableItem(25, 'Preferred Language', this._orcidInfo.preferredLocale, 'The preferred locale/language of the person.'));
 
       for (const url of this._orcidInfo.researcherUrls) {
         this.items.push(new FoldableItem(100, url.name, url.url, 'A link to a website specified by the person.'));
@@ -169,8 +157,7 @@ export class ORCIDType extends GenericIdentifierType {
 
       if (this._orcidInfo.biography) this.items.push(new FoldableItem(200, 'Biography', this._orcidInfo.biography, 'The biography of the person.', undefined, undefined, false));
 
-      if (this._orcidInfo.country)
-        this.items.push(new FoldableItem(30, 'Country', getLocaleDetail(this._orcidInfo.country, 'region'), 'The country of the person.', undefined, undefined, false));
+      if (this._orcidInfo.country) this.items.push(new FoldableItem(30, 'Country', this._orcidInfo.country, 'The country of the person.'));
     }
   }
 

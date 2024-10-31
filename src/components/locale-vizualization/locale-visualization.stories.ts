@@ -22,6 +22,7 @@ const meta: Meta = {
   },
   args: {
     locale: 'de-DE',
+    showFlag: true,
   },
 };
 export default meta;
