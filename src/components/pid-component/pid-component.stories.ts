@@ -147,6 +147,22 @@ const meta: Meta = {
         },
       },
     },
+    doNotCacheOrStoreInDatabase: {
+      name: 'do-not-cache-or-store-in-database',
+      description: 'If this flag is set to true, the component will reset the cache and database on every load and disconnect. Already existing data will be deleted.',
+      defaultValue: false,
+      control: {
+        type: 'boolean',
+      },
+      table: {
+        defaultValue: {
+          summary: 'false',
+        },
+        type: {
+          summary: 'boolean',
+        },
+      },
+    },
   },
   args: {
     value: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
@@ -158,6 +174,7 @@ const meta: Meta = {
     levelOfSubcomponents: 1,
     currentLevelOfSubcomponents: 0,
     defaultTTL: 24 * 60 * 60 * 1000,
+    doNotCacheOrStoreInDatabase: false,
   },
 };
 const textDecorator = (story: () => unknown) =>

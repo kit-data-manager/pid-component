@@ -53,6 +53,10 @@ export namespace Components {
          */
         "defaultTTL": number;
         /**
+          * If this flag is set to true, the component will reset the cache and database on every load and disconnect. Already existing data will be deleted.
+         */
+        "doNotCacheOrStoreInDatabase": boolean;
+        /**
           * Determines whether components should be emphasized towards their surrounding by border and shadow. If set to true, border and shadows will be shown around the component. It not set, the component won't be surrounded by border and shadow. (optional)
           * @type {boolean}
          */
@@ -168,6 +172,10 @@ declare namespace LocalJSX {
           * @default 24 * 60 * 60 * 1000
          */
         "defaultTTL"?: number;
+        /**
+          * If this flag is set to true, the component will reset the cache and database on every load and disconnect. Already existing data will be deleted.
+         */
+        "doNotCacheOrStoreInDatabase"?: boolean;
         /**
           * Determines whether components should be emphasized towards their surrounding by border and shadow. If set to true, border and shadows will be shown around the component. It not set, the component won't be surrounded by border and shadow. (optional)
           * @type {boolean}
