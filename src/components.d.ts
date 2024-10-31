@@ -6,23 +6,34 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
-    /**
-     * This component highlights a handle and links to the FAIR DO Scope.
-     * It automatically generates colors for the parts of the handle (prefix and suffix) to make them easily distinguishable.
-     */
-    interface HandleHighlight {
+    interface ColorHighlight {
         /**
-          * Whether the component should use the filled or the outlined design.
+          * The text to highlight.
+          * @type {string}
          */
-        "filled": boolean;
+        "text": string;
+    }
+    interface CopyButton {
         /**
-          * The Handle to highlight and link in this component.
+          * The value to copy to the clipboard.
+          * @type {string}
+          * @public
          */
-        "handle": string;
+        "value": string;
+    }
+    interface LocaleVisualization {
         /**
-          * An optional custom link to use instead of the default one which links to the FAIR DO Scope.
+          * The locale to visualize.
+          * @type {string}
+          * @public
          */
-        "linkTo": 'disable' | 'fairdoscope' | 'resolveRef';
+        "locale": string;
+        /**
+          * Whether to show the flag of the region.
+          * @type {boolean}
+          * @public
+         */
+        "showFlag": boolean;
     }
     interface PidComponent {
         /**
@@ -36,10 +47,11 @@ export namespace Components {
          */
         "currentLevelOfSubcomponents": number;
         /**
-          * Determines whether the cache should be deleted after the component on the top level is disconnected. Defaults to true. (optional)
-          * @type {boolean}
+          * Determines the default time to live (TTL) for entries in the IndexedDB. Defaults to 24 hours. Units are in milliseconds. (optional)
+          * @type {number}
+          * @default 24 * 60 * 60 * 1000
          */
-        "deleteCacheAfterDisconnect": boolean;
+        "defaultTTL": number;
         /**
           * Determines whether components should be emphasized towards their surrounding by border and shadow. If set to true, border and shadows will be shown around the component. It not set, the component won't be surrounded by border and shadow. (optional)
           * @type {boolean}
@@ -78,15 +90,23 @@ export namespace Components {
     }
 }
 declare global {
-    /**
-     * This component highlights a handle and links to the FAIR DO Scope.
-     * It automatically generates colors for the parts of the handle (prefix and suffix) to make them easily distinguishable.
-     */
-    interface HTMLHandleHighlightElement extends Components.HandleHighlight, HTMLStencilElement {
+    interface HTMLColorHighlightElement extends Components.ColorHighlight, HTMLStencilElement {
     }
-    var HTMLHandleHighlightElement: {
-        prototype: HTMLHandleHighlightElement;
-        new (): HTMLHandleHighlightElement;
+    var HTMLColorHighlightElement: {
+        prototype: HTMLColorHighlightElement;
+        new (): HTMLColorHighlightElement;
+    };
+    interface HTMLCopyButtonElement extends Components.CopyButton, HTMLStencilElement {
+    }
+    var HTMLCopyButtonElement: {
+        prototype: HTMLCopyButtonElement;
+        new (): HTMLCopyButtonElement;
+    };
+    interface HTMLLocaleVisualizationElement extends Components.LocaleVisualization, HTMLStencilElement {
+    }
+    var HTMLLocaleVisualizationElement: {
+        prototype: HTMLLocaleVisualizationElement;
+        new (): HTMLLocaleVisualizationElement;
     };
     interface HTMLPidComponentElement extends Components.PidComponent, HTMLStencilElement {
     }
@@ -95,28 +115,41 @@ declare global {
         new (): HTMLPidComponentElement;
     };
     interface HTMLElementTagNameMap {
-        "handle-highlight": HTMLHandleHighlightElement;
+        "color-highlight": HTMLColorHighlightElement;
+        "copy-button": HTMLCopyButtonElement;
+        "locale-visualization": HTMLLocaleVisualizationElement;
         "pid-component": HTMLPidComponentElement;
     }
 }
 declare namespace LocalJSX {
-    /**
-     * This component highlights a handle and links to the FAIR DO Scope.
-     * It automatically generates colors for the parts of the handle (prefix and suffix) to make them easily distinguishable.
-     */
-    interface HandleHighlight {
+    interface ColorHighlight {
         /**
-          * Whether the component should use the filled or the outlined design.
+          * The text to highlight.
+          * @type {string}
          */
-        "filled"?: boolean;
+        "text": string;
+    }
+    interface CopyButton {
         /**
-          * The Handle to highlight and link in this component.
+          * The value to copy to the clipboard.
+          * @type {string}
+          * @public
          */
-        "handle": string;
+        "value": string;
+    }
+    interface LocaleVisualization {
         /**
-          * An optional custom link to use instead of the default one which links to the FAIR DO Scope.
+          * The locale to visualize.
+          * @type {string}
+          * @public
          */
-        "linkTo"?: 'disable' | 'fairdoscope' | 'resolveRef';
+        "locale": string;
+        /**
+          * Whether to show the flag of the region.
+          * @type {boolean}
+          * @public
+         */
+        "showFlag"?: boolean;
     }
     interface PidComponent {
         /**
@@ -130,10 +163,11 @@ declare namespace LocalJSX {
          */
         "currentLevelOfSubcomponents"?: number;
         /**
-          * Determines whether the cache should be deleted after the component on the top level is disconnected. Defaults to true. (optional)
-          * @type {boolean}
+          * Determines the default time to live (TTL) for entries in the IndexedDB. Defaults to 24 hours. Units are in milliseconds. (optional)
+          * @type {number}
+          * @default 24 * 60 * 60 * 1000
          */
-        "deleteCacheAfterDisconnect"?: boolean;
+        "defaultTTL"?: number;
         /**
           * Determines whether components should be emphasized towards their surrounding by border and shadow. If set to true, border and shadows will be shown around the component. It not set, the component won't be surrounded by border and shadow. (optional)
           * @type {boolean}
@@ -171,7 +205,9 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     interface IntrinsicElements {
-        "handle-highlight": HandleHighlight;
+        "color-highlight": ColorHighlight;
+        "copy-button": CopyButton;
+        "locale-visualization": LocaleVisualization;
         "pid-component": PidComponent;
     }
 }
@@ -179,11 +215,9 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            /**
-             * This component highlights a handle and links to the FAIR DO Scope.
-             * It automatically generates colors for the parts of the handle (prefix and suffix) to make them easily distinguishable.
-             */
-            "handle-highlight": LocalJSX.HandleHighlight & JSXBase.HTMLAttributes<HTMLHandleHighlightElement>;
+            "color-highlight": LocalJSX.ColorHighlight & JSXBase.HTMLAttributes<HTMLColorHighlightElement>;
+            "copy-button": LocalJSX.CopyButton & JSXBase.HTMLAttributes<HTMLCopyButtonElement>;
+            "locale-visualization": LocalJSX.LocaleVisualization & JSXBase.HTMLAttributes<HTMLLocaleVisualizationElement>;
             "pid-component": LocalJSX.PidComponent & JSXBase.HTMLAttributes<HTMLPidComponentElement>;
         }
     }

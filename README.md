@@ -14,12 +14,12 @@ By default, it is set to 1, which means that it will only render the first level
 You can prohibit unfolding of the component by setting the `current-level-of-subcomponents` to the same value as
 the `level-of-subcomponents` property.
 
-To use the component, import the [npm-package](https://www.npmjs.com/package/@kit-data-manager/pid-component) via [unpkg](https://unpkg.com/):
+To use the component, import the [npm-package](https://www.npmjs.com/package/@kit-data-manager/pid-component)
+via [unpkg](https://unpkg.com/):
 
 ```html
-
 <head>
-  <script type='module' src='https://unpkg.com/@kit-data-manager/pid-component'></script>
+  <script type="module" src="https://unpkg.com/@kit-data-manager/pid-component"></script>
 </head>
 ```
 
@@ -33,7 +33,7 @@ Then, you can use this component like this:
 
 ```html
 
-<pid-component value='21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6'></pid-component>
+<pid-component value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"></pid-component>
 ```
 
 You can try this web component in the [demo](https://kit-data-manager.github.io/pid-component).

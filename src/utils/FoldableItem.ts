@@ -1,7 +1,8 @@
 import { Parser } from './Parser';
+import { renderers } from './utils';
 
 /**
- * This is a class that is used to represent every line in the pid-component.
+ * This is a class used to represent every line in the pid-component.
  */
 export class FoldableItem {
   /**
@@ -83,7 +84,7 @@ export class FoldableItem {
     this._valueRegex = valueRegex;
     this._renderDynamically = renderDynamically;
     // If the value shouldn't be rendered dynamically, the estimated type priority is the highest value possible (very unimportant information).
-    if (renderDynamically) this._estimatedTypePriority = Parser._dataTypes.length;
+    if (renderDynamically) this._estimatedTypePriority = renderers.length;
     else this._estimatedTypePriority = Parser.getEstimatedPriority(this._value);
   }
 

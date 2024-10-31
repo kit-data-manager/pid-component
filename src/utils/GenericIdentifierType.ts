@@ -16,30 +16,6 @@ export abstract class GenericIdentifierType {
   private readonly _value: string;
 
   /**
-   * The settings of the environment from which the settings for the component are extracted.
-   * @private
-   * @type {{name: string, value: any}[]}
-   */
-  private _settings: {
-    name: string;
-    value: any;
-  }[] = [];
-
-  /**
-   * The list of items that should be rendered in the component.
-   * @private
-   * @type {FoldableItem[]}
-   */
-  private _items: FoldableItem[] = [];
-
-  /**
-   * The list of actions that should be rendered in the component.
-   * @private
-   * @type {FoldableAction[]}
-   */
-  private _actions: FoldableAction[] = [];
-
-  /**
    * Creates a new GenericIdentifierType object
    * @param value The value that should be parsed and rendered
    * @constructor
@@ -58,12 +34,14 @@ export abstract class GenericIdentifierType {
   }
 
   /**
-   * Returns the value that should be parsed and rendered
-   * @returns {string} The value that should be parsed and rendered
+   * The settings of the environment from which the settings for the component are extracted.
+   * @private
+   * @type {{name: string, value: any}[]}
    */
-  get value(): string {
-    return this._value;
-  }
+  private _settings: {
+    name: string;
+    value: any;
+  }[] = [];
 
   /**
    * Returns the settings of the environment from which the settings for the component are extracted.
@@ -82,12 +60,26 @@ export abstract class GenericIdentifierType {
   }
 
   /**
+   * The list of items that should be rendered in the component.
+   * @private
+   * @type {FoldableItem[]}
+   */
+  private _items: FoldableItem[] = [];
+
+  /**
    * Returns the list of items that should be rendered in the component.
    * @returns {FoldableItem[]} The list of items that should be rendered in the component.
    */
   get items(): FoldableItem[] {
     return this._items;
   }
+
+  /**
+   * The list of actions that should be rendered in the component.
+   * @private
+   * @type {FoldableAction[]}
+   */
+  private _actions: FoldableAction[] = [];
 
   /**
    * Sets the list of items that should be rendered in the component.
@@ -98,21 +90,30 @@ export abstract class GenericIdentifierType {
   }
 
   /**
+   * Returns the value that should be parsed and rendered
+   * @returns {string} The value that should be parsed and rendered
+   */
+  get value(): string {
+    return this._value;
+  }
+
+  /**
+   * Returns the data that is being rendered in the component.
+   * By default, it returns undefined, which means that there is no meaningful data.
+   * @returns {any} The data that is needed for rendering the component.
+   */
+  get data(): any {
+    return undefined;
+  }
+
+  /**
    * This asynchronous method is called when the component is initialized.
    * It should be used to fetch data from external sources and generate the items and actions that should be rendered in the component.
    * It must be implemented by the child classes as it is abstract.
+   * @param data The data that is needed for rendering the component.
    * @abstract
    */
-  abstract init(): Promise<void>;
-
-  /**
-   * This method indicates if a value is resolvable or not.
-   * It could be used to resolve the value via an external API and check if the returned value is valid or even existing.
-   * It must be implemented by the child classes as it is abstract.
-   * @returns {boolean} Whether the value is resolvable or not.
-   * @abstract
-   */
-  abstract isResolvable(): boolean;
+  abstract init(data?: any): Promise<void>;
 
   /**
    * This method indicates if a value has the correct format or not.

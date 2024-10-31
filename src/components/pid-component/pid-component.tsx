@@ -1,13 +1,14 @@
-import {Component, Host, h, Prop, State, Watch} from '@stencil/core';
-import {GenericIdentifierType} from '../../utils/GenericIdentifierType';
-import {FoldableItem} from '../../utils/FoldableItem';
-import {FoldableAction} from '../../utils/FoldableAction';
-import {Parser} from '../../utils/Parser';
+import { Component, h, Host, Prop, State, Watch } from '@stencil/core';
+import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
+import { FoldableItem } from '../../utils/FoldableItem';
+import { FoldableAction } from '../../utils/FoldableAction';
+import { getEntity } from '../../utils/IndexedDBUtil';
+import { clearCache } from '../../utils/DataCache';
 
 @Component({
   tag: 'pid-component',
   styleUrl: 'pid-component.css',
-  shadow: true,
+  shadow: false,
 })
 export class PidComponent {
   /**
@@ -96,12 +97,14 @@ export class PidComponent {
   @Prop() showTopLevelCopy: boolean = true;
 
   /**
-   * Determines whether the cache should be deleted after the component on the top level is disconnected.
-   * Defaults to true.
+   * Determines the default time to live (TTL) for entries in the IndexedDB.
+   * Defaults to 24 hours.
+   * Units are in milliseconds.
    * (optional)
-   * @type {boolean}
+   * @type {number}
+   * @default 24 * 60 * 60 * 1000
    */
-  @Prop() deleteCacheAfterDisconnect: boolean = true;
+  @Prop() defaultTTL: number = 24 * 60 * 60 * 1000;
 
   /**
    * Stores the parsed identifier object.
@@ -156,7 +159,7 @@ export class PidComponent {
    */
   @Watch('loadSubcomponents')
   async watchLoadSubcomponents() {
-    this.temporarilyEmphasized = this.loadSubcomponents
+    this.temporarilyEmphasized = this.loadSubcomponents;
   }
 
   /**
@@ -174,16 +177,22 @@ export class PidComponent {
     try {
       settings = JSON.parse(this.settings);
     } catch (e) {
-      console.error("Failed to parse settings.", e)
+      console.error('Failed to parse settings.', e);
     }
+    settings.forEach(value => {
+      if (!value.values.some(v => v.name === 'ttl')) {
+        value.values.push({ name: 'ttl', value: this.defaultTTL });
+      }
+    });
 
-    // Get an object from the best fitting class implementing GenericIdentifierType
-    const obj = await Parser.getBestFit(this.value, settings);
-    this.identifierObject = obj;
+    // Get the renderer for the value
+    await getEntity(this.value, settings).then(renderer => {
+      this.identifierObject = renderer;
+    });
 
     // Generate items and actions if subcomponents should be shown
     if (!this.hideSubcomponents) {
-      this.items = obj.items;
+      this.items = this.identifierObject.items;
       this.items.sort((a, b) => {
         // Sort by priority defined in the specific implementation of GenericIdentifierType (lower is better)
         if (a.priority > b.priority) return 1;
@@ -193,95 +202,21 @@ export class PidComponent {
         if (a.estimatedTypePriority > b.estimatedTypePriority) return 1;
         if (a.estimatedTypePriority < b.estimatedTypePriority) return -1;
       });
-      this.actions = obj.actions;
+
+      this.actions = this.identifierObject.actions;
       this.actions.sort((a, b) => a.priority - b.priority);
     }
     this.displayStatus = 'loaded';
     console.log('Finished loading for ', this.value, this.identifierObject);
+    await clearCache();
   }
-
-  /**
-   * Toggles the loadSubcomponents property if the current level of subcomponents is not the total level of subcomponents.
-   */
-  private toggleSubcomponents = () => {
-    if (!this.hideSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) this.loadSubcomponents = !this.loadSubcomponents;
-  };
-
-  /**
-   * Shows the tooltip of the hovered element.
-   * @param event The event that triggered this function.
-   */
-  private showTooltip = (event: Event) => {
-    let target = event.target as HTMLElement;
-    do {
-      target = target.parentElement as HTMLElement;
-    } while (target !== null && target.tagName !== 'A');
-    if (target !== null) target.children[1].classList.remove('hidden');
-  };
-
-  /**
-   * Hides the tooltip of the hovered element.
-   * @param event The event that triggered this function.
-   */
-  private hideTooltip = (event: Event) => {
-    let target = event.target as HTMLElement;
-    do {
-      target = target.parentElement as HTMLElement;
-    } while (target !== null && target.tagName !== 'A');
-    if (target !== null) target.children[1].classList.add('hidden');
-  };
 
   /**
    * Renders the component.
    */
   render() {
-    /**
-     * Copies the given value to the clipboard and changes the text of the button to "✓ Copied!" for 1.5 seconds.
-     * @param event The event that triggered this function.
-     * @param value The value to copy to the clipboard.
-     */
-    function copyValue(event: MouseEvent, value: string) {
-      if ('clipboard' in navigator) {
-        // Use the Async Clipboard API when available.
-        navigator.clipboard.writeText(value).then(() => showSuccess());
-      } else {
-        // ...Otherwise, use document.execCommand() fallback.
-        const textArea = document.createElement('textarea');
-        textArea.value = value;
-        textArea.style.opacity = '0';
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        try {
-          const success = document.execCommand('copy');
-          console.log(`Deprecated Text copy was ${success ? 'successful' : 'unsuccessful'}.`);
-          showSuccess();
-        } catch (err) {
-          console.error(err.name, err.message);
-        }
-        document.body.removeChild(textArea);
-      }
-
-      /**
-       * Shows the success message for 1.5 seconds.
-       */
-      function showSuccess() {
-        const el = event.target as HTMLButtonElement;
-        el.innerText = '✓ Copied!';
-        el.classList.remove('hover:bg-blue-200');
-        el.classList.remove('bg-white');
-        el.classList.add('bg-green-200');
-        setTimeout(() => {
-          el.classList.remove('bg-green-200');
-          el.classList.add('hover:bg-blue-200');
-          el.classList.add('bg-white');
-          el.innerText = 'Copy';
-        }, 1500);
-      }
-    }
-
     return (
-      <Host class="inline flex-grow max-w-full font-sans flex-wrap align-top items-center text-xs">
+      <Host class="inline flex-grow max-w-full font-sans flex-wrap align-baseline items-center text-xs">
         {
           // Check if there are any items or actions to show
           (this.items.length === 0 && this.actions.length === 0) || this.hideSubcomponents ? (
@@ -290,39 +225,28 @@ export class PidComponent {
               <span
                 class={
                   this.currentLevelOfSubcomponents === 0
-                    //(w/o sub components)
-                    ? 'group ' + (this.emphasizeComponent || this.temporarilyEmphasized ? 'rounded-md shadow-md border px-1 bg-white ' : 'bg-white/40') + 'text-xs text-clip inline-flex flex-grow open:align-top open:w-full ease-in-out transition-all duration-200 overflow-y-hidden font-bold font-mono cursor-pointer list-none overflow-x-hidden space-x-3 flex-nowrap flex-shrink-0 items-center'
+                    ? //(w/o sub components)
+                      'group ' +
+                      (this.emphasizeComponent || this.temporarilyEmphasized ? 'rounded-md shadow-md border px-1 bg-white ' : 'bg-white/40') +
+                      'text-xs text-clip inline-flex flex-grow open:align-top open:w-full ease-in-out transition-all duration-200 overflow-y-hidden font-bold font-mono cursor-pointer list-none overflow-x-hidden space-x-3 flex-nowrap flex-shrink-0 items-center'
                     : ''
                 }
               >
                 <span class={'font-medium font-mono inline-flex flex-nowrap overflow-x-auto text-xs select-all'}>
-                    {
-                      // Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
-                      this.identifierObject.renderPreview()
-                    }
+                  {
+                    // Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
+                    this.identifierObject.renderPreview()
+                  }
                 </span>
                 {
                   // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
-                  this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy && this.emphasizeComponent ? (
-                    <button
-                      class={
-                        'ml-2 bg-white border border-slate-500 text-slate-800 font-medium text-xs font-mono rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 flex-none max-h-min items-center'
-                      }
-                      id={`copyButton-${this.identifierObject.value}`}
-                      onClick={event => copyValue(event, this.identifierObject.value)}
-                    >
-                      Copy
-                    </button>
-                  ) : (
-                    ''
-                  )
+                  this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy && this.emphasizeComponent ? <copy-button value={this.identifierObject.value} /> : ''
                 }
               </span>
             ) : (
               <span class={'inline-flex items-center transition ease-in-out'}>
-                <svg class="animate-spin ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none"
-                     viewBox="0 0 24 24">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                <svg class="animate-spin ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
                   <path
                     class="opacity-75"
                     fill="currentColor"
@@ -335,17 +259,17 @@ export class PidComponent {
           ) : (
             <details
               class={
-                'group ' + (this.emphasizeComponent || this.temporarilyEmphasized ? 'rounded-md border pl-0.5 py-0 bg-white bg-opacity-0' : 'bg-white/60') + 'text-clip inline flex-grow font-sans open:align-top open:w-full ease-in-out transition-all duration-200'
+                'group ' +
+                (this.emphasizeComponent || this.temporarilyEmphasized ? 'rounded-md border pl-0.5 py-0 bg-white bg-opacity-0' : 'bg-white/60') +
+                'text-clip inline flex-grow font-sans open:align-top open:w-full ease-in-out transition-all duration-200'
               }
               open={this.openByDefault}
               onToggle={this.toggleSubcomponents}
             >
-              <summary
-                class="overflow-y-hidden font-bold font-mono cursor-pointer list-none overflow-x-hidden inline-flex flex-nowrap flex-shrink-0 items-center">
+              <summary class="overflow-y-hidden font-bold font-mono cursor-pointer list-none overflow-x-hidden inline-flex flex-nowrap flex-shrink-0 items-center">
                 <span class={'inline-flex flex-nowrap overflow-x-auto pr-1 items-center'}>
-                  {
-                    this.emphasizeComponent || this.temporarilyEmphasized ? (
-                      <span class={'flex-shrink-0 pr-1'}>
+                  {this.emphasizeComponent || this.temporarilyEmphasized ? (
+                    <span class={'flex-shrink-0 pr-1'}>
                       <svg
                         class="transition group-open:-rotate-180"
                         fill="none"
@@ -361,8 +285,9 @@ export class PidComponent {
                         <path d="M 2 3 l 4 6 l 4 -6"></path>
                       </svg>
                     </span>
-                    ) : ('')
-                  }
+                  ) : (
+                    ''
+                  )}
                   <span class={'font-medium font-mono inline-flex flex-nowrap overflow-x-auto text-sm select-all'}>
                     {
                       // Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
@@ -373,14 +298,7 @@ export class PidComponent {
                 {
                   // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
                   this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy && (this.emphasizeComponent || this.temporarilyEmphasized) ? (
-                    <button
-                      class={
-                        'bg-white border border-slate-500 text-slate-500 font-medium text-xs font-mono rounded-md px-1 py-0.5 hover:bg-blue-200 hover:text-slate-900 flex-none max-h-min items-center'
-                      }
-                      onClick={event => copyValue(event, this.identifierObject.value)}
-                    >
-                      Copy
-                    </button>
+                    <copy-button value={this.identifierObject.value} />
                   ) : (
                     ''
                   )
@@ -390,25 +308,23 @@ export class PidComponent {
                 // If there are any items to show, render the table
                 this.items.length > 0 ? (
                   <div>
-                    <div
-                      class="resize-y divide-y text-sm leading-6 bg-gray-100 m-1 p-0.5 h-64 max-h-fit overflow-y-scroll border rounded min-h-[4rem]">
+                    <div class="resize-y divide-y text-sm leading-6 bg-gray-100 m-1 p-0.5 h-64 max-h-fit overflow-y-scroll border rounded min-h-[4rem]">
                       <table class="text-left w-full text-sm font-sans select-text">
                         <thead class="bg-slate-600 flex text-slate-200 w-full rounded-t">
-                        <tr class="flex w-full rounded font-semibold">
-                          <th class="px-1 w-1/4">Key</th>
-                          <th class="px-1 w-3/4">Value</th>
-                        </tr>
+                          <tr class="flex w-full rounded font-semibold">
+                            <th class="px-1 w-1/4">Key</th>
+                            <th class="px-1 w-3/4">Value</th>
+                          </tr>
                         </thead>
-                        <tbody
-                          class="bg-grey-100 flex flex-col items-center justify-between overflow-y-scroll w-full rounded-b">
-                        {this.items
-                          .filter((_, index) => {
-                            // Filter out items that are not on the current page
-                            return index >= this.tablePage * this.amountOfItems && index < this.tablePage * this.amountOfItems + this.amountOfItems;
-                          })
-                          .map(value => {
-                            // Render a row for every item
-                            return (
+                        <tbody class="bg-grey-100 flex flex-col items-center justify-between overflow-y-scroll w-full rounded-b">
+                          {this.items
+                            .filter((_, index) => {
+                              // Filter out items that are not on the current page
+                              return index >= this.tablePage * this.amountOfItems && index < this.tablePage * this.amountOfItems + this.amountOfItems;
+                            })
+                            .map(value => (
+                              // Render a row for every item
+                              // return (
                               <tr class={'odd:bg-slate-200 flex w-full'}>
                                 <td class={'overflow-x-auto p-1 w-1/4 font-mono'}>
                                   <a
@@ -419,8 +335,7 @@ export class PidComponent {
                                     onMouseOut={this.hideTooltip}
                                   >
                                     <div class="cursor-pointer align-top justify-between flex-nowrap">
-                                      <a href={value.keyLink} target={'_blank'} rel={'noopener noreferrer'}
-                                         class={'mr-2 text-blue-400 justify-start float-left'}>
+                                      <a href={value.keyLink} target={'_blank'} rel={'noopener noreferrer'} class={'mr-2 text-blue-400 justify-start float-left'}>
                                         {value.keyTitle}
                                       </a>
                                       <svg
@@ -436,10 +351,10 @@ export class PidComponent {
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
                                       >
-                                        <path stroke="none" d="M0 0h24v24H0z"/>
-                                        <circle cx="12" cy="12" r="9"/>
-                                        <line x1="12" y1="8" x2="12.01" y2="8"/>
-                                        <polyline points="11 12 12 12 12 16 13 16"/>
+                                        <path stroke="none" d="M0 0h24v24H0z" />
+                                        <circle cx="12" cy="12" r="9" />
+                                        <line x1="12" y1="8" x2="12.01" y2="8" />
+                                        <polyline points="11 12 12 12 12 16 13 16" />
                                       </svg>
                                     </div>
                                     <p
@@ -451,58 +366,48 @@ export class PidComponent {
                                   </a>
                                 </td>
                                 <td class={'align-top overflow-x-auto text-sm p-1 w-3/4 select-text flex '}>
-                                    <span class={'flex-grow'}>
-                                      {
-                                        // Load a foldable subcomponent if subcomponents are not disabled (hideSubcomponents), and the current level of subcomponents is not the total level of subcomponents. If the subcomponent is on the bottom level of the hierarchy, render just a preview. If the value should not be resolved (isFoldable), just render the value as text.
-                                        this.loadSubcomponents && !this.hideSubcomponents && !value.renderDynamically ? (
-                                          <pid-component
-                                            value={value.value}
-                                            levelOfSubcomponents={this.levelOfSubcomponents}
-                                            // emphasizeComponent={this.emphasizeComponent}
-                                            currentLevelOfSubcomponents={this.currentLevelOfSubcomponents + 1}
-                                            amountOfItems={this.amountOfItems}
-                                            settings={this.settings}
-                                          />
-                                        ) : !this.hideSubcomponents && this.currentLevelOfSubcomponents === this.levelOfSubcomponents && !value.renderDynamically ? (
-                                          <pid-component
-                                            value={value.value}
-                                            levelOfSubcomponents={this.currentLevelOfSubcomponents}
-                                            // emphasizeComponent={this.emphasizeComponent}
-                                            currentLevelOfSubcomponents={this.currentLevelOfSubcomponents}
-                                            amountOfItems={this.amountOfItems}
-                                            settings={this.settings}
-                                            hideSubcomponents={true}
-                                          />
-                                        ) : (
-                                          value.value
-                                        )
-                                      }
-                                    </span>
-                                  <button
-                                    class={
-                                      'bg-white border border-slate-500 text-slate-800 font-medium text-xs font-mono rounded-md px-2 py-0.5 hover:bg-blue-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex-none h-7 align-top mx-2'
+                                  <span class={'flex-grow'}>
+                                    {
+                                      // Load a foldable subcomponent if subcomponents are not disabled (hideSubcomponents), and the current level of subcomponents is not the total level of subcomponents. If the subcomponent is on the bottom level of the hierarchy, render just a preview. If the value should not be resolved (isFoldable), just render the value as text.
+                                      this.loadSubcomponents && !this.hideSubcomponents && !value.renderDynamically ? (
+                                        <pid-component
+                                          value={value.value}
+                                          levelOfSubcomponents={this.levelOfSubcomponents}
+                                          // emphasizeComponent={this.emphasizeComponent}
+                                          currentLevelOfSubcomponents={this.currentLevelOfSubcomponents + 1}
+                                          amountOfItems={this.amountOfItems}
+                                          settings={this.settings}
+                                        />
+                                      ) : !this.hideSubcomponents && this.currentLevelOfSubcomponents === this.levelOfSubcomponents && !value.renderDynamically ? (
+                                        <pid-component
+                                          value={value.value}
+                                          levelOfSubcomponents={this.currentLevelOfSubcomponents}
+                                          // emphasizeComponent={this.emphasizeComponent}
+                                          currentLevelOfSubcomponents={this.currentLevelOfSubcomponents}
+                                          amountOfItems={this.amountOfItems}
+                                          settings={this.settings}
+                                          hideSubcomponents={true}
+                                        />
+                                      ) : (
+                                        <span class={'font-mono text-sm'}>{value.value}</span>
+                                      )
                                     }
-                                    onClick={event => copyValue(event, value.value)}
-                                  >
-                                    Copy
-                                  </button>
+                                  </span>
+                                  <copy-button value={value.value} />
                                 </td>
                               </tr>
-                            );
-                          })}
+                            ))}
                         </tbody>
                       </table>
                     </div>
-                    <div
-                      class="flex items-center justify-between border-t border-gray-200 bg-white px-1 py-1 sm:px-1 max-h-12">
+                    <div class="flex items-center justify-between border-t border-gray-200 bg-white px-1 py-1 sm:px-1 max-h-12">
                       <div class="hidden sm:flex sm:flex-1 sm:flex-nowrap sm:items-center sm:justify-between text-sm">
                         <div class={''}>
                           <p class="text-sm text-gray-700">
                             Showing
                             <span class="font-medium"> {1 + this.tablePage * this.amountOfItems} </span>
                             to
-                            <span
-                              class="font-medium"> {Math.min(this.tablePage * this.amountOfItems + this.amountOfItems, this.items.length)} </span>
+                            <span class="font-medium"> {Math.min(this.tablePage * this.amountOfItems + this.amountOfItems, this.items.length)} </span>
                             of
                             <span class="font-medium"> {this.items.length} </span>
                             entries
@@ -603,8 +508,34 @@ export class PidComponent {
     );
   }
 
-  disconnectedCallback() {
-    console.log('Disconnected');
-    if (this.deleteCacheAfterDisconnect && caches && this.currentLevelOfSubcomponents === 0) caches.delete('pid-component').then(() => console.log('Cache deleted'));
-  }
+  /**
+   * Toggles the loadSubcomponents property if the current level of subcomponents is not the total level of subcomponents.
+   */
+  private toggleSubcomponents = () => {
+    if (!this.hideSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) this.loadSubcomponents = !this.loadSubcomponents;
+  };
+
+  /**
+   * Shows the tooltip of the hovered element.
+   * @param event The event that triggered this function.
+   */
+  private showTooltip = (event: Event) => {
+    let target = event.target as HTMLElement;
+    do {
+      target = target.parentElement as HTMLElement;
+    } while (target !== null && target.tagName !== 'A');
+    if (target !== null) target.children[1].classList.remove('hidden');
+  };
+
+  /**
+   * Hides the tooltip of the hovered element.
+   * @param event The event that triggered this function.
+   */
+  private hideTooltip = (event: Event) => {
+    let target = event.target as HTMLElement;
+    do {
+      target = target.parentElement as HTMLElement;
+    } while (target !== null && target.tagName !== 'A');
+    if (target !== null) target.children[1].classList.add('hidden');
+  };
 }

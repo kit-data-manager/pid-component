@@ -1,28 +1,10 @@
 import { GenericIdentifierType } from './GenericIdentifierType';
-import { HandleType } from './HandleType';
-import { FallbackType } from './FallbackType';
-import { ORCIDType } from './ORCIDType';
-import { DateType } from './DateType';
-import { URLType } from './URLType';
-import { EmailType } from "./EmailType";
+import { renderers } from './utils';
 
 /**
  * Class that handles the parsing of a given value and returns the best fitting component object
  */
 export class Parser {
-  /**
-   * Array of all component objects that can be used to parse a given value, ordered by priority (lower is better)
-   * @type {(new(value: string, settings?: {name: string, value: any}[]) => GenericIdentifierType)[]}
-   * @private
-   */
-  static readonly _dataTypes: (new (
-    value: string,
-    settings?: {
-      name: string;
-      value: any;
-    }[],
-  ) => GenericIdentifierType)[] = [DateType, ORCIDType, HandleType, EmailType, URLType, FallbackType];
-
   /**
    * Returns the priority of the best fitting component object for a given value (lower is better)
    * @param value String value to parse and evaluate
@@ -30,8 +12,8 @@ export class Parser {
    */
   static getEstimatedPriority(value: string): number {
     let priority = 0;
-    for (let i = 0; i < this._dataTypes.length; i++) {
-      const obj = new this._dataTypes[i](value);
+    for (let i = 0; i < renderers.length; i++) {
+      const obj = new renderers[i].constructor(value);
       if (obj.hasCorrectFormat()) {
         priority = i;
         break;
@@ -57,11 +39,11 @@ export class Parser {
     }[],
   ): Promise<GenericIdentifierType> {
     // default to fallback
-    let bestFit = new this._dataTypes[this._dataTypes.length - 1](value);
+    let bestFit = new renderers[renderers.length - 1].constructor(value);
 
     // find best fit in _dataTypes array with the highest priority (lowest index has highest priority) and correct format
-    for (let i = this._dataTypes.length - 1; i >= 0; i--) {
-      const obj = new this._dataTypes[i](value);
+    for (let i = renderers.length - 1; i >= 0; i--) {
+      const obj = new renderers[i].constructor(value);
       if (obj.hasCorrectFormat()) bestFit = obj;
     }
 
@@ -70,7 +52,9 @@ export class Parser {
       const settingsKey = bestFit.getSettingsKey();
       const settingsValues = settings.find(value => value.type === settingsKey)?.values;
       if (settingsValues) bestFit.settings = settingsValues;
-    } catch (_) {}
+    } catch (e) {
+      console.warn('Error while adding settings to object:', e);
+    }
 
     // initialize and return the object
     await bestFit.init();

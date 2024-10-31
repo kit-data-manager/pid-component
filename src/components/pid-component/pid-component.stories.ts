@@ -27,7 +27,7 @@ const meta: Meta = {
       },
       table: {
         defaultValue: {
-          summary: "false",
+          summary: 'false',
         },
         type: {
           summary: 'boolean',
@@ -43,7 +43,7 @@ const meta: Meta = {
       },
       table: {
         defaultValue: {
-          summary: "10",
+          summary: '10',
         },
         type: {
           summary: 'number',
@@ -53,14 +53,14 @@ const meta: Meta = {
     hideSubcomponents: {
       name: 'hide-subcomponents',
       description:
-        'Determines whether subcomponents should generally be shown or not. If set to true, the component won\'t show any subcomponents. If not set, the component will show subcomponents, if the current level of subcomponents is not the total level of subcomponents or greater.',
+        "Determines whether subcomponents should generally be shown or not. If set to true, the component won't show any subcomponents. If not set, the component will show subcomponents, if the current level of subcomponents is not the total level of subcomponents or greater.",
       defaultValue: false,
       control: {
         type: 'boolean',
       },
       table: {
         defaultValue: {
-          summary: "false",
+          summary: 'false',
         },
         type: {
           summary: 'boolean',
@@ -69,15 +69,14 @@ const meta: Meta = {
     },
     emphasizeComponent: {
       name: 'emphasize-component',
-      description:
-        'Determines whether components should be emphasized towards their surrounding by border and shadow.',
+      description: 'Determines whether components should be emphasized towards their surrounding by border and shadow.',
       defaultValue: true,
       control: {
         type: 'boolean',
       },
       table: {
         defaultValue: {
-          summary: "true",
+          summary: 'true',
         },
         type: {
           summary: 'boolean',
@@ -86,15 +85,14 @@ const meta: Meta = {
     },
     showTopLevelCopy: {
       name: 'show-top-level-copy',
-      description:
-        ' Determines whether on the top level the copy button is shown.',
+      description: ' Determines whether on the top level the copy button is shown.',
       defaultValue: true,
       control: {
         type: 'boolean',
       },
       table: {
         defaultValue: {
-          summary: "true",
+          summary: 'true',
         },
         type: {
           summary: 'boolean',
@@ -110,7 +108,7 @@ const meta: Meta = {
       },
       table: {
         defaultValue: {
-          summary: "1",
+          summary: '1',
         },
         type: {
           summary: 'number',
@@ -126,26 +124,26 @@ const meta: Meta = {
       },
       table: {
         defaultValue: {
-          summary: "0",
+          summary: '0',
         },
         type: {
           summary: 'number',
         },
       },
     },
-    deleteCacheAfterDisconnect: {
-      name: 'delete-cache-after-disconnect',
-      description: 'Determines whether the cache should be deleted after the top level component is disconnected from the DOM.',
-      defaultValue: true,
+    defaultTTL: {
+      name: 'default-TTL',
+      description: 'The default TTL for entries in the IndexedDB. Is used if no TTL is set in the settings.',
+      defaultValue: 24 * 60 * 60 * 1000,
       control: {
-        type: 'boolean',
+        type: 'number',
       },
       table: {
         defaultValue: {
-          summary: "true",
+          summary: '24*60*60*1000',
         },
         type: {
-          summary: 'boolean',
+          summary: 'number',
         },
       },
     },
@@ -159,21 +157,16 @@ const meta: Meta = {
     emphasizeComponent: true,
     levelOfSubcomponents: 1,
     currentLevelOfSubcomponents: 0,
-    deleteCacheAfterDisconnect: false,
+    defaultTTL: 24 * 60 * 60 * 1000,
   },
 };
-const textDecorator = story =>
-  html`<p class='items-center align-middle'>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-    ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
-    esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-    occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. ${story()} Lorem
-    ipsum dolor sit amet, consectetur adipiscing elit, sed do
-    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-    ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis
-    aute ${story()} irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+const textDecorator = (story: () => unknown) =>
+  html`<p class="items-center align-middle">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+    ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+    occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. ${story()} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis
+    aute ${story()} irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
     officia deserunt mollit anim id est laborum.
   </p>`;
 export default meta;
@@ -280,7 +273,7 @@ export const Email: Story = {
   },
 };
 
-export const commaSeperatedMails: Story = {
+export const CommaSeperatedMails: Story = {
   args: {
     value: 'someone@example.com, john.doe@demo.example',
   },
@@ -338,7 +331,7 @@ export const ORCIDInRecordWithoutLimit = {
 export const ORCIDInRecordWithSettings = {
   args: {
     value: '21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6',
-    settings: '[{"type":"ORCIDConfig","values":[{"name":"affiliationAt","value":949363200000},{"name":"showAffiliation","value":true}]}]',
+    settings: '[{"type":"ORCIDType","values":[{"name":"affiliationAt","value":949363200000},{"name":"showAffiliation","value":true}]}]',
   },
   parameters: {
     docs: {
