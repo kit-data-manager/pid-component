@@ -11,7 +11,7 @@ export class LocaleType extends GenericIdentifierType {
   }
 
   hasCorrectFormat(): boolean {
-    const regex = /^[a-z]{2}(-[A-Z]{2})?$/;
+    const regex = /^([a-zA-Z]{2})(-[A-Z]{2})?$/;
     return regex.test(this.value);
   }
 

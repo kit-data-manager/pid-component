@@ -419,3 +419,19 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     },
   },
 };
+
+export const TypedPIDMakerExampleText: Story = {
+  args: {
+    value: '21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6',
+  },
+  decorators: [
+    (story: () => unknown) => html`
+      <p class="align-middle items-center w-1/3">
+        The Typed PID Maker is an entry point to integrate digital resources into the FAIR Digital Object (FAIR DO) ecosystem. It allows creating PIDs for resources and to provide
+        them with the necessary metadata to ensure that the resources can be found and understood. <br />
+        As a result, a machine-readable representation of all kinds of research artifacts allows act on such FAIR Digital Objects which present themselves as PID, e.g., ${story()},
+        but carry much more than just a pointer to a landing page.
+      </p>
+    `,
+  ],
+};

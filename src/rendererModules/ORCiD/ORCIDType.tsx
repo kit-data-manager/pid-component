@@ -65,19 +65,25 @@ export class ORCIDType extends GenericIdentifierType {
 
     // Generate items and actions
     this.items.push(
-      ...[
-        new FoldableItem(
-          0,
-          'ORCiD',
-          this._orcidInfo.orcid,
-          'ORCiD is a free service for researchers to distinguish themselves by creating a unique personal identifier.',
-          'https://orcid.org',
-          undefined,
-          true,
-        ),
-        new FoldableItem(1, 'Family Name', this._orcidInfo.familyName, 'The family name of the person.'),
-      ],
+      new FoldableItem(
+        0,
+        'ORCiD',
+        this._orcidInfo.orcid,
+        'ORCiD is a free service for researchers to distinguish themselves by creating a unique personal identifier.',
+        'https://orcid.org',
+        undefined,
+        true,
+      ),
     );
+
+    try {
+      const familyName = this._orcidInfo.familyName;
+      if (familyName) {
+        new FoldableItem(1, 'Family Name', this._orcidInfo.familyName, 'The family name of the person.');
+      }
+    } catch (e) {
+      console.log('Failed to obtain family name from ORCiD record.', e);
+    }
 
     try {
       const givenNames = this._orcidInfo.givenNames;
@@ -139,9 +145,7 @@ export class ORCIDType extends GenericIdentifierType {
 
       // If there are other e-mail addresses, generate an item with a list of them
       if (other.length > 0)
-        this.items.push(
-          new FoldableItem(70, 'Other E-Mail addresses', other.map(email => email.email).join(', '), 'All other e-mail addresses of the person.', undefined, undefined, false),
-        );
+        this.items.push(new FoldableItem(70, 'Other E-Mail addresses', other.map(email => email.email).join(', '), 'All other e-mail addresses of the person.'));
 
       if (this._orcidInfo.preferredLocale)
         this.items.push(new FoldableItem(25, 'Preferred Language', this._orcidInfo.preferredLocale, 'The preferred locale/language of the person.'));

@@ -296,9 +296,22 @@ export class ORCIDInfo {
     });
     // .then(response => response.json());
 
-    // Parse family name and given names
-    const familyName = rawOrcidJSON['person']['name']['family-name']['value'];
-    const givenNames = rawOrcidJSON['person']['name']['given-names']['value'];
+    let familyName = '';
+    let givenNames = [];
+
+    try {
+      familyName = rawOrcidJSON['person']['name']['family-name']['value'];
+    } catch (e) {
+      console.debug(e);
+    }
+
+    try {
+      givenNames = rawOrcidJSON['person']['name']['given-names']['value'];
+    } catch (e) {
+      console.debug(e);
+    }
+    // const familyName = rawOrcidJSON['person']['name']['family-name']['value'] ? rawOrcidJSON['person']['name']['family-name']['value'] : '';
+    // const givenNames = rawOrcidJSON['person']['name']['given-names']['value'] ? rawOrcidJSON['person']['name']['given-names']['value'] : '';
 
     // Parse employments, if available
     const affiliations = rawOrcidJSON['activities-summary']['employments']['affiliation-group'];
