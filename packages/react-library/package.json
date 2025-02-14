@@ -1,0 +1,39 @@
+{
+  "name": "@kit-data-manager/react-pid-component",
+  "version": "0.0.0",
+  "description": "React wrapper for the package @kit-data-manager/pid-component",
+  "author": "Christopher Raquet <christopher.raquet@kit.edu>",
+  "homepage": "https://github.com/kit-data-manager/pid-component#readme",
+  "license": "Apache-2.0",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/types/index.d.ts",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kit-data-manager/pid-component.git"
+  },
+  "scripts": {
+    "build": "npm run tsc",
+    "tsc": "tsc -p . --outDir ./dist"
+  },
+  "bugs": {
+    "url": "https://github.com/kit-data-manager/pid-component/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@stencil/react-output-target": "^0.8.2",
+    "@kit-data-manager/pid-component": "*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}

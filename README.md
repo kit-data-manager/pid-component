@@ -42,7 +42,7 @@ You can try this web component in the [demo](https://kit-data-manager.github.io/
 
 There are detailed docs for the `pid-component` component
 available [in the Storybook](https://kit-data-manager.github.io/pid-component) and in
-the [source code](src/components/pid-component/readme.md).
+the [source code](packages/stencil-library/src/components/pid-component/readme.md).
 
 **Please notice that you must use the hyphenated version of an attribute when using the component directly in HTML (
 e.g. `currentLevelOfSubcomponents` -> `current-level-of-subcomponents`).
