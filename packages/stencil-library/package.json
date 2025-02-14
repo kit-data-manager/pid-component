@@ -95,11 +95,11 @@
     "generate": "stencil generate",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "storybook-docs": "node_modules/.bin/storybook dev --docs",
-    "lint": "node_modules/.bin/eslint .",
-    "lint:fix": "node_modules/.bin/eslint --fix .",
-    "format": "node_modules/.bin/prettier --write \"**/*.{js,jsx,ts,tsx,json,md,mdx}\"",
-    "format:check": "node_modules/.bin/prettier --check \"**/*.{js,jsx,ts,tsx,json,md,mdx}\""
+    "storybook-docs": "storybook dev --docs",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,mdx}\"",
+    "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,md,mdx}\""
   },
   "dependencies": {
     "@stencil/core": "^4.22.2",

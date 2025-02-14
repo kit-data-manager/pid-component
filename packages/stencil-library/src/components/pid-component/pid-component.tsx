@@ -35,7 +35,7 @@ export class PidComponent {
    * ```
    * @type {string}
    */
-  @Prop() settings: string;
+  @Prop() settings: string = '[]';
 
   /**
    * Determines whether the component is open or not by default.
@@ -151,7 +151,7 @@ export class PidComponent {
   async watchValue() {
     this.displayStatus = 'loading';
     // this.identifierObject = undefined;
-    await this.connectedCallback();
+    await this.componentWillLoad();
   }
 
   /**
@@ -165,14 +165,14 @@ export class PidComponent {
   /**
    * Parses the value and settings, generates the items and actions and sets the displayStatus to "loaded".
    */
-  async connectedCallback() {
+  async componentWillLoad() {
     let settings: {
       type: string;
       values: {
         name: string;
         value: any;
       }[];
-    }[];
+    }[] = [];
 
     try {
       settings = JSON.parse(this.settings);
@@ -186,9 +186,7 @@ export class PidComponent {
     });
 
     // Get the renderer for the value
-    await getEntity(this.value, settings).then(renderer => {
-      this.identifierObject = renderer;
-    });
+    this.identifierObject = await getEntity(this.value, settings);
 
     // Generate items and actions if subcomponents should be shown
     if (!this.hideSubcomponents) {
