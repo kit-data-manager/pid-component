@@ -48,18 +48,35 @@ the [source code](packages/stencil-library/src/components/pid-component/readme.m
 e.g. `currentLevelOfSubcomponents` -> `current-level-of-subcomponents`).
 When using inside Stencil or with JSX/TSX syntax, you must use the camelCase version.**
 
+## Monorepo
+
+This is a monorepo containing the following packages:
+
+ - stencil-library (@kit-data-manager/pid-component)
+ - react-library (@kit-data-manager/react-pid-component)
+
+[Lerna](https://lerna.js.org) is used for managing and building the packages (but you can also do it manually). To use, install Lerna:
+
+    npm install --global lerna
+
+and then use it to build the packages:
+
+    lerna run build
+
+It will make sure to build the packages in the correct order.
+
 ## How to run when developing
 
 1. Clone the repo
 2. Run `npm install`
 
-For running storybook in dev mode, run these commands in separate terminals:
+For running storybook in dev mode, navigate to `packages/stencil-library` and run these commands in separate terminals:
 
 - `npm run buildWatch`
 - `npm run storybook`
 
 Attention: Do **NOT** run `npm run start`. It will cause the storybook to not work properly.
-If you did run `npm run start`, delete the following folders and run `npm install` again:
+If you did run `npm run start`, delete the following folders (in `packages/stencil-library`) and run `npm install` again:
 
 - `node_modules`
 - `www`

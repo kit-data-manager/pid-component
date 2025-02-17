@@ -5,7 +5,7 @@ title: '@kit-data-manager/pid-component'
 abstract: The PID-Component is a web component that can be used to evaluate and display
   FAIR Digital Objects, PIDs, ORCiDs, and possibly other identifiers in a user-friendly
   way. It is easily extensible to support other identifier types.
-version: 0.1.3
+version: 0.1.4
 keywords:
 - stencil
 - webcomponent
@@ -24,25 +24,30 @@ keywords:
 - fairdo
 - fairdigitalobject
 authors:
-- email: maximilian.inckmann@kit.edu
-  affiliation: Karlsruhe Institute of Technology (KIT)
+- affiliation: Karlsruhe Institute of Technology (KIT)
   orcid: https://orcid.org/0009-0005-2800-4833
+  email: maximilian.inckmann@kit.edu
   family-names: Inckmann
   given-names: Maximilian
-- email: andreas.pfeil@kit.edu
-  affiliation: Karlsruhe Institute of Technology (KIT)
+- affiliation: Karlsruhe Institute of Technology (KIT)
   orcid: https://orcid.org/0000-0001-6575-1022
+  email: andreas.pfeil@kit.edu
   family-names: Pfeil
   given-names: Andreas
-- orcid: https://orcid.org/0000-0003-2804-688X
+- affiliation: Karlsruhe Institute of Technology (KIT)
+  orcid: https://orcid.org/0000-0003-2804-688X
   email: thomas.jejkal@kit.edu
   family-names: Jejkal
-  affiliation: Karlsruhe Institute of Technology (KIT)
   given-names: Thomas
+- affiliation: Karlsruhe Institute of Technology (KIT)
+  family-names: Raquet
+  orcid: https://orcid.org/0009-0003-2196-9187
+  given-names: Christopher
+  email: christopher.raquet@kit.edu
 contact:
-- email: maximilian.inckmann@kit.edu
-  affiliation: Karlsruhe Institute of Technology (KIT)
+- affiliation: Karlsruhe Institute of Technology (KIT)
   orcid: https://orcid.org/0009-0005-2800-4833
+  email: maximilian.inckmann@kit.edu
   family-names: Inckmann
   given-names: Maximilian
 license: Apache-2.0

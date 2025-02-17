@@ -1,0 +1,56 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it using these metadata.
+type: software
+title: '@kit-data-manager/react-pid-component'
+abstract: React wrapper for the package @kit-data-manager/pid-component
+version: 0.1.4
+keywords:
+- react
+- pid
+- datatyperegistry
+- handle.net
+- orcid
+- identifier
+- kit-data-manager
+- typescript
+- storybook
+- tailwindcss
+- fair
+- fairdata
+- fairdo
+- fairdigitalobject
+authors:
+- given-names: Christopher
+  affiliation: Karlsruhe Institute of Technology (KIT)
+  email: christopher.raquet@kit.edu
+  family-names: Raquet
+  orcid: https://orcid.org/0009-0003-2196-9187
+- given-names: Maximilian
+  affiliation: Karlsruhe Institute of Technology (KIT)
+  email: maximilian.inckmann@kit.edu
+  family-names: Inckmann
+  orcid: https://orcid.org/0009-0005-2800-4833
+- given-names: Andreas
+  affiliation: Karlsruhe Institute of Technology (KIT)
+  email: andreas.pfeil@kit.edu
+  family-names: Pfeil
+  orcid: https://orcid.org/0000-0001-6575-1022
+- given-names: Thomas
+  affiliation: Karlsruhe Institute of Technology (KIT)
+  email: thomas.jejkal@kit.edu
+  family-names: Jejkal
+  orcid: https://orcid.org/0000-0003-2804-688X
+contact:
+- given-names: Christopher
+  affiliation: Karlsruhe Institute of Technology (KIT)
+  email: christopher.raquet@kit.edu
+  family-names: Raquet
+  orcid: https://orcid.org/0009-0003-2196-9187
+- given-names: Maximilian
+  affiliation: Karlsruhe Institute of Technology (KIT)
+  email: maximilian.inckmann@kit.edu
+  family-names: Inckmann
+  orcid: https://orcid.org/0009-0005-2800-4833
+license: Apache-2.0
+url: https://kit-data-manager.github.io/pid-component
+repository-code: https://github.com/kit-data-manager/pid-component
