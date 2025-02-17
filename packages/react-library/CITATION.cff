@@ -3,7 +3,7 @@ message: If you use this software, please cite it using these metadata.
 type: software
 title: '@kit-data-manager/react-pid-component'
 abstract: React wrapper for the package @kit-data-manager/pid-component
-version: 0.1.4
+version: 0.1.5
 keywords:
 - react
 - pid
