@@ -15,6 +15,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: npm clean-install
       - run: npx lerna run build
+      - run: cp README.md packages/stencil-library
       - run: npx lerna publish from-package --yes
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
