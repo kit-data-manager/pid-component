@@ -1,0 +1,150 @@
+{
+  "name": "@kit-data-manager/pid-component",
+  "version": "0.1.4",
+  "license": "Apache-2.0",
+  "description": "The PID-Component is a web component that can be used to evaluate and display FAIR Digital Objects, PIDs, ORCiDs, and possibly other identifiers in a user-friendly way. It is easily extensible to support other identifier types.",
+  "author": {
+    "name": "Maximilian Inckmann",
+    "url": "https://orcid.org/0009-0005-2800-4833",
+    "email": "maximilian.inckmann@kit.edu"
+  },
+  "contributors": [
+    {
+      "name": "Maximilian Inckmann",
+      "url": "https://orcid.org/0009-0005-2800-4833",
+      "email": "maximilian.inckmann@kit.edu"
+    },
+    {
+      "name": "Andreas Pfeil",
+      "url": "https://orcid.org/0000-0001-6575-1022",
+      "email": "andreas.pfeil@kit.edu"
+    },
+    {
+      "name": "Thomas Jejkal",
+      "url": "https://orcid.org/0000-0003-2804-688X",
+      "email": "thomas.jejkal@kit.edu"
+    },
+    {
+      "name": "Christopher Raquet",
+      "url": "https://orcid.org/0009-0003-2196-9187",
+      "email": "christopher.raquet@kit.edu"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kit-data-manager/pid-component"
+  },
+  "bugs": {
+    "url": "https://github.com/kit-data-manager/pid-component/issues"
+  },
+  "keywords": [
+    "stencil",
+    "webcomponent",
+    "webcomponents",
+    "pid",
+    "datatyperegistry",
+    "handle.net",
+    "orcid",
+    "identifier",
+    "kit-data-manager",
+    "typescript",
+    "storybook",
+    "tailwindcss",
+    "fair",
+    "fairdata",
+    "fairdo",
+    "fairdigitalobject"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/stencil-library/stencil-library.esm.js",
+      "require": "./dist/stencil-library/stencil-library.cjs.js"
+    },
+    "./dist/*": {
+      "import": "./dist/*",
+      "types": "./dist/*"
+    },
+    "./components/*": {
+      "import": "./dist/components/*.js",
+      "types": "./dist/components/*.d.ts"
+    },
+    "./loader": {
+      "types": "./loader/index.d.ts",
+      "import": "./loader/index.js",
+      "require": "./loader/index.cjs"
+    },
+    "./hydrate": {
+      "types": "./hydrate/index.d.ts",
+      "import": "./hydrate/index.js",
+      "require": "./hydrate/index.cjs.js"
+    }
+  },
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.js",
+  "es2015": "dist/esm/index.mjs",
+  "es2017": "dist/esm/index.mjs",
+  "esnext": "dist/esm/index.mjs",
+  "types": "dist/types/index.d.ts",
+  "collection": "dist/collection/collection-manifest.json",
+  "collection:main": "dist/collection/index.js",
+  "files": [
+    "dist/",
+    "loader/"
+  ],
+  "scripts": {
+    "build": "stencil build --docs",
+    "buildWatch": "stencil build --docs --watch",
+    "start": "stencil build --dev --watch --serve",
+    "test": "stencil test --spec --e2e",
+    "test.watch": "stencil test --spec --e2e --watchAll",
+    "generate": "stencil generate",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "storybook-docs": "storybook dev --docs",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,mdx}\"",
+    "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,md,mdx}\""
+  },
+  "dependencies": {
+    "@stencil/core": "^4.22.2",
+    "@tempfix/idb": "^8.0.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.13.0",
+    "@stencil/react-output-target": "^0.8.2",
+    "@storybook/addon-essentials": "^8.3.6",
+    "@storybook/addon-links": "^8.3.6",
+    "@storybook/blocks": "^8.3.6",
+    "@storybook/web-components": "^8.3.6",
+    "@storybook/web-components-vite": "^8.3.6",
+    "@types/eslint__js": "^8.42.3",
+    "@types/eslint-config-prettier": "^6.11.3",
+    "@types/node": "^22.8.1",
+    "@typescript-eslint/eslint-plugin": "^8.11.0",
+    "@typescript-eslint/parser": "^8.11.0",
+    "eslint": "^9.13.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-storybook": "^0.10.1",
+    "globals": "^15.11.0",
+    "lit": "^3.2.1",
+    "prettier": "^3.3.3",
+    "prettier-plugin-tailwindcss": "^0.6.8",
+    "puppeteer": "^23.6.0",
+    "stencil-tailwind-plugin": "^1.8.0",
+    "storybook": "^8.3.6",
+    "tailwindcss": "^3.4.14",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.11.0",
+    "vite": "^6.1.0",
+    "workbox-build": "^7.1.1"
+  },
+  "maintainers": [
+    {
+      "name": "Maximilian Inckmann",
+      "url": "https://orcid.org/0009-0005-2800-4833",
+      "email": "maximilian.inckmann@kit.edu"
+    }
+  ],
+  "homepage": "https://kit-data-manager.github.io/pid-component"
+}

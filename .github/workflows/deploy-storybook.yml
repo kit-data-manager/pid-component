@@ -20,12 +20,14 @@ jobs:
         run: npm ci
       - name: Build component
         run: npm run build
+        working-directory: packages/stencil-library
       - name: Build Storybook
         run: npm run build-storybook
+        working-directory: packages/stencil-library
       - name: Upload Storybook to GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "storybook-static"
+          path: "packages/stencil-library/storybook-static"
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4

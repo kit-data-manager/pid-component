@@ -13,5 +13,5 @@ export default {
     },
   },
 
-  tags: ['autodocs']
+  tags: ['autodocs'],
 };

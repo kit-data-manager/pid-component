@@ -30,6 +30,7 @@ jobs:
           node-version: 20
           registry-url: https://npm.pkg.github.com/
       - run: npm ci
-      - run: npm publish
+      - run: npx lerna run build
+      - run: npx lerna publish from-package
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}

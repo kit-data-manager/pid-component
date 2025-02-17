@@ -1,15 +1,25 @@
 import { Config } from '@stencil/core';
 import tailwind, { tailwindHMR } from 'stencil-tailwind-plugin';
+import { reactOutputTarget } from '@stencil/react-output-target';
 
 export const config: Config = {
   namespace: 'pid-component',
   outputTargets: [
+    {
+      type: 'dist-hydrate-script',
+      dir: './hydrate',
+    },
+    reactOutputTarget({
+      outDir: '../react-library/lib/components/stencil-generated/',
+      hydrateModule: '@kit-data-manager/pid-component/hydrate',
+    }),
     {
       type: 'dist',
       esmLoaderPath: '../loader',
     },
     {
       type: 'dist-custom-elements',
+      externalRuntime: false,
     },
     {
       type: 'docs-readme',
