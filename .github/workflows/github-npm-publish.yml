@@ -31,11 +31,6 @@ jobs:
           registry-url: https://npm.pkg.github.com/
       - run: npm ci
       - run: npx lerna run build
-      - run: npm publish
-        working-directory: packages/stencil-library
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      - run: npm publish
-        working-directory: packages/react-library
+      - run: npx lerna publish from-package
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}

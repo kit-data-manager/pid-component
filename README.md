@@ -6,6 +6,8 @@ The `pid-component` is an easily extensible web component that can be used to di
 identifiers in a user-friendly way.
 It is easily extensible to support other identifier types.
 
+> A [React wrapper]() is also available
+
 The `pid-component` dynamically renders a component based on the value of the `value` property.
 Depending on the value, it decides which component to render, what priority to give it, and what props to pass to it.
 It also renders itself recursively for all its children when unfolded.

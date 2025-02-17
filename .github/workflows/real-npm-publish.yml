@@ -15,11 +15,6 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: npm clean-install
       - run: npx lerna run build
-      - run: npm publish --access public
-        working-directory: packages/stencil-library
+      - run: npx lerna publish from-package
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-      - run: npm publish --access public
-        working-directory: packages/react-library
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}

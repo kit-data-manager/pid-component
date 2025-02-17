@@ -2,6 +2,10 @@
 
 React wrapper for [@kit-data-manager/pid-component](https://github.com/kit-data-manager/pid-component)
 
+## Installation
+
+    npm install @kit-data-manager/react-pid-component
+
 ## Usage
 
 Refer to the documentation of [@kit-data-manager/pid-component](https://github.com/kit-data-manager/pid-component). 
