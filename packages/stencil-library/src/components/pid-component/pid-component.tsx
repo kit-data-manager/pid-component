@@ -2,7 +2,7 @@ import { Component, h, Host, Prop, State, Watch } from '@stencil/core';
 import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
 import { FoldableItem } from '../../utils/FoldableItem';
 import { FoldableAction } from '../../utils/FoldableAction';
-import { getEntity } from '../../utils/IndexedDBUtil';
+import { Database } from '../../utils/IndexedDBUtil';
 import { clearCache } from '../../utils/DataCache';
 
 @Component({
@@ -186,7 +186,13 @@ export class PidComponent {
     });
 
     // Get the renderer for the value
-    this.identifierObject = await getEntity(this.value, settings);
+    try {
+      const db = new Database();
+      this.identifierObject = await db.getEntity(this.value, settings);
+    } catch (e) {
+      console.error('Failed to get entity from db', e);
+      return;
+    }
 
     // Generate items and actions if subcomponents should be shown
     if (!this.hideSubcomponents) {
