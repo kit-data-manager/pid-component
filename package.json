@@ -16,7 +16,7 @@
   "scripts": {
     "build": "lerna run build"
   },
-  "description": "Monorepo for PID Component and related libraries",
+  "description": "Monorepo for the PID Component and related packages",
   "author": {
     "name": "Maximilian Inckmann",
     "url": "https://orcid.org/0009-0005-2800-4833",
@@ -27,6 +27,11 @@
       "name": "Maximilian Inckmann",
       "url": "https://orcid.org/0009-0005-2800-4833",
       "email": "maximilian.inckmann@kit.edu"
+    },
+    {
+      "name": "Christopher Raquet",
+      "url": "https://orcid.org/0009-0003-2196-9187",
+      "email": "christopher.raquet@kit.edu"
     }
   ],
   "license": "Apache-2.0",
@@ -35,6 +40,42 @@
       "name": "Maximilian Inckmann",
       "url": "https://orcid.org/0009-0005-2800-4833",
       "email": "maximilian.inckmann@kit.edu"
+    },
+    {
+      "name": "Christopher Raquet",
+      "url": "https://orcid.org/0009-0003-2196-9187",
+      "email": "christopher.raquet@kit.edu"
+    },
+    {
+      "name": "Andreas Pfeil",
+      "url": "https://orcid.org/0000-0001-6575-1022",
+      "email": "andreas.pfeil@kit.edu"
+    },
+    {
+      "name": "Thomas Jejkal",
+      "url": "https://orcid.org/0000-0003-2804-688X",
+      "email": "thomas.jejkal@kit.edu"
     }
-  ]
+  ],
+  "keywords": [
+    "react",
+    "pid",
+    "datatyperegistry",
+    "handle.net",
+    "orcid",
+    "identifier",
+    "kit-data-manager",
+    "typescript",
+    "storybook",
+    "tailwindcss",
+    "fair",
+    "fairdata",
+    "fairdo",
+    "fairdigitalobject"
+  ],
+  "homepage": "https://kit-data-manager.github.io/pid-component",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kit-data-manager/pid-component"
+  }
 }
