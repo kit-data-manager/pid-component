@@ -45,8 +45,8 @@
       "affiliation": "Karlsruhe Institute of Technology (KIT)"
     }
   ],
-  "name": "@kit-data-manager/react-pid-component",
-  "description": "React wrapper for the package @kit-data-manager/pid-component",
+  "name": "pid-component-monorepo",
+  "description": "Monorepo for the PID Component and related packages",
   "version": "0.1.6",
   "keywords": [
     "react",

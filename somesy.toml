@@ -1,15 +1,13 @@
 [project]
-name = "@kit-data-manager/pid-component"
+name = "pid-component-monorepo"
 version = "0.1.6"
-description = "The PID-Component is a web component that can be used to evaluate and display FAIR Digital Objects, PIDs, ORCiDs, and possibly other identifiers in a user-friendly way. It is easily extensible to support other identifier types."
+description = "Monorepo for the PID Component and related packages"
 license = "Apache-2.0"
 repository = "https://github.com/kit-data-manager/pid-component"
 homepage = "https://kit-data-manager.github.io/pid-component"
 documentation = "https://kit-data-manager.github.io/pid-component"
 keywords = [
-  "stencil",
-  "webcomponent",
-  "webcomponents",
+  "react",
   "pid",
   "datatyperegistry",
   "handle.net",
@@ -24,6 +22,15 @@ keywords = [
   "fairdo",
   "fairdigitalobject"
 ]
+
+[[project.people]]
+given-names = "Christopher"
+family-names = "Raquet"
+email = "christopher.raquet@kit.edu"
+orcid = "https://orcid.org/0009-0003-2196-9187"
+affiliation = "Karlsruhe Institute of Technology (KIT)"
+author = true      # is a full author of the project (i.e. appears in citations)
+maintainer = true  # currently maintains the project (i.e. is a contact person)
 
 [[project.people]]
 given-names = "Maximilian"
@@ -54,14 +61,5 @@ author = true      # is a full author of the project (i.e. appears in citations)
 maintainer = false  # currently maintains the project (i.e. is a contact person)
 publication_author = true
 
-[[project.people]]
-given-names = "Christopher"
-family-names = "Raquet"
-email = "christopher.raquet@kit.edu"
-orcid = "https://orcid.org/0009-0003-2196-9187"
-affiliation = "Karlsruhe Institute of Technology (KIT)"
-author = true      # is a full author of the project (i.e. appears in citations)
-maintainer = false  # currently maintains the project (i.e. is a contact person)
-
 [config]
-verbose = true     # show detailed information about what somesy is doing
+packages = ['packages/react-library', 'packages/stencil-library']
