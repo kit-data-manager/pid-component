@@ -47,7 +47,7 @@
   ],
   "name": "pid-component-monorepo",
   "description": "Monorepo for the PID Component and related packages",
-  "version": "0.0.0",
+  "version": "0.1.6",
   "keywords": [
     "react",
     "pid",
