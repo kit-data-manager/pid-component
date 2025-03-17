@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it using these metadata.
+type: software
+title: pid-component-monorepo
+abstract: Monorepo for PID Component and related libraries
+version: 0.0.0
+authors:
+  - orcid: https://orcid.org/0009-0005-2800-4833
+    given-names: Maximilian
+    affiliation: Karlsruhe Institute of Technology (KIT)
+    family-names: Inckmann
+    email: maximilian.inckmann@kit.edu
+contact:
+  - orcid: https://orcid.org/0009-0005-2800-4833
+    given-names: Maximilian
+    affiliation: Karlsruhe Institute of Technology (KIT)
+    family-names: Inckmann
+    email: maximilian.inckmann@kit.edu
+license: Apache-2.0

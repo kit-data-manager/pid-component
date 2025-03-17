@@ -1,0 +1,17 @@
+[project]
+name = "pid-component-monorepo"
+version = "0.0.0"
+license = "Apache-2.0"
+description = "Monorepo for PID Component and related libraries"
+
+[[project.people]]
+given-names = "Maximilian"
+family-names = "Inckmann"
+email = "maximilian.inckmann@kit.edu"
+orcid = "https://orcid.org/0009-0005-2800-4833"
+affiliation = "Karlsruhe Institute of Technology (KIT)"
+author = true      # is a full author of the project (i.e. appears in citations)
+maintainer = true  # currently maintains the project (i.e. is a contact person)
+
+[config]
+packages = ['packages/react-library', 'packages/stencil-library']
