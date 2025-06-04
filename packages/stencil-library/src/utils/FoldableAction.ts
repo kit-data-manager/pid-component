@@ -81,4 +81,13 @@ export class FoldableAction {
   get style(): 'primary' | 'secondary' | 'danger' {
     return this._style;
   }
+
+  /**
+   * Checks equality with another FoldableAction by comparing all attributes.
+   * @param other The other FoldableAction to compare.
+   * @returns {boolean} True if all attributes are equal, false otherwise.
+   */
+  equals(other: FoldableAction): boolean {
+    return this._priority === other._priority && this._title === other._title && this._link === other._link && this._style === other._style;
+  }
 }
