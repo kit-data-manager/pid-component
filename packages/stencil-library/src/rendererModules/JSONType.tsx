@@ -11,14 +11,20 @@ interface ParsedJsonResult {
  * Renderer for JSON objects/strings.
  */
 export class JSONType extends GenericIdentifierType {
-  private _parsedJsonResult: ParsedJsonResult | undefined;
+  private _parsedJsonResult: ParsedJsonResult | undefined = undefined;
 
   private getParsedJson(): ParsedJsonResult {
     if (this._parsedJsonResult === undefined) {
       try {
+        if (typeof this.value === 'object' && this.value !== null) {
+          // If the value is already an object, we can use it directly
+          this._parsedJsonResult = { data: this.value };
+          return this._parsedJsonResult;
+        }
+
         // Handle potential edge cases with the input value
         if (typeof this.value !== 'string') {
-          throw new Error('Input value is not a string');
+          throw new Error('Input value is not a string or object');
         }
 
         // Trim whitespace before parsing to handle common input issues
@@ -46,6 +52,7 @@ export class JSONType extends GenericIdentifierType {
   hasCorrectFormat(): boolean {
     const { data, error } = this.getParsedJson();
     if (error) {
+      console.warn('JSONType has incorrect format:', error.message, 'for value:', this.value);
       return false;
     }
     // Only objects and arrays are considered the "correct format" for rich rendering by this type
