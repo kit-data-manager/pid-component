@@ -702,7 +702,7 @@ export class PidComponent {
               aria-label="Identifier details section"
             >
               <summary
-                class={`overflow-hidden font-bold font-mono cursor-pointer list-none flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded-lg marker:hidden ${this.isExpanded ? 'sticky top-0 bg-white z-10 border-b border-gray-100 p-1' : 'px-0.5 py-0 whitespace-nowrap text-ellipsis'}`}
+                class={`font-bold font-mono cursor-pointer list-none flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded-lg marker:hidden ${this.isExpanded ? 'sticky top-0 bg-white z-10 border-b border-gray-100 p-1 overflow-visible' : 'px-0.5 py-0 whitespace-nowrap text-ellipsis overflow-hidden'}`}
                 style={
                   !this.isExpanded
                     ? {
@@ -712,7 +712,7 @@ export class PidComponent {
                     : {}
                 }
               >
-                <span class={'inline-flex flex-nowrap overflow-x-auto pr-1 items-center'}>
+                <span class={`inline-flex pr-1 items-center ${this.isExpanded ? 'flex-wrap overflow-visible' : 'flex-nowrap overflow-x-auto'}`}>
                   {this.emphasizeComponent || this.temporarilyEmphasized ? (
                     <span class={'flex-shrink-0 pr-1'}>
                       <svg
@@ -734,7 +734,9 @@ export class PidComponent {
                   ) : (
                     ''
                   )}
-                  <span class={'font-medium font-mono inline-flex flex-nowrap overflow-x-auto text-sm select-all'}>
+                  <span
+                    class={`font-medium font-mono inline-flex text-sm select-all ${this.isExpanded ? 'flex-wrap overflow-visible break-words' : 'flex-nowrap overflow-x-auto whitespace-nowrap'}`}
+                  >
                     {// Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
                     this.identifierObject?.renderPreview()}
                   </span>
@@ -755,13 +757,13 @@ export class PidComponent {
                     <div class="rounded-lg border border-gray-200 bg-gray-50 m-1 max-h-[calc(100%-40px)]">
                       {/* Table container with scrollable content */}
                       <div class="overflow-auto max-h-full">
-                        <table class="w-full text-left text-sm font-sans select-text border-collapse" aria-label="Identifier details">
+                        <table class="w-full text-left text-sm font-sans select-text border-collapse table-fixed" aria-label="Identifier details">
                           <thead class="bg-slate-600 text-slate-200 rounded-t-lg sticky top-0 z-10">
                             <tr class="font-semibold">
-                              <th class="px-2 py-2 min-w-[150px] w-auto rounded-tl-lg" scope="col">
+                              <th class="px-2 py-2 min-w-[150px] w-[30%] rounded-tl-lg" scope="col">
                                 Key
                               </th>
-                              <th class="px-2 py-2 w-full rounded-tr-lg" scope="col">
+                              <th class="px-2 py-2 w-[70%] rounded-tr-lg" scope="col">
                                 Value
                               </th>
                             </tr>
@@ -822,8 +824,8 @@ export class PidComponent {
                                   </div>
                                 </td>
                                 <td class={'align-top text-sm p-2 w-full select-text relative'}>
-                                  <div class="w-full h-7 pr-8 flex items-center relative">
-                                    <div class="w-full overflow-hidden text-ellipsis whitespace-nowrap">
+                                  <div class="w-full min-h-7 pr-8 flex items-center relative">
+                                    <div class="w-full overflow-x-auto whitespace-normal break-words max-h-[200px] overflow-y-auto">
                                       {
                                         // Load a foldable subcomponent if subcomponents are not disabled (hideSubcomponents), and the current level of subcomponents is not the total level of subcomponents. If the subcomponent is on the bottom level of the hierarchy, render just a preview. If the value should not be resolved (isFoldable), just render the value as text.
                                         this.loadSubcomponents && !this.hideSubcomponents && !value.renderDynamically ? (
@@ -848,7 +850,7 @@ export class PidComponent {
                                             class="flex-grow"
                                           />
                                         ) : (
-                                          <span class={'font-mono text-sm truncate'}>{value.value}</span>
+                                          <span class={'font-mono text-sm overflow-x-auto whitespace-normal break-words inline-block max-w-full'}>{value.value}</span>
                                         )
                                       }
                                     </div>

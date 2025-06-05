@@ -2,6 +2,7 @@
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property          | Attribute           | Description                                                            | Type                | Default     |
@@ -12,6 +13,7 @@
 | `showLineNumbers` | `show-line-numbers` | Set to true to enable line numbers in code view.                       | `boolean`           | `true`      |
 | `theme`           | `theme`             | Theme for syntax highlighting. Options: 'light' or 'dark'.             | `"dark" \| "light"` | `'light'`   |
 | `viewMode`        | `view-mode`         | Initial view mode for the JSON data. Can be 'tree' or 'code'.          | `"code" \| "tree"`  | `'tree'`    |
+
 
 ## Methods
 

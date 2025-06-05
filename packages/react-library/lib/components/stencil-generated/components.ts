@@ -7,14 +7,26 @@
 
 /* eslint-disable */
 
-import { ColorHighlight as ColorHighlightElement, defineCustomElement as defineColorHighlight } from '@kit-data-manager/pid-component/dist/components/color-highlight.js';
-import { CopyButton as CopyButtonElement, defineCustomElement as defineCopyButton } from '@kit-data-manager/pid-component/dist/components/copy-button.js';
-import { defineCustomElement as defineJsonViewer, JsonViewer as JsonViewerElement } from '@kit-data-manager/pid-component/dist/components/json-viewer.js';
+import {
+  ColorHighlight as ColorHighlightElement,
+  defineCustomElement as defineColorHighlight,
+} from '@kit-data-manager/pid-component/dist/components/color-highlight.js';
+import {
+  CopyButton as CopyButtonElement,
+  defineCustomElement as defineCopyButton,
+} from '@kit-data-manager/pid-component/dist/components/copy-button.js';
+import {
+  defineCustomElement as defineJsonViewer,
+  JsonViewer as JsonViewerElement,
+} from '@kit-data-manager/pid-component/dist/components/json-viewer.js';
 import {
   defineCustomElement as defineLocaleVisualization,
   LocaleVisualization as LocaleVisualizationElement,
 } from '@kit-data-manager/pid-component/dist/components/locale-visualization.js';
-import { defineCustomElement as definePidComponent, PidComponent as PidComponentElement } from '@kit-data-manager/pid-component/dist/components/pid-component.js';
+import {
+  defineCustomElement as definePidComponent,
+  PidComponent as PidComponentElement,
+} from '@kit-data-manager/pid-component/dist/components/pid-component.js';
 import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
 import { createComponent } from '@stencil/react-output-target/runtime';
 import React from 'react';
@@ -27,10 +39,10 @@ export const ColorHighlight: StencilReactComponent<ColorHighlightElement, ColorH
   // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
   react: React,
   events: {} as ColorHighlightEvents,
-  defineCustomElement: defineColorHighlight,
+  defineCustomElement: defineColorHighlight
 });
 
-export type CopyButtonEvents = NonNullable<unknown>;
+export type Co,pyButtonEvents = NonNullable<unknown>;
 
 export const CopyButton: StencilReactComponent<CopyButtonElement, CopyButtonEvents> = /*@__PURE__*/ createComponent<CopyButtonElement, CopyButtonEvents>({
   tagName: 'copy-button',
@@ -54,10 +66,7 @@ export const JsonViewer: StencilReactComponent<JsonViewerElement, JsonViewerEven
 
 export type LocaleVisualizationEvents = NonNullable<unknown>;
 
-export const LocaleVisualization: StencilReactComponent<LocaleVisualizationElement, LocaleVisualizationEvents> = /*@__PURE__*/ createComponent<
-  LocaleVisualizationElement,
-  LocaleVisualizationEvents
->({
+export const LocaleVisualization: StencilReactComponent<LocaleVisualizationElement, LocaleVisualizationEvents> = /*@__PURE__*/ createComponent<LocaleVisualizationElement, LocaleVisualizationEvents>({
   tagName: 'locale-visualization',
   elementClass: LocaleVisualizationElement,
   // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.

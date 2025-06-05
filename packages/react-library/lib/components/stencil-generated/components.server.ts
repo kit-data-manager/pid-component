@@ -8,17 +8,19 @@
 
 /* eslint-disable */
 
-import { ColorHighlight as ColorHighlightElement } from '@kit-data-manager/pid-component/dist/components/color-highlight.js';
+import {
+  ColorHighlight as ColorHighlightElement,
+} from '@kit-data-manager/pid-component/dist/components/color-highlight.js';
 import { CopyButton as CopyButtonElement } from '@kit-data-manager/pid-component/dist/components/copy-button.js';
 import { JsonViewer as JsonViewerElement } from '@kit-data-manager/pid-component/dist/components/json-viewer.js';
-import { LocaleVisualization as LocaleVisualizationElement } from '@kit-data-manager/pid-component/dist/components/locale-visualization.js';
+import {
+  LocaleVisualization as LocaleVisualizationElement,
+} from '@kit-data-manager/pid-component/dist/components/locale-visualization.js';
 import { PidComponent as PidComponentElement } from '@kit-data-manager/pid-component/dist/components/pid-component.js';
 import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
 import { createComponent, type SerializeShadowRootOptions } from '@stencil/react-output-target/ssr';
 
-export const serializeShadowRoot: SerializeShadowRootOptions = { default: 'declarative-shadow-dom' };
-
-export type ColorHighlightEvents = NonNullable<unknown>;
+export const serializeShadowRoot: SerializeShadowRootOptions = { default: "decla'declarative-shadow-dom'xport type ColorHighlightEvents = NonNullable<unknown>;
 
 export const ColorHighlight: StencilReactComponent<ColorHighlightElement, ColorHighlightEvents> = /*@__PURE__*/ createComponent<ColorHighlightElement, ColorHighlightEvents>({
   tagName: 'color-highlight',
@@ -54,10 +56,7 @@ export const JsonViewer: StencilReactComponent<JsonViewerElement, JsonViewerEven
 
 export type LocaleVisualizationEvents = NonNullable<unknown>;
 
-export const LocaleVisualization: StencilReactComponent<LocaleVisualizationElement, LocaleVisualizationEvents> = /*@__PURE__*/ createComponent<
-  LocaleVisualizationElement,
-  LocaleVisualizationEvents
->({
+export const LocaleVisualization: StencilReactComponent<LocaleVisualizationElement, LocaleVisualizationEvents> = /*@__PURE__*/ createComponent<LocaleVisualizationElement, LocaleVisualizationEvents>({
   tagName: 'locale-visualization',
   properties: {
     locale: 'locale',
