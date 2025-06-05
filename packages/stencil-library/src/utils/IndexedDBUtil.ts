@@ -74,16 +74,7 @@ export class Database {
     const db = await this.dbPromise;
 
     // Ensure the value is a valid IndexedDB key (string, number, Date, or array of those)
-    let entityKey = renderer.value;
-    if (typeof entityKey !== 'string' && typeof entityKey !== 'number') {
-      // If not valid, convert to string (e.g., JSON.stringify)
-      try {
-        entityKey = JSON.stringify(entityKey);
-      } catch {
-        entityKey = String(entityKey);
-      }
-      console.warn('Converted entity value to string for IndexedDB key:', entityKey);
-    }
+    const entityKey = this.normalizeKey(renderer.value);
 
     // Add the entity to the entities object store
     await db
@@ -148,15 +139,7 @@ export class Database {
     }[],
   ): Promise<GenericIdentifierType> {
     // Ensure the value is a valid IndexedDB key (string, number, Date, or array of those)
-    let entityKey = value;
-    if (typeof entityKey !== 'string' && typeof entityKey !== 'number') {
-      try {
-        entityKey = JSON.stringify(entityKey);
-      } catch {
-        entityKey = String(entityKey);
-      }
-      console.warn('Converted entity value to string for IndexedDB key (get):', entityKey);
-    }
+    const entityKey = this.normalizeKey(value);
     // Try to get the entity from the database
     try {
       const db = await this.dbPromise;
@@ -211,15 +194,7 @@ export class Database {
     const db = await this.dbPromise;
 
     // Ensure the value is a valid IndexedDB key (string, number, Date, or array of those)
-    let entityKey = value;
-    if (typeof entityKey !== 'string' && typeof entityKey !== 'number') {
-      try {
-        entityKey = JSON.stringify(entityKey);
-      } catch {
-        entityKey = String(entityKey);
-      }
-      console.warn('Converted entity value to string for IndexedDB key (delete):', entityKey);
-    }
+    const entityKey = this.normalizeKey(value);
 
     // Delete the entity
     await db.delete('entities', entityKey);
@@ -236,6 +211,19 @@ export class Database {
     }
     console.log('deleted entity', value);
     await tx.done;
+  }
+
+  private normalizeKey(value: string) {
+    let entityKey = value;
+    if (typeof entityKey !== 'string' && typeof entityKey !== 'number') {
+      try {
+        entityKey = JSON.stringify(entityKey);
+      } catch {
+        entityKey = String(entityKey);
+      }
+      console.warn('Converted entity value to string for IndexedDB key (delete):', entityKey);
+    }
+    return entityKey;
   }
 
   /**
