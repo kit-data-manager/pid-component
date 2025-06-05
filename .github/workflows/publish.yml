@@ -7,6 +7,10 @@ on:
   release:
     types: [ published ]
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -37,3 +41,20 @@ jobs:
       - run: npx lerna publish from-package --yes
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+  publish-npm:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org/
+      - run: npm clean-install
+      - run: npx lerna run build
+      - run: cp README.md packages/stencil-library
+      - run: npx lerna publish from-package --yes
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
