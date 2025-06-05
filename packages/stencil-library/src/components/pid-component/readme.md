@@ -20,6 +20,7 @@
 | `value`                       | `value`                          | The value to parse, evaluate and render.                                                                                                                                                                                                                                                                                                               | `string`  | `undefined`           |
 | `width`                       | `width`                          | Initial width of the component (e.g. '500px', '50%'). If not set, defaults to 500px on large screens, 400px on medium screens, and 300px on small screens.                                                                                                                                                                                             | `string`  | `undefined`           |
 
+
 ## Methods
 
 ### `updateComponentSizing() => Promise<void>`

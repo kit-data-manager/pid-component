@@ -6,4 +6,73 @@
  */
 
 /* eslint-disable */
-export { ColorHighlight, CopyButton, LocaleVisualization, PidComponent } from "./components.server";
+
+import { ColorHighlight as ColorHighlightElement, defineCustomElement as defineColorHighlight } from '@kit-data-manager/pid-component/dist/components/color-highlight.js';
+import { CopyButton as CopyButtonElement, defineCustomElement as defineCopyButton } from '@kit-data-manager/pid-component/dist/components/copy-button.js';
+import { defineCustomElement as defineJsonViewer, JsonViewer as JsonViewerElement } from '@kit-data-manager/pid-component/dist/components/json-viewer.js';
+import {
+  defineCustomElement as defineLocaleVisualization,
+  LocaleVisualization as LocaleVisualizationElement,
+} from '@kit-data-manager/pid-component/dist/components/locale-visualization.js';
+import { defineCustomElement as definePidComponent, PidComponent as PidComponentElement } from '@kit-data-manager/pid-component/dist/components/pid-component.js';
+import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from '@stencil/react-output-target/runtime';
+import React from 'react';
+
+export type ColorHighlightEvents = NonNullable<unknown>;
+
+export const ColorHighlight: StencilReactComponent<ColorHighlightElement, ColorHighlightEvents> = /*@__PURE__*/ createComponent<ColorHighlightElement, ColorHighlightEvents>({
+  tagName: 'color-highlight',
+  elementClass: ColorHighlightElement,
+  // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+  react: React,
+  events: {} as ColorHighlightEvents,
+  defineCustomElement: defineColorHighlight,
+});
+
+export type CopyButtonEvents = NonNullable<unknown>;
+
+export const CopyButton: StencilReactComponent<CopyButtonElement, CopyButtonEvents> = /*@__PURE__*/ createComponent<CopyButtonElement, CopyButtonEvents>({
+  tagName: 'copy-button',
+  elementClass: CopyButtonElement,
+  // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+  react: React,
+  events: {} as CopyButtonEvents,
+  defineCustomElement: defineCopyButton,
+});
+
+export type JsonViewerEvents = NonNullable<unknown>;
+
+export const JsonViewer: StencilReactComponent<JsonViewerElement, JsonViewerEvents> = /*@__PURE__*/ createComponent<JsonViewerElement, JsonViewerEvents>({
+  tagName: 'json-viewer',
+  elementClass: JsonViewerElement,
+  // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+  react: React,
+  events: {} as JsonViewerEvents,
+  defineCustomElement: defineJsonViewer,
+});
+
+export type LocaleVisualizationEvents = NonNullable<unknown>;
+
+export const LocaleVisualization: StencilReactComponent<LocaleVisualizationElement, LocaleVisualizationEvents> = /*@__PURE__*/ createComponent<
+  LocaleVisualizationElement,
+  LocaleVisualizationEvents
+>({
+  tagName: 'locale-visualization',
+  elementClass: LocaleVisualizationElement,
+  // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+  react: React,
+  events: {} as LocaleVisualizationEvents,
+  defineCustomElement: defineLocaleVisualization,
+});
+
+export type PidComponentEvents = NonNullable<unknown>;
+
+export const PidComponent: StencilReactComponent<PidComponentElement, PidComponentEvents> = /*@__PURE__*/ createComponent<PidComponentElement, PidComponentEvents>({
+  tagName: 'pid-component',
+  elementClass: PidComponentElement,
+  // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+  react: React,
+  events: {} as PidComponentEvents,
+  defineCustomElement: definePidComponent,
+});
