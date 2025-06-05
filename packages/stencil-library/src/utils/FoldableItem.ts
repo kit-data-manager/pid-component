@@ -159,4 +159,19 @@ export class FoldableItem {
   isValidValue(): boolean {
     return this._valueRegex.test(this._value);
   }
+
+  /**
+   * Checks equality with another FoldableItem by comparing all attributes.
+   * @param other The other FoldableItem to compare.
+   * @returns {boolean} True if all attributes are equal, false otherwise.
+   */
+  equals(other: FoldableItem): boolean {
+    return (
+      this._keyTitle === other._keyTitle &&
+      this._value === other._value &&
+      this._keyTooltip === other._keyTooltip &&
+      this._keyLink === other._keyLink &&
+      this._renderDynamically === other._renderDynamically
+    );
+  }
 }

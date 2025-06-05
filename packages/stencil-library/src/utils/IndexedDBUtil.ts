@@ -73,10 +73,13 @@ export class Database {
     const context = document.documentURI;
     const db = await this.dbPromise;
 
+    // Ensure the value is a valid IndexedDB key (string, number, Date, or array of those)
+    const entityKey = this.normalizeKey(renderer.value);
+
     // Add the entity to the entities object store
     await db
       .add('entities', {
-        value: renderer.value,
+        value: entityKey,
         rendererKey: renderer.getSettingsKey(),
         context: context,
         lastAccess: new Date(),
@@ -135,6 +138,8 @@ export class Database {
       }[];
     }[],
   ): Promise<GenericIdentifierType> {
+    // Ensure the value is a valid IndexedDB key (string, number, Date, or array of those)
+    const entityKey = this.normalizeKey(value);
     // Try to get the entity from the database
     try {
       const db = await this.dbPromise;
@@ -146,7 +151,7 @@ export class Database {
             lastAccess: Date;
             lastData: any;
           }
-        | undefined = await db.get('entities', value);
+        | undefined = await db.get('entities', entityKey);
 
       if (entity !== undefined) {
         // If the entity was found, check if the TTL has expired
@@ -188,8 +193,11 @@ export class Database {
   async deleteEntity(value: string) {
     const db = await this.dbPromise;
 
+    // Ensure the value is a valid IndexedDB key (string, number, Date, or array of those)
+    const entityKey = this.normalizeKey(value);
+
     // Delete the entity
-    await db.delete('entities', value);
+    await db.delete('entities', entityKey);
 
     // Delete all relations for the entity
     const tx = db.transaction('relations', 'readwrite');
@@ -203,6 +211,19 @@ export class Database {
     }
     console.log('deleted entity', value);
     await tx.done;
+  }
+
+  private normalizeKey(value: string) {
+    let entityKey = value;
+    if (typeof entityKey !== 'string' && typeof entityKey !== 'number') {
+      try {
+        entityKey = JSON.stringify(entityKey);
+      } catch {
+        entityKey = String(entityKey);
+      }
+      console.warn('Converted entity value to string for IndexedDB key (delete):', entityKey);
+    }
+    return entityKey;
   }
 
   /**
