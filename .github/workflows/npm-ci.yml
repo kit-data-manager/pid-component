@@ -1,5 +1,8 @@
 name: NPM Clean Install
 
+permissions:
+  contents: read
+
 on:
   push:
     branches: [ main, dev ]
