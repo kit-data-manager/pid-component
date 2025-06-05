@@ -130,6 +130,12 @@ export class PidComponent {
    */
   @Method()
   async updateComponentSizing() {
+    // Save current dimensions if expanded before making changes
+    if (this.isExpanded && !this._currentExpandedWidth) {
+      this._currentExpandedWidth = this.el.style.width || this.width || '500px';
+      this._currentExpandedHeight = this.el.style.height || this.height || '300px';
+    }
+
     if (this.isExpanded) {
       // For expanded state, use Tailwind classes only
       this.el.classList.add('resize-both');
@@ -186,9 +192,8 @@ export class PidComponent {
       this.el.classList.remove('max-w-full');
       this.el.classList.remove('overflow-auto');
 
-      // Reset to original state or pre-resize dimensions
-      this._currentExpandedWidth = null;
-      this._currentExpandedHeight = null;
+      // Don't reset saved dimensions when collapsing, just remove styling
+      // We'll reuse these dimensions the next time we expand
 
       // Add specific collapsed state classes
       this.el.classList.add('w-auto');
@@ -290,12 +295,18 @@ export class PidComponent {
 
       // Initialize resize observer to ensure proper display after manual resizing
       this._resizeObserver = new ResizeObserver(() => {
-        // Ensure table cells maintain their layout during resize
-        const valueCells = this.el.querySelectorAll('.value-cell');
+        // Save current dimensions when resizing
+        if (this.isExpanded) {
+          this._currentExpandedWidth = this.el.style.width || this.el.clientWidth + 'px';
+          this._currentExpandedHeight = this.el.style.height || this.el.clientHeight + 'px';
+        }
+
+        // Ensure proper positioning of copy buttons
+        const valueCells = this.el.querySelectorAll('td.relative');
         valueCells.forEach(cell => {
           const copyButton = cell.querySelector('copy-button');
           if (copyButton) {
-            copyButton.classList.add('absolute', 'right-2', 'top-2');
+            copyButton.classList.add('absolute', 'right-2', 'top-1/2', '-translate-y-1/2');
           }
         });
       });
@@ -335,14 +346,16 @@ export class PidComponent {
 
   @Watch('openByDefault')
   watchOpenByDefault() {
+    // Save dimensions before state changes
+    const wasExpanded = this.isExpanded;
+    if (wasExpanded) {
+      this._currentExpandedWidth = this.el.style.width || this.el.clientWidth + 'px';
+      this._currentExpandedHeight = this.el.style.height || this.el.clientHeight + 'px';
+    }
+
     this.isExpanded = this.openByDefault;
-    if (!this.isExpanded) {
-      // Save current dimensions before collapsing
-      if (this.isExpanded) {
-        this._currentExpandedWidth = this.el.style.width;
-        this._currentExpandedHeight = this.el.style.height;
-      }
-    } else {
+
+    if (this.isExpanded) {
       // When expanding
       if (!this._originalWidth) {
         // First time expanding
@@ -377,6 +390,12 @@ export class PidComponent {
     if (event && event.target) {
       const details = (event.target as HTMLElement).closest('details');
       if (details) {
+        // Save current dimensions before state change if component is expanded
+        if (this.isExpanded) {
+          this._currentExpandedWidth = this.el.style.width || this.el.clientWidth + 'px';
+          this._currentExpandedHeight = this.el.style.height || this.el.clientHeight + 'px';
+        }
+
         this.isExpanded = details.open;
         this.updateComponentSizing();
       }
@@ -388,15 +407,10 @@ export class PidComponent {
    * @param event The event that triggered this function.
    */
   private showTooltip = (event: Event) => {
-    let target = event.target as HTMLElement;
-
-    // Find the parent A element
-    while (target !== null && target.tagName !== 'A') {
-      target = target.parentElement as HTMLElement;
-    }
+    const target = event.currentTarget as HTMLElement;
 
     // Find and show the tooltip
-    if (target !== null) {
+    if (target) {
       const tooltip = target.querySelector('[role="tooltip"]');
       if (tooltip) {
         tooltip.classList.remove('hidden');
@@ -411,15 +425,10 @@ export class PidComponent {
    * @param event The event that triggered this function.
    */
   private hideTooltip = (event: Event) => {
-    let target = event.target as HTMLElement;
-
-    // Find the parent A element
-    while (target !== null && target.tagName !== 'A') {
-      target = target.parentElement as HTMLElement;
-    }
+    const target = event.currentTarget as HTMLElement;
 
     // Find and hide the tooltip
-    if (target !== null) {
+    if (target) {
       const tooltip = target.querySelector('[role="tooltip"]');
       if (tooltip) {
         tooltip.classList.add('hidden');
@@ -639,8 +648,8 @@ export class PidComponent {
         }
       >
         {
-          // Check if there are any items or actions to show
-          (this.items.length === 0 && this.actions.length === 0) || this.hideSubcomponents ? (
+          // Check if there are any items or actions to show, or if there's a body to render
+          (this.items.length === 0 && this.actions.length === 0 && !this.identifierObject?.renderBody()) || this.hideSubcomponents ? (
             this.identifierObject !== undefined && this.displayStatus === 'loaded' ? (
               // If loaded but no items available render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
               <span
@@ -775,29 +784,30 @@ export class PidComponent {
                                 class={`odd:bg-slate-200 even:bg-gray-50 h-7 leading-7 ${index !== this._filteredItems.length - 1 ? 'border-b border-gray-200' : ''}`}
                               >
                                 <td class={'p-2 min-w-[150px] w-auto font-mono align-middle'}>
-                                  <div class="whitespace-nowrap h-7 leading-7 overflow-hidden text-ellipsis">
-                                    <a
-                                      role="link"
-                                      class="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded-md focus:bg-gray-200 relative md:mt-0 inline flex-nowrap"
+                                  <div class="h-7 leading-7 overflow-hidden w-full">
+                                    <div
+                                      class="cursor-pointer relative inline-block w-full"
                                       onMouseOver={this.showTooltip}
                                       onFocus={this.showTooltip}
                                       onMouseOut={this.hideTooltip}
+                                      onBlur={this.hideTooltip}
                                       tabIndex={0}
                                       aria-label={value.keyTitle}
                                     >
-                                      <div class="cursor-pointer align-top justify-between flex-nowrap">
+                                      <div class="flex items-center justify-between">
                                         <a
                                           href={value.keyLink}
                                           target={'_blank'}
                                           rel={'noopener noreferrer'}
-                                          class={'mr-2 text-blue-600 underline hover:text-blue-800 justify-start float-left'}
+                                          class="mr-2 text-blue-600 underline hover:text-blue-800 truncate"
+                                          onClick={e => e.stopPropagation()}
                                         >
                                           {value.keyTitle}
                                         </a>
                                         <svg
                                           aria-hidden="true"
                                           xmlns="http://www.w3.org/2000/svg"
-                                          class="icon icon-tabler icon-tabler-info-circle justify-end min-w-[1rem] min-h-[1rem] flex-none float-right"
+                                          class="icon icon-tabler icon-tabler-info-circle min-w-[1rem] min-h-[1rem] flex-shrink-0"
                                           width="20"
                                           height="20"
                                           viewBox="0 0 24 24"
@@ -813,14 +823,14 @@ export class PidComponent {
                                           <polyline points="11 12 12 12 12 16 13 16" />
                                         </svg>
                                       </div>
-                                      <p
+                                      <div
                                         role="tooltip"
                                         id={`tooltip-${value.keyTitle.replace(/\s+/g, '-').toLowerCase()}`}
-                                        class="hidden z-20 mt-1 transition duration-100 ease-in-out shadow-md bg-white rounded text-xs text-gray-600 p-1 flex-wrap overflow-clip"
+                                        class="hidden z-20 absolute top-full left-0 mt-1 transition duration-100 ease-in-out shadow-md bg-white rounded text-xs text-gray-600 p-2 max-w-full w-full overflow-y-auto max-h-[150px] whitespace-normal border border-gray-200"
                                       >
                                         {value.keyTooltip}
-                                      </p>
-                                    </a>
+                                      </div>
+                                    </div>
                                   </div>
                                 </td>
                                 <td class={'align-top text-sm p-2 w-full select-text relative'}>

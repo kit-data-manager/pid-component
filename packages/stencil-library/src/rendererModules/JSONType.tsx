@@ -1,61 +1,62 @@
 import { FunctionalComponent, h } from '@stencil/core';
 import { GenericIdentifierType } from '../utils/GenericIdentifierType';
-import { FoldableAction } from '../utils/FoldableAction';
 import '../components/json-viewer/json-viewer';
+
+interface ParsedJsonResult {
+  data?: object | string;
+  error?: Error;
+}
 
 /**
  * Renderer for JSON objects/strings.
  */
 export class JSONType extends GenericIdentifierType {
+  private _parsedJsonResult: ParsedJsonResult | undefined;
+
+  private getParsedJson(): ParsedJsonResult {
+    if (this._parsedJsonResult === undefined) {
+      try {
+        // Handle potential edge cases with the input value
+        if (typeof this.value !== 'string') {
+          throw new Error('Input value is not a string');
+        }
+
+        // Trim whitespace before parsing to handle common input issues
+        const trimmedValue = this.value.trim();
+
+        // Handle empty strings
+        if (trimmedValue === '') {
+          this._parsedJsonResult = { error: new Error('Empty JSON string') };
+          return this._parsedJsonResult;
+        }
+
+        const parsed = JSON.parse(trimmedValue);
+        this._parsedJsonResult = { data: parsed };
+      } catch (e) {
+        this._parsedJsonResult = { error: e instanceof Error ? e : new Error(String(e)) };
+      }
+    }
+    return this._parsedJsonResult;
+  }
+
   getSettingsKey(): string {
     return 'JSONType';
   }
 
   hasCorrectFormat(): boolean {
-    try {
-      if (typeof this.value === 'string') {
-        const parsed = JSON.parse(this.value);
-        // Only objects and arrays are valid JSON for rendering
-        return typeof parsed === 'object' && parsed !== null;
-      }
-      if (typeof this.value === 'object' && this.value !== null) {
-        return true;
-      }
-      return false;
-    } catch {
+    const { data, error } = this.getParsedJson();
+    if (error) {
       return false;
     }
+    // Only objects and arrays are considered the "correct format" for rich rendering by this type
+    return typeof data === 'object' && data !== null;
   }
 
   init(): Promise<void> {
-    // Create a good filename from the first property or a default name
-    let filename = 'data.json';
-    try {
-      const jsonObj = typeof this.value === 'string' ? JSON.parse(this.value) : this.value;
-      // Try to create a meaningful filename from the first property if it's a string
-      if (typeof jsonObj === 'object' && jsonObj !== null) {
-        const firstKey = Object.keys(jsonObj)[0];
-        if (firstKey && typeof jsonObj[firstKey] === 'string' && jsonObj[firstKey].length < 30) {
-          filename = `${firstKey}-${jsonObj[firstKey].replace(/[^a-z0-9]/gi, '-')}.json`;
-        } else if (firstKey && typeof jsonObj[firstKey] === 'number') {
-          filename = `${firstKey}-${jsonObj[firstKey]}.json`;
-        } else if (firstKey) {
-          filename = `${firstKey}.json`;
-        }
-      }
-    } catch {
-      // If anything fails, use the default filename
-    }
-
-    // Add download action to the actions array
-    this.actions.push(
-      new FoldableAction(
-        1,
-        'Download JSON',
-        `data:text/json;charset=utf-8,${encodeURIComponent(typeof this.value === 'string' ? this.value : JSON.stringify(this.value, null, 2))}#filename=${filename}`,
-        'secondary',
-      ),
-    );
+    // Invalidate cache if data changes, though init() doesn't receive new value here
+    // If `this.value` could be externally changed after instantiation, a setter for `value`
+    // in GenericIdentifierType or here should clear _parsedJsonResult.
+    this._parsedJsonResult = undefined;
     return Promise.resolve();
   }
 
@@ -63,29 +64,25 @@ export class JSONType extends GenericIdentifierType {
     return false;
   }
 
-  renderPreview(): FunctionalComponent<any> {
-    let jsonObj: any = this.value;
-    if (typeof this.value === 'string') {
-      try {
-        jsonObj = JSON.parse(this.value);
-      } catch {
-        return <span class="text-red-500">Invalid JSON</span>;
-      }
+  renderPreview() {
+    const { data: jsonObj, error } = this.getParsedJson();
+
+    if (error) {
+      return <span class="text-red-500">Invalid JSON</span>;
     }
 
-    // Show a more condensed and user-friendly preview
-    const isComplex = typeof jsonObj === 'object' && jsonObj !== null;
+    // Show a more condensed and user-friendly preview for objects/arrays
+    const isComplexObjectOrArray = typeof jsonObj === 'object' && jsonObj !== null;
     const isArray = Array.isArray(jsonObj);
-    const entryCount = isComplex ? Object.keys(jsonObj).length : 0;
 
-    // For complex objects/arrays, show a summary rather than the raw JSON
-    if (isComplex) {
+    if (isComplexObjectOrArray) {
+      const entryCount = Object.keys(jsonObj).length;
       return (
         <div class="w-full">
-          <div class="bg-gray-100 rounded-md p-2 text-xs font-mono flex items-center">
+          <div class="bg-gray-100 rounded-md text-xs font-mono flex items-center">
             <span class="font-medium mr-1">{isArray ? 'Array' : 'Object'}</span>
             <span class="text-gray-500">{isArray ? '[' : '{'}</span>
-            <span class="text-gray-500 text-xs ml-1">
+            <span class="text-gray-500 text-xs">
               {entryCount} {entryCount === 1 ? 'item' : 'items'}
             </span>
             <span class="text-gray-500">{isArray ? ']' : '}'}</span>
@@ -94,19 +91,32 @@ export class JSONType extends GenericIdentifierType {
       );
     }
 
-    // For simple values, show the stringified value
+    // For simple JSON values (strings, numbers, booleans, null), show the stringified value
     return (
       <div class="w-full">
-        <pre class="bg-gray-100 rounded-md p-2 text-xs font-mono overflow-x-auto whitespace-pre-wrap max-w-full">{JSON.stringify(jsonObj, null, 2)}</pre>
+        <pre class="bg-gray-100 rounded-md text-xs font-mono overflow-x-auto whitespace-pre-wrap max-w-full">{JSON.stringify(jsonObj, null, 2)}</pre>
       </div>
     );
   }
 
-  renderBody(): FunctionalComponent<any> {
+  renderBody(): FunctionalComponent<never> {
+    const { data: parsedData, error } = this.getParsedJson();
+
+    if (error) {
+      return (
+        <div class="w-full overflow-y-auto">
+          <span class="text-red-500">Invalid JSON data: {error.message}</span>
+        </div>
+      );
+    }
+
     return (
-      <json-viewer data={this.value} max-height={500} expand-all={false} show-line-numbers={true} theme="light">
-        <span class="text-red-500">Invalid JSON data</span>
-      </json-viewer>
+      <div class="w-full overflow-y-auto">
+        <json-viewer data={parsedData} expand-all={false} show-line-numbers={true} theme="light">
+          {/* This slot content will be shown if json-viewer itself fails or if data is not renderable by it */}
+          <span class="text-red-500">Could not display JSON data.</span>
+        </json-viewer>
+      </div>
     );
   }
 }
