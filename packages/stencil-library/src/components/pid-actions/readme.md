@@ -9,6 +9,7 @@
 |-----------|-----------|-----------------------------|--------------------|---------|
 | `actions` | `actions` | Array of actions to display | `FoldableAction[]` | `[]`    |
 
+
 ## Dependencies
 
 ### Used by

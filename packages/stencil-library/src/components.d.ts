@@ -171,8 +171,7 @@ export namespace Components {
      * Initial width of the component (e.g. '500px', '50%'). If not set, defaults to 500px on large screens, 400px on medium screens, and 300px on small screens.
      * @type {string}
      */
-    "width"?: string'width'
-    interface PidDataTable {
+    "width"?: string'width'   interface PidDataTable {
       /**
        * Current level of subcomponents
        * @default 0
