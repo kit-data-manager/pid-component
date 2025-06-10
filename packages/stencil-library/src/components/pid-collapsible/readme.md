@@ -2,6 +2,7 @@
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property        | Attribute        | Description                                               | Type      | Default     |
@@ -13,11 +14,13 @@
 | `lineHeight`    | `line-height`    | Line height for collapsed state                           | `number`  | `24`        |
 | `open`          | `open`           | Whether the collapsible is open by default                | `boolean` | `false`     |
 
+
 ## Events
 
 | Event               | Description                                   | Type                   |
 |---------------------|-----------------------------------------------|------------------------|
 | `collapsibleToggle` | Event emitted when the collapsible is toggled | `CustomEvent<boolean>` |
+
 
 ## Dependencies
 
@@ -26,12 +29,10 @@
 - [pid-component](../pid-component)
 
 ### Graph
-
 ```mermaid
-graph TD
-;
+graph TD;
   pid-component --> pid-collapsible
-  style pid-collapsible fill: #f9f, stroke: #333, stroke-width: 4px
+  style pid-collapsible fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------

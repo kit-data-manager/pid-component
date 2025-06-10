@@ -92,9 +92,9 @@ export class PidDataTable {
     }
 
     return (
-      <div class="rounded-lg border border-gray-200 bg-gray-50 m-1 max-h-[calc(100%-40px)]">
+      <div class="rounded-lg border border-gray-200 bg-gray-50 m-1 flex flex-col h-full">
         {/* Table container with scrollable content */}
-        <div class="overflow-auto max-h-full">
+        <div class="overflow-auto flex-grow">
           <table class="w-full text-left text-sm font-sans select-text border-collapse table-fixed" aria-label="Data table">
             <thead class="bg-slate-600 text-slate-200 rounded-t-lg sticky top-0 z-10">
               <tr class="font-semibold">
@@ -114,7 +114,7 @@ export class PidDataTable {
                 >
                   <td class={'p-2 min-w-[150px] w-auto font-mono align-middle'}>
                     <div class="h-7 leading-7 overflow-hidden w-full">
-                      <pid-tooltip text={value.keyTooltip}>
+                      <pid-tooltip text={value.keyTooltip || `Details for ${value.keyTitle}`}>
                         <a
                           slot="trigger"
                           href={value.keyLink}
@@ -140,16 +140,19 @@ export class PidDataTable {
                               currentLevelOfSubcomponents={this.currentLevelOfSubcomponents + 1}
                               amountOfItems={this.itemsPerPage}
                               settings={this.settings}
+                              openByDefault={false}
+                              // openByDefault={this.loadSubcomponents}
                               class="flex-grow"
                             />
                           ) : !this.hideSubcomponents && this.currentLevelOfSubcomponents === this.levelOfSubcomponents && !value.renderDynamically ? (
                             <pid-component
                               value={value.value}
                               levelOfSubcomponents={this.currentLevelOfSubcomponents}
-                              currentLevelOfSubcomponents={this.currentLevelOfSubcomponents}
+                              currentLevelOfSubcomponents={this.currentLevelOfSubcomponents + 1}
                               amountOfItems={this.itemsPerPage}
                               settings={this.settings}
                               hideSubcomponents={true}
+                              openByDefault={false}
                               class="flex-grow"
                             />
                           ) : (
@@ -158,7 +161,7 @@ export class PidDataTable {
                         }
                       </div>
                     </div>
-                    <copy-button value={value.value} class="absolute right-0 top-1/2 -translate-y-1/2 flex-shrink-0 z-10 opacity-100 visible" />
+                    <copy-button value={value.value} class="absolute right-2 top-1/2 -translate-y-1/2 flex-shrink-0 z-20 opacity-100 visible hover:z-30 cursor-pointer" />
                   </td>
                 </tr>
               ))}
@@ -166,7 +169,10 @@ export class PidDataTable {
           </table>
         </div>
 
-        <pid-pagination currentPage={this.currentPage} totalItems={this.items.length} itemsPerPage={this.itemsPerPage} onPageChange={e => this.handlePageChange(e.detail)} />
+        {/* Fixed footer with pagination - always visible */}
+        <div class="sticky bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-20 mt-auto">
+          <pid-pagination currentPage={this.currentPage} totalItems={this.items.length} itemsPerPage={this.itemsPerPage} onPageChange={e => this.handlePageChange(e.detail)} />
+        </div>
       </div>
     );
   }

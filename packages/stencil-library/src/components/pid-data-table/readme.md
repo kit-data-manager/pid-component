@@ -2,6 +2,7 @@
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property                      | Attribute                        | Description                            | Type             | Default |
@@ -14,6 +15,7 @@
 | `levelOfSubcomponents`        | `level-of-subcomponents`         | Total level of subcomponents           | `number`         | `1`     |
 | `loadSubcomponents`           | `load-subcomponents`             | Whether to load subcomponents          | `boolean`        | `false` |
 | `settings`                    | `settings`                       | Settings to pass to subcomponents      | `string`         | `'[]'`  |
+
 
 ## Events
 
@@ -35,7 +37,6 @@
 - [pid-pagination](../pid-pagination)
 
 ### Graph
-
 ```mermaid
 graph TD;
   pid-data-table --> pid-tooltip

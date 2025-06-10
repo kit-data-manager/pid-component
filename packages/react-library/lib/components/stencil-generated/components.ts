@@ -24,6 +24,10 @@ import {
   LocaleVisualization as LocaleVisualizationElement,
 } from '@kit-data-manager/pid-component/dist/components/locale-visualization.js';
 import {
+  defineCustomElement as definePidActions,
+  PidActions as PidActionsElement,
+} from '@kit-data-manager/pid-component/dist/components/pid-actions.js';
+import {
   defineCustomElement as definePidCollapsible,
   PidCollapsible as PidCollapsibleElement,
 } from '@kit-data-manager/pid-component/dist/components/pid-collapsible.js';
@@ -58,9 +62,7 @@ export const ColorHighlight: StencilReactComponent<ColorHighlightElement, ColorH
   defineCustomElement: defineColorHighlight
 });
 
-export type CopyButtonEvents = Non
-,
-Nullable<unknown>;
+export type CopyButtonEvents = NonNulla,ble<unknown>;
 
 export const CopyButton: StencilReactComponent<CopyButtonElement, CopyButtonEvents> = /*@__PURE__*/ createComponent<CopyButtonElement, CopyButtonEvents>({
   tagName: 'copy-button',
@@ -91,6 +93,17 @@ export const LocaleVisualization: StencilReactComponent<LocaleVisualizationEleme
   react: React,
   events: {} as LocaleVisualizationEvents,
   defineCustomElement: defineLocaleVisualization,
+});
+
+export type PidActionsEvents = NonNullable<unknown>;
+
+export const PidActions: StencilReactComponent<PidActionsElement, PidActionsEvents> = /*@__PURE__*/ createComponent<PidActionsElement, PidActionsEvents>({
+  tagName: 'pid-actions',
+  elementClass: PidActionsElement,
+  // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+  react: React,
+  events: {} as PidActionsEvents,
+  defineCustomElement: definePidActions,
 });
 
 export type PidCollapsibleEvents = { onCollapsibleToggle: EventName<CustomEvent<boolean>> };

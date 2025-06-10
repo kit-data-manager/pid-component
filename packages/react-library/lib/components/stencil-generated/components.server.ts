@@ -16,6 +16,7 @@ import { JsonViewer as JsonViewerElement } from '@kit-data-manager/pid-component
 import {
   LocaleVisualization as LocaleVisualizationElement,
 } from '@kit-data-manager/pid-component/dist/components/locale-visualization.js';
+import { PidActions as PidActionsElement } from '@kit-data-manager/pid-component/dist/components/pid-actions.js';
 import {
   PidCollapsible as PidCollapsibleElement,
 } from '@kit-data-manager/pid-component/dist/components/pid-collapsible.js';
@@ -28,8 +29,7 @@ import { PidTooltip as PidTooltipElement } from '@kit-data-manager/pid-component
 import type { EventName, StencilReactComponent } from '@stencil/react-output-target/runtime';
 import { createComponent, type SerializeShadowRootOptions } from '@stencil/react-output-target/ssr';
 
-export const serializeShadowRoot: SerializeShadowRootOptions = {
-  default: "declarative'declarative-shadow-dom'type ColorHighlightEvents = NonNullable<unknown>;
+export const serializeShadowRoot: SerializeShadowRootOptions = { default: "declarative'declarative-shadow-dom'type ColorHighlightEvents = NonNullable<unknown>;
 
 export const ColorHighlight: StencilReactComponent<ColorHighlightElement, ColorHighlightEvents> = /*@__PURE__*/ createComponent<ColorHighlightElement, ColorHighlightEvents>({
   tagName: 'color-highlight',
@@ -71,6 +71,15 @@ export const LocaleVisualization: StencilReactComponent<LocaleVisualizationEleme
     locale: 'locale',
     showFlag: 'show-flag',
   },
+  hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
+  serializeShadowRoot,
+});
+
+export type PidActionsEvents = NonNullable<unknown>;
+
+export const PidActions: StencilReactComponent<PidActionsElement, PidActionsEvents> = /*@__PURE__*/ createComponent<PidActionsElement, PidActionsEvents>({
+  tagName: 'pid-actions',
+  properties: { actions: 'actions' },
   hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
   serializeShadowRoot,
 });

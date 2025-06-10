@@ -56,8 +56,8 @@ export class PidPagination {
     }
 
     return (
-      <div class="flex items-center justify-between border-t border-gray-200 bg-white px-1 py-1 text-xs">
-        <div class="hidden sm:flex sm:flex-1 sm:flex-nowrap sm:items-center sm:justify-between">
+      <div class="flex items-center justify-between border-t border-gray-200 bg-white px-1 py-1 text-xs sticky bottom-0 left-0 right-0 z-20">
+        <div class="flex flex-1 flex-nowrap items-center justify-between">
           <div>
             <p class="text-xs text-gray-700">
               Showing

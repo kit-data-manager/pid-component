@@ -43,6 +43,7 @@ Type: `Promise<void>`
 - [copy-button](../copy-button)
 - [pid-collapsible](../pid-collapsible)
 - [pid-data-table](../pid-data-table)
+- [pid-actions](../pid-actions)
 
 ### Graph
 ```mermaid
@@ -50,6 +51,7 @@ graph TD;
   pid-component --> copy-button
   pid-component --> pid-collapsible
   pid-component --> pid-data-table
+  pid-component --> pid-actions
   pid-data-table --> pid-component
   style pid-component fill:#f9f,stroke:#333,stroke-width:4px
 ```

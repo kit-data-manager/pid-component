@@ -235,13 +235,17 @@ export class PidComponent {
    * The expanded state is now handled by the pid-collapsible component.
    */
   private toggleSubcomponents = (event?: CustomEvent<boolean>) => {
-    if (!this.hideSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) {
-      this.loadSubcomponents = !this.loadSubcomponents;
-    }
-
     // Update expanded state based on collapsible event
     if (event) {
+      // Stop propagation to prevent parent pid-components from collapsing
+      event.stopPropagation();
+
       this.isExpanded = event.detail;
+
+      // Only toggle loadSubcomponents when expanding, not when collapsing
+      if (event.detail && !this.hideSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) {
+        this.loadSubcomponents = true;
+      }
     }
   };
 
@@ -447,6 +451,7 @@ export class PidComponent {
             )
           ) : (
             <pid-collapsible
+              // emphasize={true}
               open={this.openByDefault}
               emphasize={this.emphasizeComponent || this.temporarilyEmphasized}
               expanded={this.isExpanded}
@@ -454,6 +459,11 @@ export class PidComponent {
               initialHeight={this.height}
               lineHeight={this._lineHeight}
               onCollapsibleToggle={e => this.toggleSubcomponents(e)}
+              onClick={e => {
+                // Isolate click events to prevent bubbling to parent components
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+              }}
             >
               <span
                 slot="summary"
@@ -463,7 +473,7 @@ export class PidComponent {
               </span>
 
               {this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy && (this.emphasizeComponent || this.temporarilyEmphasized) ? (
-                <copy-button slot="summary-actions" value={this.identifierObject.value} class="absolute right-2" />
+                <copy-button slot="summary-actions" value={this.value} class="absolute right-2" />
               ) : null}
 
               {/* Table and content */}
@@ -478,38 +488,14 @@ export class PidComponent {
                   levelOfSubcomponents={this.levelOfSubcomponents}
                   settings={this.settings}
                   onPageChange={e => (this.tablePage = e.detail)}
+                  class="flex-grow"
                 />
               ) : null}
 
               {this.identifierObject?.renderBody()}
 
               {/* Actions */}
-              {this.actions.length > 0 ? (
-                <div class="actions-container sticky bottom-0 bg-white border-t border-gray-200 p-1 z-10 mt-auto">
-                  <span class={'flex justify-between gap-1'}>
-                    {this.actions.map(action => {
-                      let style = 'p-1 font-semibold text-sm rounded border ';
-                      switch (action.style) {
-                        case 'primary':
-                          style += 'bg-blue-500 text-white';
-                          break;
-                        case 'secondary':
-                          style += 'bg-slate-200 text-blue-500';
-                          break;
-                        case 'danger':
-                          style += 'bg-red-500 text-white';
-                          break;
-                      }
-
-                      return (
-                        <a key={`action-${action.title}`} href={action.link} class={style} rel={'noopener noreferrer'} target={'_blank'}>
-                          {action.title}
-                        </a>
-                      );
-                    })}
-                  </span>
-                </div>
-              ) : null}
+              {this.actions.length > 0 ? <pid-actions actions={this.actions}></pid-actions> : null}
             </pid-collapsible>
           )
         }

@@ -2,3 +2,53 @@
 details summary::-webkit-details-marker {
   display: none;
 }
+
+/* Ensure resize property works correctly */
+pid-collapsible.resize-both {
+  resize: both !important;
+  overflow: auto !important;
+  max-width: 100% !important; /* Prevent exceeding parent container */
+}
+
+/* Safari-specific fixes */
+@media not all and (min-resolution: .001dpcm) {
+  @supports (-webkit-appearance:none) {
+    pid-collapsible details {
+      display: flex !important;
+      flex-direction: column !important;
+    }
+
+    pid-collapsible details summary {
+      display: block !important;
+    }
+
+    pid-collapsible.resize-both {
+      -webkit-resize: both !important;
+    }
+  }
+}
+
+/* Style for resize handle */
+pid-collapsible.resize-both::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  cursor: nwse-resize;
+  z-index: 30; /* Ensure resize handle is above other elements */
+}
+
+/* Ensure details element takes full height */
+pid-collapsible details {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ensure content area takes remaining height */
+pid-collapsible details .flex-grow {
+  flex: 1;
+  min-height: 0; /* Allow flex to shrink below content size */
+}

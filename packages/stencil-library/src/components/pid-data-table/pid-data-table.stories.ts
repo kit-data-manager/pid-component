@@ -147,16 +147,19 @@ export const Default: Story = {
     itemsPerPage: 5,
   },
   render: args => html`
-    <pid-data-table
-      .items=${args.items}
-      itemsPerPage=${args.itemsPerPage}
-      currentPage=${args.currentPage}
-      loadSubcomponents=${args.loadSubcomponents}
-      hideSubcomponents=${args.hideSubcomponents}
-      currentLevelOfSubcomponents=${args.currentLevelOfSubcomponents}
-      levelOfSubcomponents=${args.levelOfSubcomponents}
-      settings=${args.settings}
-    ></pid-data-table>
+    <div style="width: 800px; border: 1px solid #ccc; padding: 10px; margin: 20px;">
+      <pid-data-table
+        .items=${args.items}
+        itemsPerPage=${args.itemsPerPage}
+        currentPage=${args.currentPage}
+        loadSubcomponents=${args.loadSubcomponents}
+        hideSubcomponents=${args.hideSubcomponents}
+        currentLevelOfSubcomponents=${args.currentLevelOfSubcomponents}
+        levelOfSubcomponents=${args.levelOfSubcomponents}
+        settings=${args.settings}
+        @pageChange=${e => console.log('Page changed to', e.detail)}
+      ></pid-data-table>
+    </div>
   `,
   parameters: {
     docs: {
@@ -183,16 +186,19 @@ export const WithMoreItemsPerPage: Story = {
     itemsPerPage: 10,
   },
   render: args => html`
-    <pid-data-table
-      .items=${args.items}
-      itemsPerPage=${args.itemsPerPage}
-      currentPage=${args.currentPage}
-      loadSubcomponents=${args.loadSubcomponents}
-      hideSubcomponents=${args.hideSubcomponents}
-      currentLevelOfSubcomponents=${args.currentLevelOfSubcomponents}
-      levelOfSubcomponents=${args.levelOfSubcomponents}
-      settings=${args.settings}
-    ></pid-data-table>
+    <div style="width: 800px; border: 1px solid #ccc; padding: 10px; margin: 20px;">
+      <pid-data-table
+        .items=${args.items}
+        itemsPerPage=${args.itemsPerPage}
+        currentPage=${args.currentPage}
+        loadSubcomponents=${args.loadSubcomponents}
+        hideSubcomponents=${args.hideSubcomponents}
+        currentLevelOfSubcomponents=${args.currentLevelOfSubcomponents}
+        levelOfSubcomponents=${args.levelOfSubcomponents}
+        settings=${args.settings}
+        @pageChange=${e => console.log('Page changed to', e.detail)}
+      ></pid-data-table>
+    </div>
   `,
   parameters: {
     docs: {
@@ -220,16 +226,19 @@ export const WithLoadSubcomponents: Story = {
     loadSubcomponents: true,
   },
   render: args => html`
-    <pid-data-table
-      .items=${args.items}
-      itemsPerPage=${args.itemsPerPage}
-      currentPage=${args.currentPage}
-      loadSubcomponents=${args.loadSubcomponents}
-      hideSubcomponents=${args.hideSubcomponents}
-      currentLevelOfSubcomponents=${args.currentLevelOfSubcomponents}
-      levelOfSubcomponents=${args.levelOfSubcomponents}
-      settings=${args.settings}
-    ></pid-data-table>
+    <div style="width: 800px; border: 1px solid #ccc; padding: 10px; margin: 20px;">
+      <pid-data-table
+        .items=${args.items}
+        itemsPerPage=${args.itemsPerPage}
+        currentPage=${args.currentPage}
+        loadSubcomponents=${args.loadSubcomponents}
+        hideSubcomponents=${args.hideSubcomponents}
+        currentLevelOfSubcomponents=${args.currentLevelOfSubcomponents}
+        levelOfSubcomponents=${args.levelOfSubcomponents}
+        settings=${args.settings}
+        @pageChange=${e => console.log('Page changed to', e.detail)}
+      ></pid-data-table>
+    </div>
   `,
   parameters: {
     docs: {

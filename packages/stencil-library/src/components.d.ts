@@ -5,8 +5,10 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
+import { FoldableAction } from './utils/FoldableAction';
 import { FoldableItem } from './utils/FoldableItem';
 
+export { FoldableAction } from './utils/FoldableAction';
 export { FoldableItem } from './utils/FoldableItem';
 export namespace Components {
     interface ColorHighlight {
@@ -78,75 +80,38 @@ export namespace Components {
        */
       "showFlag": bool'showFlag'
 
-      interface;
-      PidCollapsible
+  interface PidActions {
+    /**
+     * Array of actions to display
+     * @default []
+     */
+    "actions": Folda'actions'[];
+  }
 
-  {
+  interface PidCollapsible {
     /**
      * Whether to emphasize the component with border and shadow
      * @default false
      */
-    'emphasize';
-  :
-    boo;
-  'emphasize' **
-  *
-    Whether;
-    the;
-    component;
-    is in expanded;
-    mode(full
-    size;
-  )
-  * @default
-    false
-    * /
-    'expanded';
-  :
-    bool;
-  'expanded' **
-  *
-    Initial;
-    height;
-    when;
-    expanded
-    * /
-    'initialHeight' ? 'initialHeight' **
-  *
-    Initial;
-    width;
-    when;
-    expanded
-    * /
-    'initialWidth' ? : 'initialWidth' **
-  *
-    Line;
-    height;
-    for collapsed state
-    * @
-  default
-    24
-    * /
-    'lineHeight';
-  :
-    nu;
-    'lineHeight' *
-    * Whether;
-    the;
-    collapsible;
-    is;
-    open;
-    by;
-  default
-  * @default
-    false
-    * /
-    'open';
-  :
-    boolean;
-    'open';
-
-    interface PidComponent {
+    "emphasize": boo'emphasize'**
+     * Whether the component is in expanded mode (full size)
+     * @default false
+     */
+    "expanded": bool'expanded'**
+     * Initial height when expanded
+     */
+    "initialHeight"?'initialHeight'**
+     * Initial width when expanded
+     */
+    "initialWidth"?:'initialWidth'**
+     * Line height for collapsed state
+     * @default 24
+     */
+    "lineHeight": nu'lineHeight'*
+     * Whether the collapsible is open by default
+     * @default false
+     */
+    "open": boolean;'open'   interface PidComponent {
       /**
        * The number of items to show in the table per page. Defaults to 10. (optional)
        * @type {number}
@@ -219,7 +184,6 @@ export namespace Components {
        */
       'width'?: string;
     }
-
     interface PidDataTable {
       /**
        * Current level of subcomponents
@@ -262,7 +226,6 @@ export namespace Components {
        */
       'settings': string;
     }
-
     interface PidPagination {
       /**
        * Current page (0-based index)
@@ -280,7 +243,6 @@ export namespace Components {
        */
       'totalItems': number;
     }
-
     interface PidTooltip {
       /**
        * The maximum height of the tooltip
@@ -302,19 +264,19 @@ export namespace Components {
        */
       'text': string;
     }
-  }
+}
 
-  export interface PidCollapsibleCustomEvent<T> extends CustomEvent<T> {
+export interface PidCollapsibleCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPidCollapsibleElement;
-  }
+}
 
-  export interface PidDataTableCustomEvent<T> extends CustomEvent<T> {
+export interface PidDataTableCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPidDataTableElement;
-  }
+}
 
-  export interface PidPaginationCustomEvent<T> extends CustomEvent<T> {
+export interface PidPaginationCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPidPaginationElement;
 }
@@ -345,6 +307,14 @@ declare global {
         prototype: HTMLLocaleVisualizationElement;
         new (): HTMLLocaleVisualizationElement;
     };
+
+  interface HTMLPidActionsElement extends Components.PidActions, HTMLStencilElement {
+  }
+
+  var HTMLPidActionsElement: {
+    prototype: HTMLPidActionsElement;
+    new(): HTMLPidActionsElement;
+  };
 
   interface HTMLPidCollapsibleElementEventMap {
     'collapsibleToggle': boolean;
@@ -445,6 +415,7 @@ declare global {
         "copy-button": HTMLCopyButtonElement;
       'json-viewer': HTMLJsonViewerElement;
         "locale-visualization": HTMLLocaleVisualizationElement;
+      'pid-actions': HTMLPidActionsElement;
       'pid-collapsible': HTMLPidCollapsibleElement;
         "pid-component": HTMLPidComponentElement;
       'pid-data-table': HTMLPidDataTableElement;
@@ -515,6 +486,14 @@ declare namespace LocalJSX {
          */
         "showFlag"?: boolean;
     }
+
+  interface PidActions {
+    /**
+     * Array of actions to display
+     * @default []
+     */
+    'actions'?: FoldableAction[];
+  }
 
   interface PidCollapsible {
     /**
@@ -715,6 +694,7 @@ declare namespace LocalJSX {
         "copy-button": CopyButton;
       'json-viewer': JsonViewer;
         "locale-visualization": LocaleVisualization;
+      'pid-actions': PidActions;
       'pid-collapsible': PidCollapsible;
         "pid-component": PidComponent;
       'pid-data-table': PidDataTable;
@@ -730,6 +710,7 @@ declare module "@stencil/core" {
             "copy-button": LocalJSX.CopyButton & JSXBase.HTMLAttributes<HTMLCopyButtonElement>;
           'json-viewer': LocalJSX.JsonViewer & JSXBase.HTMLAttributes<HTMLJsonViewerElement>;
             "locale-visualization": LocalJSX.LocaleVisualization & JSXBase.HTMLAttributes<HTMLLocaleVisualizationElement>;
+          'pid-actions': LocalJSX.PidActions & JSXBase.HTMLAttributes<HTMLPidActionsElement>;
           'pid-collapsible': LocalJSX.PidCollapsible & JSXBase.HTMLAttributes<HTMLPidCollapsibleElement>;
             "pid-component": LocalJSX.PidComponent & JSXBase.HTMLAttributes<HTMLPidComponentElement>;
           'pid-data-table': LocalJSX.PidDataTable & JSXBase.HTMLAttributes<HTMLPidDataTableElement>;

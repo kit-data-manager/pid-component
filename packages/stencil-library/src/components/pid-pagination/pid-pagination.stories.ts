@@ -63,7 +63,16 @@ export const Default: Story = {
     totalItems: 100,
     itemsPerPage: 10,
   },
-  render: args => html` <pid-pagination currentPage=${args.currentPage} totalItems=${args.totalItems} itemsPerPage=${args.itemsPerPage}></pid-pagination> `,
+  render: args => html`
+    <div style="width: 500px; border: 1px solid #ccc; padding: 10px;">
+      <pid-pagination
+        currentPage=${args.currentPage}
+        totalItems=${args.totalItems}
+        itemsPerPage=${args.itemsPerPage}
+        @pageChange=${e => console.log('Page changed to', e.detail)}
+      ></pid-pagination>
+    </div>
+  `,
   parameters: {
     docs: {
       source: {
@@ -85,7 +94,16 @@ export const WithMoreItemsPerPage: Story = {
     totalItems: 100,
     itemsPerPage: 20,
   },
-  render: args => html` <pid-pagination currentPage=${args.currentPage} totalItems=${args.totalItems} itemsPerPage=${args.itemsPerPage}></pid-pagination> `,
+  render: args => html`
+    <div style="width: 500px; border: 1px solid #ccc; padding: 10px;">
+      <pid-pagination
+        currentPage=${args.currentPage}
+        totalItems=${args.totalItems}
+        itemsPerPage=${args.itemsPerPage}
+        @pageChange=${e => console.log('Page changed to', e.detail)}
+      ></pid-pagination>
+    </div>
+  `,
   parameters: {
     docs: {
       source: {
@@ -107,7 +125,16 @@ export const OnSecondPage: Story = {
     totalItems: 100,
     itemsPerPage: 10,
   },
-  render: args => html` <pid-pagination currentPage=${args.currentPage} totalItems=${args.totalItems} itemsPerPage=${args.itemsPerPage}></pid-pagination> `,
+  render: args => html`
+    <div style="width: 500px; border: 1px solid #ccc; padding: 10px;">
+      <pid-pagination
+        currentPage=${args.currentPage}
+        totalItems=${args.totalItems}
+        itemsPerPage=${args.itemsPerPage}
+        @pageChange=${e => console.log('Page changed to', e.detail)}
+      ></pid-pagination>
+    </div>
+  `,
   parameters: {
     docs: {
       source: {
@@ -129,7 +156,16 @@ export const WithFewItems: Story = {
     totalItems: 5,
     itemsPerPage: 10,
   },
-  render: args => html` <pid-pagination currentPage=${args.currentPage} totalItems=${args.totalItems} itemsPerPage=${args.itemsPerPage}></pid-pagination> `,
+  render: args => html`
+    <div style="width: 500px; border: 1px solid #ccc; padding: 10px;">
+      <pid-pagination
+        currentPage=${args.currentPage}
+        totalItems=${args.totalItems}
+        itemsPerPage=${args.itemsPerPage}
+        @pageChange=${e => console.log('Page changed to', e.detail)}
+      ></pid-pagination>
+    </div>
+  `,
   parameters: {
     docs: {
       source: {

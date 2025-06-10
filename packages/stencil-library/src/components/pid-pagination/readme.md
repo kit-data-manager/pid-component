@@ -2,6 +2,7 @@
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property       | Attribute        | Description                  | Type     | Default |
@@ -10,11 +11,13 @@
 | `itemsPerPage` | `items-per-page` | Number of items per page     | `number` | `10`    |
 | `totalItems`   | `total-items`    | Total number of items        | `number` | `0`     |
 
+
 ## Events
 
 | Event        | Description                     | Type                  |
 |--------------|---------------------------------|-----------------------|
 | `pageChange` | Event emitted when page changes | `CustomEvent<number>` |
+
 
 ## Dependencies
 
@@ -23,12 +26,10 @@
 - [pid-data-table](../pid-data-table)
 
 ### Graph
-
 ```mermaid
-graph TD
-;
+graph TD;
   pid-data-table --> pid-pagination
-  style pid-pagination fill: #f9f, stroke: #333, stroke-width: 4px
+  style pid-pagination fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------
