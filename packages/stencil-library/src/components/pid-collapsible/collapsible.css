@@ -1,0 +1,4 @@
+/* Hide default details marker - can't be done with Tailwind */
+details summary::-webkit-details-marker {
+  display: none;
+}

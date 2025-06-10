@@ -16,11 +16,20 @@ import { JsonViewer as JsonViewerElement } from '@kit-data-manager/pid-component
 import {
   LocaleVisualization as LocaleVisualizationElement,
 } from '@kit-data-manager/pid-component/dist/components/locale-visualization.js';
+import {
+  PidCollapsible as PidCollapsibleElement,
+} from '@kit-data-manager/pid-component/dist/components/pid-collapsible.js';
 import { PidComponent as PidComponentElement } from '@kit-data-manager/pid-component/dist/components/pid-component.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import { PidDataTable as PidDataTableElement } from '@kit-data-manager/pid-component/dist/components/pid-data-table.js';
+import {
+  PidPagination as PidPaginationElement,
+} from '@kit-data-manager/pid-component/dist/components/pid-pagination.js';
+import { PidTooltip as PidTooltipElement } from '@kit-data-manager/pid-component/dist/components/pid-tooltip.js';
+import type { EventName, StencilReactComponent } from '@stencil/react-output-target/runtime';
 import { createComponent, type SerializeShadowRootOptions } from '@stencil/react-output-target/ssr';
 
-export const serializeShadowRoot: SerializeShadowRootOptions = { default: "decla'declarative-shadow-dom'xport type ColorHighlightEvents = NonNullable<unknown>;
+export const serializeShadowRoot: SerializeShadowRootOptions = {
+  default: "declarative'declarative-shadow-dom'type ColorHighlightEvents = NonNullable<unknown>;
 
 export const ColorHighlight: StencilReactComponent<ColorHighlightElement, ColorHighlightEvents> = /*@__PURE__*/ createComponent<ColorHighlightElement, ColorHighlightEvents>({
   tagName: 'color-highlight',
@@ -66,6 +75,22 @@ export const LocaleVisualization: StencilReactComponent<LocaleVisualizationEleme
   serializeShadowRoot,
 });
 
+export type PidCollapsibleEvents = { onCollapsibleToggle: EventName<CustomEvent<boolean>> };
+
+export const PidCollapsible: StencilReactComponent<PidCollapsibleElement, PidCollapsibleEvents> = /*@__PURE__*/ createComponent<PidCollapsibleElement, PidCollapsibleEvents>({
+  tagName: 'pid-collapsible',
+  properties: {
+    open: 'open',
+    emphasize: 'emphasize',
+    expanded: 'expanded',
+    initialWidth: 'initial-width',
+    initialHeight: 'initial-height',
+    lineHeight: 'line-height',
+  },
+  hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
+  serializeShadowRoot,
+});
+
 export type PidComponentEvents = NonNullable<unknown>;
 
 export const PidComponent: StencilReactComponent<PidComponentElement, PidComponentEvents> = /*@__PURE__*/ createComponent<PidComponentElement, PidComponentEvents>({
@@ -83,6 +108,51 @@ export const PidComponent: StencilReactComponent<PidComponentElement, PidCompone
     defaultTTL: 'default-t-t-l',
     width: 'width',
     height: 'height',
+  },
+  hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
+  serializeShadowRoot,
+});
+
+export type PidDataTableEvents = { onPageChange: EventName<CustomEvent<number>> };
+
+export const PidDataTable: StencilReactComponent<PidDataTableElement, PidDataTableEvents> = /*@__PURE__*/ createComponent<PidDataTableElement, PidDataTableEvents>({
+  tagName: 'pid-data-table',
+  properties: {
+    items: 'items',
+    itemsPerPage: 'items-per-page',
+    currentPage: 'current-page',
+    loadSubcomponents: 'load-subcomponents',
+    hideSubcomponents: 'hide-subcomponents',
+    currentLevelOfSubcomponents: 'current-level-of-subcomponents',
+    levelOfSubcomponents: 'level-of-subcomponents',
+    settings: 'settings',
+  },
+  hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
+  serializeShadowRoot,
+});
+
+export type PidPaginationEvents = { onPageChange: EventName<CustomEvent<number>> };
+
+export const PidPagination: StencilReactComponent<PidPaginationElement, PidPaginationEvents> = /*@__PURE__*/ createComponent<PidPaginationElement, PidPaginationEvents>({
+  tagName: 'pid-pagination',
+  properties: {
+    currentPage: 'current-page',
+    totalItems: 'total-items',
+    itemsPerPage: 'items-per-page',
+  },
+  hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
+  serializeShadowRoot,
+});
+
+export type PidTooltipEvents = NonNullable<unknown>;
+
+export const PidTooltip: StencilReactComponent<PidTooltipElement, PidTooltipEvents> = /*@__PURE__*/ createComponent<PidTooltipElement, PidTooltipEvents>({
+  tagName: 'pid-tooltip',
+  properties: {
+    text: 'text',
+    position: 'position',
+    maxWidth: 'max-width',
+    maxHeight: 'max-height',
   },
   hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
   serializeShadowRoot,

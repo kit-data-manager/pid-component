@@ -24,10 +24,26 @@ import {
   LocaleVisualization as LocaleVisualizationElement,
 } from '@kit-data-manager/pid-component/dist/components/locale-visualization.js';
 import {
+  defineCustomElement as definePidCollapsible,
+  PidCollapsible as PidCollapsibleElement,
+} from '@kit-data-manager/pid-component/dist/components/pid-collapsible.js';
+import {
   defineCustomElement as definePidComponent,
   PidComponent as PidComponentElement,
 } from '@kit-data-manager/pid-component/dist/components/pid-component.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import {
+  defineCustomElement as definePidDataTable,
+  PidDataTable as PidDataTableElement,
+} from '@kit-data-manager/pid-component/dist/components/pid-data-table.js';
+import {
+  defineCustomElement as definePidPagination,
+  PidPagination as PidPaginationElement,
+} from '@kit-data-manager/pid-component/dist/components/pid-pagination.js';
+import {
+  defineCustomElement as definePidTooltip,
+  PidTooltip as PidTooltipElement,
+} from '@kit-data-manager/pid-component/dist/components/pid-tooltip.js';
+import type { EventName, StencilReactComponent } from '@stencil/react-output-target/runtime';
 import { createComponent } from '@stencil/react-output-target/runtime';
 import React from 'react';
 
@@ -42,7 +58,9 @@ export const ColorHighlight: StencilReactComponent<ColorHighlightElement, ColorH
   defineCustomElement: defineColorHighlight
 });
 
-export type Co,pyButtonEvents = NonNullable<unknown>;
+export type CopyButtonEvents = Non
+,
+Nullable<unknown>;
 
 export const CopyButton: StencilReactComponent<CopyButtonElement, CopyButtonEvents> = /*@__PURE__*/ createComponent<CopyButtonElement, CopyButtonEvents>({
   tagName: 'copy-button',
@@ -75,6 +93,17 @@ export const LocaleVisualization: StencilReactComponent<LocaleVisualizationEleme
   defineCustomElement: defineLocaleVisualization,
 });
 
+export type PidCollapsibleEvents = { onCollapsibleToggle: EventName<CustomEvent<boolean>> };
+
+export const PidCollapsible: StencilReactComponent<PidCollapsibleElement, PidCollapsibleEvents> = /*@__PURE__*/ createComponent<PidCollapsibleElement, PidCollapsibleEvents>({
+  tagName: 'pid-collapsible',
+  elementClass: PidCollapsibleElement,
+  // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+  react: React,
+  events: { onCollapsibleToggle: 'collapsibleToggle' } as PidCollapsibleEvents,
+  defineCustomElement: definePidCollapsible,
+});
+
 export type PidComponentEvents = NonNullable<unknown>;
 
 export const PidComponent: StencilReactComponent<PidComponentElement, PidComponentEvents> = /*@__PURE__*/ createComponent<PidComponentElement, PidComponentEvents>({
@@ -84,4 +113,37 @@ export const PidComponent: StencilReactComponent<PidComponentElement, PidCompone
   react: React,
   events: {} as PidComponentEvents,
   defineCustomElement: definePidComponent,
+});
+
+export type PidDataTableEvents = { onPageChange: EventName<CustomEvent<number>> };
+
+export const PidDataTable: StencilReactComponent<PidDataTableElement, PidDataTableEvents> = /*@__PURE__*/ createComponent<PidDataTableElement, PidDataTableEvents>({
+  tagName: 'pid-data-table',
+  elementClass: PidDataTableElement,
+  // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+  react: React,
+  events: { onPageChange: 'pageChange' } as PidDataTableEvents,
+  defineCustomElement: definePidDataTable,
+});
+
+export type PidPaginationEvents = { onPageChange: EventName<CustomEvent<number>> };
+
+export const PidPagination: StencilReactComponent<PidPaginationElement, PidPaginationEvents> = /*@__PURE__*/ createComponent<PidPaginationElement, PidPaginationEvents>({
+  tagName: 'pid-pagination',
+  elementClass: PidPaginationElement,
+  // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+  react: React,
+  events: { onPageChange: 'pageChange' } as PidPaginationEvents,
+  defineCustomElement: definePidPagination,
+});
+
+export type PidTooltipEvents = NonNullable<unknown>;
+
+export const PidTooltip: StencilReactComponent<PidTooltipElement, PidTooltipEvents> = /*@__PURE__*/ createComponent<PidTooltipElement, PidTooltipEvents>({
+  tagName: 'pid-tooltip',
+  elementClass: PidTooltipElement,
+  // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+  react: React,
+  events: {} as PidTooltipEvents,
+  defineCustomElement: definePidTooltip,
 });

@@ -26,6 +26,7 @@
 ### `updateComponentSizing() => Promise<void>`
 
 Updates the component sizing and styling based on the expanded state
+This method is now handled by the pid-collapsible component
 
 #### Returns
 
@@ -35,17 +36,21 @@ Type: `Promise<void>`
 
 ### Used by
 
- - [pid-component](.)
+- [pid-data-table](../pid-data-table)
 
 ### Depends on
 
 - [copy-button](../copy-button)
-- [pid-component](.)
+- [pid-collapsible](../pid-collapsible)
+- [pid-data-table](../pid-data-table)
 
 ### Graph
 ```mermaid
 graph TD;
-  pid-component --> pid-component
+  pid-component --> copy-button
+  pid-component --> pid-collapsible
+  pid-component --> pid-data-table
+  pid-data-table --> pid-component
   style pid-component fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

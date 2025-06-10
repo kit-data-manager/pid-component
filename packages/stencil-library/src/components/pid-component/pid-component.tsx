@@ -1,4 +1,4 @@
-import { Component, Element, Fragment, h, Host, Method, Prop, State, Watch } from '@stencil/core';
+import { Component, Element, h, Host, Method, Prop, State, Watch } from '@stencil/core';
 import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
 import { FoldableItem } from '../../utils/FoldableItem';
 import { FoldableAction } from '../../utils/FoldableAction';
@@ -127,103 +127,12 @@ export class PidComponent {
 
   /**
    * Updates the component sizing and styling based on the expanded state
+   * This method is now handled by the pid-collapsible component
    */
   @Method()
   async updateComponentSizing() {
-    // Save current dimensions if expanded before making changes
-    if (this.isExpanded && !this._currentExpandedWidth) {
-      this._currentExpandedWidth = this.el.style.width || this.width || '500px';
-      this._currentExpandedHeight = this.el.style.height || this.height || '300px';
-    }
-
-    if (this.isExpanded) {
-      // For expanded state, use Tailwind classes only
-      this.el.classList.add('resize-both');
-      this.el.classList.add('overflow-auto');
-      this.el.classList.add('min-w-[500px]');
-      this.el.classList.add('min-h-[300px]');
-      this.el.classList.add('w-[500px]');
-      this.el.classList.add('h-[300px]');
-      this.el.classList.add('max-w-full');
-      this.el.classList.add('float-left');
-      this.el.classList.add('bg-white');
-
-      // Set width and height through classes to respect Tailwind
-      if (this.width) {
-        this.el.style.width = this.width;
-      }
-
-      if (this.height) {
-        this.el.style.height = this.height;
-      }
-
-      // Remove any existing resize indicators first to avoid duplicates
-      this.el.querySelectorAll('.resize-indicator').forEach(element => element.remove());
-
-      // Show resize indicator only when expanded
-      const resizeIndicator = document.createElement('div');
-      resizeIndicator.className = 'absolute bottom-0 right-0 w-4 h-4 opacity-100 pointer-events-none resize-indicator z-50';
-      resizeIndicator.innerHTML = `
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M22 2L2 22" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
-          <path d="M22 8L8 22" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
-          <path d="M22 14L14 22" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-      `;
-      this.el.appendChild(resizeIndicator);
-
-      // Create pseudo-element for resize handle to make it more visible and usable
-      const style = document.createElement('style');
-      style.innerHTML = `
-          #${this.el.id} {
-            resize: both !important;
-            overflow: auto !important;
-          }
-        `;
-      document.head.appendChild(style);
-      this.el.dataset.hasResizeStyle = 'true';
-    } else {
-      // Component is collapsed - fit to a single line
-      this.el.classList.remove('resize-both');
-      this.el.classList.remove('min-w-[500px]');
-      this.el.classList.remove('min-h-[300px]');
-      this.el.classList.remove('w-[500px]');
-      this.el.classList.remove('h-[300px]');
-      this.el.classList.remove('max-w-full');
-      this.el.classList.remove('overflow-auto');
-
-      // Don't reset saved dimensions when collapsing, just remove styling
-      // We'll reuse these dimensions the next time we expand
-
-      // Add specific collapsed state classes
-      this.el.classList.add('w-auto');
-      this.el.classList.add('float-left');
-      this.el.classList.add('inline-block');
-      this.el.classList.add('align-middle');
-      this.el.classList.add('overflow-hidden');
-      this.el.classList.add('py-0');
-      this.el.classList.add('my-0');
-
-      // Apply computed line height for text sizing
-      const lineHeight = this._lineHeight || 24; // Default fallback
-      this.el.style.height = `${lineHeight}px`;
-      this.el.style.lineHeight = `${lineHeight}px`;
-
-      // Hide resize indicator when collapsed
-      const resizeIndicator = this.el.querySelector('.resize-indicator');
-      if (resizeIndicator) {
-        resizeIndicator.remove();
-      }
-
-      // Remove resize handle if it exists
-      if (this.el.dataset.hasResizeHandle === 'true') {
-        const resizeHandle = this.el.querySelector('.resize-handle');
-        if (resizeHandle) {
-          resizeHandle.remove();
-        }
-        delete this.el.dataset.hasResizeHandle;
-      }
-    }
+    // This method is kept for backward compatibility
+    console.log('updateComponentSizing is now handled by the pid-collapsible component');
   }
 
   // Height property already defined above in updateComponentSizing method
@@ -279,38 +188,9 @@ export class PidComponent {
     // Add clear-after to prevent text from flowing under the component
     this.el.classList.add('after:content-[""]', 'after:block', 'after:clear-both');
 
-    // Initialize component based on expanded state
-    this.updateComponentSizing();
-
-    // Initialize component ID for resize handle references
+    // Initialize component ID for references
     if (!this.el.id) {
       this.el.id = `pid-component-${Math.random().toString(36).substr(2, 9)}`;
-    }
-
-    // Add event listener for resize handle
-    if (this.isExpanded) {
-      // Allow resizing through mouse interaction when expanded
-      this.el.style.resize = 'both';
-      this.el.style.overflow = 'auto';
-
-      // Initialize resize observer to ensure proper display after manual resizing
-      this._resizeObserver = new ResizeObserver(() => {
-        // Save current dimensions when resizing
-        if (this.isExpanded) {
-          this._currentExpandedWidth = this.el.style.width || this.el.clientWidth + 'px';
-          this._currentExpandedHeight = this.el.style.height || this.el.clientHeight + 'px';
-        }
-
-        // Ensure proper positioning of copy buttons
-        const valueCells = this.el.querySelectorAll('td.relative');
-        valueCells.forEach(cell => {
-          const copyButton = cell.querySelector('copy-button');
-          if (copyButton) {
-            copyButton.classList.add('absolute', 'right-2', 'top-1/2', '-translate-y-1/2');
-          }
-        });
-      });
-      this._resizeObserver.observe(this.el);
     }
   }
 
@@ -346,122 +226,33 @@ export class PidComponent {
 
   @Watch('openByDefault')
   watchOpenByDefault() {
-    // Save dimensions before state changes
-    const wasExpanded = this.isExpanded;
-    if (wasExpanded) {
-      this._currentExpandedWidth = this.el.style.width || this.el.clientWidth + 'px';
-      this._currentExpandedHeight = this.el.style.height || this.el.clientHeight + 'px';
-    }
-
+    // Update expanded state based on openByDefault
     this.isExpanded = this.openByDefault;
-
-    if (this.isExpanded) {
-      // When expanding
-      if (!this._originalWidth) {
-        // First time expanding
-        this._originalWidth = this.width || '500px';
-        this._originalHeight = this.height || '300px';
-      }
-
-      // Use saved dimensions from previous expand if available
-      if (this._currentExpandedWidth && this._currentExpandedHeight) {
-        this.el.style.width = this._currentExpandedWidth;
-        this.el.style.height = this._currentExpandedHeight;
-      } else {
-        // Otherwise use original dimensions
-        this.el.style.width = this._originalWidth || '500px';
-        this.el.style.height = this._originalHeight || '300px';
-      }
-    }
-
-    this.updateComponentSizing();
   }
 
   /**
    * Toggles the loadSubcomponents property if the current level of subcomponents is not the total level of subcomponents.
-   * Also updates the expanded state of the component.
+   * The expanded state is now handled by the pid-collapsible component.
    */
-  private toggleSubcomponents = (event?: Event) => {
+  private toggleSubcomponents = (event?: CustomEvent<boolean>) => {
     if (!this.hideSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) {
       this.loadSubcomponents = !this.loadSubcomponents;
     }
 
-    // Update expanded state based on details element
-    if (event && event.target) {
-      const details = (event.target as HTMLElement).closest('details');
-      if (details) {
-        // Save current dimensions before state change if component is expanded
-        if (this.isExpanded) {
-          this._currentExpandedWidth = this.el.style.width || this.el.clientWidth + 'px';
-          this._currentExpandedHeight = this.el.style.height || this.el.clientHeight + 'px';
-        }
-
-        this.isExpanded = details.open;
-        this.updateComponentSizing();
-      }
+    // Update expanded state based on collapsible event
+    if (event) {
+      this.isExpanded = event.detail;
     }
   };
 
-  /**
-   * Shows the tooltip of the hovered/focused element.
-   * @param event The event that triggered this function.
-   */
-  private showTooltip = (event: Event) => {
-    const target = event.currentTarget as HTMLElement;
-
-    // Find and show the tooltip
-    if (target) {
-      const tooltip = target.querySelector('[role="tooltip"]');
-      if (tooltip) {
-        tooltip.classList.remove('hidden');
-        // Add ARIA attributes for accessibility
-        target.setAttribute('aria-describedby', tooltip.id || 'tooltip');
-      }
-    }
-  };
-
-  /**
-   * Hides the tooltip of the hovered/focused element.
-   * @param event The event that triggered this function.
-   */
-  private hideTooltip = (event: Event) => {
-    const target = event.currentTarget as HTMLElement;
-
-    // Find and hide the tooltip
-    if (target) {
-      const tooltip = target.querySelector('[role="tooltip"]');
-      if (tooltip) {
-        tooltip.classList.add('hidden');
-        // Remove ARIA attributes
-        target.removeAttribute('aria-describedby');
-      }
-    }
-  };
+  // Tooltip functionality has been moved to the pid-tooltip component
 
   /**
    * Parses the value and settings, generates the items and actions and sets the displayStatus to "loaded".
    */
-  // Store the filtered items to avoid recalculating on every render
-  private _filteredItems: FoldableItem[] = [];
-
-  /**
-   * Updates the filtered items based on the current page and amount of items.
-   * @private
-   */
-  private updateFilteredItems(): void {
-    this._filteredItems = this.items.filter((_, index) => {
-      return index >= this.tablePage * this.amountOfItems && index < this.tablePage * this.amountOfItems + this.amountOfItems;
-    });
-  }
-
-  @Watch('tablePage')
-  onTablePageChange(): void {
-    this.updateFilteredItems();
-  }
 
   @Watch('items')
   onItemsChange(): void {
-    this.updateFilteredItems();
     // Reset page if we're beyond the available pages
     const maxPage = Math.ceil(this.items.length / this.amountOfItems) - 1;
     if (this.tablePage > maxPage && maxPage >= 0) {
@@ -579,31 +370,6 @@ export class PidComponent {
     this.items = [];
     this.actions = [];
 
-    // Remove any dynamically added elements
-    const resizeIndicator = this.el.querySelector('.resize-indicator');
-    if (resizeIndicator) {
-      resizeIndicator.remove();
-    }
-
-    // Remove event listeners
-    const detailsElement = this.el.querySelector('details');
-    if (detailsElement) {
-      detailsElement.removeEventListener('toggle', () => this.toggleSubcomponents());
-    }
-
-    // Remove resize event listeners if added
-    if (this._resizeObserver) {
-      this._resizeObserver.disconnect();
-    }
-
-    // Remove any custom styles that were added
-    if (this.el.dataset.hasResizeStyle === 'true') {
-      const styleElement = Array.from(document.head.querySelectorAll('style')).find(style => style.innerHTML.includes(`#${this.el.id}::before`));
-      if (styleElement) {
-        styleElement.remove();
-      }
-    }
-
     // Cancel any pending operations
     if (this._abortController) {
       this._abortController.abort();
@@ -614,17 +380,6 @@ export class PidComponent {
   // AbortController for canceling pending operations
   private _abortController?: AbortController;
 
-  // ResizeObserver for handling component resizing
-  private _resizeObserver?: ResizeObserver;
-
-  // Store original dimensions to restore after folding/unfolding
-  private _originalWidth: string | null = null;
-  private _originalHeight: string | null = null;
-
-  // Store current dimensions for resizing
-  private _currentExpandedWidth: string | null = null;
-  private _currentExpandedHeight: string | null = null;
-
   // Store computed line height for collapsed state
   private _lineHeight: number = 24; // Default fallback
 
@@ -633,20 +388,7 @@ export class PidComponent {
    */
   render() {
     return (
-      <Host
-        class={`relative ${this.emphasizeComponent ? 'border border-gray-300 rounded-md shadow-sm' : ''} mr-4 float-left
-        ${this.isExpanded ? 'mb-4 max-w-full resize-both overflow-auto' : 'my-0 inline-block align-middle overflow-hidden'}
-        bg-white font-sans ${this.isExpanded ? 'text-xs' : 'text-sm'}
-        ${this.isExpanded ? 'min-w-[500px] min-h-[300px] w-[500px] h-[300px]' : ''}`}
-        style={
-          !this.isExpanded
-            ? {
-                height: `${this._lineHeight || 24}px`,
-                lineHeight: `${this._lineHeight || 24}px`,
-              }
-            : {}
-        }
-      >
+      <Host class="relative font-sans">
         {
           // Check if there are any items or actions to show, or if there's a body to render
           (this.items.length === 0 && this.actions.length === 0 && !this.identifierObject?.renderBody()) || this.hideSubcomponents ? (
@@ -704,254 +446,44 @@ export class PidComponent {
               </span>
             )
           ) : (
-            <details
-              class="group w-full text-clip font-sans transition-all duration-200 ease-in-out flex flex-col h-full"
+            <pid-collapsible
               open={this.openByDefault}
-              onToggle={this.toggleSubcomponents}
-              aria-label="Identifier details section"
+              emphasize={this.emphasizeComponent || this.temporarilyEmphasized}
+              expanded={this.isExpanded}
+              initialWidth={this.width}
+              initialHeight={this.height}
+              lineHeight={this._lineHeight}
+              onCollapsibleToggle={e => this.toggleSubcomponents(e)}
             >
-              <summary
-                class={`font-bold font-mono cursor-pointer list-none flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded-lg marker:hidden ${this.isExpanded ? 'sticky top-0 bg-white z-10 border-b border-gray-100 p-1 overflow-visible' : 'px-0.5 py-0 whitespace-nowrap text-ellipsis overflow-hidden'}`}
-                style={
-                  !this.isExpanded
-                    ? {
-                        height: `${this._lineHeight || 24}px`,
-                        lineHeight: `${this._lineHeight || 24}px`,
-                      }
-                    : {}
-                }
+              <span
+                slot="summary"
+                class={`font-medium font-mono inline-flex text-sm select-all ${this.isExpanded ? 'flex-wrap overflow-visible break-words' : 'flex-nowrap overflow-x-auto whitespace-nowrap'}`}
               >
-                <span class={`inline-flex pr-1 items-center ${this.isExpanded ? 'flex-wrap overflow-visible' : 'flex-nowrap overflow-x-auto'}`}>
-                  {this.emphasizeComponent || this.temporarilyEmphasized ? (
-                    <span class={'flex-shrink-0 pr-1'}>
-                      <svg
-                        class="transition group-open:-rotate-180"
-                        fill="none"
-                        height="12"
-                        shape-rendering="geometricPrecision"
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="1.5"
-                        viewBox="0 0 12 12"
-                        width="10"
-                        aria-hidden="true"
-                      >
-                        <path d="M 2 3 l 4 6 l 4 -6"></path>
-                      </svg>
-                    </span>
-                  ) : (
-                    ''
-                  )}
-                  <span
-                    class={`font-medium font-mono inline-flex text-sm select-all ${this.isExpanded ? 'flex-wrap overflow-visible break-words' : 'flex-nowrap overflow-x-auto whitespace-nowrap'}`}
-                  >
-                    {// Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
-                    this.identifierObject?.renderPreview()}
-                  </span>
-                </span>
-                {
-                  // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
-                  this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy && (this.emphasizeComponent || this.temporarilyEmphasized) ? (
-                    <copy-button value={this.identifierObject.value} class="absolute right-2" />
-                  ) : (
-                    ''
-                  )
-                }
-              </summary>
-              {
-                // If there are any items to show, render the table
-                this.items.length > 0 ? (
-                  <Fragment>
-                    <div class="rounded-lg border border-gray-200 bg-gray-50 m-1 max-h-[calc(100%-40px)]">
-                      {/* Table container with scrollable content */}
-                      <div class="overflow-auto max-h-full">
-                        <table class="w-full text-left text-sm font-sans select-text border-collapse table-fixed" aria-label="Identifier details">
-                          <thead class="bg-slate-600 text-slate-200 rounded-t-lg sticky top-0 z-10">
-                            <tr class="font-semibold">
-                              <th class="px-2 py-2 min-w-[150px] w-[30%] rounded-tl-lg" scope="col">
-                                Key
-                              </th>
-                              <th class="px-2 py-2 w-[70%] rounded-tr-lg" scope="col">
-                                Value
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody class="bg-gray-50">
-                            {this._filteredItems.map((value, index) => (
-                              <tr
-                                key={`item-${value.keyTitle}`}
-                                class={`odd:bg-slate-200 even:bg-gray-50 h-7 leading-7 ${index !== this._filteredItems.length - 1 ? 'border-b border-gray-200' : ''}`}
-                              >
-                                <td class={'p-2 min-w-[150px] w-auto font-mono align-middle'}>
-                                  <div class="h-7 leading-7 overflow-hidden w-full">
-                                    <div
-                                      class="cursor-pointer relative inline-block w-full"
-                                      onMouseOver={this.showTooltip}
-                                      onFocus={this.showTooltip}
-                                      onMouseOut={this.hideTooltip}
-                                      onBlur={this.hideTooltip}
-                                      tabIndex={0}
-                                      aria-label={value.keyTitle}
-                                    >
-                                      <div class="flex items-center justify-between">
-                                        <a
-                                          href={value.keyLink}
-                                          target={'_blank'}
-                                          rel={'noopener noreferrer'}
-                                          class="mr-2 text-blue-600 underline hover:text-blue-800 truncate"
-                                          onClick={e => e.stopPropagation()}
-                                        >
-                                          {value.keyTitle}
-                                        </a>
-                                        <svg
-                                          aria-hidden="true"
-                                          xmlns="http://www.w3.org/2000/svg"
-                                          class="icon icon-tabler icon-tabler-info-circle min-w-[1rem] min-h-[1rem] flex-shrink-0"
-                                          width="20"
-                                          height="20"
-                                          viewBox="0 0 24 24"
-                                          stroke-width="1.5"
-                                          stroke="#A0AEC0"
-                                          fill="none"
-                                          stroke-linecap="round"
-                                          stroke-linejoin="round"
-                                        >
-                                          <path stroke="none" d="M0 0h24v24H0z" />
-                                          <circle cx="12" cy="12" r="9" />
-                                          <line x1="12" y1="8" x2="12.01" y2="8" />
-                                          <polyline points="11 12 12 12 12 16 13 16" />
-                                        </svg>
-                                      </div>
-                                      <div
-                                        role="tooltip"
-                                        id={`tooltip-${value.keyTitle.replace(/\s+/g, '-').toLowerCase()}`}
-                                        class="hidden z-20 absolute top-full left-0 mt-1 transition duration-100 ease-in-out shadow-md bg-white rounded text-xs text-gray-600 p-2 max-w-full w-full overflow-y-auto max-h-[150px] whitespace-normal border border-gray-200"
-                                      >
-                                        {value.keyTooltip}
-                                      </div>
-                                    </div>
-                                  </div>
-                                </td>
-                                <td class={'align-top text-sm p-2 w-full select-text relative'}>
-                                  <div class="w-full min-h-7 pr-8 flex items-center relative">
-                                    <div class="w-full overflow-x-auto whitespace-normal break-words max-h-[200px] overflow-y-auto">
-                                      {
-                                        // Load a foldable subcomponent if subcomponents are not disabled (hideSubcomponents), and the current level of subcomponents is not the total level of subcomponents. If the subcomponent is on the bottom level of the hierarchy, render just a preview. If the value should not be resolved (isFoldable), just render the value as text.
-                                        this.loadSubcomponents && !this.hideSubcomponents && !value.renderDynamically ? (
-                                          <pid-component
-                                            value={value.value}
-                                            levelOfSubcomponents={this.levelOfSubcomponents}
-                                            // emphasizeComponent={this.emphasizeComponent}
-                                            currentLevelOfSubcomponents={this.currentLevelOfSubcomponents + 1}
-                                            amountOfItems={this.amountOfItems}
-                                            settings={this.settings}
-                                            class="flex-grow"
-                                          />
-                                        ) : !this.hideSubcomponents && this.currentLevelOfSubcomponents === this.levelOfSubcomponents && !value.renderDynamically ? (
-                                          <pid-component
-                                            value={value.value}
-                                            levelOfSubcomponents={this.currentLevelOfSubcomponents}
-                                            // emphasizeComponent={this.emphasizeComponent}
-                                            currentLevelOfSubcomponents={this.currentLevelOfSubcomponents}
-                                            amountOfItems={this.amountOfItems}
-                                            settings={this.settings}
-                                            hideSubcomponents={true}
-                                            class="flex-grow"
-                                          />
-                                        ) : (
-                                          <span class={'font-mono text-sm overflow-x-auto whitespace-normal break-words inline-block max-w-full'}>{value.value}</span>
-                                        )
-                                      }
-                                    </div>
-                                  </div>
-                                  <copy-button value={value.value} class="absolute right-0 top-1/2 -translate-y-1/2 flex-shrink-0 z-10 opacity-100 visible" />
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                    <div class="sticky bottom-0 flex items-center justify-between border-t border-gray-200 bg-white px-1 py-1 max-h-10 rounded-b-lg text-xs z-10">
-                      <div class="hidden sm:flex sm:flex-1 sm:flex-nowrap sm:items-center sm:justify-between text-sm">
-                        <div>
-                          <p class="text-xs text-gray-700">
-                            Showing
-                            <span class="font-medium"> {1 + this.tablePage * this.amountOfItems} </span>
-                            to
-                            <span class="font-medium"> {Math.min(this.tablePage * this.amountOfItems + this.amountOfItems, this.items.length)} </span>
-                            of
-                            <span class="font-medium"> {this.items.length} </span>
-                            entries
-                          </p>
-                        </div>
-                        <div>
-                          {this.items.length > this.amountOfItems ? (
-                            <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-                              <button
-                                onClick={() => {
-                                  this.tablePage = Math.max(this.tablePage - 1, 0);
-                                }}
-                                class="relative inline-flex items-center rounded-l-md px-1 py-0.5 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
-                                aria-label="Previous page"
-                              >
-                                <span class="sr-only">Previous</span>
-                                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                  <path
-                                    fill-rule="evenodd"
-                                    d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 01-1.06.02z"
-                                    clip-rule="evenodd"
-                                  />
-                                </svg>
-                              </button>
-                              {Array(Math.ceil(this.items.length / this.amountOfItems))
-                                .fill(0)
-                                .map((_, index) => {
-                                  return (
-                                    <button
-                                      key={`page-${index}`}
-                                      onClick={() => (this.tablePage = index)}
-                                      class={
-                                        index === this.tablePage
-                                          ? 'relative z-10 inline-flex items-center bg-blue-600 px-2 py-0.5 text-xs font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
-                                          : 'relative hidden items-center px-2 py-0.5 text-xs font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 md:inline-flex'
-                                      }
-                                      aria-label={`Page ${index + 1}`}
-                                    >
-                                      {index + 1}
-                                    </button>
-                                  );
-                                })}
-                              <button
-                                onClick={() => {
-                                  this.tablePage = Math.min(this.tablePage + 1, Math.floor(this.items.length / this.amountOfItems));
-                                }}
-                                class="relative inline-flex items-center rounded-r-md px-1 py-0.5 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
-                                aria-label="Next page"
-                              >
-                                <span class="sr-only">Next</span>
-                                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                  <path
-                                    fill-rule="evenodd"
-                                    d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
-                                    clip-rule="evenodd"
-                                  />
-                                </svg>
-                              </button>
-                            </nav>
-                          ) : (
-                            ''
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </Fragment>
-                ) : (
-                  ''
-                )
-              }
+                {this.identifierObject?.renderPreview()}
+              </span>
+
+              {this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy && (this.emphasizeComponent || this.temporarilyEmphasized) ? (
+                <copy-button slot="summary-actions" value={this.identifierObject.value} class="absolute right-2" />
+              ) : null}
+
+              {/* Table and content */}
+              {this.items.length > 0 ? (
+                <pid-data-table
+                  items={this.items}
+                  itemsPerPage={this.amountOfItems}
+                  currentPage={this.tablePage}
+                  loadSubcomponents={this.loadSubcomponents}
+                  hideSubcomponents={this.hideSubcomponents}
+                  currentLevelOfSubcomponents={this.currentLevelOfSubcomponents}
+                  levelOfSubcomponents={this.levelOfSubcomponents}
+                  settings={this.settings}
+                  onPageChange={e => (this.tablePage = e.detail)}
+                />
+              ) : null}
+
               {this.identifierObject?.renderBody()}
+
+              {/* Actions */}
               {this.actions.length > 0 ? (
                 <div class="actions-container sticky bottom-0 bg-white border-t border-gray-200 p-1 z-10 mt-auto">
                   <span class={'flex justify-between gap-1'}>
@@ -977,10 +509,8 @@ export class PidComponent {
                     })}
                   </span>
                 </div>
-              ) : (
-                ''
-              )}
-            </details>
+              ) : null}
+            </pid-collapsible>
           )
         }
       </Host>

@@ -15,11 +15,13 @@
 ### Used by
 
  - [pid-component](../pid-component)
+- [pid-data-table](../pid-data-table)
 
 ### Graph
 ```mermaid
 graph TD;
   pid-component --> copy-button
+  pid-data-table --> copy-button
   style copy-button fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
