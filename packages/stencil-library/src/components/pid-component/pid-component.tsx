@@ -495,7 +495,7 @@ export class PidComponent {
               {this.identifierObject?.renderBody()}
 
               {/* Actions */}
-              {this.actions.length > 0 ? <pid-actions actions={this.actions}></pid-actions> : null}
+              {this.actions.length > 0 ? <pid-actions actions={this.actions} class="z-30"></pid-actions> : null}
             </pid-collapsible>
           )
         }

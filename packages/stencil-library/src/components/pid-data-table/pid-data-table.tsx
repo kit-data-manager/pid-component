@@ -170,7 +170,7 @@ export class PidDataTable {
         </div>
 
         {/* Fixed footer with pagination - always visible */}
-        <div class="sticky bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-20 mt-auto">
+        <div class="sticky bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-30 mt-auto">
           <pid-pagination currentPage={this.currentPage} totalItems={this.items.length} itemsPerPage={this.itemsPerPage} onPageChange={e => this.handlePageChange(e.detail)} />
         </div>
       </div>

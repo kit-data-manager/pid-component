@@ -12,6 +12,7 @@
 | `position`          | `position`   | The position of the tooltip        | `"bottom" \| "left" \| "right" \| "top"` | `'top'`     |
 | `text` _(required)_ | `text`       | The text to display in the tooltip | `string`                                 | `undefined` |
 
+
 ## Dependencies
 
 ### Used by

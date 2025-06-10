@@ -76,47 +76,27 @@ export class PidCollapsible {
   }
 
   componentDidLoad() {
+    // Clean up any existing ResizeObserver to prevent memory leaks
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
+
     this.updateSizing();
 
     // Add event listeners for Safari compatibility
     this.addSafariCompatibilityListeners();
 
-    // Initialize ResizeObserver to track resize events
+    // Initialize ResizeObserver to only track dimensions without auto-resizing
     this.resizeObserver = new ResizeObserver(entries => {
       for (const entry of entries) {
         if (this.expanded) {
-          // Calculate content dimensions
-          const contentElement = this.el.querySelector('.flex-grow');
-          const contentWidth = contentElement?.scrollWidth || 300;
-          const contentHeight = contentElement?.scrollHeight || 200;
-
-          // Get current dimensions
+          // Simply track current dimensions without modifying them automatically
           const currentWidth = entry.contentRect.width;
           const currentHeight = entry.contentRect.height;
 
-          // Update state with current dimensions
+          // Just update state without auto-resizing
           this.currentWidth = `${currentWidth}px`;
           this.currentHeight = `${currentHeight}px`;
-
-          // Always enforce constraints to prevent oversizing
-          // Add padding to content dimensions for better appearance
-          const maxWidth = contentWidth + 40;
-          const maxHeight = contentHeight + 60;
-
-          // Set max-width and max-height constraints
-          this.el.style.maxWidth = `${maxWidth}px`;
-          this.el.style.maxHeight = `${maxHeight}px`;
-
-          // If current dimensions exceed content dimensions, resize to fit content
-          if (currentWidth > maxWidth) {
-            this.el.style.width = `${maxWidth}px`;
-            this.currentWidth = `${maxWidth}px`;
-          }
-
-          if (currentHeight > maxHeight) {
-            this.el.style.height = `${maxHeight}px`;
-            this.currentHeight = `${maxHeight}px`;
-          }
         }
       }
     });
@@ -205,8 +185,8 @@ export class PidCollapsible {
       // For expanded state
       this.el.classList.add('resize-both', 'overflow-auto', 'float-left', 'bg-white');
 
-      // Use min-width and min-height with smaller values to allow content to determine size
-      this.el.classList.add('min-w-[300px]', 'min-h-[200px]');
+      // Use min-width and min-height with larger values to ensure UI elements remain visible
+      this.el.classList.add('min-w-[350px]', 'min-h-[250px]');
 
       // Calculate content dimensions
       const contentElement = this.el.querySelector('.flex-grow');
@@ -260,7 +240,7 @@ export class PidCollapsible {
       }
     } else {
       // For collapsed state
-      this.el.classList.remove('resize-both', 'min-w-[300px]', 'min-h-[200px]', 'overflow-auto');
+      this.el.classList.remove('resize-both', 'min-w-[350px]', 'min-h-[250px]', 'overflow-auto');
 
       // Clear max-width and max-height constraints
       this.el.style.maxWidth = '';
@@ -273,6 +253,9 @@ export class PidCollapsible {
       if (this.el.style.height) {
         this.currentHeight = this.el.style.height;
       }
+
+      // Reset width to auto to fit content in collapsed state
+      this.el.style.width = 'auto';
 
       // Add collapsed state classes
       this.el.classList.add('w-auto', 'float-left', 'inline-block', 'align-middle', 'overflow-hidden', 'py-0', 'my-0');
@@ -382,6 +365,8 @@ export class PidCollapsible {
   };
 
   render() {
+    // No automatic resizing on render, let the regular component lifecycle handle it
+
     // Create resize indicator if expanded
     const resizeIndicator = this.expanded ? (
       <div class="absolute bottom-0 right-0 w-4 h-4 opacity-100 pointer-events-none z-50">

@@ -23,6 +23,7 @@
 |--------------|---------------------------------|-----------------------|
 | `pageChange` | Event emitted when page changes | `CustomEvent<number>` |
 
+
 ## Dependencies
 
 ### Used by
