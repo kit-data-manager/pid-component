@@ -213,29 +213,24 @@ export namespace Components {
      * Settings to pass to subcomponents
      * @default '[]'
      */
-    "settings": stri'settings'    interface PidPagination {
-      /**
-       * Current page (0-based index)
-       * @default 0
-       */
-      'currentPage': number;
-      /**
-       * Number of items per page
-       * @default 10
-       */
-      'itemsPerPage': number;
-      /**
-       * Available page sizes
-       * @default [5, 10, 25, 50, 100]
-       */
-      'pageSizes': number[];
-      /**
-       * Total number of items
-       * @default 0
-       */
-      'totalItems': number;
-    }
-    interface PidTooltip {
+    "settings": stri'settings' interface PidPagination {
+    /**
+     * Current page (0-based index)
+     * @default 0
+     */
+    "currentPage": n'currentPage'*
+     * Number of items per page
+     * @default 10
+     */
+    "itemsPerPage": 'itemsPerPage'*
+     * Available page sizes
+     * @default [5, 10, 25, 50, 100]
+     */
+    "pageSizes": num'pageSizes'/**
+     * Total number of items
+     * @default 0
+     */
+    "totalItems": nu'totalItems'    interface PidTooltip {
       /**
        * The maximum height of the tooltip
        * @default '150px'

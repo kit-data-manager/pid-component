@@ -47,6 +47,18 @@ pid-collapsible details {
   flex-direction: column;
 }
 
+/* Ensure footer sticks to bottom of container */
+pid-collapsible details > div:last-of-type {
+  margin-top: auto;
+}
+
+/* Fix for Safari to ensure the footer stays at the bottom */
+@supports (-webkit-appearance:none) {
+  pid-collapsible details {
+    min-height: 100%;
+  }
+}
+
 /* Ensure dropdowns are visible */
 pid-collapsible .overflow-visible {
   overflow: visible !important;
@@ -58,6 +70,24 @@ pid-collapsible [slot="footer-actions"],
 pid-collapsible [slot="footer-pagination"] {
   position: relative;
   z-index: 40;
+}
+
+/* Ensure copy buttons appear above footer when scrolling */
+pid-collapsible copy-button {
+  z-index: 50;
+}
+
+/* Make pagination container positioned above content but below dropdowns */
+pid-collapsible pid-pagination {
+  position: relative;
+  z-index: 45;
+  width: 100%;
+}
+
+/* Prevent pagination dropdowns from being cut off */
+pid-collapsible .overflow-visible,
+pid-pagination .overflow-visible {
+  overflow: visible !important;
 }
 
 :host {

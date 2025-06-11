@@ -541,13 +541,18 @@ export class PidCollapsible {
           </div>
 
           {this.showFooter && this.expanded && (
-            <div class={footerClasses}>
-              <div class="flex-grow">
-                <slot name="footer-left"></slot>
-              </div>
-              <div class="flex items-center gap-2">
-                <slot name="footer-actions"></slot>
-                <slot name="footer-pagination"></slot>
+            <div class="flex flex-col w-full mt-auto sticky bottom-0 left-0 right-0 bg-white border-t border-gray-200">
+              {/* Main footer slot for pagination */}
+              <slot name="footer"></slot>
+
+              {/* Actions row */}
+              <div class={footerClasses}>
+                <div class="flex-grow">
+                  <slot name="footer-left"></slot>
+                </div>
+                <div class="flex items-center gap-2">
+                  <slot name="footer-actions"></slot>
+                </div>
               </div>
             </div>
           )}

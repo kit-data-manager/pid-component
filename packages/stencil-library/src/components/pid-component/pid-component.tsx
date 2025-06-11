@@ -496,17 +496,21 @@ export class PidComponent {
 
               {this.identifierObject?.renderBody()}
 
-              <pid-pagination
-                slot="footer-pagination"
-                currentPage={this.tablePage}
-                totalItems={this.items.length}
-                itemsPerPage={this.amountOfItems}
-                onPageChange={e => (this.tablePage = e.detail)}
-                onItemsPerPageChange={e => (this.amountOfItems = e.detail)}
-              />
+              {/* Pagination in a separate line above actions */}
+              {this.items.length > this.amountOfItems && (
+                <div slot="footer" class="w-full bg-white z-40">
+                  <pid-pagination
+                    currentPage={this.tablePage}
+                    totalItems={this.items.length}
+                    itemsPerPage={this.amountOfItems}
+                    onPageChange={e => (this.tablePage = e.detail)}
+                    onItemsPerPageChange={e => (this.amountOfItems = e.detail)}
+                  />
+                </div>
+              )}
 
-              {/* Footer Actions - moved to footer slot */}
-              {this.actions.length > 0 && <pid-actions slot="footer-actions" actions={this.actions} class="flex-shrink-0" />}
+              {/* Footer Actions - in a separate line below pagination */}
+              {this.actions.length > 0 && <pid-actions slot="footer-actions" actions={this.actions} class="flex-shrink-0 mt-0" />}
             </pid-collapsible>
           )
         }

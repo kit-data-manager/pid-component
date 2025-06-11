@@ -84,29 +84,6 @@ export class PidDataTable {
     }
   }
 
-  // /**
-  //  * Handle page change from pagination component
-  //  */
-  // private handlePageChange = (page: number) => {
-  //   this.currentPage = page;
-  //   this.pageChange.emit(page);
-  // };
-  //
-  // /**
-  //  * Handle items per page change from pagination component
-  //  */
-  // private handleItemsPerPageChange = (size: number) => {
-  //   // Calculate new page index to maintain visible items as much as possible
-  //   const currentStartItem = this.currentPage * this.itemsPerPage;
-  //   const newPage = Math.floor(currentStartItem / size);
-  //
-  //   this.itemsPerPage = size;
-  //   this.currentPage = newPage;
-  //
-  //   this.itemsPerPageChange.emit(size);
-  //   this.pageChange.emit(newPage);
-  // };
-
   componentWillLoad() {
     this.updateFilteredItems();
   }
@@ -184,25 +161,13 @@ export class PidDataTable {
                         }
                       </div>
                     </div>
-                    <copy-button value={value.value} class="absolute right-2 top-1/2 -translate-y-1/2 flex-shrink-0 z-30 opacity-100 visible hover:z-40 cursor-pointer" />
+                    <copy-button value={value.value} class="absolute right-2 top-1/2 -translate-y-1/2 flex-shrink-0 z-40 opacity-100 visible hover:z-50 cursor-pointer" />
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-
-        {/*/!* Fixed footer with enhanced pagination - always visible at the bottom *!/*/}
-        {/*<div class="sticky bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-30 mt-auto w-full">*/}
-        {/*  <pid-pagination*/}
-        {/*    currentPage={this.currentPage}*/}
-        {/*    totalItems={this.items.length}*/}
-        {/*    itemsPerPage={this.itemsPerPage}*/}
-        {/*    pageSizes={this.pageSizes}*/}
-        {/*    onPageChange={e => this.handlePageChange(e.detail)}*/}
-        {/*    onItemsPerPageChange={e => this.handleItemsPerPageChange(e.detail)}*/}
-        {/*  />*/}
-        {/*</div>*/}
       </div>
     );
   }

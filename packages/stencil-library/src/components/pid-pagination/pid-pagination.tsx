@@ -140,7 +140,7 @@ export class PidPagination {
     const visiblePages = this.getVisiblePageNumbers();
 
     return (
-      <div class="flex flex-wrap items-center justify-between gap-2 py-2 px-3 text-sm bg-white relative z-40 overflow-visible">
+      <div class="flex flex-wrap items-center justify-between gap-2 py-1 px-3 text-sm bg-white relative z-50 overflow-visible w-full">
         {/* Left side: Page size selector and info */}
         <div class="flex items-center gap-2 text-gray-600">
           <div class="relative inline-block">
