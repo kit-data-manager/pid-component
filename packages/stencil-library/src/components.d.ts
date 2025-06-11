@@ -248,7 +248,8 @@ export namespace Components {
      * The text to display in the tooltip
      */
     "text": string;
-'text'export interface PidCollapsibleCustomEvent<T> extends CustomEvent<T> {
+'text'
+export interface PidCollapsibleCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPidCollapsibleElement;
 }
