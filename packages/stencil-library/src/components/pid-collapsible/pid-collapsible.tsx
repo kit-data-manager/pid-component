@@ -505,7 +505,7 @@ export class PidCollapsible {
           }}
         >
           <summary
-            class={summaryClasses}
+            class={`${summaryClasses} sticky top-0 z-50 bg-white`}
             onClick={e => {
               e.stopPropagation();
               e.stopImmediatePropagation();
@@ -541,7 +541,7 @@ export class PidCollapsible {
           </div>
 
           {this.showFooter && this.expanded && (
-            <div class="flex flex-col w-full mt-auto sticky bottom-0 left-0 right-0 bg-white border-t border-gray-200">
+            <div class="flex flex-col w-full mt-auto sticky bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
               {/* Main footer slot for pagination */}
               <slot name="footer"></slot>
 

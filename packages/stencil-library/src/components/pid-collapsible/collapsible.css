@@ -72,16 +72,31 @@ pid-collapsible [slot="footer-pagination"] {
   z-index: 40;
 }
 
-/* Ensure copy buttons appear above footer when scrolling */
+/* Copy buttons should be visible within the table but hidden when scrolling under header/footer */
 pid-collapsible copy-button {
-  z-index: 50;
+  z-index: 30;
 }
 
-/* Make pagination container positioned above content but below dropdowns */
+/* Make pagination container positioned above content */
 pid-collapsible pid-pagination {
   position: relative;
-  z-index: 45;
+  z-index: 55;
   width: 100%;
+}
+
+/* Ensure summary and footer are always on top */
+pid-collapsible summary {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background-color: white;
+}
+
+pid-collapsible [slot="footer"],
+pid-collapsible [slot="footer-actions"] {
+  position: relative;
+  z-index: 60;
+  background-color: white;
 }
 
 /* Prevent pagination dropdowns from being cut off */

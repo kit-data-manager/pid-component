@@ -96,9 +96,9 @@ export class PidDataTable {
     return (
       <div class="rounded-lg border border-gray-200 bg-gray-50 m-1 flex flex-col h-full">
         {/* Table container with scrollable content */}
-        <div class="overflow-auto flex-grow">
+        <div class="overflow-auto flex-grow relative z-10">
           <table class="w-full text-left text-sm font-sans select-text border-collapse table-fixed" aria-label="Data table">
-            <thead class="bg-slate-600 text-slate-200 rounded-t-lg sticky top-0 z-10">
+            <thead class="bg-slate-600 text-slate-200 rounded-t-lg sticky top-0 z-20">
               <tr class="font-semibold">
                 <th class="px-2 py-2 min-w-[150px] w-[30%] rounded-tl-lg" scope="col">
                   Key
@@ -161,7 +161,7 @@ export class PidDataTable {
                         }
                       </div>
                     </div>
-                    <copy-button value={value.value} class="absolute right-2 top-1/2 -translate-y-1/2 flex-shrink-0 z-40 opacity-100 visible hover:z-50 cursor-pointer" />
+                    <copy-button value={value.value} class="absolute right-2 top-1/2 -translate-y-1/2 flex-shrink-0 z-30 opacity-100 visible hover:z-35 cursor-pointer" />
                   </td>
                 </tr>
               ))}

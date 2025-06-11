@@ -230,28 +230,25 @@ export namespace Components {
      * Total number of items
      * @default 0
      */
-    "totalItems": nu'totalItems'    interface PidTooltip {
-      /**
-       * The maximum height of the tooltip
-       * @default '150px'
-       */
-      'maxHeight': string;
-      /**
-       * The maximum width of the tooltip
-       * @default '250px'
-       */
-      'maxWidth': string;
-      /**
-       * The position of the tooltip
-       * @default 'top'
-       */
-      'position': 'top' | 'bottom' | 'left' | 'right';
-      /**
-       * The text to display in the tooltip
-       */
-      'text': string;
-    }
-}
+    "totalItems": nu'totalItems' interface PidTooltip {
+    /**
+     * The maximum height of the tooltip
+     * @default '150px'
+     */
+    "maxHeight": str'maxHeight'*
+     * The maximum width of the tooltip
+     * @default '250px'
+     */
+    "maxWidth": stri'maxWidth'*
+     * The position of the tooltip
+     * @default 'top'
+     */
+    "position": 'top'position'm' | 'left' | 'right';
+    /**
+     * The text to display in the tooltip
+     */
+    "text": string;
+'text'}
 export interface PidCollapsibleCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPidCollapsibleElement;
