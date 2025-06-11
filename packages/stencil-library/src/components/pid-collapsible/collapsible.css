@@ -47,6 +47,54 @@ pid-collapsible details {
   flex-direction: column;
 }
 
+/* Ensure dropdowns are visible */
+pid-collapsible .overflow-visible {
+  overflow: visible !important;
+}
+
+/* Ensure footer content is properly layered */
+pid-collapsible [slot="footer"],
+pid-collapsible [slot="footer-actions"],
+pid-collapsible [slot="footer-pagination"] {
+  position: relative;
+  z-index: 40;
+}
+
+:host {
+  display: block;
+}
+
+.collapsible-container {
+  min-width: var(--initial-width, 300px);
+  min-height: var(--initial-height, 200px);
+}
+
+.collapsible-container.expanded {
+  width: var(--initial-width, 500px);
+  height: var(--initial-height, 300px);
+  overflow: auto;
+  resize: both;
+}
+
+@media (max-width: 768px) {
+  .collapsible-container {
+    min-width: var(--initial-width, 250px);
+  }
+
+  .collapsible-container.expanded {
+    width: var(--initial-width, 400px);
+  }
+}
+
+@media (max-width: 480px) {
+  .collapsible-container {
+    min-width: var(--initial-width, 200px);
+  }
+
+  .collapsible-container.expanded {
+    width: var(--initial-width, 300px);
+  }
+}
 /* Ensure content area takes remaining height */
 pid-collapsible details .flex-grow {
   flex: 1;

@@ -1,5 +1,34 @@
 import { Component, Element, Event, EventEmitter, h, Host, Prop, State, Watch } from '@stencil/core';
 
+/**
+ * Constants for CSS class management
+ */
+const CONSTANTS = {
+  DEFAULT_WIDTH: '500px',
+  DEFAULT_HEIGHT: '300px',
+  MIN_WIDTH: 300,
+  MIN_HEIGHT: 200,
+  PADDING_WIDTH: 40,
+  PADDING_HEIGHT: 60,
+  FOOTER_HEIGHT: 60, // Height reserved for footer section
+};
+
+/**
+ * SVG markup for the resize indicator
+ */
+const RESIZE_INDICATOR_SVG = `
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M22 2L2 22" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+    <path d="M22 8L8 22" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+    <path d="M22 14L14 22" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+  </svg>
+`;
+
+/**
+ * Type definition for component states
+ */
+type CollapsibleState = 'expanded' | 'collapsed';
+
 @Component({
   tag: 'pid-collapsible',
   styleUrl: 'collapsible.css',
@@ -39,6 +68,11 @@ export class PidCollapsible {
   @Prop() lineHeight: number = 24;
 
   /**
+   * Whether to show the footer section
+   */
+  @Prop() showFooter: boolean = false;
+
+  /**
    * Event emitted when the collapsible is toggled
    */
   @Event() collapsibleToggle: EventEmitter<boolean>;
@@ -52,13 +86,16 @@ export class PidCollapsible {
   // ResizeObserver to track resize events
   private resizeObserver: ResizeObserver;
 
+  // Flag to prevent recursive toggle calls
+  private isToggling = false;
+
   /**
    * Watch for changes in the open property
    */
   @Watch('open')
   watchOpen() {
     this.expanded = this.open;
-    this.updateSizing();
+    this.updateAppearance();
   }
 
   /**
@@ -66,214 +103,243 @@ export class PidCollapsible {
    */
   @Watch('expanded')
   watchExpanded() {
-    this.updateSizing();
+    this.updateAppearance();
   }
 
   componentWillLoad() {
+    // Initialize state from props
     this.expanded = this.open;
-    this.currentWidth = this.initialWidth || '500px';
-    this.currentHeight = this.initialHeight || '300px';
+    this.currentWidth = this.initialWidth || CONSTANTS.DEFAULT_WIDTH;
+    this.currentHeight = this.initialHeight || CONSTANTS.DEFAULT_HEIGHT;
   }
 
   componentDidLoad() {
-    // Clean up any existing ResizeObserver to prevent memory leaks
+    this.setupResizeObserver();
+    this.updateAppearance();
+    this.addBrowserCompatibilityListeners();
+  }
+
+  disconnectedCallback() {
+    this.cleanupResources();
+  }
+
+  /**
+   * Sets up the resize observer to track dimension changes
+   */
+  private setupResizeObserver() {
+    // Clean up existing observer if present
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
     }
 
-    this.updateSizing();
-
-    // Add event listeners for Safari compatibility
-    this.addSafariCompatibilityListeners();
-
-    // Initialize ResizeObserver to only track dimensions without auto-resizing
+    // Create new observer
     this.resizeObserver = new ResizeObserver(entries => {
-      for (const entry of entries) {
-        if (this.expanded) {
-          // Simply track current dimensions without modifying them automatically
-          const currentWidth = entry.contentRect.width;
-          const currentHeight = entry.contentRect.height;
+      // Only track dimensions when expanded
+      if (!this.expanded) return;
 
-          // Just update state without auto-resizing
-          this.currentWidth = `${currentWidth}px`;
-          this.currentHeight = `${currentHeight}px`;
-        }
+      for (const entry of entries) {
+        // Update current dimensions based on observed changes
+        this.currentWidth = `${entry.contentRect.width}px`;
+        this.currentHeight = `${entry.contentRect.height}px`;
       }
     });
 
-    // Start observing the element if expanded
+    // Start observing if expanded
     if (this.expanded) {
       this.resizeObserver.observe(this.el);
     }
   }
 
   /**
-   * Add event listeners for Safari compatibility
+   * Adds event listeners for cross-browser compatibility
    */
-  private addSafariCompatibilityListeners() {
-    // Get the details element
+  private addBrowserCompatibilityListeners() {
     const details = this.el.querySelector('details');
     if (!details) return;
 
-    // Add click listener to summary to handle Safari-specific issues
     const summary = details.querySelector('summary');
-    if (summary) {
-      summary.addEventListener(
-        'click',
-        e => {
-          // Check if we're running in Safari
-          const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    if (!summary) return;
 
-          // Only apply Safari-specific handling in Safari browsers
-          if (isSafari) {
-            // If we're already in the process of toggling, ignore this event
-            if (this.isToggling) {
-              return;
-            }
-
-            // Set the flag to prevent recursive calls
-            this.isToggling = true;
-
-            // Prevent the default toggle behavior in Safari
-            e.preventDefault();
-            e.stopPropagation();
-
-            // Manually toggle the expanded state
-            this.expanded = !this.expanded;
-
-            // Force the details element to match our expanded state
-            details.open = this.expanded;
-
-            // Emit the event
-            this.collapsibleToggle.emit(this.expanded);
-
-            // Update sizing based on new state
-            this.updateSizing();
-
-            // Reset the flag after a short delay
-            setTimeout(() => {
-              this.isToggling = false;
-            }, 100);
-          }
-        },
-        { capture: true },
-      );
-    }
+    // Safari has issues with the details element
+    summary.addEventListener('click', this.handleSafariCompatibility, { capture: true });
   }
 
-  disconnectedCallback() {
-    // Clean up ResizeObserver when component is removed
+  /**
+   * Handles Safari-specific compatibility issues
+   */
+  private handleSafariCompatibility = (e: Event) => {
+    // Only apply for Safari
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    if (!isSafari || this.isToggling) return;
+
+    this.isToggling = true;
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Manually handle the toggle
+    this.toggleCollapsible(e);
+
+    // Reset toggle flag after short delay
+    setTimeout(() => {
+      this.isToggling = false;
+    }, 100);
+  };
+
+  /**
+   * Cleans up resources when component is destroyed
+   */
+  private cleanupResources() {
+    // Disconnect ResizeObserver
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
+      this.resizeObserver = null;
     }
 
-    // Clean up event listeners
+    // Remove event listeners
     const details = this.el.querySelector('details');
     if (details) {
       const summary = details.querySelector('summary');
       if (summary) {
-        summary.removeEventListener('click', () => {}, { capture: true });
+        summary.removeEventListener('click', this.handleSafariCompatibility, { capture: true });
       }
     }
   }
 
   /**
-   * Updates the component sizing based on expanded state
+   * Updates the component appearance based on expanded state
    */
-  private updateSizing() {
+  private updateAppearance() {
+    // Reset all classes and styles before applying new ones
+    this.resetStyles();
+
     if (this.expanded) {
-      // For expanded state
-      this.el.classList.add('resize-both', 'overflow-auto', 'float-left', 'bg-white');
-
-      // Use min-width and min-height with larger values to ensure UI elements remain visible
-      this.el.classList.add('min-w-[350px]', 'min-h-[250px]');
-
-      // Calculate content dimensions
-      const contentElement = this.el.querySelector('.flex-grow');
-      const contentWidth = contentElement?.scrollWidth || 300;
-      const contentHeight = contentElement?.scrollHeight || 200;
-
-      // Add padding to content dimensions for better appearance
-      const maxWidth = contentWidth + 40;
-      const maxHeight = contentHeight + 60;
-
-      // Set max-width and max-height constraints
-      this.el.style.maxWidth = `${maxWidth}px`;
-      this.el.style.maxHeight = `${maxHeight}px`;
-
-      // Set width and height based on content size if not already set
-      if (!this.currentWidth || this.currentWidth === '500px') {
-        // Get content size and add some padding
-        this.currentWidth = `${Math.min(Math.max(contentWidth + 40, 300), maxWidth)}px`;
-      } else {
-        // Ensure width doesn't exceed content width
-        const numericWidth = parseInt(this.currentWidth, 10);
-        if (numericWidth > maxWidth) {
-          this.currentWidth = `${maxWidth}px`;
-        }
-      }
-
-      if (!this.currentHeight || this.currentHeight === '300px') {
-        // Get content size and add some padding
-        this.currentHeight = `${Math.min(Math.max(contentHeight + 60, 200), maxHeight)}px`;
-      } else {
-        // Ensure height doesn't exceed content height
-        const numericHeight = parseInt(this.currentHeight, 10);
-        if (numericHeight > maxHeight) {
-          this.currentHeight = `${maxHeight}px`;
-        }
-      }
-
-      // Set width and height
-      this.el.style.width = this.currentWidth;
-      this.el.style.height = this.currentHeight;
-
-      // Explicitly set resize property
-      this.el.style.resize = 'both';
-
-      // Add resize indicator
-      this.addResizeIndicator();
-
-      // Start observing resize events
-      if (this.resizeObserver) {
-        this.resizeObserver.observe(this.el);
-      }
+      this.applyExpandedStyles();
     } else {
-      // For collapsed state
-      this.el.classList.remove('resize-both', 'min-w-[350px]', 'min-h-[250px]', 'overflow-auto');
+      this.applyCollapsedStyles();
+    }
+  }
 
-      // Clear max-width and max-height constraints
-      this.el.style.maxWidth = '';
-      this.el.style.maxHeight = '';
+  /**
+   * Resets all dynamically applied styles and classes
+   */
+  private resetStyles() {
+    // Reset classes that might change between states
+    this.el.classList.remove('resize-both', 'overflow-auto', 'w-auto', 'inline-block', 'align-middle', 'overflow-hidden', 'py-0', 'my-0');
+  }
 
-      // Save current dimensions before collapsing
-      if (this.el.style.width) {
-        this.currentWidth = this.el.style.width;
+  /**
+   * Applies styles for expanded state
+   */
+  private applyExpandedStyles() {
+    // Apply expanded state classes
+    this.el.classList.add('resize-both', 'overflow-auto', 'float-left', 'bg-white');
+
+    // Calculate optimal dimensions based on content
+    const dimensions = this.calculateContentDimensions();
+
+    // Apply size constraints
+    this.el.style.maxWidth = `${dimensions.maxWidth}px`;
+    this.el.style.maxHeight = `${dimensions.maxHeight}px`;
+
+    // Set dimensions
+    this.updateDimensions(dimensions);
+
+    // Enable resize and add visual indicator
+    this.el.style.resize = 'both';
+    this.addResizeIndicator();
+
+    // Observe for resize events
+    if (this.resizeObserver) {
+      this.resizeObserver.observe(this.el);
+    }
+  }
+
+  /**
+   * Calculates content dimensions for optimal sizing
+   */
+  private calculateContentDimensions() {
+    const contentElement = this.el.querySelector('.flex-grow');
+    const contentWidth = contentElement?.scrollWidth || CONSTANTS.MIN_WIDTH;
+    const contentHeight = contentElement?.scrollHeight || CONSTANTS.MIN_HEIGHT;
+
+    // Add padding for better appearance, plus footer height if footer is shown
+    const footerHeight = this.showFooter ? CONSTANTS.FOOTER_HEIGHT : 0;
+    const maxWidth = contentWidth + CONSTANTS.PADDING_WIDTH;
+    const maxHeight = contentHeight + CONSTANTS.PADDING_HEIGHT + footerHeight;
+
+    return { contentWidth, contentHeight, maxWidth, maxHeight };
+  }
+
+  /**
+   * Updates dimensions based on content and constraints
+   */
+  private updateDimensions(dimensions: { contentWidth: number; contentHeight: number; maxWidth: number; maxHeight: number }) {
+    const { contentWidth, contentHeight, maxWidth, maxHeight } = dimensions;
+
+    // Width handling
+    if (!this.currentWidth || this.currentWidth === CONSTANTS.DEFAULT_WIDTH) {
+      // Calculate optimal width
+      this.currentWidth = `${Math.min(Math.max(contentWidth + CONSTANTS.PADDING_WIDTH, CONSTANTS.MIN_WIDTH), maxWidth)}px`;
+    } else {
+      // Ensure width doesn't exceed max
+      const numericWidth = parseInt(this.currentWidth, 10);
+      if (numericWidth > maxWidth) {
+        this.currentWidth = `${maxWidth}px`;
       }
-      if (this.el.style.height) {
-        this.currentHeight = this.el.style.height;
+    }
+
+    // Height handling
+    if (!this.currentHeight || this.currentHeight === CONSTANTS.DEFAULT_HEIGHT) {
+      // Calculate optimal height
+      this.currentHeight = `${Math.min(Math.max(contentHeight + CONSTANTS.PADDING_HEIGHT, CONSTANTS.MIN_HEIGHT), maxHeight)}px`;
+    } else {
+      // Ensure height doesn't exceed max
+      const numericHeight = parseInt(this.currentHeight, 10);
+      if (numericHeight > maxHeight) {
+        this.currentHeight = `${maxHeight}px`;
       }
+    }
 
-      // Reset width to auto to fit content in collapsed state
-      this.el.style.width = 'auto';
+    // Apply dimensions
+    this.el.style.width = this.currentWidth;
+    this.el.style.height = this.currentHeight;
+  }
 
-      // Add collapsed state classes
-      this.el.classList.add('w-auto', 'float-left', 'inline-block', 'align-middle', 'overflow-hidden', 'py-0', 'my-0');
+  /**
+   * Applies styles for collapsed state
+   */
+  private applyCollapsedStyles() {
+    // Store current dimensions before collapsing
+    if (this.el.style.width) {
+      this.currentWidth = this.el.style.width;
+    }
+    if (this.el.style.height) {
+      this.currentHeight = this.el.style.height;
+    }
 
-      // Apply line height for text sizing
-      this.el.style.height = `${this.lineHeight}px`;
-      this.el.style.lineHeight = `${this.lineHeight}px`;
+    // Clear size constraints
+    this.el.style.maxWidth = '';
+    this.el.style.maxHeight = '';
 
-      // Remove resize property
-      this.el.style.resize = 'none';
+    // Auto width for collapsed state
+    this.el.style.width = 'auto';
 
-      // Remove resize indicator
-      this.removeResizeIndicator();
+    // Apply collapsed state classes
+    this.el.classList.add('w-auto', 'float-left', 'inline-block', 'align-middle', 'overflow-hidden', 'py-0', 'my-0');
 
-      // Stop observing resize events
-      if (this.resizeObserver) {
-        this.resizeObserver.unobserve(this.el);
-      }
+    // Set line height for text
+    this.el.style.height = `${this.lineHeight}px`;
+    this.el.style.lineHeight = `${this.lineHeight}px`;
+
+    // Disable resize
+    this.el.style.resize = 'none';
+
+    // Remove visual indicators
+    this.removeResizeIndicator();
+
+    // Stop resize observation
+    if (this.resizeObserver) {
+      this.resizeObserver.unobserve(this.el);
     }
   }
 
@@ -281,19 +347,13 @@ export class PidCollapsible {
    * Adds resize indicator to the component
    */
   private addResizeIndicator() {
-    // Remove any existing resize indicators first
+    // Remove existing indicator first
     this.removeResizeIndicator();
 
-    // Create and add the resize indicator
+    // Create and add new indicator
     const resizeIndicator = document.createElement('div');
     resizeIndicator.className = 'absolute bottom-0 right-0 w-4 h-4 opacity-100 pointer-events-none resize-indicator z-50';
-    resizeIndicator.innerHTML = `
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M22 2L2 22" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
-        <path d="M22 8L8 22" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
-        <path d="M22 14L14 22" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-    `;
+    resizeIndicator.innerHTML = RESIZE_INDICATOR_SVG;
     this.el.appendChild(resizeIndicator);
   }
 
@@ -307,121 +367,153 @@ export class PidCollapsible {
     }
   }
 
-  // Flag to prevent recursive toggle calls
-  private isToggling = false;
-
   /**
    * Handles the toggle event
    */
   private handleToggle = (event: Event) => {
-    // If we're already in the process of toggling, ignore this event
-    if (this.isToggling) {
-      return;
-    }
+    if (this.isToggling) return;
+    this.toggleCollapsible(event);
+  };
 
-    // Set the flag to prevent recursive calls
+  /**
+   * Toggles the collapsible state
+   */
+  private toggleCollapsible(event: Event) {
+    // Set flag to prevent recursive calls
     this.isToggling = true;
 
-    // Immediately stop propagation and prevent default to avoid any bubbling
+    // Stop event propagation
     event.stopPropagation();
     event.preventDefault();
-
-    // Stop immediate propagation to prevent any other listeners from being called
     if (event.cancelable) {
       event.stopImmediatePropagation();
     }
 
-    // Get the details element directly from this component instead of from event target
-    // This fixes issues when clicking on nested elements or subcomponents
+    // Get details element
     const details = this.el.querySelector('details');
-    if (details) {
-      // Toggle the expanded state
-      this.expanded = !this.expanded;
-
-      // Force the details element to match our expanded state
-      details.open = this.expanded;
-
-      // Emit the event
-      this.collapsibleToggle.emit(this.expanded);
-
-      // Update sizing based on new state
-      this.updateSizing();
-
-      // Safari-specific: ensure the details element's open state is correctly set
-      // This helps with Safari's handling of the details element
-      setTimeout(() => {
-        if (details.open !== this.expanded) {
-          details.open = this.expanded;
-        }
-        // Reset the flag after a short delay to allow for any animations to complete
-        setTimeout(() => {
-          this.isToggling = false;
-        }, 100);
-      }, 0);
-    } else {
-      // Reset the flag if we didn't find a details element
+    if (!details) {
       this.isToggling = false;
+      return;
     }
-  };
+
+    // Toggle expanded state
+    this.expanded = !this.expanded;
+    details.open = this.expanded;
+
+    // Emit event
+    this.collapsibleToggle.emit(this.expanded);
+
+    // Update appearance
+    this.updateAppearance();
+
+    // Ensure consistent state and reset flag
+    setTimeout(() => {
+      if (details.open !== this.expanded) {
+        details.open = this.expanded;
+      }
+      setTimeout(() => {
+        this.isToggling = false;
+      }, 100);
+    }, 0);
+  }
+
+  /**
+   * Generates classes for different component states
+   */
+  private getClassesForState(state: CollapsibleState) {
+    const baseClasses = ['relative', 'mx-2', 'float-left', 'bg-white', 'font-sans'];
+
+    // Add emphasis classes if needed
+    if (this.emphasize) {
+      baseClasses.push('border', 'border-gray-300', 'rounded-md', 'shadow-sm');
+    }
+
+    // Add state-specific classes
+    if (state === 'expanded') {
+      baseClasses.push('mb-2', 'overflow-auto', 'max-w-full', 'resize-both', 'text-xs');
+    } else {
+      baseClasses.push('my-0', 'inline-block', 'align-middle', 'overflow-hidden', 'text-sm', `h-[${this.lineHeight}px]`, `leading-[${this.lineHeight}px]`);
+    }
+
+    return baseClasses.filter(Boolean).join(' ');
+  }
+
+  /**
+   * Gets classes for the summary element
+   */
+  private getSummaryClasses() {
+    const baseClasses = [
+      'font-bold',
+      'font-mono',
+      'cursor-pointer',
+      'list-none',
+      'flex',
+      'items-center',
+      'focus:outline-none',
+      'focus-visible:ring-2',
+      'focus-visible:ring-blue-400',
+      'rounded-lg',
+      'marker:hidden',
+    ];
+
+    // Add state-specific classes
+    if (this.expanded) {
+      baseClasses.push('sticky', 'top-0', 'bg-white', 'z-10', 'border-b', 'border-gray-100', 'p-1', 'overflow-visible');
+    } else {
+      baseClasses.push('px-0.5', 'py-0', 'whitespace-nowrap', 'text-ellipsis', 'overflow-hidden', `h-[${this.lineHeight}px]`, `leading-[${this.lineHeight}px]`);
+    }
+
+    return baseClasses.join(' ');
+  }
+
+  /**
+   * Gets classes for the footer element
+   */
+  private getFooterClasses() {
+    return [
+      'sticky',
+      'bottom-0',
+      'bg-white',
+      'border-t',
+      'border-gray-100',
+      'p-2',
+      'flex',
+      'items-center',
+      'justify-between',
+      'gap-2',
+      'z-10',
+      'min-h-[48px]',
+      'flex-shrink-0',
+    ].join(' ');
+  }
 
   render() {
-    // No automatic resizing on render, let the regular component lifecycle handle it
-
-    // Create resize indicator if expanded
-    const resizeIndicator = this.expanded ? (
-      <div class="absolute bottom-0 right-0 w-4 h-4 opacity-100 pointer-events-none z-50">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M22 2L2 22" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" />
-          <path d="M22 8L8 22" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" />
-          <path d="M22 14L14 22" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" />
-        </svg>
-      </div>
-    ) : null;
+    // Get classes for current state
+    const hostClasses = this.getClassesForState(this.expanded ? 'expanded' : 'collapsed');
+    const summaryClasses = this.getSummaryClasses();
+    const footerClasses = this.getFooterClasses();
 
     return (
-      <Host
-        class={`relative ${this.emphasize ? 'border border-gray-300 rounded-md shadow-sm' : ''} mr-4 float-left
-        ${this.expanded ? 'mb-4 overflow-auto max-w-full' : 'my-0 inline-block align-middle overflow-hidden'}
-        bg-white font-sans ${this.expanded ? 'text-xs' : 'text-sm'}`}
-        style={{
-          ...(this.expanded ? { resize: 'both' } : {}),
-          ...(this.expanded
-            ? {}
-            : {
-                height: `${this.lineHeight}px`,
-                lineHeight: `${this.lineHeight}px`,
-              }),
-        }}
-      >
+      <Host class={hostClasses}>
         <details
           class="group w-full text-clip font-sans transition-all duration-200 ease-in-out flex flex-col h-full"
           open={this.open}
           onToggle={this.handleToggle}
           onClick={e => {
-            // More aggressive stopPropagation to prevent parent handlers from interfering
             e.stopPropagation();
             e.stopImmediatePropagation();
           }}
         >
           <summary
-            class={`font-bold font-mono cursor-pointer list-none flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded-lg marker:hidden ${this.expanded ? 'sticky top-0 bg-white z-10 border-b border-gray-100 p-1 overflow-visible' : 'px-0.5 py-0 whitespace-nowrap text-ellipsis overflow-hidden'}`}
-            style={
-              !this.expanded
-                ? {
-                    height: `${this.lineHeight}px`,
-                    lineHeight: `${this.lineHeight}px`,
-                  }
-                : {}
-            }
+            class={summaryClasses}
             onClick={e => {
-              // Capture and handle click events on summary to prevent bubbling
               e.stopPropagation();
               e.stopImmediatePropagation();
             }}
           >
             <span class={`inline-flex pr-1 items-center ${this.expanded ? 'flex-wrap overflow-visible' : 'flex-nowrap overflow-x-auto'}`}>
-              {this.emphasize ? (
-                <span class={'flex-shrink-0 pr-1'}>
+              {this.emphasize && (
+                <span class="flex-shrink-0 pr-1">
                   <svg
                     class="transition group-open:-rotate-180"
                     fill="none"
@@ -438,16 +530,38 @@ export class PidCollapsible {
                     <path d="M 2 3 l 4 6 l 4 -6"></path>
                   </svg>
                 </span>
-              ) : null}
+              )}
               <slot name="summary"></slot>
             </span>
             <slot name="summary-actions"></slot>
           </summary>
-          <div class="flex-grow overflow-auto flex flex-col h-full min-h-0">
+
+          <div class={`flex-grow overflow-auto flex flex-col min-h-0 ${this.showFooter ? 'pb-0' : ''}`}>
             <slot></slot>
           </div>
+
+          {this.showFooter && this.expanded && (
+            <div class={footerClasses}>
+              <div class="flex-grow">
+                <slot name="footer-left"></slot>
+              </div>
+              <div class="flex items-center gap-2">
+                <slot name="footer-actions"></slot>
+                <slot name="footer-pagination"></slot>
+              </div>
+            </div>
+          )}
         </details>
-        {resizeIndicator}
+
+        {this.expanded && (
+          <div class="absolute bottom-0 right-0 w-4 h-4 opacity-100 pointer-events-none z-50 cursor-nwse-resize">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M22 2L2 22" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" />
+              <path d="M22 8L8 22" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" />
+              <path d="M22 14L14 22" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </div>
+        )}
       </Host>
     );
   }

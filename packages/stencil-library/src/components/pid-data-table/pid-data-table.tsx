@@ -14,12 +14,17 @@ export class PidDataTable {
   /**
    * Number of items to show per page
    */
-  @Prop() itemsPerPage: number = 10;
+  @Prop({ mutable: true }) itemsPerPage: number = 10;
 
   /**
    * Current page (0-based index)
    */
   @Prop({ mutable: true }) currentPage: number = 0;
+
+  /**
+   * Available page sizes
+   */
+  @Prop() pageSizes: number[] = [5, 10, 25, 50, 100];
 
   /**
    * Whether to load subcomponents
@@ -52,6 +57,11 @@ export class PidDataTable {
   @Event() pageChange: EventEmitter<number>;
 
   /**
+   * Event emitted when items per page changes
+   */
+  @Event() itemsPerPageChange: EventEmitter<number>;
+
+  /**
    * Filtered items based on current page
    */
   @State() filteredItems: FoldableItem[] = [];
@@ -74,13 +84,28 @@ export class PidDataTable {
     }
   }
 
-  /**
-   * Handle page change from pagination component
-   */
-  private handlePageChange = (page: number) => {
-    this.currentPage = page;
-    this.pageChange.emit(page);
-  };
+  // /**
+  //  * Handle page change from pagination component
+  //  */
+  // private handlePageChange = (page: number) => {
+  //   this.currentPage = page;
+  //   this.pageChange.emit(page);
+  // };
+  //
+  // /**
+  //  * Handle items per page change from pagination component
+  //  */
+  // private handleItemsPerPageChange = (size: number) => {
+  //   // Calculate new page index to maintain visible items as much as possible
+  //   const currentStartItem = this.currentPage * this.itemsPerPage;
+  //   const newPage = Math.floor(currentStartItem / size);
+  //
+  //   this.itemsPerPage = size;
+  //   this.currentPage = newPage;
+  //
+  //   this.itemsPerPageChange.emit(size);
+  //   this.pageChange.emit(newPage);
+  // };
 
   componentWillLoad() {
     this.updateFilteredItems();
@@ -113,10 +138,9 @@ export class PidDataTable {
                   class={`odd:bg-slate-200 even:bg-gray-50 h-7 leading-7 ${index !== this.filteredItems.length - 1 ? 'border-b border-gray-200' : ''}`}
                 >
                   <td class={'p-2 min-w-[150px] w-auto font-mono align-middle'}>
-                    <div class="h-7 leading-7 overflow-hidden w-full">
-                      <pid-tooltip text={value.keyTooltip || `Details for ${value.keyTitle}`}>
+                    <pid-tooltip text={value.keyTooltip || `Details for ${value.keyTitle}`}>
+                      <div slot="trigger" class="h-7 leading-7 overflow-hidden w-full flex items-center">
                         <a
-                          slot="trigger"
                           href={value.keyLink}
                           target={'_blank'}
                           rel={'noopener noreferrer'}
@@ -125,8 +149,8 @@ export class PidDataTable {
                         >
                           {value.keyTitle}
                         </a>
-                      </pid-tooltip>
-                    </div>
+                      </div>
+                    </pid-tooltip>
                   </td>
                   <td class={'align-top text-sm p-2 w-full select-text relative'}>
                     <div class="w-full min-h-7 pr-8 flex items-center relative">
@@ -141,7 +165,6 @@ export class PidDataTable {
                               amountOfItems={this.itemsPerPage}
                               settings={this.settings}
                               openByDefault={false}
-                              // openByDefault={this.loadSubcomponents}
                               class="flex-grow"
                             />
                           ) : !this.hideSubcomponents && this.currentLevelOfSubcomponents === this.levelOfSubcomponents && !value.renderDynamically ? (
@@ -161,7 +184,7 @@ export class PidDataTable {
                         }
                       </div>
                     </div>
-                    <copy-button value={value.value} class="absolute right-2 top-1/2 -translate-y-1/2 flex-shrink-0 z-20 opacity-100 visible hover:z-30 cursor-pointer" />
+                    <copy-button value={value.value} class="absolute right-2 top-1/2 -translate-y-1/2 flex-shrink-0 z-30 opacity-100 visible hover:z-40 cursor-pointer" />
                   </td>
                 </tr>
               ))}
@@ -169,10 +192,17 @@ export class PidDataTable {
           </table>
         </div>
 
-        {/* Fixed footer with pagination - always visible */}
-        <div class="sticky bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-30 mt-auto">
-          <pid-pagination currentPage={this.currentPage} totalItems={this.items.length} itemsPerPage={this.itemsPerPage} onPageChange={e => this.handlePageChange(e.detail)} />
-        </div>
+        {/*/!* Fixed footer with enhanced pagination - always visible at the bottom *!/*/}
+        {/*<div class="sticky bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-30 mt-auto w-full">*/}
+        {/*  <pid-pagination*/}
+        {/*    currentPage={this.currentPage}*/}
+        {/*    totalItems={this.items.length}*/}
+        {/*    itemsPerPage={this.itemsPerPage}*/}
+        {/*    pageSizes={this.pageSizes}*/}
+        {/*    onPageChange={e => this.handlePageChange(e.detail)}*/}
+        {/*    onItemsPerPageChange={e => this.handleItemsPerPageChange(e.detail)}*/}
+        {/*  />*/}
+        {/*</div>*/}
       </div>
     );
   }

@@ -76,8 +76,10 @@ export class PidTooltip {
         {hasTooltipText && (
           <div
             role="tooltip"
-            class={`${this.isVisible ? '' : 'hidden'} z-20 absolute ${this.getPositionClasses()} mt-1 transition duration-100 ease-in-out shadow-md bg-white rounded text-xs text-gray-600 p-2 max-w-full w-full overflow-y-auto whitespace-normal border border-gray-200`}
+            class={`${this.isVisible ? '' : 'hidden'} z-20 absolute ${this.getPositionClasses()} mt-1 transition duration-100 ease-in-out shadow-md bg-white rounded text-xs text-gray-600 p-2 w-full overflow-y-auto whitespace-normal border border-gray-200`}
             style={{
+              // We need to keep these as inline styles since they're dynamic values
+              // Tailwind can't process dynamic values at runtime
               maxWidth: this.maxWidth,
               maxHeight: this.maxHeight,
             }}

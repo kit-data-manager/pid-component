@@ -44,23 +44,13 @@ export class CopyButton {
       const textArea = document.createElement('textarea');
       textArea.value = this.value;
 
-      // Make the textarea part of the visible DOM to ensure it works on all platforms
-      textArea.style.position = 'fixed';
-      textArea.style.top = '0';
-      textArea.style.left = '0';
-      textArea.style.width = '2em';
-      textArea.style.height = '2em';
-      textArea.style.padding = '0';
-      textArea.style.border = 'none';
-      textArea.style.outline = 'none';
-      textArea.style.boxShadow = 'none';
-      textArea.style.background = 'transparent';
-      textArea.style.opacity = '0';
-      textArea.style.zIndex = '9999'; // Ensure it's above other elements
+      // Add to DOM with Tailwind classes for positioning
+      textArea.className = 'fixed top-0 left-0 opacity-0 pointer-events-none z-[9999] w-[10em] h-[10em]';
 
       document.body.appendChild(textArea);
 
       // Focus and select need to happen after the element is in the DOM
+      // Increased timeout to ensure the element is properly rendered
       setTimeout(() => {
         textArea.focus();
         textArea.select();
@@ -70,13 +60,29 @@ export class CopyButton {
           console.log(`execCommand copy was ${success ? 'successful' : 'unsuccessful'}.`);
           if (success) {
             this.showSuccess();
+          } else {
+            // If execCommand fails, try one more time with a different approach
+            const range = document.createRange();
+            range.selectNodeContents(textArea);
+            const selection = window.getSelection();
+            if (selection) {
+              selection.removeAllRanges();
+              selection.addRange(range);
+              textArea.setSelectionRange(0, textArea.value.length); // For mobile devices
+
+              const secondAttempt = document.execCommand('copy');
+              console.log(`Second attempt execCommand copy was ${secondAttempt ? 'successful' : 'unsuccessful'}.`);
+              if (secondAttempt) {
+                this.showSuccess();
+              }
+            }
           }
         } catch (err) {
           console.error('Failed to copy text with execCommand:', err);
         } finally {
           document.body.removeChild(textArea);
         }
-      }, 100);
+      }, 200); // Increased timeout for better reliability
     } catch (err) {
       console.error('Failed to copy text:', err);
     }

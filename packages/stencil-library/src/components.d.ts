@@ -111,7 +111,11 @@ export namespace Components {
      * Whether the collapsible is open by default
      * @default false
      */
-    "open": boolean;'open'  interface PidComponent {
+    "open": boolean;'open'**
+     * Whether to show the footer section
+     * @default false
+     */
+    "showFooter": bo'showFooter'  interface PidComponent {
     /**
      * The number of items to show in the table per page. Defaults to 10. (optional)
      * @type {number}
@@ -171,49 +175,45 @@ export namespace Components {
      * Initial width of the component (e.g. '500px', '50%'). If not set, defaults to 500px on large screens, 400px on medium screens, and 300px on small screens.
      * @type {string}
      */
-    "width"?: string'width'   interface PidDataTable {
-      /**
-       * Current level of subcomponents
-       * @default 0
-       */
-      'currentLevelOfSubcomponents': number;
-      /**
-       * Current page (0-based index)
-       * @default 0
-       */
-      'currentPage': number;
-      /**
-       * Whether to hide subcomponents
-       * @default false
-       */
-      'hideSubcomponents': boolean;
-      /**
-       * Array of items to display in the table
-       * @default []
-       */
-      'items': FoldableItem[];
-      /**
-       * Number of items to show per page
-       * @default 10
-       */
-      'itemsPerPage': number;
-      /**
-       * Total level of subcomponents
-       * @default 1
-       */
-      'levelOfSubcomponents': number;
-      /**
-       * Whether to load subcomponents
-       * @default false
-       */
-      'loadSubcomponents': boolean;
-      /**
-       * Settings to pass to subcomponents
-       * @default '[]'
-       */
-      'settings': string;
-    }
-    interface PidPagination {
+    "width"?: string'width'  interface PidDataTable {
+    /**
+     * Current level of subcomponents
+     * @default 0
+     */
+    "currentLevelOfS'currentLevelOfSubcomponents'*
+     * Current page (0-based index)
+     * @default 0
+     */
+    "currentPage": n'currentPage'*
+     * Whether to hide subcomponents
+     * @default false
+     */
+    "hideSubcomponen'hideSubcomponents'**
+     * Array of items to display in the table
+     * @default []
+     */
+    "items": Foldabl'items';
+    /**
+     * Number of items to show per page
+     * @default 10
+     */
+    "itemsPerPage": 'itemsPerPage'*
+     * Total level of subcomponents
+     * @default 1
+     */
+    "levelOfSubcompo'levelOfSubcomponents'*
+     * Whether to load subcomponents
+     * @default false
+     */
+    "loadSubcomponen'loadSubcomponents'**
+     * Available page sizes
+     * @default [5, 10, 25, 50, 100]
+     */
+    "pageSizes": num'pageSizes'/**
+     * Settings to pass to subcomponents
+     * @default '[]'
+     */
+    "settings": stri'settings'    interface PidPagination {
       /**
        * Current page (0-based index)
        * @default 0
@@ -224,6 +224,11 @@ export namespace Components {
        * @default 10
        */
       'itemsPerPage': number;
+      /**
+       * Available page sizes
+       * @default [5, 10, 25, 50, 100]
+       */
+      'pageSizes': number[];
       /**
        * Total number of items
        * @default 0
@@ -335,6 +340,7 @@ declare global {
 
   interface HTMLPidDataTableElementEventMap {
     'pageChange': number;
+    'itemsPerPageChange': number;
   }
 
   interface HTMLPidDataTableElement extends Components.PidDataTable, HTMLStencilElement {
@@ -362,6 +368,7 @@ declare global {
 
   interface HTMLPidPaginationElementEventMap {
     'pageChange': number;
+    'itemsPerPageChange': number;
   }
 
   interface HTMLPidPaginationElement extends Components.PidPagination, HTMLStencilElement {
@@ -512,6 +519,11 @@ declare namespace LocalJSX {
      * @default false
      */
     'open'?: boolean;
+    /**
+     * Whether to show the footer section
+     * @default false
+     */
+    'showFooter'?: boolean;
   }
     interface PidComponent {
         /**
@@ -620,9 +632,18 @@ declare namespace LocalJSX {
      */
     'loadSubcomponents'?: boolean;
     /**
+     * Event emitted when items per page changes
+     */
+    'onItemsPerPageChange'?: (event: PidDataTableCustomEvent<number>) => void;
+    /**
      * Event emitted when page changes
      */
     'onPageChange'?: (event: PidDataTableCustomEvent<number>) => void;
+    /**
+     * Available page sizes
+     * @default [5, 10, 25, 50, 100]
+     */
+    'pageSizes'?: number[];
     /**
      * Settings to pass to subcomponents
      * @default '[]'
@@ -642,9 +663,18 @@ declare namespace LocalJSX {
      */
     'itemsPerPage'?: number;
     /**
+     * Event emitted when items per page changes
+     */
+    'onItemsPerPageChange'?: (event: PidPaginationCustomEvent<number>) => void;
+    /**
      * Event emitted when page changes
      */
     'onPageChange'?: (event: PidPaginationCustomEvent<number>) => void;
+    /**
+     * Available page sizes
+     * @default [5, 10, 25, 50, 100]
+     */
+    'pageSizes'?: number[];
     /**
      * Total number of items
      * @default 0

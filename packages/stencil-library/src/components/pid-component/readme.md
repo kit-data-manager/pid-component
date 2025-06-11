@@ -43,6 +43,7 @@ Type: `Promise<void>`
 - [copy-button](../copy-button)
 - [pid-collapsible](../pid-collapsible)
 - [pid-data-table](../pid-data-table)
+- [pid-pagination](../pid-pagination)
 - [pid-actions](../pid-actions)
 
 ### Graph
@@ -51,6 +52,7 @@ graph TD;
   pid-component --> copy-button
   pid-component --> pid-collapsible
   pid-component --> pid-data-table
+  pid-component --> pid-pagination
   pid-component --> pid-actions
   pid-data-table --> pid-component
   style pid-component fill:#f9f,stroke:#333,stroke-width:4px

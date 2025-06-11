@@ -388,6 +388,15 @@ export class PidComponent {
   private _lineHeight: number = 24; // Default fallback
 
   /**
+   * Determines if footer should be shown based on whether there are actions or items with pagination
+   */
+  private get shouldShowFooter(): boolean {
+    const hasActions = this.actions.length > 0;
+    const hasPagination = this.items.length > this.amountOfItems;
+    return hasActions || hasPagination;
+  }
+
+  /**
    * Renders the component.
    */
   render() {
@@ -404,16 +413,9 @@ export class PidComponent {
                     ? //(w/o sub components)
                       'group ' +
                       (this.emphasizeComponent || this.temporarilyEmphasized ? 'rounded-md shadow border border-gray-300 px-2 py-0 bg-white ' : 'bg-white/60') +
-                      ' text-clip inline-flex w-full open:align-top open:w-full ease-in-out transition-all duration-200 overflow-hidden font-bold font-mono cursor-pointer list-none flex-nowrap items-center'
+                      ' text-clip inline-flex w-full open:align-top open:w-full ease-in-out transition-all duration-200 overflow-hidden font-bold font-mono cursor-pointer list-none flex-nowrap items-center' +
+                      (!this.isExpanded ? ` h-[${this._lineHeight || 24}px] leading-[${this._lineHeight || 24}px]` : '')
                     : ''
-                }
-                style={
-                  !this.isExpanded
-                    ? {
-                        height: `${this._lineHeight || 24}px`,
-                        lineHeight: `${this._lineHeight || 24}px`,
-                      }
-                    : {}
                 }
                 tabIndex={0}
                 aria-label="Identifier preview"
@@ -451,13 +453,13 @@ export class PidComponent {
             )
           ) : (
             <pid-collapsible
-              // emphasize={true}
               open={this.openByDefault}
               emphasize={this.emphasizeComponent || this.temporarilyEmphasized}
               expanded={this.isExpanded}
               initialWidth={this.width}
               initialHeight={this.height}
               lineHeight={this._lineHeight}
+              showFooter={this.shouldShowFooter}
               onCollapsibleToggle={e => this.toggleSubcomponents(e)}
               onClick={e => {
                 // Isolate click events to prevent bubbling to parent components
@@ -473,7 +475,7 @@ export class PidComponent {
               </span>
 
               {this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy && (this.emphasizeComponent || this.temporarilyEmphasized) ? (
-                <copy-button slot="summary-actions" value={this.value} class="absolute right-2" />
+                <copy-button slot="summary-actions" value={this.value} class="relative ml-auto flex-shrink-0" />
               ) : null}
 
               {/* Table and content */}
@@ -488,14 +490,23 @@ export class PidComponent {
                   levelOfSubcomponents={this.levelOfSubcomponents}
                   settings={this.settings}
                   onPageChange={e => (this.tablePage = e.detail)}
-                  class="flex-grow"
+                  class="flex-grow overflow-auto"
                 />
               ) : null}
 
               {this.identifierObject?.renderBody()}
 
-              {/* Actions */}
-              {this.actions.length > 0 ? <pid-actions actions={this.actions} class="z-30"></pid-actions> : null}
+              <pid-pagination
+                slot="footer-pagination"
+                currentPage={this.tablePage}
+                totalItems={this.items.length}
+                itemsPerPage={this.amountOfItems}
+                onPageChange={e => (this.tablePage = e.detail)}
+                onItemsPerPageChange={e => (this.amountOfItems = e.detail)}
+              />
+
+              {/* Footer Actions - moved to footer slot */}
+              {this.actions.length > 0 && <pid-actions slot="footer-actions" actions={this.actions} class="flex-shrink-0" />}
             </pid-collapsible>
           )
         }

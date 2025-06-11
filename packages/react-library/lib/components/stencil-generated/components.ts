@@ -7,46 +7,19 @@
 
 /* eslint-disable */
 
-import {
-  ColorHighlight as ColorHighlightElement,
-  defineCustomElement as defineColorHighlight,
-} from '@kit-data-manager/pid-component/dist/components/color-highlight.js';
-import {
-  CopyButton as CopyButtonElement,
-  defineCustomElement as defineCopyButton,
-} from '@kit-data-manager/pid-component/dist/components/copy-button.js';
-import {
-  defineCustomElement as defineJsonViewer,
-  JsonViewer as JsonViewerElement,
-} from '@kit-data-manager/pid-component/dist/components/json-viewer.js';
+import { ColorHighlight as ColorHighlightElement, defineCustomElement as defineColorHighlight } from '@kit-data-manager/pid-component/dist/components/color-highlight.js';
+import { CopyButton as CopyButtonElement, defineCustomElement as defineCopyButton } from '@kit-data-manager/pid-component/dist/components/copy-button.js';
+import { defineCustomElement as defineJsonViewer, JsonViewer as JsonViewerElement } from '@kit-data-manager/pid-component/dist/components/json-viewer.js';
 import {
   defineCustomElement as defineLocaleVisualization,
   LocaleVisualization as LocaleVisualizationElement,
 } from '@kit-data-manager/pid-component/dist/components/locale-visualization.js';
-import {
-  defineCustomElement as definePidActions,
-  PidActions as PidActionsElement,
-} from '@kit-data-manager/pid-component/dist/components/pid-actions.js';
-import {
-  defineCustomElement as definePidCollapsible,
-  PidCollapsible as PidCollapsibleElement,
-} from '@kit-data-manager/pid-component/dist/components/pid-collapsible.js';
-import {
-  defineCustomElement as definePidComponent,
-  PidComponent as PidComponentElement,
-} from '@kit-data-manager/pid-component/dist/components/pid-component.js';
-import {
-  defineCustomElement as definePidDataTable,
-  PidDataTable as PidDataTableElement,
-} from '@kit-data-manager/pid-component/dist/components/pid-data-table.js';
-import {
-  defineCustomElement as definePidPagination,
-  PidPagination as PidPaginationElement,
-} from '@kit-data-manager/pid-component/dist/components/pid-pagination.js';
-import {
-  defineCustomElement as definePidTooltip,
-  PidTooltip as PidTooltipElement,
-} from '@kit-data-manager/pid-component/dist/components/pid-tooltip.js';
+import { defineCustomElement as definePidActions, PidActions as PidActionsElement } from '@kit-data-manager/pid-component/dist/components/pid-actions.js';
+import { defineCustomElement as definePidCollapsible, PidCollapsible as PidCollapsibleElement } from '@kit-data-manager/pid-component/dist/components/pid-collapsible.js';
+import { defineCustomElement as definePidComponent, PidComponent as PidComponentElement } from '@kit-data-manager/pid-component/dist/components/pid-component.js';
+import { defineCustomElement as definePidDataTable, PidDataTable as PidDataTableElement } from '@kit-data-manager/pid-component/dist/components/pid-data-table.js';
+import { defineCustomElement as definePidPagination, PidPagination as PidPaginationElement } from '@kit-data-manager/pid-component/dist/components/pid-pagination.js';
+import { defineCustomElement as definePidTooltip, PidTooltip as PidTooltipElement } from '@kit-data-manager/pid-component/dist/components/pid-tooltip.js';
 import type { EventName, StencilReactComponent } from '@stencil/react-output-target/runtime';
 import { createComponent } from '@stencil/react-output-target/runtime';
 import React from 'react';
@@ -59,10 +32,10 @@ export const ColorHighlight: StencilReactComponent<ColorHighlightElement, ColorH
   // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
   react: React,
   events: {} as ColorHighlightEvents,
-  defineCustomElement: defineColorHighlight
+  defineCustomElement: defineColorHighlight,
 });
 
-export type CopyButtonEvents = NonNulla,ble<unknown>;
+export type CopyButtonEvents = NonNullable<unknown>;
 
 export const CopyButton: StencilReactComponent<CopyButtonElement, CopyButtonEvents> = /*@__PURE__*/ createComponent<CopyButtonElement, CopyButtonEvents>({
   tagName: 'copy-button',
@@ -86,7 +59,10 @@ export const JsonViewer: StencilReactComponent<JsonViewerElement, JsonViewerEven
 
 export type LocaleVisualizationEvents = NonNullable<unknown>;
 
-export const LocaleVisualization: StencilReactComponent<LocaleVisualizationElement, LocaleVisualizationEvents> = /*@__PURE__*/ createComponent<LocaleVisualizationElement, LocaleVisualizationEvents>({
+export const LocaleVisualization: StencilReactComponent<LocaleVisualizationElement, LocaleVisualizationEvents> = /*@__PURE__*/ createComponent<
+  LocaleVisualizationElement,
+  LocaleVisualizationEvents
+>({
   tagName: 'locale-visualization',
   elementClass: LocaleVisualizationElement,
   // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
@@ -128,25 +104,37 @@ export const PidComponent: StencilReactComponent<PidComponentElement, PidCompone
   defineCustomElement: definePidComponent,
 });
 
-export type PidDataTableEvents = { onPageChange: EventName<CustomEvent<number>> };
+export type PidDataTableEvents = {
+  onPageChange: EventName<CustomEvent<number>>;
+  onItemsPerPageChange: EventName<CustomEvent<number>>;
+};
 
 export const PidDataTable: StencilReactComponent<PidDataTableElement, PidDataTableEvents> = /*@__PURE__*/ createComponent<PidDataTableElement, PidDataTableEvents>({
   tagName: 'pid-data-table',
   elementClass: PidDataTableElement,
   // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
   react: React,
-  events: { onPageChange: 'pageChange' } as PidDataTableEvents,
+  events: {
+    onPageChange: 'pageChange',
+    onItemsPerPageChange: 'itemsPerPageChange',
+  } as PidDataTableEvents,
   defineCustomElement: definePidDataTable,
 });
 
-export type PidPaginationEvents = { onPageChange: EventName<CustomEvent<number>> };
+export type PidPaginationEvents = {
+  onPageChange: EventName<CustomEvent<number>>;
+  onItemsPerPageChange: EventName<CustomEvent<number>>;
+};
 
 export const PidPagination: StencilReactComponent<PidPaginationElement, PidPaginationEvents> = /*@__PURE__*/ createComponent<PidPaginationElement, PidPaginationEvents>({
   tagName: 'pid-pagination',
   elementClass: PidPaginationElement,
   // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
   react: React,
-  events: { onPageChange: 'pageChange' } as PidPaginationEvents,
+  events: {
+    onPageChange: 'pageChange',
+    onItemsPerPageChange: 'itemsPerPageChange',
+  } as PidPaginationEvents,
   defineCustomElement: definePidPagination,
 });
 

@@ -5,30 +5,32 @@
 
 ## Properties
 
-| Property       | Attribute        | Description                  | Type     | Default |
-|----------------|------------------|------------------------------|----------|---------|
-| `currentPage`  | `current-page`   | Current page (0-based index) | `number` | `0`     |
-| `itemsPerPage` | `items-per-page` | Number of items per page     | `number` | `10`    |
-| `totalItems`   | `total-items`    | Total number of items        | `number` | `0`     |
+| Property       | Attribute        | Description                  | Type       | Default                |
+|----------------|------------------|------------------------------|------------|------------------------|
+| `currentPage`  | `current-page`   | Current page (0-based index) | `number`   | `0`                    |
+| `itemsPerPage` | `items-per-page` | Number of items per page     | `number`   | `10`                   |
+| `pageSizes`    | `page-sizes`     | Available page sizes         | `number[]` | `[5, 10, 25, 50, 100]` |
+| `totalItems`   | `total-items`    | Total number of items        | `number`   | `0`                    |
 
 
 ## Events
 
-| Event        | Description                     | Type                  |
-|--------------|---------------------------------|-----------------------|
-| `pageChange` | Event emitted when page changes | `CustomEvent<number>` |
+| Event                | Description                               | Type                  |
+|----------------------|-------------------------------------------|-----------------------|
+| `itemsPerPageChange` | Event emitted when items per page changes | `CustomEvent<number>` |
+| `pageChange`         | Event emitted when page changes           | `CustomEvent<number>` |
 
 
 ## Dependencies
 
 ### Used by
 
-- [pid-data-table](../pid-data-table)
+- [pid-component](../pid-component)
 
 ### Graph
 ```mermaid
 graph TD;
-  pid-data-table --> pid-pagination
+  pid-component --> pid-pagination
   style pid-pagination fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
