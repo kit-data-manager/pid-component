@@ -1,4 +1,4 @@
-import { Component, Element, h, Host, Listen, Prop, State } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, h, Host, Listen, Prop, State } from '@stencil/core';
 
 @Component({
   tag: 'pid-tooltip',
@@ -13,9 +13,14 @@ export class PidTooltip {
   @State() isVisible: boolean = false;
 
   /**
-   * Internal state to track if this tooltip is in the first row of a table
+   * Internal state to track the calculated optimal position (top or bottom only)
    */
-  @State() isFirstRow: boolean = false;
+  @State() calculatedPosition: 'top' | 'bottom' = 'top';
+
+  /**
+   * Internal state to track if we need to expand the row
+   */
+  @State() needsRowExpansion: boolean = false;
 
   /**
    * Unique ID for ARIA attributes
@@ -26,6 +31,26 @@ export class PidTooltip {
    * Reference to the tooltip button for focus management
    */
   private buttonRef?: HTMLButtonElement;
+
+  /**
+   * Reference to the tooltip element for positioning calculations
+   */
+  private tooltipRef?: HTMLElement;
+
+  /**
+   * Reference to the table row for height manipulation
+   */
+  private tableRow?: HTMLTableRowElement;
+
+  /**
+   * Original row height before expansion
+   */
+  private originalRowHeight?: string;
+
+  /**
+   * Event emitted when tooltip requires row expansion
+   */
+  @Event() tooltipExpansionChange: EventEmitter<{ expand: boolean; requiredHeight: number }>;
 
   /**
    * Handle keyboard events for accessibility
@@ -42,17 +67,20 @@ export class PidTooltip {
   }
 
   /**
-   * Shows the tooltip
+   * Shows the tooltip and calculates optimal position
    */
   private showTooltip = () => {
     this.isVisible = true;
+    // Calculate position after the tooltip becomes visible
+    setTimeout(() => this.calculateOptimalPosition(), 10);
   };
 
   /**
-   * Hides the tooltip
+   * Hides the tooltip and restores row height
    */
   private hideTooltip = () => {
     this.isVisible = false;
+    this.restoreRowHeight();
   };
 
   /**
@@ -61,7 +89,11 @@ export class PidTooltip {
   private toggleTooltip = (event: Event) => {
     event.preventDefault();
     event.stopPropagation();
-    this.isVisible = !this.isVisible;
+    if (this.isVisible) {
+      this.hideTooltip();
+    } else {
+      this.showTooltip();
+    }
   };
 
   /**
@@ -80,9 +112,9 @@ export class PidTooltip {
   @Prop() text!: string;
 
   /**
-   * The position of the tooltip
+   * The preferred position of the tooltip (top or bottom)
    */
-  @Prop() position: 'top' | 'bottom' | 'left' | 'right' = 'top';
+  @Prop() position: 'top' | 'bottom' = 'top';
 
   /**
    * The maximum width of the tooltip
@@ -100,31 +132,147 @@ export class PidTooltip {
   @Prop() fitContent: boolean = true;
 
   componentDidLoad() {
-    // Check if this tooltip is in the first row of a data table
-    this.checkIfInFirstTableRow();
+    // Set initial calculated position
+    this.calculatedPosition = this.position === 'bottom' ? 'bottom' : 'top';
+    // Find the table row for potential height manipulation
+    this.tableRow = this.el.closest('tr') as HTMLTableRowElement;
   }
 
   /**
-   * Check if tooltip is in the first row of a table
+   * Calculate the optimal position (top or bottom) and determine if row expansion is needed
    */
-  private checkIfInFirstTableRow() {
-    const isInTable = !!this.el.closest('table');
-    if (isInTable) {
-      const tr = this.el.closest('tr');
-      const tbody = tr?.parentElement;
-      if (tbody && tbody.tagName.toLowerCase() === 'tbody') {
-        const firstRow = tbody.querySelector('tr:first-child');
-        this.isFirstRow = tr === firstRow;
-      }
+  private calculateOptimalPosition() {
+    if (!this.tooltipRef || !this.isVisible) return;
+
+    const hostRect = this.el.getBoundingClientRect();
+    const table = this.el.closest('table');
+    const tableContainer = table?.closest('.overflow-auto') || table?.parentElement;
+
+    if (!tableContainer) {
+      // Fallback to original position if not in a table
+      this.calculatedPosition = this.position === 'bottom' ? 'bottom' : 'top';
+      return;
     }
+
+    const containerRect = tableContainer.getBoundingClientRect();
+
+    // Calculate available space above and below
+    const spaceAbove = hostRect.top - containerRect.top;
+    const spaceBelow = containerRect.bottom - hostRect.bottom;
+
+    // Get tooltip content height
+    const tooltipHeight = this.estimateTooltipHeight(this.text);
+    const requiredSpace = tooltipHeight + 20; // Add margin
+
+    // Determine position based on available space
+    let useBottom = false;
+    let needsExpansion = false;
+
+    if (this.position === 'top' && spaceAbove >= requiredSpace) {
+      // Preferred top position fits
+      useBottom = false;
+    } else if (this.position === 'bottom' && spaceBelow >= requiredSpace) {
+      // Preferred bottom position fits
+      useBottom = true;
+    } else if (spaceAbove >= spaceBelow && spaceAbove >= requiredSpace) {
+      // More space above and it fits
+      useBottom = false;
+    } else if (spaceBelow >= requiredSpace) {
+      // Bottom has enough space
+      useBottom = true;
+    } else {
+      // Neither position has enough space - use bottom and expand row
+      useBottom = true;
+      needsExpansion = true;
+    }
+
+    this.calculatedPosition = useBottom ? 'bottom' : 'top';
+    this.needsRowExpansion = needsExpansion;
+
+    if (needsExpansion) {
+      this.expandRowForTooltip(tooltipHeight);
+    }
+  }
+
+  /**
+   * Expand the table row to accommodate the tooltip
+   */
+  private expandRowForTooltip(tooltipHeight: number) {
+    if (!this.tableRow) return;
+
+    // Store original height
+    this.originalRowHeight = this.tableRow.style.height || 'auto';
+
+    // Calculate required row height
+    const currentRowHeight = this.tableRow.offsetHeight;
+    const requiredAdditionalHeight = tooltipHeight + 40; // Extra padding for tooltip + margins
+    const newRowHeight = Math.max(currentRowHeight, requiredAdditionalHeight);
+
+    // Apply new height with smooth transition
+    this.tableRow.style.transition = 'height 0.2s ease-in-out';
+    this.tableRow.style.height = `${newRowHeight}px`;
+
+    // Emit event for any parent components that need to know
+    this.tooltipExpansionChange.emit({
+      expand: true,
+      requiredHeight: newRowHeight,
+    });
+  }
+
+  /**
+   * Restore the original row height
+   */
+  private restoreRowHeight() {
+    if (!this.tableRow || !this.needsRowExpansion) return;
+
+    // Restore original height
+    this.tableRow.style.height = this.originalRowHeight || 'auto';
+
+    // Remove transition after animation completes
+    setTimeout(() => {
+      if (this.tableRow) {
+        this.tableRow.style.transition = '';
+      }
+    }, 200);
+
+    this.needsRowExpansion = false;
+
+    // Emit event for cleanup
+    this.tooltipExpansionChange.emit({
+      expand: false,
+      requiredHeight: 0,
+    });
+  }
+
+  /**
+   * Estimate the height required for the tooltip content
+   */
+  private estimateTooltipHeight(content: string): number {
+    // Create a temporary element to measure content height
+    const tempDiv = document.createElement('div');
+    tempDiv.style.cssText = `
+      position: absolute;
+      visibility: hidden;
+      white-space: normal;
+      word-wrap: break-word;
+      max-width: ${this.maxWidth};
+      padding: 12px;
+      font-size: 12px;
+      line-height: 1.4;
+      border: 1px solid transparent;
+    `;
+    tempDiv.textContent = content;
+
+    document.body.appendChild(tempDiv);
+    const height = tempDiv.offsetHeight;
+    document.body.removeChild(tempDiv);
+
+    return height;
   }
 
   render() {
     // Don't show the tooltip icon if there's no text
     const hasTooltipText = this.text && this.text.trim().length > 0;
-
-    // If this is the first row in a table, force bottom position to prevent cut-off
-    const effectivePosition = this.isFirstRow ? 'bottom' : this.position;
 
     return (
       <Host class="relative inline-block w-full" onMouseEnter={this.showTooltip} onMouseLeave={this.hideTooltip}>
@@ -168,9 +316,10 @@ export class PidTooltip {
         </div>
         {hasTooltipText && (
           <div
+            ref={el => (this.tooltipRef = el)}
             id={this.tooltipId}
             role="tooltip"
-            class={`${this.isVisible ? 'block' : 'hidden'} z-50 absolute ${this.getPositionClasses(effectivePosition)} transition-opacity duration-200 ease-in-out shadow-lg bg-white rounded text-xs text-gray-700 p-3 w-full whitespace-normal border border-gray-300`}
+            class={`${this.isVisible ? 'block' : 'hidden'} z-50 absolute ${this.getPositionClasses(this.calculatedPosition)} transition-opacity duration-200 ease-in-out shadow-lg bg-white rounded text-xs text-gray-700 p-3 w-full whitespace-normal border border-gray-300`}
             style={this.getTooltipStyles()}
             aria-live="polite"
           >
@@ -181,16 +330,12 @@ export class PidTooltip {
     );
   }
 
-  private getPositionClasses(position: 'top' | 'bottom' | 'left' | 'right' = 'top'): string {
+  private getPositionClasses(position: 'top' | 'bottom'): string {
     switch (position) {
       case 'top':
         return 'bottom-full left-0 mb-2';
       case 'bottom':
         return 'top-full left-0 mt-2';
-      case 'left':
-        return 'right-full top-0 mr-2';
-      case 'right':
-        return 'left-full top-0 ml-2';
       default:
         return 'top-full left-0 mt-2';
     }
@@ -204,8 +349,8 @@ export class PidTooltip {
       maxWidth: this.maxWidth,
     };
 
-    // Only add maxHeight if we're not fitting content exactly
-    if (!this.fitContent) {
+    // Set appropriate height constraints
+    if (this.needsRowExpansion || !this.fitContent) {
       styles.maxHeight = this.maxHeight;
       styles.overflowY = 'auto';
     }

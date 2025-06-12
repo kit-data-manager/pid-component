@@ -1,4 +1,4 @@
-import { Component, Event, EventEmitter, h, Prop, State, Watch } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Listen, Prop, State, Watch } from '@stencil/core';
 import { FoldableItem } from '../../utils/FoldableItem';
 
 @Component({
@@ -67,6 +67,23 @@ export class PidDataTable {
   @State() filteredItems: FoldableItem[] = [];
 
   /**
+   * Listen for tooltip expansion events to adjust table layout if needed
+   */
+  @Listen('tooltipExpansionChange')
+  handleTooltipExpansion(event: CustomEvent<{ expand: boolean; requiredHeight: number }>) {
+    const { expand, requiredHeight } = event.detail;
+
+    if (expand) {
+      // Optionally handle table-wide adjustments when tooltip expands
+      // For now, the row expansion is handled by the tooltip itself
+      console.log(`Tooltip expanded, requiring ${requiredHeight}px height`);
+    } else {
+      // Handle cleanup when tooltip collapses
+      console.log('Tooltip collapsed');
+    }
+  }
+
+  /**
    * Watch for changes in items
    */
   @Watch('items')
@@ -116,12 +133,13 @@ export class PidDataTable {
               {this.filteredItems.map((value, index) => (
                 <tr
                   key={`item-${value.keyTitle}-${index}`}
-                  class={`odd:bg-slate-200 even:bg-gray-50 h-7 leading-7 ${index !== this.filteredItems.length - 1 ? 'border-b border-gray-200' : ''}`}
+                  class={`odd:bg-slate-200 even:bg-gray-50 leading-7 ${index !== this.filteredItems.length - 1 ? 'border-b border-gray-200' : ''}`}
+                  style={{ minHeight: '28px' }} // Base minimum height for rows
                   role="row"
                 >
-                  <td class={'p-2 min-w-[150px] w-auto font-mono align-middle'} role="cell">
-                    <pid-tooltip text={value.keyTooltip || `Details for ${value.keyTitle}`} position={index === 0 ? 'bottom' : 'top'}>
-                      <div slot="trigger" class="h-7 leading-7 overflow-hidden w-full flex items-center">
+                  <td class={'p-2 min-w-[150px] w-auto font-mono align-top'} role="cell">
+                    <pid-tooltip text={value.keyTooltip || `Details for ${value.keyTitle}`} position="top" maxHeight="200px">
+                      <div slot="trigger" class="min-h-7 leading-7 overflow-hidden w-full flex items-center">
                         <a
                           href={value.keyLink}
                           target={'_blank'}
@@ -136,7 +154,7 @@ export class PidDataTable {
                     </pid-tooltip>
                   </td>
                   <td class={'align-top text-sm p-2 w-full select-text relative'} role="cell">
-                    <div class="w-full min-h-7 pr-8 flex items-center relative">
+                    <div class="w-full min-h-7 pr-8 flex items-start relative">
                       <div class="w-full overflow-x-auto whitespace-normal break-words max-h-[200px] overflow-y-auto">
                         {
                           // Load a foldable subcomponent if subcomponents are not disabled (hideSubcomponents), and the current level of subcomponents is not the total level of subcomponents. If the subcomponent is on the bottom level of the hierarchy, render just a preview. If the value should not be resolved (isFoldable), just render the value as text.
@@ -169,7 +187,7 @@ export class PidDataTable {
                     </div>
                     <copy-button
                       value={value.value}
-                      class="absolute right-2 top-1/2 -translate-y-1/2 flex-shrink-0 z-30 opacity-100 visible hover:z-35 cursor-pointer"
+                      class="absolute right-2 top-2 flex-shrink-0 z-30 opacity-100 visible hover:z-35 cursor-pointer"
                       aria-label={`Copy ${value.keyTitle} value`}
                     />
                   </td>

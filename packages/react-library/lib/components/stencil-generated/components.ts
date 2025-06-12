@@ -162,13 +162,15 @@ export const PidPagination: StencilReactComponent<PidPaginationElement, PidPagin
   defineCustomElement: definePidPagination,
 });
 
-export type PidTooltipEvents = NonNullable<unknown>;
+export type PidTooltipEvents = {
+  onTooltipExpansionChange: EventName<CustomEvent<{ expand: boolean; requiredHeight: number }>>
+};
 
 export const PidTooltip: StencilReactComponent<PidTooltipElement, PidTooltipEvents> = /*@__PURE__*/ createComponent<PidTooltipElement, PidTooltipEvents>({
   tagName: 'pid-tooltip',
   elementClass: PidTooltipElement,
   // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
   react: React,
-  events: {} as PidTooltipEvents,
+  events: { onTooltipExpansionChange: 'tooltipExpansionChange' } as PidTooltipEvents,
   defineCustomElement: definePidTooltip,
 });
