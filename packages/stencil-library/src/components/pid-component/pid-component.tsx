@@ -497,8 +497,8 @@ export class PidComponent {
               {this.identifierObject?.renderBody()}
 
               {/* Pagination in a separate line above actions */}
-              {this.items.length > this.amountOfItems && (
-                <div slot="footer" class="w-full bg-white z-40">
+              {this.items.length > 0 && (
+                <div slot="footer" class="relative w-full bg-white z-50 overflow-visible">
                   <pid-pagination
                     currentPage={this.tablePage}
                     totalItems={this.items.length}

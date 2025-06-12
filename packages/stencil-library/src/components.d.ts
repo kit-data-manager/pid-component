@@ -269,28 +269,30 @@ export namespace Components {
        * Whether the tooltip should fit its content height exactly
        * @default true
        */
-      "fitContent": boolean;
+      "fit'fitContent'olean;
       /**
-    'fitContent'imum height of the tooltip
+       * The maximum height of the tooltip
        * @default '150px'
        */
-      "maxHeight": string;
+      "max'maxHeight'ring;
       /**
-      'maxHeight'mum width of the tooltip
+       * The maximum width of the tooltip
        * @default '250px'
        */
-      "maxWidth": string;
+      "max'maxWidth'ring;
       /**
-       'maxWidth'erred position of the tooltip (top or bottom)
+       * The preferred position of the tooltip (top or bottom)
        * @default 'top'
        */
-      "position": 'top' | 'bottom';
-      /'position'* The text to display in the tooltip
+      "pos'position'op' | 'bottom';
+      /**
+       * The text to display in the tooltip
        */
-      "text": string;
+      "tex'text'ring;
     }
 }
-export interf'text'dCollapsibleCustomEvent<T> extends CustomEvent<T> {
+
+export interface PidCollapsibleCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPidCollapsibleElement;
 }

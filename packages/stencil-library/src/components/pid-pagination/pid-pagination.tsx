@@ -1,4 +1,4 @@
-import { Component, Event, EventEmitter, h, Prop, State } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Prop } from '@stencil/core';
 
 @Component({
   tag: 'pid-pagination',
@@ -36,11 +36,6 @@ export class PidPagination {
   @Event() itemsPerPageChange: EventEmitter<number>;
 
   /**
-   * Internal state for dropdown visibility
-   */
-  @State() isDropdownOpen: boolean = false;
-
-  /**
    * Handle page change
    */
   private handlePageChange = (page: number) => {
@@ -53,15 +48,7 @@ export class PidPagination {
    * Handle items per page change
    */
   private handleItemsPerPageChange = (size: number) => {
-    this.isDropdownOpen = false;
     this.itemsPerPageChange.emit(size);
-  };
-
-  /**
-   * Toggle dropdown
-   */
-  private toggleDropdown = () => {
-    this.isDropdownOpen = !this.isDropdownOpen;
   };
 
   /**
@@ -138,54 +125,44 @@ export class PidPagination {
     }
 
     const visiblePages = this.getVisiblePageNumbers();
+    const needsPagination = this.totalItems > this.itemsPerPage;
 
     return (
-      <div class="flex flex-wrap items-center justify-between gap-2 py-1 px-3 text-sm bg-white relative z-50 overflow-visible w-full">
-        {/* Left side: Page size selector and info */}
-        <div class="flex items-center gap-2 text-gray-600">
-          <div class="relative inline-block">
-            <button
-              onClick={this.toggleDropdown}
-              class="flex items-center gap-1 rounded border border-gray-200 bg-white px-2 py-1 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-            >
-              <span>{this.itemsPerPage} per page</span>
-              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={this.isDropdownOpen ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7'} />
-              </svg>
-            </button>
-
-            {this.isDropdownOpen && (
-              <div class="absolute left-0 z-50 mt-1 w-32 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                <div class="py-1" role="menu" aria-orientation="vertical">
-                  {this.pageSizes.map(size => (
-                    <button
-                      key={`size-${size}`}
-                      onClick={() => this.handleItemsPerPageChange(size)}
-                      class={`block w-full px-4 py-2 text-left text-xs ${this.itemsPerPage === size ? 'bg-gray-100 font-medium text-gray-900' : 'text-gray-700 hover:bg-gray-50'}`}
-                      role="menuitem"
-                    >
-                      {size} items
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
+      <div class="flex flex-wrap items-center justify-between gap-2 py-1 px-3 text-sm bg-white w-full resize-none">
+        {/* Left side: Page size selector and info - ALWAYS SHOWN */}
+        <div class="flex flex-wrap items-center gap-2 text-gray-600">
+          {/* Horizontal page size selector */}
+          <div class="flex items-center gap-1">
+            <span class="text-xs text-gray-600 whitespace-nowrap">Items per page:</span>
+            <div class="flex items-center gap-0.5 rounded border border-gray-200 bg-white p-0.5">
+              {this.pageSizes.map(size => (
+                <button
+                  key={`size-${size}`}
+                  onClick={() => this.handleItemsPerPageChange(size)}
+                  class={`px-2 py-0.5 text-xs rounded transition-colors resize-none ${
+                    this.itemsPerPage === size ? 'bg-blue-600 text-white font-medium' : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
           </div>
 
-          <span class="hidden text-xs text-gray-600 sm:block">
+          <span class="hidden text-xs text-gray-600 sm:block whitespace-nowrap">
             Showing {this.displayRange.start}-{this.displayRange.end} of {this.totalItems}
           </span>
         </div>
 
-        {/* Right side: Pagination controls */}
-        {this.totalItems > this.itemsPerPage && (
+        {/* Right side: Pagination controls - ONLY SHOWN WHEN NEEDED */}
+        {needsPagination && (
           <div class="flex items-center">
-            <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+            <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm resize-none" aria-label="Pagination">
               {/* Previous button */}
               <button
                 onClick={() => this.handlePageChange(this.currentPage - 1)}
                 disabled={this.currentPage === 0}
-                class="relative inline-flex items-center rounded-l-md px-2 py-1.5 text-gray-500 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                class="relative inline-flex items-center rounded-l-md px-2 py-1.5 text-gray-500 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed resize-none"
                 aria-label="Previous page"
               >
                 <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -202,7 +179,7 @@ export class PidPagination {
                 // Render ellipsis
                 if (page === '...') {
                   return (
-                    <span key={`ellipsis-${i}`} class="relative inline-flex items-center px-2 py-1.5 text-sm text-gray-700 ring-1 ring-inset ring-gray-300">
+                    <span key={`ellipsis-${i}`} class="relative inline-flex items-center px-2 py-1.5 text-sm text-gray-700 ring-1 ring-inset ring-gray-300 resize-none">
                       ...
                     </span>
                   );
@@ -217,8 +194,8 @@ export class PidPagination {
                     onClick={() => this.handlePageChange(pageNum)}
                     class={
                       isCurrentPage
-                        ? 'relative z-10 inline-flex items-center bg-blue-600 px-2 py-1.5 text-xs font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
-                        : 'relative inline-flex items-center px-2 py-1.5 text-xs text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500'
+                        ? 'relative z-10 inline-flex items-center bg-blue-600 px-2 py-1.5 text-xs font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 resize-none'
+                        : 'relative inline-flex items-center px-2 py-1.5 text-xs text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 resize-none'
                     }
                     aria-label={`Page ${pageNum + 1}`}
                     aria-current={isCurrentPage ? 'page' : undefined}
@@ -232,7 +209,7 @@ export class PidPagination {
               <button
                 onClick={() => this.handlePageChange(this.currentPage + 1)}
                 disabled={this.currentPage >= this.totalPages - 1}
-                class="relative inline-flex items-center rounded-r-md px-2 py-1.5 text-gray-500 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                class="relative inline-flex items-center rounded-r-md px-2 py-1.5 text-gray-500 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed resize-none"
                 aria-label="Next page"
               >
                 <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
