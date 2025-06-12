@@ -52,6 +52,11 @@ export class PidDataTable {
   @Prop() settings: string = '[]';
 
   /**
+   * Enable adaptive pagination mode
+   */
+  @Prop() adaptivePagination: boolean = false;
+
+  /**
    * Event emitted when page changes
    */
   @Event() pageChange: EventEmitter<number>;
@@ -114,10 +119,15 @@ export class PidDataTable {
       );
     }
 
-    return (
-      <div class="rounded-lg border border-gray-200 bg-gray-50 m-1 flex flex-col h-full">
+    // Adjust container and table classes based on adaptive pagination mode
+    const containerClass = this.adaptivePagination
+      ? 'rounded-lg border border-gray-200 bg-gray-50 m-1 flex flex-col h-full'
+      : 'rounded-lg border border-gray-200 bg-gray-50 m-1 flex flex-col h-full';
+
+    const tableContainerClass = this.adaptivePagination ? 'flex-'flex-grow relative z-10 overflow-hidden'erflow-au'overflow-auto flex-grow relative z-10'n (
+      <div class={containerClass}>
         {/* Table container with scrollable content */}
-        <div class="overflow-auto flex-grow relative z-10">
+        <div class={tableContainerClass}>
           <table class="w-full text-left text-sm font-sans select-text border-collapse table-fixed" aria-label="Data table" role="table">
             <thead class="bg-slate-600 text-slate-200 rounded-t-lg sticky top-0 z-20">
               <tr class="font-semibold" role="row">

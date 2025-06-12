@@ -89,6 +89,11 @@ export namespace Components {
     }
     interface PidCollapsible {
         /**
+         * Enable adaptive pagination mode - automatically adjusts number of items based on available space
+         * @default false
+         */
+        "ada'adaptivePagination'olean;
+      /**
           * Whether to emphasize the component with border and shadow
           * @default false
          */
@@ -124,6 +129,12 @@ export namespace Components {
     }
     interface PidComponent {
         /**
+         * Enable adaptive pagination based on available space. When true, amountOfItems becomes the initial/minimum value.
+         * @type {boolean}
+         * @default false
+         */
+        'adaptivePagination': boolean;
+      /**
           * The number of items to show in the table per page. Defaults to 10. (optional)
           * @type {number}
           * @default 10
@@ -148,6 +159,12 @@ export namespace Components {
          */
         "emphasizeComponent": boolean;
         /**
+         * Estimated height of each table row in pixels (used for adaptive pagination).
+         * @type {number}
+         * @default 40
+         */
+        'estimatedRowHeight': number;
+      /**
           * Initial height of the component (e.g. '300px', '50vh'). If not set, defaults to 300px.
           * @type {string}
          */
@@ -164,6 +181,18 @@ export namespace Components {
          */
         "levelOfSubcomponents": number;
         /**
+         * Maximum number of items to show per page when using adaptive pagination.
+         * @type {number}
+         * @default 50
+         */
+        'maxItemsPerPage': number;
+      /**
+       * Minimum number of items to show per page when using adaptive pagination.
+       * @type {number}
+       * @default 5
+       */
+      'minItemsPerPage': number;
+      /**
           * Determines whether the component is open or not by default. (optional)
           * @type {boolean}
          */
@@ -197,6 +226,11 @@ export namespace Components {
     }
     interface PidDataTable {
         /**
+         * Enable adaptive pagination mode
+         * @default false
+         */
+        'adaptivePagination': boolean;
+      /**
           * Current level of subcomponents
           * @default 0
          */
@@ -244,6 +278,11 @@ export namespace Components {
     }
     interface PidPagination {
         /**
+         * Enable adaptive pagination mode
+         * @default false
+         */
+        'adaptivePagination': boolean;
+      /**
           * Current page (0-based index)
           * @default 0
          */
@@ -259,6 +298,11 @@ export namespace Components {
          */
         "pageSizes": number[];
         /**
+         * Whether to show the items per page control
+         * @default true
+         */
+        'showItemsPerPageControl': boolean;
+      /**
           * Total number of items
           * @default 0
          */
@@ -269,29 +313,28 @@ export namespace Components {
        * Whether the tooltip should fit its content height exactly
        * @default true
        */
-      "fit'fitContent'olean;
+      'fitContent': boolean;
       /**
        * The maximum height of the tooltip
        * @default '150px'
        */
-      "max'maxHeight'ring;
+      'maxHeight': string;
       /**
        * The maximum width of the tooltip
        * @default '250px'
        */
-      "max'maxWidth'ring;
+      'maxWidth': string;
       /**
        * The preferred position of the tooltip (top or bottom)
        * @default 'top'
        */
-      "pos'position'op' | 'bottom';
+      'position': 'top' | 'bottom';
       /**
        * The text to display in the tooltip
        */
-      "tex'text'ring;
+      'text': string;
     }
 }
-
 export interface PidCollapsibleCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPidCollapsibleElement;
@@ -341,6 +384,7 @@ declare global {
     };
     interface HTMLPidCollapsibleElementEventMap {
         "collapsibleToggle": boolean;
+      'collapsibleResize': { width: number; height: number };
     }
     interface HTMLPidCollapsibleElement extends Components.PidCollapsible, HTMLStencilElement {
         addEventListener<K extends keyof HTMLPidCollapsibleElementEventMap>(type: K, listener: (this: HTMLPidCollapsibleElement, ev: PidCollapsibleCustomEvent<HTMLPidCollapsibleElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -507,6 +551,11 @@ declare namespace LocalJSX {
     }
     interface PidCollapsible {
         /**
+         * Enable adaptive pagination mode - automatically adjusts number of items based on available space
+         * @default false
+         */
+        'adaptivePagination'?: boolean;
+      /**
           * Whether to emphasize the component with border and shadow
           * @default false
          */
@@ -530,6 +579,10 @@ declare namespace LocalJSX {
          */
         "lineHeight"?: number;
         /**
+         * Event emitted when component is resized (for adaptive pagination)
+         */
+        'onCollapsibleResize'?: (event: PidCollapsibleCustomEvent<{ width: number; height: number }>) => void;
+      /**
           * Event emitted when the collapsible is toggled
          */
         "onCollapsibleToggle"?: (event: PidCollapsibleCustomEvent<boolean>) => void;
@@ -546,6 +599,12 @@ declare namespace LocalJSX {
     }
     interface PidComponent {
         /**
+         * Enable adaptive pagination based on available space. When true, amountOfItems becomes the initial/minimum value.
+         * @type {boolean}
+         * @default false
+         */
+        'adaptivePagination'?: boolean;
+      /**
           * The number of items to show in the table per page. Defaults to 10. (optional)
           * @type {number}
           * @default 10
@@ -570,6 +629,12 @@ declare namespace LocalJSX {
          */
         "emphasizeComponent"?: boolean;
         /**
+         * Estimated height of each table row in pixels (used for adaptive pagination).
+         * @type {number}
+         * @default 40
+         */
+        'estimatedRowHeight'?: number;
+      /**
           * Initial height of the component (e.g. '300px', '50vh'). If not set, defaults to 300px.
           * @type {string}
          */
@@ -586,6 +651,18 @@ declare namespace LocalJSX {
          */
         "levelOfSubcomponents"?: number;
         /**
+         * Maximum number of items to show per page when using adaptive pagination.
+         * @type {number}
+         * @default 50
+         */
+        'maxItemsPerPage'?: number;
+      /**
+       * Minimum number of items to show per page when using adaptive pagination.
+       * @type {number}
+       * @default 5
+       */
+      'minItemsPerPage'?: number;
+      /**
           * Determines whether the component is open or not by default. (optional)
           * @type {boolean}
          */
@@ -615,6 +692,11 @@ declare namespace LocalJSX {
     }
     interface PidDataTable {
         /**
+         * Enable adaptive pagination mode
+         * @default false
+         */
+        'adaptivePagination'?: boolean;
+      /**
           * Current level of subcomponents
           * @default 0
          */
@@ -670,6 +752,11 @@ declare namespace LocalJSX {
     }
     interface PidPagination {
         /**
+         * Enable adaptive pagination mode
+         * @default false
+         */
+        'adaptivePagination'?: boolean;
+      /**
           * Current page (0-based index)
           * @default 0
          */
@@ -693,6 +780,11 @@ declare namespace LocalJSX {
          */
         "pageSizes"?: number[];
         /**
+         * Whether to show the items per page control
+         * @default true
+         */
+        'showItemsPerPageControl'?: boolean;
+      /**
           * Total number of items
           * @default 0
          */

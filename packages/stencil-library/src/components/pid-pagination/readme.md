@@ -5,12 +5,14 @@
 
 ## Properties
 
-| Property       | Attribute        | Description                  | Type       | Default                |
-| -------------- | ---------------- | ---------------------------- | ---------- | ---------------------- |
-| `currentPage`  | `current-page`   | Current page (0-based index) | `number`   | `0`                    |
-| `itemsPerPage` | `items-per-page` | Number of items per page     | `number`   | `10`                   |
-| `pageSizes`    | `page-sizes`     | Available page sizes         | `number[]` | `[5, 10, 25, 50, 100]` |
-| `totalItems`   | `total-items`    | Total number of items        | `number`   | `0`                    |
+| Property                  | Attribute                     | Description                                | Type       | Default                |
+|---------------------------|-------------------------------|--------------------------------------------|------------|------------------------|
+| `adaptivePagination`      | `adaptive-pagination`         | Enable adaptive pagination mode            | `boolean`  | `false`                |
+| `currentPage`             | `current-page`                | Current page (0-based index)               | `number`   | `0`                    |
+| `itemsPerPage`            | `items-per-page`              | Number of items per page                   | `number`   | `10`                   |
+| `pageSizes`               | `page-sizes`                  | Available page sizes                       | `number[]` | `[5, 10, 25, 50, 100]` |
+| `showItemsPerPageControl` | `show-items-per-page-control` | Whether to show the items per page control | `boolean`  | `true`                 |
+| `totalItems`              | `total-items`                 | Total number of items                      | `number`   | `0`                    |
 
 
 ## Events

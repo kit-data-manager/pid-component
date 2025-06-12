@@ -73,9 +73,19 @@ export class PidCollapsible {
   @Prop() showFooter: boolean = false;
 
   /**
+   * Enable adaptive pagination mode - automatically adjusts number of items based on available space
+   */
+  @Prop() adaptivePagination: boolean = false;
+
+  /**
    * Event emitted when the collapsible is toggled
    */
   @Event() collapsibleToggle: EventEmitter<boolean>;
+
+  /**
+   * Event emitted when component is resized (for adaptive pagination)
+   */
+  @Event() collapsibleResize: EventEmitter<{ width: number; height: number }>;
 
   /**
    * Internal state to track current dimensions
@@ -142,9 +152,17 @@ export class PidCollapsible {
       if (!this.expanded) return;
 
       for (const entry of entries) {
+        const width = entry.contentRect.width;
+        const height = entry.contentRect.height;
+
         // Update current dimensions based on observed changes
-        this.currentWidth = `${entry.contentRect.width}px`;
-        this.currentHeight = `${entry.contentRect.height}px`;
+        this.currentWidth = `${width}px`;
+        this.currentHeight = `${height}px`;
+
+        // Emit resize event for adaptive pagination
+        if (this.adaptivePagination) {
+          this.collapsibleResize.emit({ width, height });
+        }
       }
     });
 

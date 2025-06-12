@@ -126,6 +126,31 @@ export class PidComponent {
   @Prop() height?: string;
 
   /**
+   * Enable adaptive pagination based on available space.
+   * When true, amountOfItems becomes the initial/minimum value.
+   * @type {boolean}
+   */
+  @Prop() adaptivePagination: boolean = false;
+
+  /**
+   * Minimum number of items to show per page when using adaptive pagination.
+   * @type {number}
+   */
+  @Prop() minItemsPerPage: number = 5;
+
+  /**
+   * Maximum number of items to show per page when using adaptive pagination.
+   * @type {number}
+   */
+  @Prop() maxItemsPerPage: number = 50;
+
+  /**
+   * Estimated height of each table row in pixels (used for adaptive pagination).
+   * @type {number}
+   */
+  @Prop() estimatedRowHeight: number = 40;
+
+  /**
    * Updates the component sizing and styling based on the expanded state
    * This method is now handled by the pid-collapsible component
    */
@@ -178,6 +203,11 @@ export class PidComponent {
    * Tracks whether the component is expanded/unfolded or not
    */
   @State() isExpanded: boolean = false;
+
+  /**
+   * Tracks calculated items per page for adaptive pagination
+   */
+  @State() calculatedItemsPerPage: number = 10;
 
   constructor() {
     this.temporarilyEmphasized = this.emphasizeComponent;
@@ -279,6 +309,9 @@ export class PidComponent {
   async componentWillLoad() {
     // Validate amountOfItems to prevent division by zero
     this.validateAmountOfItems(this.amountOfItems);
+
+    // Initialize calculated items per page
+    this.calculatedItemsPerPage = this.adaptivePagination ? this.amountOfItems : this.amountOfItems;
 
     // Clear items and actions before loading new data to prevent double rendering
     this.items = [];
@@ -388,6 +421,42 @@ export class PidComponent {
   private _lineHeight: number = 24; // Default fallback
 
   /**
+   * Calculates the optimal number of items per page based on available height
+   */
+  private calculateOptimalItemsPerPage = (availableHeight: number): number => {
+    if (!this.adaptivePagination) {
+      return this.amountOfItems;
+    }
+
+    // Reserve space for header, footer, padding
+    const headerHeight = 44; // Table header height
+    const footerHeight = this.shouldShowFooter ? 120 : 0; // Footer with pagination
+    const padding = 20; // Container padding
+
+    const availableTableHeight = availableHeight - headerHeight - footerHeight - padding;
+    const maxItems = Math.floor(availableTableHeight / this.estimatedRowHeight);
+
+    // Constrain between min and max
+    return Math.max(this.minItemsPerPage, Math.min(maxItems, this.maxItemsPerPage, this.items.length || this.amountOfItems));
+  };
+
+  /**
+   * Handles resize events from collapsible component
+   */
+  private handleCollapsibleResize = (event: CustomEvent<{ width: number; height: number }>) => {
+    if (this.adaptivePagination && this.isExpanded && event.detail.height > 0) {
+      const newItemsPerPage = this.calculateOptimalItemsPerPage(event.detail.height);
+      if (newItemsPerPage !== this.calculatedItemsPerPage) {
+        this.calculatedItemsPerPage = newItemsPerPage;
+        // Reset to first page when items per page changes significantly
+        if (Math.abs(newItemsPerPage - this.calculatedItemsPerPage) > 3) {
+          this.tablePage = 0;
+        }
+      }
+    }
+  };
+
+  /**
    * Determines if footer should be shown based on whether there are actions or items with pagination
    */
   private get shouldShowFooter(): boolean {
@@ -400,6 +469,9 @@ export class PidComponent {
    * Renders the component.
    */
   render() {
+    // Determine effective items per page based on adaptive pagination mode
+    const effectiveItemsPerPage = this.adaptivePagination ? this.calculatedItemsPerPage : this.amountOfItems;
+
     return (
       <Host class="relative font-sans">
         {
@@ -460,7 +532,9 @@ export class PidComponent {
               initialHeight={this.height}
               lineHeight={this._lineHeight}
               showFooter={this.shouldShowFooter}
+              adaptivePagination={this.adaptivePagination}
               onCollapsibleToggle={e => this.toggleSubcomponents(e)}
+              onCollapsibleResize={this.handleCollapsibleResize}
               onClick={e => {
                 // Isolate click events to prevent bubbling to parent components
                 e.stopPropagation();
@@ -482,15 +556,16 @@ export class PidComponent {
               {this.items.length > 0 ? (
                 <pid-data-table
                   items={this.items}
-                  itemsPerPage={this.amountOfItems}
+                  itemsPerPage={effectiveItemsPerPage}
                   currentPage={this.tablePage}
                   loadSubcomponents={this.loadSubcomponents}
                   hideSubcomponents={this.hideSubcomponents}
                   currentLevelOfSubcomponents={this.currentLevelOfSubcomponents}
                   levelOfSubcomponents={this.levelOfSubcomponents}
                   settings={this.settings}
+                  adaptivePagination={this.adaptivePagination}
                   onPageChange={e => (this.tablePage = e.detail)}
-                  class="flex-grow overflow-auto"
+                  class={this.adaptivePagination ? 'flex-grow overflow-hidden' : 'flex-grow overflow-auto'}
                 />
               ) : null}
 
@@ -502,9 +577,15 @@ export class PidComponent {
                   <pid-pagination
                     currentPage={this.tablePage}
                     totalItems={this.items.length}
-                    itemsPerPage={this.amountOfItems}
+                    itemsPerPage={effectiveItemsPerPage}
                     onPageChange={e => (this.tablePage = e.detail)}
-                    onItemsPerPageChange={e => (this.amountOfItems = e.detail)}
+                    onItemsPerPageChange={e => {
+                      if (!this.adaptivePagination) {
+                        this.amountOfItems = e.detail;
+                      }
+                    }}
+                    adaptivePagination={this.adaptivePagination}
+                    showItemsPerPageControl={!this.adaptivePagination}
                   />
                 </div>
               )}

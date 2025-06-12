@@ -1,76 +1,75 @@
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 
+/**
+ * The pid-collapsible component provides a flexible container that can be expanded
+ * and collapsed. It supports customization of appearance and behavior.
+ */
 const meta: Meta = {
-  title: 'pid-collapsible',
+  title: 'Components/Collapsible',
   component: 'pid-collapsible',
+  tags: ['autodocs'],
   argTypes: {
     open: {
       description: 'Whether the collapsible is open by default',
-      control: {
-        type: 'boolean',
-      },
+      control: { type: 'boolean' },
       table: {
-        defaultValue: {
-          summary: 'false',
-        },
-        type: {
-          summary: 'boolean',
-        },
+        defaultValue: { summary: 'false' },
+        type: { summary: 'boolean' },
       },
     },
     emphasize: {
       description: 'Whether to emphasize the component with border and shadow',
-      control: {
-        type: 'boolean',
-      },
+      control: { type: 'boolean' },
       table: {
-        defaultValue: {
-          summary: 'false',
-        },
-        type: {
-          summary: 'boolean',
-        },
+        defaultValue: { summary: 'false' },
+        type: { summary: 'boolean' },
       },
     },
     expanded: {
       description: 'Whether the component is in expanded mode (full size)',
-      control: {
-        type: 'boolean',
-      },
+      control: { type: 'boolean' },
       table: {
-        defaultValue: {
-          summary: 'false',
-        },
-        type: {
-          summary: 'boolean',
-        },
+        defaultValue: { summary: 'false' },
+        type: { summary: 'boolean' },
       },
     },
     initialWidth: {
       description: 'Initial width when expanded',
-      control: {
-        type: 'text',
+      control: { type: 'text' },
+      table: {
+        type: { summary: 'string' },
       },
     },
     initialHeight: {
       description: 'Initial height when expanded',
-      control: {
-        type: 'text',
+      control: { type: 'text' },
+      table: {
+        type: { summary: 'string' },
       },
     },
     lineHeight: {
       description: 'Line height for collapsed state',
-      control: {
-        type: 'number',
-      },
+      control: { type: 'number' },
       table: {
-        defaultValue: {
-          summary: '24',
-        },
-        type: {
-          summary: 'number',
-        },
+        defaultValue: { summary: '24' },
+        type: { summary: 'number' },
+      },
+    },
+    showFooter: {
+      description: 'Whether to show the footer section',
+      control: { type: 'boolean' },
+      table: {
+        defaultValue: { summary: 'false' },
+        type: { summary: 'boolean' },
+      },
+    },
+    resizable: {
+      description: 'Whether the component can be resized',
+      control: { type: 'boolean' },
+      table: {
+        defaultValue: { summary: 'false' },
+        type: { summary: 'boolean' },
       },
     },
   },
@@ -79,31 +78,44 @@ const meta: Meta = {
     emphasize: true,
     expanded: false,
     lineHeight: 24,
+    showFooter: false,
+    resizable: false,
   },
 };
+
 export default meta;
 type Story = StoryObj;
 
+/**
+ * Default collapsible component in closed state
+ */
 export const Default: Story = {
   args: {
     open: false,
     emphasize: true,
   },
   render: args => html`
-    <pid-collapsible
-      open=${args.open}
-      emphasize=${args.emphasize}
-      expanded=${args.expanded}
-      initialWidth=${args.initialWidth}
-      initialHeight=${args.initialHeight}
-      lineHeight=${args.lineHeight}
-    >
-      <span slot="summary">Collapsible Component</span>
-      <div>
-        <p>This is the content of the collapsible component.</p>
-        <p>It can contain any HTML content.</p>
-      </div>
-    </pid-collapsible>
+    <div class="p-4 bg-gray-50 rounded-md">
+      <pid-collapsible
+        open=${args.open}
+        emphasize=${args.emphasize}
+        expanded=${args.expanded}
+        initialWidth=${args.initialWidth}
+        initialHeight=${args.initialHeight}
+        lineHeight=${args.lineHeight}
+        showFooter=${args.showFooter}
+        resizable=${args.resizable}
+        @toggle=${e => console.log('Toggle event:', e.detail)}
+        @resize=${e => console.log('Resize event:', e.detail)}
+      >
+        <span slot="summary" class="font-medium">Collapsible Component</span>
+        <div class="p-4">
+          <p class="mb-2">This is the content of the collapsible component.</p>
+          <p>It can contain any HTML content.</p>
+        </div>
+        ${args.showFooter ? html` <div slot="footer" class="p-2 text-center text-sm text-gray-500">Footer content here</div> ` : ''}
+      </pid-collapsible>
+    </div>
   `,
   parameters: {
     docs: {
@@ -122,26 +134,36 @@ export const Default: Story = {
   },
 };
 
+/**
+ * Collapsible component that starts in the open state
+ */
 export const OpenByDefault: Story = {
   args: {
     open: true,
     emphasize: true,
   },
   render: args => html`
-    <pid-collapsible
-      open=${args.open}
-      emphasize=${args.emphasize}
-      expanded=${args.expanded}
-      initialWidth=${args.initialWidth}
-      initialHeight=${args.initialHeight}
-      lineHeight=${args.lineHeight}
-    >
-      <span slot="summary">Collapsible Component (Open by Default)</span>
-      <div>
-        <p>This is the content of the collapsible component.</p>
-        <p>It can contain any HTML content.</p>
-      </div>
-    </pid-collapsible>
+    <div class="p-4 bg-gray-50 rounded-md">
+      <pid-collapsible
+        open=${args.open}
+        emphasize=${args.emphasize}
+        expanded=${args.expanded}
+        initialWidth=${args.initialWidth}
+        initialHeight=${args.initialHeight}
+        lineHeight=${args.lineHeight}
+        showFooter=${args.showFooter}
+        resizable=${args.resizable}
+        @toggle=${e => console.log('Toggle event:', e.detail)}
+        @resize=${e => console.log('Resize event:', e.detail)}
+      >
+        <span slot="summary" class="font-medium">Collapsible Component (Open by Default)</span>
+        <div class="p-4">
+          <p class="mb-2">This is the content of the collapsible component.</p>
+          <p>It can contain any HTML content.</p>
+        </div>
+        ${args.showFooter ? html` <div slot="footer" class="p-2 text-center text-sm text-gray-500">Footer content here</div> ` : ''}
+      </pid-collapsible>
+    </div>
   `,
   parameters: {
     docs: {
@@ -160,37 +182,290 @@ export const OpenByDefault: Story = {
   },
 };
 
-export const WithSummaryActions: Story = {
+/**
+ * Collapsible component with footer and resize capability
+ */
+export const WithFooterAndResize: Story = {
   args: {
-    open: false,
+    open: true,
     emphasize: true,
+    showFooter: true,
+    resizable: true,
+    initialWidth: '500px',
+    initialHeight: '300px',
   },
   render: args => html`
-    <pid-collapsible
-      open=${args.open}
-      emphasize=${args.emphasize}
-      expanded=${args.expanded}
-      initialWidth=${args.initialWidth}
-      initialHeight=${args.initialHeight}
-      lineHeight=${args.lineHeight}
-    >
-      <span slot="summary">Collapsible with Actions</span>
-      <button slot="summary-actions" class="bg-blue-500 text-white px-2 py-1 rounded">Action</button>
-      <div>
-        <p>This collapsible has an action button in the summary.</p>
-      </div>
-    </pid-collapsible>
+    <div class="p-4 bg-gray-50 rounded-md">
+      <pid-collapsible
+        open=${args.open}
+        emphasize=${args.emphasize}
+        expanded=${args.expanded}
+        initialWidth=${args.initialWidth}
+        initialHeight=${args.initialHeight}
+        lineHeight=${args.lineHeight}
+        showFooter=${args.showFooter}
+        resizable=${args.resizable}
+        @toggle=${e => console.log('Toggle event:', e.detail)}
+        @resize=${e => console.log('Resize event:', e.detail)}
+      >
+        <span slot="summary" class="font-medium">Resizable Collapsible with Footer</span>
+        <div class="p-4">
+          <p class="mb-2">This component has a footer and can be resized.</p>
+          <p class="mb-2">Try dragging the bottom-right corner to resize.</p>
+          <div class="bg-blue-50 p-3 rounded-md border border-blue-200 text-sm"><strong>Tip:</strong> The resize handle appears in the bottom-right corner when hovering.</div>
+        </div>
+        <div slot="footer" class="p-2 flex justify-between items-center border-t border-gray-200">
+          <span class="text-sm text-gray-500">Footer content</span>
+          <div class="flex gap-2">
+            <button class="px-3 py-1 bg-blue-500 text-white rounded text-sm">Action 1</button>
+            <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded text-sm">Action 2</button>
+          </div>
+        </div>
+      </pid-collapsible>
+    </div>
   `,
   parameters: {
     docs: {
       source: {
         code: `
-<pid-collapsible open="false" emphasize="true">
-  <span slot="summary">Collapsible with Actions</span>
-  <button slot="summary-actions" class="bg-blue-500 text-white px-2 py-1 rounded">Action</button>
+<pid-collapsible
+  open="true"
+  emphasize="true"
+  showFooter="true"
+  resizable="true"
+  initialWidth="500px"
+  initialHeight="300px">
+  <span slot="summary">Resizable Collapsible with Footer</span>
   <div>
-    <p>This collapsible has an action button in the summary.</p>
+    <p>This component has a footer and can be resized.</p>
+    <p>Try dragging the bottom-right corner to resize.</p>
   </div>
+  <div slot="footer">
+    <span>Footer content</span>
+    <button>Action 1</button>
+    <button>Action 2</button>
+  </div>
+</pid-collapsible>
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Adaptive collapsible component that responds to resize events
+ */
+export const AdaptiveWithResizeEvents: Story = {
+  args: {
+    open: true,
+    emphasize: true,
+    resizable: true,
+    showFooter: true,
+    initialWidth: '500px',
+    initialHeight: '300px',
+  },
+  render: args => {
+    // Create a unique ID for this instance
+    const resizeInfoId = `resize-info-${Math.random().toString(36).substring(2, 9)}`;
+
+    // Setup the resize event handler
+    const handleResize = e => {
+      const resizeInfo = document.getElementById(resizeInfoId);
+      if (resizeInfo) {
+        resizeInfo.textContent = `Width: ${Math.round(e.detail.width)}px × Height: ${Math.round(e.detail.height)}px`;
+      }
+    };
+
+    return html`
+      <div class="p-4 bg-gray-50 rounded-md">
+        <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded text-sm">Resize the component to see resize events in the footer.</div>
+
+        <pid-collapsible
+          open=${args.open}
+          emphasize=${args.emphasize}
+          expanded=${args.expanded}
+          initialWidth=${args.initialWidth}
+          initialHeight=${args.initialHeight}
+          lineHeight=${args.lineHeight}
+          showFooter=${args.showFooter}
+          resizable=${args.resizable}
+          @toggle=${e => console.log('Toggle event:', e.detail)}
+          @collapsibleResize=${handleResize}
+        >
+          <span slot="summary" class="font-medium">Adaptive Collapsible</span>
+          <div class="p-4 flex-grow">
+            <p class="mb-2">This collapsible demonstrates the adaptive resizing feature.</p>
+            <p>Resize events will be shown in the footer.</p>
+          </div>
+          <div slot="footer" class="p-2 text-center text-sm bg-blue-50" id=${resizeInfoId}>Resize the component to see dimensions</div>
+        </pid-collapsible>
+      </div>
+    `;
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `
+<pid-collapsible
+  open="true"
+  emphasize="true"
+  showFooter="true"
+  resizable="true"
+  initialWidth="500px"
+  initialHeight="300px"
+  @collapsibleResize="handleResizeEvent">
+  <span slot="summary">Adaptive Collapsible</span>
+  <div>
+    <p>This collapsible demonstrates the adaptive resizing feature.</p>
+    <p>Resize events will be shown in the footer.</p>
+  </div>
+  <div slot="footer" id="resize-info">
+    Resize the component to see dimensions
+  </div>
+</pid-collapsible>
+
+<script>
+  // Handle resize events
+  document.querySelector('pid-collapsible').addEventListener('collapsibleResize', e => {
+    const resizeInfo = document.getElementById('resize-info');
+    if (resizeInfo) {
+      resizeInfo.textContent = \`Width: \${Math.round(e.detail.width)}px × Height: \${Math.round(e.detail.height)}px\`;
+    }
+  });
+</script>
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Showcase of different collapsible states
+ */
+export const CollapsibleStates: Story = {
+  render: () => {
+    // Define the different states to showcase
+    const states = [
+      {
+        title: 'Default',
+        open: false,
+        emphasize: false,
+        expanded: false,
+        showFooter: false,
+        description: 'Default state with no emphasis, closed, and no footer.',
+        bgColor: 'bg-white',
+      },
+      {
+        title: 'Open',
+        open: true,
+        emphasize: false,
+        expanded: false,
+        showFooter: false,
+        description: 'Open state with no emphasis and no footer.',
+        bgColor: 'bg-blue-50',
+      },
+      {
+        title: 'Emphasized',
+        open: false,
+        emphasize: true,
+        expanded: false,
+        showFooter: false,
+        description: 'Closed state with emphasis and no footer.',
+        bgColor: 'bg-green-50',
+      },
+      {
+        title: 'With Footer',
+        open: true,
+        emphasize: true,
+        expanded: false,
+        showFooter: true,
+        description: 'Open state with emphasis and footer.',
+        bgColor: 'bg-yellow-50',
+      },
+      {
+        title: 'Expanded',
+        open: true,
+        emphasize: true,
+        expanded: true,
+        showFooter: true,
+        description: 'Open, emphasized, expanded state with footer.',
+        bgColor: 'bg-purple-50',
+      },
+    ];
+
+    // Create a template for each state
+    const stateTemplates = states.map(
+      state => html`
+        <div class="p-4 ${state.bgColor} rounded-lg mb-6">
+          <h3 class="text-lg font-bold mb-2">${state.title}</h3>
+          <p class="text-sm mb-4">${state.description}</p>
+
+          <pid-collapsible open=${state.open} emphasize=${state.emphasize} expanded=${state.expanded} showFooter=${state.showFooter}>
+            <span slot="summary" class="font-medium">${state.title} Example</span>
+            <div class="p-4">
+              <p class="mb-2">This collapsible demonstrates the <strong>${state.title}</strong> state.</p>
+              <ul class="list-disc pl-5 mt-2">
+                <li>Open: ${state.open}</li>
+                <li>Emphasize: ${state.emphasize}</li>
+                <li>Expanded: ${state.expanded}</li>
+                <li>Show Footer: ${state.showFooter}</li>
+              </ul>
+            </div>
+            ${state.showFooter ? html` <div slot="footer" class="p-2 text-center text-sm text-gray-500 border-t border-gray-200">Footer for ${state.title}</div> ` : ''}
+          </pid-collapsible>
+        </div>
+      `,
+    );
+
+    // Combine all states into a container
+    return html` <div class="bg-gray-100 p-8 space-y-4 rounded-md">${stateTemplates}</div> `;
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `
+<!-- Example of different collapsible states -->
+
+<!-- Default state -->
+<pid-collapsible>
+  <span slot="summary">Default Example</span>
+  <div>
+    <p>This collapsible demonstrates the default state.</p>
+  </div>
+</pid-collapsible>
+
+<!-- Open state -->
+<pid-collapsible open="true">
+  <span slot="summary">Open Example</span>
+  <div>
+    <p>This collapsible demonstrates the open state.</p>
+  </div>
+</pid-collapsible>
+
+<!-- Emphasized state -->
+<pid-collapsible emphasize="true">
+  <span slot="summary">Emphasized Example</span>
+  <div>
+    <p>This collapsible demonstrates the emphasized state.</p>
+  </div>
+</pid-collapsible>
+
+<!-- With Footer state -->
+<pid-collapsible open="true" emphasize="true" showFooter="true">
+  <span slot="summary">With Footer Example</span>
+  <div>
+    <p>This collapsible demonstrates the state with footer.</p>
+  </div>
+  <div slot="footer">Footer content</div>
+</pid-collapsible>
+
+<!-- Expanded state -->
+<pid-collapsible open="true" emphasize="true" expanded="true" showFooter="true">
+  <span slot="summary">Expanded Example</span>
+  <div>
+    <p>This collapsible demonstrates the expanded state.</p>
+  </div>
+  <div slot="footer">Footer content</div>
 </pid-collapsible>
         `,
       },

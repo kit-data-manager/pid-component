@@ -6,7 +6,8 @@
 ## Properties
 
 | Property                      | Attribute                        | Description                            | Type             | Default                |
-| ----------------------------- | -------------------------------- | -------------------------------------- | ---------------- | ---------------------- |
+|-------------------------------|----------------------------------|----------------------------------------|------------------|------------------------|
+| `adaptivePagination`          | `adaptive-pagination`            | Enable adaptive pagination mode        | `boolean`        | `false`                |
 | `currentLevelOfSubcomponents` | `current-level-of-subcomponents` | Current level of subcomponents         | `number`         | `0`                    |
 | `currentPage`                 | `current-page`                   | Current page (0-based index)           | `number`         | `0`                    |
 | `hideSubcomponents`           | `hide-subcomponents`             | Whether to hide subcomponents          | `boolean`        | `false`                |

@@ -84,7 +84,10 @@ export const PidActions: StencilReactComponent<PidActionsElement, PidActionsEven
   serializeShadowRoot,
 });
 
-export type PidCollapsibleEvents = { onCollapsibleToggle: EventName<CustomEvent<boolean>> };
+export type PidCollapsibleEvents = {
+  onCollapsibleToggle: EventName<CustomEvent<boolean>>,
+  onCollapsibleResize: EventName<CustomEvent<{ width: number; height: number }>>
+};
 
 export const PidCollapsible: StencilReactComponent<PidCollapsibleElement, PidCollapsibleEvents> = /*@__PURE__*/ createComponent<PidCollapsibleElement, PidCollapsibleEvents>({
   tagName: 'pid-collapsible',
@@ -96,6 +99,7 @@ export const PidCollapsible: StencilReactComponent<PidCollapsibleElement, PidCol
     initialHeight: 'initial-height',
     lineHeight: 'line-height',
     showFooter: 'show-footer',
+    adaptivePagination: 'adaptive-pagination',
   },
   hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
   serializeShadowRoot,
@@ -118,6 +122,10 @@ export const PidComponent: StencilReactComponent<PidComponentElement, PidCompone
     defaultTTL: 'default-t-t-l',
     width: 'width',
     height: 'height',
+    adaptivePagination: 'adaptive-pagination',
+    minItemsPerPage: 'min-items-per-page',
+    maxItemsPerPage: 'max-items-per-page',
+    estimatedRowHeight: 'estimated-row-height',
   },
   hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
   serializeShadowRoot,
@@ -140,6 +148,7 @@ export const PidDataTable: StencilReactComponent<PidDataTableElement, PidDataTab
     currentLevelOfSubcomponents: 'current-level-of-subcomponents',
     levelOfSubcomponents: 'level-of-subcomponents',
     settings: 'settings',
+    adaptivePagination: 'adaptive-pagination',
   },
   hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
   serializeShadowRoot,
@@ -157,6 +166,8 @@ export const PidPagination: StencilReactComponent<PidPaginationElement, PidPagin
     totalItems: 'total-items',
     itemsPerPage: 'items-per-page',
     pageSizes: 'page-sizes',
+    adaptivePagination: 'adaptive-pagination',
+    showItemsPerPageControl: 'show-items-per-page-control',
   },
   hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
   serializeShadowRoot,
