@@ -4,7 +4,6 @@ import { reactOutputTarget } from '@stencil/react-output-target';
 
 export const config: Config = {
   namespace: 'pid-component',
-  jsxFragmentFactory: 'Fragment',
   outputTargets: [
     {
       type: 'dist-hydrate-script',
@@ -30,7 +29,7 @@ export const config: Config = {
     },
   ],
   testing: {
-    browserHeadless: 'new',
+    browserHeadless: true,
   },
   plugins: [tailwind(), tailwindHMR()],
   extras: {

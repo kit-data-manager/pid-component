@@ -536,7 +536,7 @@ export class PidCollapsible {
             <slot name="summary-actions"></slot>
           </summary>
 
-          <div class={`flex-grow overflow-auto flex flex-col min-h-0 ${this.showFooter ? 'pb-0' : ''}`}>
+          <div class={`flex-grow overflow-auto flex flex-col min-h-0 p-1 ${this.showFooter ? 'p-1' : ''}`}>
             <slot></slot>
           </div>
 
@@ -557,16 +557,6 @@ export class PidCollapsible {
             </div>
           )}
         </details>
-
-        {this.expanded && (
-          <div class="absolute bottom-0 right-0 w-4 h-4 opacity-100 pointer-events-none z-50 cursor-nwse-resize">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M22 2L2 22" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" />
-              <path d="M22 8L8 22" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" />
-              <path d="M22 14L14 22" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" />
-            </svg>
-          </div>
-        )}
       </Host>
     );
   }

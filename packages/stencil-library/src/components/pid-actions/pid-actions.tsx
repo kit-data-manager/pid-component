@@ -3,7 +3,7 @@ import { FoldableAction } from '../../utils/FoldableAction';
 
 @Component({
   tag: 'pid-actions',
-  shadow: false,
+  // shadow: false,
 })
 export class PidActions {
   /**

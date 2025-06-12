@@ -5,12 +5,13 @@
 
 ## Properties
 
-| Property            | Attribute    | Description                        | Type                                     | Default     |
-|---------------------|--------------|------------------------------------|------------------------------------------|-------------|
-| `maxHeight`         | `max-height` | The maximum height of the tooltip  | `string`                                 | `'150px'`   |
-| `maxWidth`          | `max-width`  | The maximum width of the tooltip   | `string`                                 | `'250px'`   |
-| `position`          | `position`   | The position of the tooltip        | `"bottom" \| "left" \| "right" \| "top"` | `'top'`     |
-| `text` _(required)_ | `text`       | The text to display in the tooltip | `string`                                 | `undefined` |
+| Property            | Attribute     | Description                                               | Type                                     | Default     |
+|---------------------|---------------|-----------------------------------------------------------|------------------------------------------|-------------|
+| `fitContent`        | `fit-content` | Whether the tooltip should fit its content height exactly | `boolean`                                | `true`      |
+| `maxHeight`         | `max-height`  | The maximum height of the tooltip                         | `string`                                 | `'150px'`   |
+| `maxWidth`          | `max-width`   | The maximum width of the tooltip                          | `string`                                 | `'250px'`   |
+| `position`          | `position`    | The position of the tooltip                               | `"bottom" \| "left" \| "right" \| "top"` | `'top'`     |
+| `text` _(required)_ | `text`        | The text to display in the tooltip                        | `string`                                 | `undefined` |
 
 
 ## Dependencies

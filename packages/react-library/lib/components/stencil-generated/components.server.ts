@@ -171,6 +171,7 @@ export const PidTooltip: StencilReactComponent<PidTooltipElement, PidTooltipEven
     position: 'position',
     maxWidth: 'max-width',
     maxHeight: 'max-height',
+    fitContent: 'fit-content',
   },
   hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
   serializeShadowRoot,
