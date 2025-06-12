@@ -66,19 +66,19 @@ export namespace Components {
         "viewMode": 'tree' | 'code';
     }
     interface LocaleVisualization {
-        /**
-          * The locale to visualize.
-          * @type {string}
-          * @public
-         */
-        "locale": string;
-        /**
-          * Whether to show the flag of the region.
-          * @type {boolean}
-          * @public
-          * @default true
-         */
-        "showFlag": boolean;
+      /**
+       * The locale to visualize.
+       * @type {string}
+       * @public
+       */
+      locale: string;
+      /**
+       * Whether to show the flag of the region.
+       * @type {boolean}
+       * @public
+       * @default true
+       */
+      showFlag: boolean;
     }
     interface PidActions {
         /**
@@ -269,29 +269,28 @@ export namespace Components {
        * Whether the tooltip should fit its content height exactly
        * @default true
        */
-      fitContent: boolean;
+      "fitContent": boolean;
       /**
-       * The maximum height of the tooltip
+    'fitContent'imum height of the tooltip
        * @default '150px'
        */
-      maxHeight: string;
+      "maxHeight": string;
       /**
-       * The maximum width of the tooltip
+      'maxHeight'mum width of the tooltip
        * @default '250px'
        */
-      maxWidth: string;
+      "maxWidth": string;
       /**
-       * The preferred position of the tooltip (top or bottom)
+       'maxWidth'erred position of the tooltip (top or bottom)
        * @default 'top'
        */
-      position: 'top' | 'bottom';
-      /**
-       * The te'position'lay in the tooltip
+      "position": 'top' | 'bottom';
+      /'position'* The text to display in the tooltip
        */
-      text: string;
+      "text": string;
     }
 }
-export interface PidCollapsibleCustomEvent<T> extends CustomEvent<T> {
+export interf'text'dCollapsibleCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPidCollapsibleElement;
 }
@@ -303,7 +302,6 @@ export interface PidPaginationCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPidPaginationElement;
 }
-
 export interface PidTooltipCustomEvent<T> extends CustomEvent<T> {
   detail: T;
   target: HTMLPidTooltipElement;
@@ -400,38 +398,22 @@ declare global {
     };
 
   interface HTMLPidTooltipElementEventMap {
-    tooltipExpansionChange: { expand: boolean; requiredHeight: number };
+    'tooltipExpansionChange': { expand: boolean; requiredHeight: number };
   }
     interface HTMLPidTooltipElement extends Components.PidTooltip, HTMLStencilElement {
-      addEventListener<K extends keyof HTMLPidTooltipElementEventMap>(
-        type: K,
-        listener: (this: HTMLPidTooltipElement, ev: PidTooltipCustomEvent<HTMLPidTooltipElementEventMap[K]>) => any,
-        options?: boolean | AddEventListenerOptions,
-      ): void;
+      addEventListener<K extends keyof HTMLPidTooltipElementEventMap>(type: K, listener: (this: HTMLPidTooltipElement, ev: PidTooltipCustomEvent<HTMLPidTooltipElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
 
       addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
 
-      addEventListener<K extends keyof HTMLElementEventMap>(
-        type: K,
-        listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any,
-        options?: boolean | AddEventListenerOptions,
-      ): void;
+      addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
 
       addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
 
-      removeEventListener<K extends keyof HTMLPidTooltipElementEventMap>(
-        type: K,
-        listener: (this: HTMLPidTooltipElement, ev: PidTooltipCustomEvent<HTMLPidTooltipElementEventMap[K]>) => any,
-        options?: boolean | EventListenerOptions,
-      ): void;
+      removeEventListener<K extends keyof HTMLPidTooltipElementEventMap>(type: K, listener: (this: HTMLPidTooltipElement, ev: PidTooltipCustomEvent<HTMLPidTooltipElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
 
       removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
 
-      removeEventListener<K extends keyof HTMLElementEventMap>(
-        type: K,
-        listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any,
-        options?: boolean | EventListenerOptions,
-      ): void;
+      removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
 
       removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
@@ -509,7 +491,7 @@ declare namespace LocalJSX {
         /**
           * Whether to show the flag of the region.
           * @type {boolean}
-          * @public
+         * @public
           * @default true
          */
         "showFlag"?: boolean;
@@ -719,33 +701,33 @@ declare namespace LocalJSX {
        * Whether the tooltip should fit its content height exactly
        * @default true
        */
-      fitContent?: boolean;
+      'fitContent'?: boolean;
       /**
        * The maximum height of the tooltip
        * @default '150px'
        */
-      maxHeight?: string;
+      'maxHeight'?: string;
       /**
           * The maximum width of the tooltip
           * @default '250px'
-  'onTooltipExpansionChange'h"?: string;
+       */
+      'maxWidth'?: string;
         /**
          * Event emitted when tooltip requires row expansion
          */
-      onTooltipExpansionChange?: (
-        event: PidTooltipCustomEvent<{
+        'onTooltipExpansionChange'?: (event: PidTooltipCustomEvent<{
           expand: boolean;
-          requiredHeight: number;
-        }>,
-      ) => void;
+          requiredHeight: number
+        }>) => void;
       /**
        * The preferred position of the tooltip (top or bottom)
        * @default 'top'
        */
-      position?: 'top' | 'b'position'    /**
+      'position'?: 'top' | 'bottom';
+      /**
        * The text to display in the tooltip
        */
-      text: string;
+      'text': string;
     }
     interface IntrinsicElements {
         "color-highlight": ColorHighlight;

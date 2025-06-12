@@ -13,6 +13,7 @@
 | `position`          | `position`    | The preferred position of the tooltip (top or bottom)     | `"bottom" \| "top"` | `'top'`     |
 | `text` _(required)_ | `text`        | The text to display in the tooltip                        | `string`            | `undefined` |
 
+
 ## Events
 
 | Event                    | Description                                       | Type                                                        |

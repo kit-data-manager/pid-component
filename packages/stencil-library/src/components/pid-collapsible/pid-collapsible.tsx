@@ -83,6 +83,10 @@ export class PidCollapsible {
   @State() currentWidth: string;
   @State() currentHeight: string;
 
+  // Add these new private properties to store the last expanded dimensions
+  private lastExpandedWidth: string;
+  private lastExpandedHeight: string;
+
   // ResizeObserver to track resize events
   private resizeObserver: ResizeObserver;
 
@@ -241,7 +245,7 @@ export class PidCollapsible {
     this.el.style.maxWidth = `${dimensions.maxWidth}px`;
     this.el.style.maxHeight = `${dimensions.maxHeight}px`;
 
-    // Set dimensions
+    // Set dimensions - use stored dimensions if available
     this.updateDimensions(dimensions);
 
     // Enable resize and add visual indicator
@@ -276,8 +280,15 @@ export class PidCollapsible {
   private updateDimensions(dimensions: { contentWidth: number; contentHeight: number; maxWidth: number; maxHeight: number }) {
     const { contentWidth, contentHeight, maxWidth, maxHeight } = dimensions;
 
-    // Width handling
-    if (!this.currentWidth || this.currentWidth === CONSTANTS.DEFAULT_WIDTH) {
+    // Width handling - use last expanded width if available, otherwise calculate
+    if (this.lastExpandedWidth && this.lastExpandedWidth !== CONSTANTS.DEFAULT_WIDTH) {
+      this.currentWidth = this.lastExpandedWidth;
+      // Ensure width doesn't exceed max
+      const numericWidth = parseInt(this.currentWidth, 10);
+      if (numericWidth > maxWidth) {
+        this.currentWidth = `${maxWidth}px`;
+      }
+    } else if (!this.currentWidth || this.currentWidth === CONSTANTS.DEFAULT_WIDTH) {
       // Calculate optimal width
       this.currentWidth = `${Math.min(Math.max(contentWidth + CONSTANTS.PADDING_WIDTH, CONSTANTS.MIN_WIDTH), maxWidth)}px`;
     } else {
@@ -288,8 +299,15 @@ export class PidCollapsible {
       }
     }
 
-    // Height handling
-    if (!this.currentHeight || this.currentHeight === CONSTANTS.DEFAULT_HEIGHT) {
+    // Height handling - use last expanded height if available, otherwise calculate
+    if (this.lastExpandedHeight && this.lastExpandedHeight !== CONSTANTS.DEFAULT_HEIGHT) {
+      this.currentHeight = this.lastExpandedHeight;
+      // Ensure height doesn't exceed max
+      const numericHeight = parseInt(this.currentHeight, 10);
+      if (numericHeight > maxHeight) {
+        this.currentHeight = `${maxHeight}px`;
+      }
+    } else if (!this.currentHeight || this.currentHeight === CONSTANTS.DEFAULT_HEIGHT) {
       // Calculate optimal height
       this.currentHeight = `${Math.min(Math.max(contentHeight + CONSTANTS.PADDING_HEIGHT, CONSTANTS.MIN_HEIGHT), maxHeight)}px`;
     } else {
@@ -309,11 +327,13 @@ export class PidCollapsible {
    * Applies styles for collapsed state
    */
   private applyCollapsedStyles() {
-    // Store current dimensions before collapsing
-    if (this.el.style.width) {
+    // Store current expanded dimensions for restoration
+    if (this.el.style.width && this.el.style.width !== 'auto') {
+      this.lastExpandedWidth = this.el.style.width;
       this.currentWidth = this.el.style.width;
     }
-    if (this.el.style.height) {
+    if (this.el.style.height && this.el.style.height !== `${this.lineHeight}px`) {
+      this.lastExpandedHeight = this.el.style.height;
       this.currentHeight = this.el.style.height;
     }
 
