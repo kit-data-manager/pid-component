@@ -6,7 +6,7 @@ import { html } from 'lit';
  * and collapsed. It supports customization of appearance and behavior.
  */
 const meta: Meta = {
-  title: 'Components/Collapsible',
+  title: 'Internal/Collapsible',
   component: 'pid-collapsible',
   tags: ['autodocs'],
   argTypes: {

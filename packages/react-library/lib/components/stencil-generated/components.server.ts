@@ -105,7 +105,7 @@ export const PidCollapsible: StencilReactComponent<PidCollapsibleElement, PidCol
   serializeShadowRoot,
 });
 
-export type PidComponentEvents = NonNullable<unknown>;
+export type PidComponentEvents = { onCollapsibleToggle: EventName<CustomEvent<boolean>> };
 
 export const PidComponent: StencilReactComponent<PidComponentElement, PidComponentEvents> = /*@__PURE__*/ createComponent<PidComponentElement, PidComponentEvents>({
   tagName: 'pid-component',
@@ -123,8 +123,6 @@ export const PidComponent: StencilReactComponent<PidComponentElement, PidCompone
     width: 'width',
     height: 'height',
     adaptivePagination: 'adaptive-pagination',
-    minItemsPerPage: 'min-items-per-page',
-    maxItemsPerPage: 'max-items-per-page',
     estimatedRowHeight: 'estimated-row-height',
   },
   hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
@@ -132,6 +130,7 @@ export const PidComponent: StencilReactComponent<PidComponentElement, PidCompone
 });
 
 export type PidDataTableEvents = {
+  onRowHeightsChange: EventName<CustomEvent<{ totalHeight: number, averageHeight: number }>>,
   onPageChange: EventName<CustomEvent<number>>,
   onItemsPerPageChange: EventName<CustomEvent<number>>
 };
@@ -149,6 +148,7 @@ export const PidDataTable: StencilReactComponent<PidDataTableElement, PidDataTab
     levelOfSubcomponents: 'level-of-subcomponents',
     settings: 'settings',
     adaptivePagination: 'adaptive-pagination',
+    estimatedRowHeight: 'estimated-row-height',
   },
   hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
   serializeShadowRoot,

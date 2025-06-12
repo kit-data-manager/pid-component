@@ -204,6 +204,22 @@ export class PidCollapsible {
     // Reset toggle flag after short delay
     setTimeout(() => {
       this.isToggling = false;
+
+      // For Safari, we need to ensure the resize observer is properly attached
+      // after toggling, as Safari may lose the observer during DOM updates
+      if (this.expanded && this.resizeObserver) {
+        this.resizeObserver.disconnect();
+        this.resizeObserver.observe(this.el);
+
+        // Force a resize event to update adaptive pagination
+        if (this.adaptivePagination) {
+          const rect = this.el.getBoundingClientRect();
+          this.collapsibleResize.emit({
+            width: rect.width,
+            height: rect.height,
+          });
+        }
+      }
     }, 100);
   };
 
@@ -296,49 +312,38 @@ export class PidCollapsible {
    * Updates dimensions based on content and constraints
    */
   private updateDimensions(dimensions: { contentWidth: number; contentHeight: number; maxWidth: number; maxHeight: number }) {
-    const { contentWidth, contentHeight, maxWidth, maxHeight } = dimensions;
+    const { contentWidth, contentHeight } = dimensions;
 
     // Width handling - use last expanded width if available, otherwise calculate
     if (this.lastExpandedWidth && this.lastExpandedWidth !== CONSTANTS.DEFAULT_WIDTH) {
+      // Use the last expanded width without constraints
       this.currentWidth = this.lastExpandedWidth;
-      // Ensure width doesn't exceed max
-      const numericWidth = parseInt(this.currentWidth, 10);
-      if (numericWidth > maxWidth) {
-        this.currentWidth = `${maxWidth}px`;
-      }
     } else if (!this.currentWidth || this.currentWidth === CONSTANTS.DEFAULT_WIDTH) {
-      // Calculate optimal width
-      this.currentWidth = `${Math.min(Math.max(contentWidth + CONSTANTS.PADDING_WIDTH, CONSTANTS.MIN_WIDTH), maxWidth)}px`;
-    } else {
-      // Ensure width doesn't exceed max
-      const numericWidth = parseInt(this.currentWidth, 10);
-      if (numericWidth > maxWidth) {
-        this.currentWidth = `${maxWidth}px`;
-      }
+      // Calculate optimal width as initial value only
+      // Use minimum width constraint but no maximum constraint
+      this.currentWidth = `${Math.max(contentWidth + CONSTANTS.PADDING_WIDTH, CONSTANTS.MIN_WIDTH)}px`;
     }
+    // No else clause - keep current width if it exists
 
     // Height handling - use last expanded height if available, otherwise calculate
     if (this.lastExpandedHeight && this.lastExpandedHeight !== CONSTANTS.DEFAULT_HEIGHT) {
+      // Use the last expanded height without constraints
       this.currentHeight = this.lastExpandedHeight;
-      // Ensure height doesn't exceed max
-      const numericHeight = parseInt(this.currentHeight, 10);
-      if (numericHeight > maxHeight) {
-        this.currentHeight = `${maxHeight}px`;
-      }
     } else if (!this.currentHeight || this.currentHeight === CONSTANTS.DEFAULT_HEIGHT) {
-      // Calculate optimal height
-      this.currentHeight = `${Math.min(Math.max(contentHeight + CONSTANTS.PADDING_HEIGHT, CONSTANTS.MIN_HEIGHT), maxHeight)}px`;
-    } else {
-      // Ensure height doesn't exceed max
-      const numericHeight = parseInt(this.currentHeight, 10);
-      if (numericHeight > maxHeight) {
-        this.currentHeight = `${maxHeight}px`;
-      }
+      // Calculate optimal height as initial value only
+      // Use minimum height constraint but no maximum constraint
+      this.currentHeight = `${Math.max(contentHeight + CONSTANTS.PADDING_HEIGHT, CONSTANTS.MIN_HEIGHT)}px`;
     }
+    // No else clause - keep current height if it exists
 
-    // Apply dimensions
+    // Apply dimensions with Tailwind classes for better browser compatibility
     this.el.style.width = this.currentWidth;
     this.el.style.height = this.currentHeight;
+
+    // Add Tailwind classes to ensure content fits properly and prevent white space
+    if (this.adaptivePagination) {
+      this.el.classList.add('overflow-hidden');
+    }
   }
 
   /**
@@ -390,7 +395,10 @@ export class PidCollapsible {
 
     // Create and add new indicator
     const resizeIndicator = document.createElement('div');
+    // Use Tailwind classes for positioning and styling
     resizeIndicator.className = 'absolute bottom-0 right-0 w-4 h-4 opacity-100 pointer-events-none resize-indicator z-50';
+    // Add explicit cursor style for Safari compatibility
+    resizeIndicator.style.cursor = 'nwse-resize';
     resizeIndicator.innerHTML = RESIZE_INDICATOR_SVG;
     this.el.appendChild(resizeIndicator);
   }

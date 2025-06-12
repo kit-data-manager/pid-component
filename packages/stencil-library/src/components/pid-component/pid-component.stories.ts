@@ -66,7 +66,7 @@ class MockIdentifier {
  * management, and adaptive pagination.
  */
 const meta: Meta = {
-  title: 'Components/PID Component',
+  title: 'PID-Component',
   component: 'pid-component',
   tags: ['autodocs'],
   argTypes: {
@@ -156,28 +156,6 @@ const meta: Meta = {
         type: { summary: 'boolean' },
       },
     },
-    minItemsPerPage: {
-      description: 'Minimum number of items to show per page when using adaptive pagination',
-      control: {
-        type: 'number',
-        min: 1,
-      },
-      table: {
-        defaultValue: { summary: '5' },
-        type: { summary: 'number' },
-      },
-    },
-    maxItemsPerPage: {
-      description: 'Maximum number of items to show per page when using adaptive pagination',
-      control: {
-        type: 'number',
-        min: 1,
-      },
-      table: {
-        defaultValue: { summary: '50' },
-        type: { summary: 'number' },
-      },
-    },
     width: {
       description: 'Initial width of the component',
       control: { type: 'text' },
@@ -204,8 +182,6 @@ const meta: Meta = {
     emphasizeComponent: true,
     showTopLevelCopy: true,
     adaptivePagination: false,
-    minItemsPerPage: 5,
-    maxItemsPerPage: 50,
     width: '500px',
     height: '300px',
   },
@@ -523,7 +499,7 @@ export const TypedPIDMakerExampleText: Story = {
  */
 export const WithAdaptivePagination: Story = {
   args: {
-    value: 'Adaptive Pagination Component',
+    value: '21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6',
     openByDefault: true,
     adaptivePagination: true,
     width: '600px',
@@ -537,7 +513,7 @@ export const WithAdaptivePagination: Story = {
       source: {
         code: `
 <pid-component
-  value="Adaptive Pagination Component"
+  value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"
   openByDefault="true"
   adaptivePagination="true"
   width="600px"
@@ -619,6 +595,20 @@ export const PaginationComparison: Story = {
     header.innerHTML = 'Compare Standard (fixed) vs Adaptive Pagination';
     container.appendChild(header);
 
+    // Instructions
+    const instructions = document.createElement('div');
+    instructions.className = 'text-sm p-2 bg-yellow-50 rounded-md mb-2';
+    instructions.innerHTML = `
+      <p><strong>Try these interactions:</strong></p>
+      <ul class="list-disc pl-5">
+        <li>Expand subcomponents in both tables to see how they behave differently</li>
+        <li>In adaptive mode, notice how other items stay on the same page when space allows</li>
+        <li>Resize your browser window to see how adaptive pagination adjusts</li>
+        <li>Use the pagination controls to manually change items per page in both modes</li>
+      </ul>
+    `;
+    container.appendChild(instructions);
+
     // Wrapper for the two columns
     const wrapper = document.createElement('div');
     wrapper.className = 'flex flex-col md:flex-row gap-4 bg-gray-100 p-4 rounded-md';
@@ -633,15 +623,13 @@ export const PaginationComparison: Story = {
     standardCol.appendChild(standardLabel);
 
     const standardComponent = document.createElement('pid-component');
-    standardComponent.value = 'https://example.com/sample';
+    standardComponent.value = '21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6';
     standardComponent.openByDefault = true;
-    standardComponent.width = '100%';
-    standardComponent.height = '400px';
     standardComponent.amountOfItems = 10;
 
     // Mock data for standard component
     // @ts-ignore - Accessing private state for demo
-    standardComponent.identifierObject = new MockIdentifier('https://example.com/sample', 25, 3);
+    standardComponent.identifierObject = new MockIdentifier('21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6', 25, 3);
     // @ts-ignore - Manually trigger state update
     standardComponent.displayStatus = 'loaded';
     // @ts-ignore - Manually populate items and actions
@@ -662,16 +650,14 @@ export const PaginationComparison: Story = {
     adaptiveCol.appendChild(adaptiveLabel);
 
     const adaptiveComponent = document.createElement('pid-component');
-    adaptiveComponent.value = 'https://example.com/sample';
+    adaptiveComponent.value = '21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6';
     adaptiveComponent.openByDefault = true;
-    adaptiveComponent.width = '100%';
-    adaptiveComponent.height = '400px';
     adaptiveComponent.adaptivePagination = true;
     adaptiveComponent.amountOfItems = 10;
 
     // Mock data for adaptive component
     // @ts-ignore - Accessing private state for demo
-    adaptiveComponent.identifierObject = new MockIdentifier('https://example.com/sample', 25, 3);
+    adaptiveComponent.identifierObject = new MockIdentifier('21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6', 25, 3);
     // @ts-ignore - Manually trigger state update
     adaptiveComponent.displayStatus = 'loaded';
     // @ts-ignore - Manually populate items and actions
@@ -691,7 +677,7 @@ export const PaginationComparison: Story = {
         code: `
 <!-- Standard Pagination -->
 <pid-component
-  value="https://example.com/sample"
+  value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"
   openByDefault="true"
   width="100%"
   height="400px"
@@ -700,7 +686,7 @@ export const PaginationComparison: Story = {
 
 <!-- Adaptive Pagination -->
 <pid-component
-  value="https://example.com/sample"
+  value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"
   openByDefault="true"
   width="100%"
   height="400px"

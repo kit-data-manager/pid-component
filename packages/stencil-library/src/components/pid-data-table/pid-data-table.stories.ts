@@ -18,7 +18,7 @@ const createMockItems = (count: number): FoldableItem[] => {
 };
 
 const meta: Meta = {
-  title: 'Components/PID Data Table',
+  title: 'Internal/Data Table',
   component: 'pid-data-table',
   argTypes: {
     items: {

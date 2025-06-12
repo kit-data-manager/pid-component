@@ -6,7 +6,7 @@ import { html } from 'lit';
  * It displays a button that, when clicked, copies the specified value to the clipboard.
  */
 const meta: Meta = {
-  title: 'Components/Copy Button',
+  title: 'Internal/Copy Button',
   component: 'copy-button',
   tags: ['autodocs'],
   argTypes: {

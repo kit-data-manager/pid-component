@@ -7,6 +7,25 @@ import { FoldableItem } from '../../utils/FoldableItem';
 })
 export class PidDataTable {
   /**
+   * Tracks which subcomponents are expanded
+   */
+  @State() expandedSubcomponents: Set<string> = new Set();
+
+  /**
+   * Tracks the measured heights of rows
+   */
+  @State() rowHeights: Map<string, number> = new Map();
+
+  /**
+   * Event emitted when row heights change
+   */
+  @Event() rowHeightsChange: EventEmitter<{ totalHeight: number; averageHeight: number }>;
+
+  /**
+   * Reference to the table element for measurements
+   */
+  private tableRef?: HTMLTableElement;
+  /**
    * Array of items to display in the table
    */
   @Prop() items: FoldableItem[] = [];
@@ -57,6 +76,11 @@ export class PidDataTable {
   @Prop() adaptivePagination: boolean = false;
 
   /**
+   * Estimated height of each table row in pixels (used as fallback)
+   */
+  @Prop() estimatedRowHeight: number = 40;
+
+  /**
    * Event emitted when page changes
    */
   @Event() pageChange: EventEmitter<number>;
@@ -89,15 +113,189 @@ export class PidDataTable {
   }
 
   /**
+   * Handle subcomponent expansion/collapse
+   */
+  // Debounce timer for subcomponent toggle
+  private toggleDebounceTimer: any = null;
+
+  handleSubcomponentToggle = (event: CustomEvent<boolean>, itemId: string) => {
+    // Stop propagation to prevent parent components from handling the event
+    event.stopPropagation();
+
+    if (event.detail) {
+      // Subcomponent expanded
+      this.expandedSubcomponents.add(itemId);
+    } else {
+      // Subcomponent collapsed
+      this.expandedSubcomponents.delete(itemId);
+    }
+
+    // Force update by creating a new Set
+    this.expandedSubcomponents = new Set(this.expandedSubcomponents);
+
+    // Clear any existing debounce timer
+    if (this.toggleDebounceTimer) {
+      clearTimeout(this.toggleDebounceTimer);
+    }
+
+    // Debounce the measurement and page change to prevent rapid successive updates
+    this.toggleDebounceTimer = setTimeout(() => {
+      // Only measure if we're not already measuring
+      if (!this.isMeasuring) {
+        this.isMeasuring = true;
+        this.measureRowHeights();
+        setTimeout(() => {
+          this.isMeasuring = false;
+        }, 50);
+      }
+
+      // Emit event to notify parent component that pagination may need to be adjusted
+      this.pageChange.emit(this.currentPage);
+    }, 150); // Debounce for 150ms
+  };
+
+  /**
+   * Measures the heights of all rows and updates the rowHeights map
+   */
+  // Store previous measurements to detect significant changes
+  private previousAverageHeight: number = 0;
+
+  private measureRowHeights = () => {
+    if (!this.tableRef) return;
+
+    const rows = this.tableRef.querySelectorAll('tbody tr');
+    let totalHeight = 0;
+    let rowCount = 0;
+
+    // Don't clear previous measurements if there are no rows to measure
+    // This prevents unnecessary updates when the table is empty
+    if (rows.length === 0) return;
+
+    // Create a new map for measurements
+    const newRowHeights = new Map<string, number>();
+
+    // Measure each row
+    rows.forEach((row, index) => {
+      const item = this.filteredItems[index];
+      if (!item) return;
+
+      const height = row.getBoundingClientRect().height;
+      const rowId = `${item.keyTitle}-${index}`;
+
+      newRowHeights.set(rowId, height);
+      totalHeight += height;
+      rowCount++;
+    });
+
+    // Calculate average height
+    const averageHeight = rowCount > 0 ? totalHeight / rowCount : this.estimatedRowHeight || 40;
+
+    // Only update and emit if there's a significant change (more than 5%)
+    const heightDifference = Math.abs(this.previousAverageHeight - averageHeight);
+    const significantChange = this.previousAverageHeight === 0 || heightDifference / Math.max(1, this.previousAverageHeight) > 0.05;
+
+    if (significantChange) {
+      // Update the previous average height
+      this.previousAverageHeight = averageHeight;
+
+      // Update the row heights map
+      this.rowHeights = newRowHeights;
+
+      // Emit event with height information
+      this.rowHeightsChange.emit({
+        totalHeight,
+        averageHeight,
+      });
+    }
+  };
+
+  /**
    * Watch for changes in items
    */
   @Watch('items')
   @Watch('currentPage')
   @Watch('itemsPerPage')
+  @Watch('expandedSubcomponents')
   updateFilteredItems() {
-    this.filteredItems = this.items.filter((_, index) => {
-      return index >= this.currentPage * this.itemsPerPage && index < this.currentPage * this.itemsPerPage + this.itemsPerPage;
-    });
+    // When a subcomponent is expanded, we want to keep it on the same page
+    // and let other items reflow to the next page if necessary
+
+    if (this.expandedSubcomponents.size === 0) {
+      // If no subcomponents are expanded, use standard pagination
+      const startIndex = this.currentPage * this.itemsPerPage;
+      const endIndex = Math.min(startIndex + this.itemsPerPage, this.items.length);
+      this.filteredItems = this.items.slice(startIndex, endIndex);
+    } else {
+      // If subcomponents are expanded, we need to handle pagination differently
+      // to keep expanded items on their original page
+
+      // First, determine which page each expanded item belongs to
+      const expandedItemsInfo = Array.from(this.expandedSubcomponents)
+        .map(id => {
+          // Extract index from the ID (format: "keyTitle-index")
+          const parts = id.split('-');
+          const keyTitle = parts.slice(0, -1).join('-'); // Handle keys with hyphens
+          const index = parseInt(parts[parts.length - 1], 10);
+
+          // Find the item in the items array
+          const itemIndex = this.items.findIndex(item => item.keyTitle === keyTitle && !isNaN(index));
+
+          if (itemIndex === -1) return null;
+
+          // Calculate which page this item would normally be on
+          const page = Math.floor(itemIndex / this.itemsPerPage);
+
+          return { itemIndex, page, id };
+        })
+        .filter(Boolean); // Remove null entries
+
+      // Filter to only expanded items on the current page
+      const expandedItemsOnCurrentPage = expandedItemsInfo.filter(info => info.page === this.currentPage);
+
+      if (expandedItemsOnCurrentPage.length === 0) {
+        // If no expanded items on current page, use standard pagination
+        const startIndex = this.currentPage * this.itemsPerPage;
+        const endIndex = Math.min(startIndex + this.itemsPerPage, this.items.length);
+        this.filteredItems = this.items.slice(startIndex, endIndex);
+      } else {
+        // If we have expanded items on this page, keep them on this page
+        // and adjust other items accordingly
+
+        // Get the base range for this page
+        const baseStartIndex = this.currentPage * this.itemsPerPage;
+        const baseEndIndex = Math.min(baseStartIndex + this.itemsPerPage, this.items.length);
+
+        // Get all item indices that should be on this page
+        // Start with the expanded items that belong on this page
+        const itemIndicesOnThisPage = expandedItemsOnCurrentPage.map(info => info.itemIndex);
+
+        // Calculate how many regular items we can fit
+        const remainingSlots = this.itemsPerPage - expandedItemsOnCurrentPage.length;
+
+        // Add regular items that fit on this page
+        if (remainingSlots > 0) {
+          // Get all non-expanded items
+          const nonExpandedIndices = [];
+          for (let i = baseStartIndex; i < baseEndIndex; i++) {
+            // Check if this item is not one of the expanded items
+            if (!itemIndicesOnThisPage.includes(i)) {
+              nonExpandedIndices.push(i);
+              // Stop if we've filled all remaining slots
+              if (nonExpandedIndices.length >= remainingSlots) break;
+            }
+          }
+
+          // Add these indices to our page
+          itemIndicesOnThisPage.push(...nonExpandedIndices);
+        }
+
+        // Sort indices to maintain original order
+        itemIndicesOnThisPage.sort((a, b) => a - b);
+
+        // Create the filtered items array based on these indices
+        this.filteredItems = itemIndicesOnThisPage.map(index => this.items[index]);
+      }
+    }
 
     // Reset page if we're beyond the available pages
     const maxPage = Math.ceil(this.items.length / this.itemsPerPage) - 1;
@@ -110,6 +308,39 @@ export class PidDataTable {
     this.updateFilteredItems();
   }
 
+  componentDidLoad() {
+    // Measure row heights after initial rendering, but only if there are items to measure
+    // This prevents unnecessary measurements when the table is empty
+    if (this.filteredItems.length > 0) {
+      // Use a longer timeout to ensure the table is fully rendered
+      // This is especially important for the initial load
+      setTimeout(() => {
+        if (!this.isMeasuring) {
+          this.isMeasuring = true;
+          this.measureRowHeights();
+          setTimeout(() => {
+            this.isMeasuring = false;
+          }, 50);
+        }
+      }, 300);
+    }
+  }
+
+  // Track if we're currently measuring to prevent infinite loops
+  private isMeasuring: boolean = false;
+
+  componentDidUpdate() {
+    // Only measure heights if we're not already measuring
+    // This prevents infinite loops caused by measurement -> update -> measurement cycles
+    if (!this.isMeasuring) {
+      this.isMeasuring = true;
+      setTimeout(() => {
+        this.measureRowHeights();
+        this.isMeasuring = false;
+      }, 100);
+    }
+  }
+
   render() {
     if (this.items.length === 0) {
       return (
@@ -120,15 +351,23 @@ export class PidDataTable {
     }
 
     // Adjust container and table classes based on adaptive pagination mode
-    const containerClass = this.adaptivePagination
-      ? 'rounded-lg border border-gray-200 bg-gray-50 m-1 flex flex-col h-full'
-      : 'rounded-lg border border-gray-200 bg-gray-50 m-1 flex flex-col h-full';
+    // Using Tailwind classes for consistent styling
+    const containerClass = 'rounded-lg border border-gray-200 bg-gray-50 m-1 flex flex-col h-full';
 
-    const tableContainerClass = this.adaptivePagination ? 'flex-'flex-grow relative z-10 overflow-hidden'erflow-au'overflow-auto flex-grow relative z-10'n (
+    // In adaptive mode, use overflow-hidden to prevent scrolling within the table
+    // This ensures the table is always fully visible without internal scrolling
+    const tableContainerClass = this.adaptivePagination ? 'flex-grow relative z-10 overflow-hidden' : 'overflow-auto flex-grow relative z-10';
+
+    return (
       <div class={containerClass}>
         {/* Table container with scrollable content */}
         <div class={tableContainerClass}>
-          <table class="w-full text-left text-sm font-sans select-text border-collapse table-fixed" aria-label="Data table" role="table">
+          <table
+            class="w-full text-left text-sm font-sans select-text border-collapse table-fixed"
+            aria-label="Data table"
+            role="table"
+            ref={el => (this.tableRef = el as HTMLTableElement)}
+          >
             <thead class="bg-slate-600 text-slate-200 rounded-t-lg sticky top-0 z-20">
               <tr class="font-semibold" role="row">
                 <th class="px-2 py-2 min-w-[150px] w-[30%] rounded-tl-lg" scope="col" role="columnheader">
@@ -176,6 +415,8 @@ export class PidDataTable {
                               amountOfItems={this.itemsPerPage}
                               settings={this.settings}
                               openByDefault={false}
+                              adaptivePagination={this.adaptivePagination}
+                              onCollapsibleToggle={e => this.handleSubcomponentToggle(e, `${value.keyTitle}-${index}`)}
                               class="flex-grow"
                             />
                           ) : !this.hideSubcomponents && this.currentLevelOfSubcomponents === this.levelOfSubcomponents && !value.renderDynamically ? (
@@ -187,6 +428,8 @@ export class PidDataTable {
                               settings={this.settings}
                               hideSubcomponents={true}
                               openByDefault={false}
+                              adaptivePagination={this.adaptivePagination}
+                              onCollapsibleToggle={e => this.handleSubcomponentToggle(e, `${value.keyTitle}-${index}`)}
                               class="flex-grow"
                             />
                           ) : (

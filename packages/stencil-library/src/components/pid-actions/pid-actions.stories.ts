@@ -17,7 +17,7 @@ const mockActions = [
 ];
 
 const meta: Meta = {
-  title: 'Components/PID Actions',
+  title: 'Internal/PID Actions',
   component: 'pid-actions',
   tags: ['autodocs'],
   argTypes: {

@@ -6,7 +6,7 @@ import { html } from 'lit';
  * standard and adaptive pagination modes.
  */
 const meta: Meta = {
-  title: 'Components/Pagination',
+  title: 'Internal/Pagination',
   component: 'pid-pagination',
   tags: ['autodocs'],
   argTypes: {

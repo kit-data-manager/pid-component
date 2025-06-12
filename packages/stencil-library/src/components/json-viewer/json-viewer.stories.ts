@@ -5,7 +5,7 @@ import { Meta, StoryObj } from '@storybook/web-components-vite';
  * collapsible tree view or formatted code view.
  */
 const meta: Meta = {
-  title: 'Components/JSON Viewer',
+  title: 'Renderer/JSON Viewer',
   component: 'json-viewer',
   tags: ['autodocs'],
   argTypes: {
