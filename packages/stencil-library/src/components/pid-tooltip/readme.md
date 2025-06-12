@@ -6,7 +6,7 @@
 ## Properties
 
 | Property            | Attribute     | Description                                               | Type                                     | Default     |
-|---------------------|---------------|-----------------------------------------------------------|------------------------------------------|-------------|
+| ------------------- | ------------- | --------------------------------------------------------- | ---------------------------------------- | ----------- |
 | `fitContent`        | `fit-content` | Whether the tooltip should fit its content height exactly | `boolean`                                | `true`      |
 | `maxHeight`         | `max-height`  | The maximum height of the tooltip                         | `string`                                 | `'150px'`   |
 | `maxWidth`          | `max-width`   | The maximum width of the tooltip                          | `string`                                 | `'250px'`   |
@@ -18,7 +18,7 @@
 
 ### Used by
 
-- [pid-data-table](../pid-data-table)
+ - [pid-data-table](../pid-data-table)
 
 ### Graph
 ```mermaid

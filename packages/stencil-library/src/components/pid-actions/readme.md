@@ -6,7 +6,7 @@
 ## Properties
 
 | Property  | Attribute | Description                 | Type               | Default |
-|-----------|-----------|-----------------------------|--------------------|---------|
+| --------- | --------- | --------------------------- | ------------------ | ------- |
 | `actions` | `actions` | Array of actions to display | `FoldableAction[]` | `[]`    |
 
 
@@ -14,7 +14,7 @@
 
 ### Used by
 
-- [pid-component](../pid-component)
+ - [pid-component](../pid-component)
 
 ### Graph
 ```mermaid

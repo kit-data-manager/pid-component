@@ -90,46 +90,52 @@ export class PidDataTable {
 
   render() {
     if (this.items.length === 0) {
-      return null;
+      return (
+        <div class="rounded-lg border border-gray-200 bg-gray-50 m-1 p-4 text-center text-gray-500" role="status" aria-live="polite">
+          No data available
+        </div>
+      );
     }
 
     return (
       <div class="rounded-lg border border-gray-200 bg-gray-50 m-1 flex flex-col h-full">
         {/* Table container with scrollable content */}
         <div class="overflow-auto flex-grow relative z-10">
-          <table class="w-full text-left text-sm font-sans select-text border-collapse table-fixed" aria-label="Data table">
+          <table class="w-full text-left text-sm font-sans select-text border-collapse table-fixed" aria-label="Data table" role="table">
             <thead class="bg-slate-600 text-slate-200 rounded-t-lg sticky top-0 z-20">
-              <tr class="font-semibold">
-                <th class="px-2 py-2 min-w-[150px] w-[30%] rounded-tl-lg" scope="col">
+              <tr class="font-semibold" role="row">
+                <th class="px-2 py-2 min-w-[150px] w-[30%] rounded-tl-lg" scope="col" role="columnheader">
                   Key
                 </th>
-                <th class="px-2 py-2 w-[70%] rounded-tr-lg" scope="col">
+                <th class="px-2 py-2 w-[70%] rounded-tr-lg" scope="col" role="columnheader">
                   Value
                 </th>
               </tr>
             </thead>
-            <tbody class="bg-gray-50">
+            <tbody class="bg-gray-50" role="rowgroup">
               {this.filteredItems.map((value, index) => (
                 <tr
-                  key={`item-${value.keyTitle}`}
+                  key={`item-${value.keyTitle}-${index}`}
                   class={`odd:bg-slate-200 even:bg-gray-50 h-7 leading-7 ${index !== this.filteredItems.length - 1 ? 'border-b border-gray-200' : ''}`}
+                  role="row"
                 >
-                  <td class={'p-2 min-w-[150px] w-auto font-mono align-middle'}>
-                    <pid-tooltip text={value.keyTooltip || `Details for ${value.keyTitle}`}>
+                  <td class={'p-2 min-w-[150px] w-auto font-mono align-middle'} role="cell">
+                    <pid-tooltip text={value.keyTooltip || `Details for ${value.keyTitle}`} position={index === 0 ? 'bottom' : 'top'}>
                       <div slot="trigger" class="h-7 leading-7 overflow-hidden w-full flex items-center">
                         <a
                           href={value.keyLink}
                           target={'_blank'}
                           rel={'noopener noreferrer'}
-                          class="mr-2 text-blue-600 underline hover:text-blue-800 truncate"
+                          class="mr-2 text-blue-600 underline hover:text-blue-800 focus:text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 rounded truncate"
                           onClick={e => e.stopPropagation()}
+                          aria-label={`Open ${value.keyTitle} in new tab`}
                         >
                           {value.keyTitle}
                         </a>
                       </div>
                     </pid-tooltip>
                   </td>
-                  <td class={'align-top text-sm p-2 w-full select-text relative'}>
+                  <td class={'align-top text-sm p-2 w-full select-text relative'} role="cell">
                     <div class="w-full min-h-7 pr-8 flex items-center relative">
                       <div class="w-full overflow-x-auto whitespace-normal break-words max-h-[200px] overflow-y-auto">
                         {
@@ -161,7 +167,11 @@ export class PidDataTable {
                         }
                       </div>
                     </div>
-                    <copy-button value={value.value} class="absolute right-2 top-1/2 -translate-y-1/2 flex-shrink-0 z-30 opacity-100 visible hover:z-35 cursor-pointer" />
+                    <copy-button
+                      value={value.value}
+                      class="absolute right-2 top-1/2 -translate-y-1/2 flex-shrink-0 z-30 opacity-100 visible hover:z-35 cursor-pointer"
+                      aria-label={`Copy ${value.keyTitle} value`}
+                    />
                   </td>
                 </tr>
               ))}

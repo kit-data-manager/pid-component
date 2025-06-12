@@ -6,7 +6,7 @@
 ## Properties
 
 | Property       | Attribute        | Description                  | Type       | Default                |
-|----------------|------------------|------------------------------|------------|------------------------|
+| -------------- | ---------------- | ---------------------------- | ---------- | ---------------------- |
 | `currentPage`  | `current-page`   | Current page (0-based index) | `number`   | `0`                    |
 | `itemsPerPage` | `items-per-page` | Number of items per page     | `number`   | `10`                   |
 | `pageSizes`    | `page-sizes`     | Available page sizes         | `number[]` | `[5, 10, 25, 50, 100]` |
@@ -16,7 +16,7 @@
 ## Events
 
 | Event                | Description                               | Type                  |
-|----------------------|-------------------------------------------|-----------------------|
+| -------------------- | ----------------------------------------- | --------------------- |
 | `itemsPerPageChange` | Event emitted when items per page changes | `CustomEvent<number>` |
 | `pageChange`         | Event emitted when page changes           | `CustomEvent<number>` |
 
@@ -25,7 +25,7 @@
 
 ### Used by
 
-- [pid-component](../pid-component)
+ - [pid-component](../pid-component)
 
 ### Graph
 ```mermaid

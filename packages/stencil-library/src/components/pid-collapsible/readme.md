@@ -55,7 +55,7 @@ A collapsible component that can be toggled between expanded and collapsed state
 ## Properties
 
 | Property        | Attribute        | Description                                               | Type      | Default     |
-|-----------------|------------------|-----------------------------------------------------------|-----------|-------------|
+| --------------- | ---------------- | --------------------------------------------------------- | --------- | ----------- |
 | `emphasize`     | `emphasize`      | Whether to emphasize the component with border and shadow | `boolean` | `false`     |
 | `expanded`      | `expanded`       | Whether the component is in expanded mode (full size)     | `boolean` | `false`     |
 | `initialHeight` | `initial-height` | Initial height when expanded                              | `string`  | `undefined` |
@@ -68,7 +68,7 @@ A collapsible component that can be toggled between expanded and collapsed state
 ## Events
 
 | Event               | Description                                   | Type                   |
-|---------------------|-----------------------------------------------|------------------------|
+| ------------------- | --------------------------------------------- | ---------------------- |
 | `collapsibleToggle` | Event emitted when the collapsible is toggled | `CustomEvent<boolean>` |
 
 
@@ -76,7 +76,7 @@ A collapsible component that can be toggled between expanded and collapsed state
 
 ### Used by
 
-- [pid-component](../pid-component)
+ - [pid-component](../pid-component)
 
 ### Graph
 ```mermaid

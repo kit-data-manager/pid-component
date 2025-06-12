@@ -6,7 +6,7 @@
 ## Properties
 
 | Property                      | Attribute                        | Description                                                                                                                                                                                                                                                                                                                                            | Type      | Default               |
-|-------------------------------|----------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------|-----------------------|
+| ----------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------- | --------------------- |
 | `amountOfItems`               | `amount-of-items`                | The number of items to show in the table per page. Defaults to 10. (optional)                                                                                                                                                                                                                                                                          | `number`  | `10`                  |
 | `currentLevelOfSubcomponents` | `current-level-of-subcomponents` | The current level of subcomponents. Defaults to 0. (optional)                                                                                                                                                                                                                                                                                          | `number`  | `0`                   |
 | `defaultTTL`                  | `default-t-t-l`                  | Determines the default time to live (TTL) for entries in the IndexedDB. Defaults to 24 hours. Units are in milliseconds. (optional)                                                                                                                                                                                                                    | `number`  | `24 * 60 * 60 * 1000` |
@@ -32,11 +32,14 @@ This method is now handled by the pid-collapsible component
 
 Type: `Promise<void>`
 
+
+
+
 ## Dependencies
 
 ### Used by
 
-- [pid-data-table](../pid-data-table)
+ - [pid-data-table](../pid-data-table)
 
 ### Depends on
 

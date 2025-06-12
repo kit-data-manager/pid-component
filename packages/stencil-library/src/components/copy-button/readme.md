@@ -15,7 +15,7 @@
 ### Used by
 
  - [pid-component](../pid-component)
-- [pid-data-table](../pid-data-table)
+ - [pid-data-table](../pid-data-table)
 
 ### Graph
 ```mermaid
