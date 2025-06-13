@@ -51,6 +51,7 @@ A collapsible component that can be toggled between expanded and collapsed state
 | `(default)`       | Main content of the collapsible    |
 <!-- Auto Generated Below -->
 
+
 ## Overview
 
 Component for creating collapsible/expandable content sections
@@ -58,24 +59,22 @@ with resize capability and cross-browser compatibility
 
 ## Properties
 
-| Property             | Attribute             | Description                                                                                      | Type      | Default     |
-|----------------------|-----------------------|--------------------------------------------------------------------------------------------------|-----------|-------------|
-| `adaptivePagination` | `adaptive-pagination` | Enable adaptive pagination mode - automatically adjusts number of items based on available space | `boolean` | `false`     |
-| `emphasize`          | `emphasize`           | Whether to emphasize the component with border and shadow                                        | `boolean` | `false`     |
-| `expanded`           | `expanded`            | Whether the component is in expanded mode (full size)                                            | `boolean` | `false`     |
-| `initialHeight`      | `initial-height`      | Initial height when expanded                                                                     | `string`  | `undefined` |
-| `initialWidth`       | `initial-width`       | Initial width when expanded                                                                      | `string`  | `undefined` |
-| `lineHeight`         | `line-height`         | Line height for collapsed state                                                                  | `number`  | `24`        |
-| `open`               | `open`                | Whether the collapsible is open by default                                                       | `boolean` | `false`     |
-| `showFooter`         | `show-footer`         | Whether to show the footer section                                                               | `boolean` | `false`     |
+| Property        | Attribute        | Description                                               | Type      | Default     |
+|-----------------|------------------|-----------------------------------------------------------|-----------|-------------|
+| `emphasize`     | `emphasize`      | Whether to emphasize the component with border and shadow | `boolean` | `false`     |
+| `expanded`      | `expanded`       | Whether the component is in expanded mode (full size)     | `boolean` | `false`     |
+| `initialHeight` | `initial-height` | Initial height when expanded                              | `string`  | `undefined` |
+| `initialWidth`  | `initial-width`  | Initial width when expanded                               | `string`  | `undefined` |
+| `lineHeight`    | `line-height`    | Line height for collapsed state                           | `number`  | `24`        |
+| `open`          | `open`           | Whether the collapsible is open by default                | `boolean` | `false`     |
+| `showFooter`    | `show-footer`    | Whether to show the footer section                        | `boolean` | `false`     |
 
 
 ## Events
 
-| Event               | Description                                                       | Type                                              |
-|---------------------|-------------------------------------------------------------------|---------------------------------------------------|
-| `collapsibleResize` | Event emitted when component is resized (for adaptive pagination) | `CustomEvent<{ width: number; height: number; }>` |
-| `collapsibleToggle` | Event emitted when the collapsible is toggled                     | `CustomEvent<boolean>`                            |
+| Event               | Description                                   | Type                   |
+|---------------------|-----------------------------------------------|------------------------|
+| `collapsibleToggle` | Event emitted when the collapsible is toggled | `CustomEvent<boolean>` |
 
 
 ## Dependencies

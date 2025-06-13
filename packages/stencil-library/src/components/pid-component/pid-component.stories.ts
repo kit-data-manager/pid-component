@@ -1,64 +1,5 @@
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
-import { FoldableItem } from '../../utils/FoldableItem';
-import { FoldableAction } from '../../utils/FoldableAction';
-
-/**
- * Create mock data items for the stories
- */
-const createMockItems = (count: number): FoldableItem[] => {
-  return Array.from({ length: count }, (_, i) => {
-    return new FoldableItem(
-      i, // priority
-      `Property ${i + 1}`, // keyTitle
-      `Value for property ${i + 1}. This is a sample value that demonstrates the content.`, // value
-      `Tooltip for Property ${i + 1}`, // keyTooltip
-      `https://example.com/property/${i + 1}`, // keyLink
-      undefined, // valueRegex
-      false, // renderDynamically
-    );
-  });
-};
-
-/**
- * Create mock actions for the stories
- */
-const createMockActions = (count: number): FoldableAction[] => {
-  const styles: ('primary' | 'secondary' | 'danger')[] = ['primary', 'secondary', 'danger'];
-
-  return Array.from({ length: count }, (_, i) => {
-    const style = styles[i % styles.length];
-    return new FoldableAction(
-      i, // priority
-      `Action ${i + 1}`, // title
-      `https://example.com/action/${i + 1}`, // link
-      style, // style
-    );
-  });
-};
-
-/**
- * Mock implementation of GenericIdentifierType for demos
- */
-class MockIdentifier {
-  value: string;
-  items: FoldableItem[];
-  actions: FoldableAction[];
-
-  constructor(value: string, itemCount: number = 5, actionCount: number = 2) {
-    this.value = value;
-    this.items = createMockItems(itemCount);
-    this.actions = createMockActions(actionCount);
-  }
-
-  renderPreview() {
-    return this.value;
-  }
-
-  renderBody() {
-    return null;
-  }
-}
 
 /**
  * The pid-component is a versatile component for displaying and interacting with
@@ -148,31 +89,9 @@ const meta: Meta = {
         type: { summary: 'boolean' },
       },
     },
-    adaptivePagination: {
-      description: 'Enable adaptive pagination based on available space',
-      control: { type: 'boolean' },
-      table: {
-        defaultValue: { summary: 'false' },
-        type: { summary: 'boolean' },
-      },
-    },
-    width: {
-      description: 'Initial width of the component',
-      control: { type: 'text' },
-      table: {
-        type: { summary: 'string' },
-      },
-    },
-    height: {
-      description: 'Initial height of the component',
-      control: { type: 'text' },
-      table: {
-        type: { summary: 'string' },
-      },
-    },
   },
   args: {
-    value: 'Example Value',
+    value: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
     settings: '[]',
     openByDefault: false,
     amountOfItems: 10,
@@ -181,9 +100,6 @@ const meta: Meta = {
     hideSubcomponents: false,
     emphasizeComponent: true,
     showTopLevelCopy: true,
-    adaptivePagination: false,
-    width: '500px',
-    height: '300px',
   },
 };
 
@@ -199,36 +115,6 @@ const textDecorator = (story: () => unknown) =>
 
 export default meta;
 type Story = StoryObj;
-
-/**
- * Helper function to create a pid-component with mock data
- */
-const createComponentWithMockData = (props: Record<string, any>) => {
-  // Create container with padding and Tailwind classes
-  const container = document.createElement('div');
-  container.className = 'p-4 bg-white rounded-md';
-
-  // Create and configure the component
-  const component = document.createElement('pid-component');
-
-  // Apply all properties
-  Object.entries(props).forEach(([key, value]) => {
-    component[key] = value;
-  });
-
-  // For demo purposes, mock the database retrieval
-  // @ts-ignore - Accessing private state for demo
-  component.identifierObject = new MockIdentifier(props.value, 10, 3);
-  // @ts-ignore - Manually trigger state update
-  component.displayStatus = 'loaded';
-  // @ts-ignore - Manually populate items and actions
-  component.items = createMockItems(10);
-  // @ts-ignore - Manually populate actions
-  component.actions = createMockActions(3);
-
-  container.appendChild(component);
-  return container;
-};
 
 export const Default: Story = {
   args: {
@@ -484,7 +370,7 @@ export const TypedPIDMakerExampleText: Story = {
   },
   decorators: [
     (story: () => unknown) => html`
-      <p class="align-middle items-center w-1/3">
+      <p class="align-middle items-center w-2/3">
         The Typed PID Maker is an entry point to integrate digital resources into the FAIR Digital Object (FAIR DO) ecosystem. It allows creating PIDs for resources and to provide
         them with the necessary metadata to ensure that the resources can be found and understood. <br />
         As a result, a machine-readable representation of all kinds of research artifacts allows act on such FAIR Digital Objects which present themselves as PID, e.g., ${story()},
@@ -492,209 +378,4 @@ export const TypedPIDMakerExampleText: Story = {
       </p>
     `,
   ],
-};
-
-/**
- * Component with adaptive pagination enabled
- */
-export const WithAdaptivePagination: Story = {
-  args: {
-    value: '21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6',
-    openByDefault: true,
-    adaptivePagination: true,
-    width: '600px',
-    height: '400px',
-  },
-  render: args => {
-    return createComponentWithMockData(args);
-  },
-  parameters: {
-    docs: {
-      source: {
-        code: `
-<pid-component
-  value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"
-  openByDefault="true"
-  adaptivePagination="true"
-  width="600px"
-  height="400px"
-></pid-component>
-        `,
-      },
-    },
-  },
-};
-
-/**
- * Component with custom dimensions
- */
-export const CustomDimensions: Story = {
-  args: {
-    value: 'Custom Size Component',
-    openByDefault: true,
-    width: '700px',
-    height: '350px',
-  },
-  render: args => {
-    return createComponentWithMockData(args);
-  },
-  parameters: {
-    docs: {
-      source: {
-        code: `
-<pid-component
-  value="Custom Size Component"
-  openByDefault="true"
-  width="700px"
-  height="350px"
-></pid-component>
-        `,
-      },
-    },
-  },
-};
-
-/**
- * Component with subcomponents hidden
- */
-export const HiddenSubcomponents: Story = {
-  args: {
-    value: 'No Subcomponents Component',
-    hideSubcomponents: true,
-    openByDefault: true,
-  },
-  render: args => {
-    return createComponentWithMockData(args);
-  },
-  parameters: {
-    docs: {
-      source: {
-        code: `
-<pid-component
-  value="No Subcomponents Component"
-  hideSubcomponents="true"
-  openByDefault="true"
-></pid-component>
-        `,
-      },
-    },
-  },
-};
-
-/**
- * Comparison of standard and adaptive pagination
- */
-export const PaginationComparison: Story = {
-  render: () => {
-    const container = document.createElement('div');
-    container.className = 'space-y-4';
-
-    // Header
-    const header = document.createElement('div');
-    header.className = 'text-center p-2 bg-blue-50 rounded-md';
-    header.innerHTML = 'Compare Standard (fixed) vs Adaptive Pagination';
-    container.appendChild(header);
-
-    // Instructions
-    const instructions = document.createElement('div');
-    instructions.className = 'text-sm p-2 bg-yellow-50 rounded-md mb-2';
-    instructions.innerHTML = `
-      <p><strong>Try these interactions:</strong></p>
-      <ul class="list-disc pl-5">
-        <li>Expand subcomponents in both tables to see how they behave differently</li>
-        <li>In adaptive mode, notice how other items stay on the same page when space allows</li>
-        <li>Resize your browser window to see how adaptive pagination adjusts</li>
-        <li>Use the pagination controls to manually change items per page in both modes</li>
-      </ul>
-    `;
-    container.appendChild(instructions);
-
-    // Wrapper for the two columns
-    const wrapper = document.createElement('div');
-    wrapper.className = 'flex flex-col md:flex-row gap-4 bg-gray-100 p-4 rounded-md';
-
-    // Standard pagination column
-    const standardCol = document.createElement('div');
-    standardCol.className = 'flex-1';
-
-    const standardLabel = document.createElement('div');
-    standardLabel.className = 'font-bold mb-2 p-1 bg-white rounded-md text-center';
-    standardLabel.textContent = 'Standard Pagination';
-    standardCol.appendChild(standardLabel);
-
-    const standardComponent = document.createElement('pid-component');
-    standardComponent.value = '21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6';
-    standardComponent.openByDefault = true;
-    standardComponent.amountOfItems = 10;
-
-    // Mock data for standard component
-    // @ts-ignore - Accessing private state for demo
-    standardComponent.identifierObject = new MockIdentifier('21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6', 25, 3);
-    // @ts-ignore - Manually trigger state update
-    standardComponent.displayStatus = 'loaded';
-    // @ts-ignore - Manually populate items and actions
-    standardComponent.items = createMockItems(25);
-    // @ts-ignore - Manually populate actions
-    standardComponent.actions = createMockActions(3);
-
-    standardCol.appendChild(standardComponent);
-    wrapper.appendChild(standardCol);
-
-    // Adaptive pagination column
-    const adaptiveCol = document.createElement('div');
-    adaptiveCol.className = 'flex-1';
-
-    const adaptiveLabel = document.createElement('div');
-    adaptiveLabel.className = 'font-bold mb-2 p-1 bg-white rounded-md text-center';
-    adaptiveLabel.textContent = 'Adaptive Pagination';
-    adaptiveCol.appendChild(adaptiveLabel);
-
-    const adaptiveComponent = document.createElement('pid-component');
-    adaptiveComponent.value = '21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6';
-    adaptiveComponent.openByDefault = true;
-    adaptiveComponent.adaptivePagination = true;
-    adaptiveComponent.amountOfItems = 10;
-
-    // Mock data for adaptive component
-    // @ts-ignore - Accessing private state for demo
-    adaptiveComponent.identifierObject = new MockIdentifier('21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6', 25, 3);
-    // @ts-ignore - Manually trigger state update
-    adaptiveComponent.displayStatus = 'loaded';
-    // @ts-ignore - Manually populate items and actions
-    adaptiveComponent.items = createMockItems(25);
-    // @ts-ignore - Manually populate actions
-    adaptiveComponent.actions = createMockActions(3);
-
-    adaptiveCol.appendChild(adaptiveComponent);
-    wrapper.appendChild(adaptiveCol);
-
-    container.appendChild(wrapper);
-    return container;
-  },
-  parameters: {
-    docs: {
-      source: {
-        code: `
-<!-- Standard Pagination -->
-<pid-component
-  value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"
-  openByDefault="true"
-  width="100%"
-  height="400px"
-  amountOfItems="10"
-></pid-component>
-
-<!-- Adaptive Pagination -->
-<pid-component
-  value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"
-  openByDefault="true"
-  width="100%"
-  height="400px"
-  adaptivePagination="true"
-  amountOfItems="10"
-></pid-component>
-        `,
-      },
-    },
-  },
 };

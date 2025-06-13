@@ -157,6 +157,8 @@ export const PidPagination: StencilReactComponent<PidPaginationElement, PidPagin
     totalItems: 'total-items',
     itemsPerPage: 'items-per-page',
     pageSizes: 'page-sizes',
+    adaptivePagination: 'adaptive-pagination',
+    showItemsPerPageControl: 'show-items-per-page-control',
   },
   hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
   serializeShadowRoot,

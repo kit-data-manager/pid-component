@@ -5,28 +5,25 @@
 
 ## Properties
 
-| Property                      | Attribute                        | Description                                                     | Type             | Default                |
-|-------------------------------|----------------------------------|-----------------------------------------------------------------|------------------|------------------------|
-| `adaptivePagination`          | `adaptive-pagination`            | Enable adaptive pagination mode                                 | `boolean`        | `false`                |
-| `currentLevelOfSubcomponents` | `current-level-of-subcomponents` | Current level of subcomponents                                  | `number`         | `0`                    |
-| `currentPage`                 | `current-page`                   | Current page (0-based index)                                    | `number`         | `0`                    |
-| `estimatedRowHeight`          | `estimated-row-height`           | Estimated height of each table row in pixels (used as fallback) | `number`         | `40`                   |
-| `hideSubcomponents`           | `hide-subcomponents`             | Whether to hide subcomponents                                   | `boolean`        | `false`                |
-| `items`                       | `items`                          | Array of items to display in the table                          | `FoldableItem[]` | `[]`                   |
-| `itemsPerPage`                | `items-per-page`                 | Number of items to show per page                                | `number`         | `10`                   |
-| `levelOfSubcomponents`        | `level-of-subcomponents`         | Total level of subcomponents                                    | `number`         | `1`                    |
-| `loadSubcomponents`           | `load-subcomponents`             | Whether to load subcomponents                                   | `boolean`        | `false`                |
-| `pageSizes`                   | `page-sizes`                     | Available page sizes                                            | `number[]`       | `[5, 10, 25, 50, 100]` |
-| `settings`                    | `settings`                       | Settings to pass to subcomponents                               | `string`         | `'[]'`                 |
+| Property                      | Attribute                        | Description                            | Type             | Default                |
+|-------------------------------|----------------------------------|----------------------------------------|------------------|------------------------|
+| `currentLevelOfSubcomponents` | `current-level-of-subcomponents` | Current level of subcomponents         | `number`         | `0`                    |
+| `currentPage`                 | `current-page`                   | Current page (0-based index)           | `number`         | `0`                    |
+| `hideSubcomponents`           | `hide-subcomponents`             | Whether to hide subcomponents          | `boolean`        | `false`                |
+| `items`                       | `items`                          | Array of items to display in the table | `FoldableItem[]` | `[]`                   |
+| `itemsPerPage`                | `items-per-page`                 | Number of items to show per page       | `number`         | `10`                   |
+| `levelOfSubcomponents`        | `level-of-subcomponents`         | Total level of subcomponents           | `number`         | `1`                    |
+| `loadSubcomponents`           | `load-subcomponents`             | Whether to load subcomponents          | `boolean`        | `false`                |
+| `pageSizes`                   | `page-sizes`                     | Available page sizes                   | `number[]`       | `[5, 10, 25, 50, 100]` |
+| `settings`                    | `settings`                       | Settings to pass to subcomponents      | `string`         | `'[]'`                 |
 
 
 ## Events
 
-| Event                | Description                               | Type                                                           |
-|----------------------|-------------------------------------------|----------------------------------------------------------------|
-| `itemsPerPageChange` | Event emitted when items per page changes | `CustomEvent<number>`                                          |
-| `pageChange`         | Event emitted when page changes           | `CustomEvent<number>`                                          |
-| `rowHeightsChange`   | Event emitted when row heights change     | `CustomEvent<{ totalHeight: number; averageHeight: number; }>` |
+| Event                | Description                               | Type                  |
+|----------------------|-------------------------------------------|-----------------------|
+| `itemsPerPageChange` | Event emitted when items per page changes | `CustomEvent<number>` |
+| `pageChange`         | Event emitted when page changes           | `CustomEvent<number>` |
 
 
 ## Dependencies

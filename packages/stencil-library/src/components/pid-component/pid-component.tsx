@@ -1,4 +1,4 @@
-import { Component, Element, Event, EventEmitter, h, Host, Method, Prop, State, Watch } from '@stencil/core';
+import { Component, Element, h, Host, Method, Prop, State, Watch } from '@stencil/core';
 import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
 import { FoldableItem } from '../../utils/FoldableItem';
 import { FoldableAction } from '../../utils/FoldableAction';
@@ -126,32 +126,6 @@ export class PidComponent {
   @Prop() height?: string;
 
   /**
-   * Enable adaptive pagination based on available space.
-   * When true, amountOfItems becomes the initial value that can be unrestricted changed by the user.
-   * @type {boolean}
-   */
-  @Prop() adaptivePagination: boolean = false;
-
-  /**
-   * Event emitted when the collapsible is toggled (expanded/collapsed).
-   * This event is emitted with a boolean value indicating whether the component is expanded (true) or collapsed (false).
-   * @event collapsibleToggle
-   */
-  @Event() collapsibleToggle: EventEmitter<boolean>;
-
-  /**
-   * Estimated height of each table row in pixels (used for adaptive pagination).
-   * This is used as a fallback when no actual measurements are available.
-   * @type {number}
-   */
-  @Prop() estimatedRowHeight: number = 40;
-
-  /**
-   * Actual measured average row height (updated dynamically)
-   */
-  @State() measuredRowHeight: number = 0;
-
-  /**
    * Updates the component sizing and styling based on the expanded state
    * This method is now handled by the pid-collapsible component
    */
@@ -204,11 +178,6 @@ export class PidComponent {
    * Tracks whether the component is expanded/unfolded or not
    */
   @State() isExpanded: boolean = false;
-
-  /**
-   * Tracks calculated items per page for adaptive pagination
-   */
-  @State() calculatedItemsPerPage: number = 10;
 
   constructor() {
     this.temporarilyEmphasized = this.emphasizeComponent;
@@ -277,9 +246,6 @@ export class PidComponent {
       if (event.detail && !this.hideSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) {
         this.loadSubcomponents = true;
       }
-
-      // Emit the collapsibleToggle event to notify parent components
-      this.collapsibleToggle.emit(event.detail);
     }
   };
 
@@ -313,11 +279,6 @@ export class PidComponent {
   async componentWillLoad() {
     // Validate amountOfItems to prevent division by zero
     this.validateAmountOfItems(this.amountOfItems);
-
-    // Initialize calculated items per page
-    // In adaptive mode, amountOfItems becomes the initial value
-    // but will be adjusted based on available space
-    this.calculatedItemsPerPage = this.amountOfItems;
 
     // Clear items and actions before loading new data to prevent double rendering
     this.items = [];
@@ -427,178 +388,18 @@ export class PidComponent {
   private _lineHeight: number = 24; // Default fallback
 
   /**
-   * Calculates the optimal number of items per page based on available height
-   */
-  private calculateOptimalItemsPerPage = (availableHeight: number): number => {
-    if (!this.adaptivePagination) {
-      return this.amountOfItems;
-    }
-
-    // Reserve space for header, footer, padding
-    const headerHeight = 44; // Table header height
-    const footerHeight = this.shouldShowFooter ? 120 : 0; // Footer with pagination
-    const padding = 40; // Container padding (increased to account for borders, margins)
-
-    // Calculate available height for table rows
-    const availableTableHeight = Math.max(0, availableHeight - headerHeight - footerHeight - padding);
-
-    // Use measured row height if available, otherwise fall back to estimated height
-    const rowHeight = this.measuredRowHeight > 0 ? this.measuredRowHeight : this.estimatedRowHeight;
-
-    // Calculate how many items can fit in the available space
-    const maxItems = Math.floor(availableTableHeight / rowHeight);
-
-    // Return the calculated number of items without constraints
-    // This allows unrestricted resizing based on available space
-    return Math.max(1, maxItems);
-  };
-
-  /**
-   * Handles row height changes from the data table
-   */
-  // Debounce timer to prevent rapid successive updates
-  private rowHeightDebounceTimer: any = null;
-  // Flag to prevent recursive updates
-  private isUpdatingFromRowHeights: boolean = false;
-
-  private handleRowHeightsChange = (event: CustomEvent<{ totalHeight: number; averageHeight: number }>) => {
-    // Prevent processing if we're already updating from a row height change
-    if (this.isUpdatingFromRowHeights) return;
-
-    // Only update if the height has changed significantly (more than 5%)
-    const heightDifference = Math.abs(this.measuredRowHeight - event.detail.averageHeight);
-    const significantChange = this.measuredRowHeight === 0 || heightDifference / this.measuredRowHeight > 0.05;
-
-    // Update the measured row height if it's valid and has changed significantly
-    if (event.detail.averageHeight > 0 && significantChange) {
-      // Clear any existing debounce timer
-      if (this.rowHeightDebounceTimer) {
-        clearTimeout(this.rowHeightDebounceTimer);
-      }
-
-      // Debounce the update to prevent rapid successive updates
-      this.rowHeightDebounceTimer = setTimeout(() => {
-        this.isUpdatingFromRowHeights = true;
-
-        // Update the measured row height
-        this.measuredRowHeight = event.detail.averageHeight;
-
-        // Recalculate items per page if expanded
-        if (this.adaptivePagination && this.isExpanded) {
-          const el = this.el.querySelector('pid-collapsible');
-          if (el) {
-            const rect = el.getBoundingClientRect();
-            const newItemsPerPage = this.calculateOptimalItemsPerPage(rect.height);
-
-            // Only update if the change is significant (more than 1 item difference)
-            if (Math.abs(newItemsPerPage - this.calculatedItemsPerPage) > 1) {
-              const previousItemsPerPage = this.calculatedItemsPerPage;
-              this.calculatedItemsPerPage = newItemsPerPage;
-
-              // Adjust page to maintain position
-              const currentTopItemIndex = this.tablePage * previousItemsPerPage;
-              const newPage = Math.floor(currentTopItemIndex / newItemsPerPage);
-
-              if (newPage !== this.tablePage) {
-                this.tablePage = newPage;
-              }
-
-              console.log(`Adaptive pagination: Updated based on measured row height (${this.measuredRowHeight}px), showing ${newItemsPerPage} items per page`);
-            }
-          }
-        }
-
-        // Reset the update flag after a short delay
-        setTimeout(() => {
-          this.isUpdatingFromRowHeights = false;
-        }, 50);
-      }, 200); // Debounce for 200ms
-    }
-  };
-
-  /**
-   * Handles resize events from collapsible component
-   */
-  // Debounce timer for resize events
-  private resizeDebounceTimer: any = null;
-  // Flag to prevent recursive updates
-  private isUpdatingFromResize: boolean = false;
-
-  private handleCollapsibleResize = (event: CustomEvent<{ width: number; height: number }>) => {
-    // Prevent processing if we're already updating from a resize event
-    // or if we're updating from row heights to avoid conflicts
-    if (this.isUpdatingFromResize || this.isUpdatingFromRowHeights) return;
-
-    // Only process if we're in adaptive pagination mode, expanded, and have a valid height
-    if (this.adaptivePagination && this.isExpanded && event.detail.height > 0) {
-      // Clear any existing debounce timer
-      if (this.resizeDebounceTimer) {
-        clearTimeout(this.resizeDebounceTimer);
-      }
-
-      // Debounce the resize handling to prevent rapid successive updates
-      this.resizeDebounceTimer = setTimeout(() => {
-        this.isUpdatingFromResize = true;
-
-        // Calculate new optimal items per page based on available height
-        const newItemsPerPage = this.calculateOptimalItemsPerPage(event.detail.height);
-
-        // Only update if the change is significant (more than 1 item difference)
-        // This prevents minor fluctuations from causing unnecessary updates
-        if (Math.abs(newItemsPerPage - this.calculatedItemsPerPage) > 1) {
-          const previousItemsPerPage = this.calculatedItemsPerPage;
-          this.calculatedItemsPerPage = newItemsPerPage;
-
-          // Calculate current position in the data
-          const currentTopItemIndex = this.tablePage * previousItemsPerPage;
-
-          // Determine new page to keep the view position as consistent as possible
-          if (newItemsPerPage !== previousItemsPerPage) {
-            // Calculate new page that would show the same top item
-            const newPage = Math.floor(currentTopItemIndex / newItemsPerPage);
-
-            // Only change page if necessary
-            if (newPage !== this.tablePage) {
-              this.tablePage = newPage;
-            }
-          }
-
-          console.log(`Adaptive pagination: Resized to ${event.detail.width}x${event.detail.height}, showing ${newItemsPerPage} items per page`);
-        }
-
-        // Reset the update flag after a short delay
-        setTimeout(() => {
-          this.isUpdatingFromResize = false;
-        }, 50);
-      }, 200); // Debounce for 200ms
-    }
-  };
-
-  /**
    * Determines if footer should be shown based on whether there are actions or items with pagination
    */
   private get shouldShowFooter(): boolean {
     const hasActions = this.actions.length > 0;
-
-    // In adaptive mode, we need pagination if items exceed the calculated amount
-    // In fixed mode, we need pagination if items exceed the configured amount
-    const effectiveItemsPerPage = this.adaptivePagination ? this.calculatedItemsPerPage : this.amountOfItems;
-    const hasPagination = this.items.length > effectiveItemsPerPage;
-
-    // Always show footer in adaptive mode when there are items to paginate
-    // This ensures the pagination controls are always available even when all items fit
-    const needsAdaptiveControls = this.adaptivePagination && this.items.length > 1;
-
-    return hasActions || hasPagination || needsAdaptiveControls;
+    const hasPagination = this.items.length > this.amountOfItems;
+    return hasActions || hasPagination;
   }
 
   /**
    * Renders the component.
    */
   render() {
-    // Determine effective items per page based on adaptive pagination mode
-    const effectiveItemsPerPage = this.adaptivePagination ? this.calculatedItemsPerPage : this.amountOfItems;
-
     return (
       <Host class="relative font-sans">
         {
@@ -659,9 +460,7 @@ export class PidComponent {
               initialHeight={this.height}
               lineHeight={this._lineHeight}
               showFooter={this.shouldShowFooter}
-              adaptivePagination={this.adaptivePagination}
               onCollapsibleToggle={e => this.toggleSubcomponents(e)}
-              onCollapsibleResize={this.handleCollapsibleResize}
               onClick={e => {
                 // Isolate click events to prevent bubbling to parent components
                 e.stopPropagation();
@@ -683,18 +482,15 @@ export class PidComponent {
               {this.items.length > 0 ? (
                 <pid-data-table
                   items={this.items}
-                  itemsPerPage={effectiveItemsPerPage}
+                  itemsPerPage={this.amountOfItems}
                   currentPage={this.tablePage}
                   loadSubcomponents={this.loadSubcomponents}
                   hideSubcomponents={this.hideSubcomponents}
                   currentLevelOfSubcomponents={this.currentLevelOfSubcomponents}
                   levelOfSubcomponents={this.levelOfSubcomponents}
                   settings={this.settings}
-                  adaptivePagination={this.adaptivePagination}
-                  estimatedRowHeight={this.estimatedRowHeight}
                   onPageChange={e => (this.tablePage = e.detail)}
-                  onRowHeightsChange={this.handleRowHeightsChange}
-                  class={this.adaptivePagination ? 'flex-grow overflow-hidden' : 'flex-grow overflow-auto'}
+                  class="flex-grow overflow-auto"
                 />
               ) : null}
 
@@ -706,19 +502,9 @@ export class PidComponent {
                   <pid-pagination
                     currentPage={this.tablePage}
                     totalItems={this.items.length}
-                    itemsPerPage={effectiveItemsPerPage}
+                    itemsPerPage={this.amountOfItems}
                     onPageChange={e => (this.tablePage = e.detail)}
-                    onItemsPerPageChange={e => {
-                      if (this.adaptivePagination) {
-                        // In adaptive mode, update calculatedItemsPerPage directly
-                        // This allows users to change the number of items per page after initialization
-                        this.calculatedItemsPerPage = e.detail;
-                      } else {
-                        this.amountOfItems = e.detail;
-                      }
-                    }}
-                    adaptivePagination={this.adaptivePagination}
-                    showItemsPerPageControl={true}
+                    onItemsPerPageChange={e => (this.amountOfItems = e.detail)}
                   />
                 </div>
               )}
