@@ -146,24 +146,6 @@ export class JsonViewer {
   };
 
   /**
-   * Method to download the JSON data as a file
-   */
-  private downloadJson = () => {
-    try {
-      const jsonString = JSON.stringify(this.parsedData, null, 2);
-      const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(jsonString);
-      const downloadAnchorNode = document.createElement('a');
-      downloadAnchorNode.setAttribute('href', dataStr);
-      downloadAnchorNode.setAttribute('download', 'data.json');
-      document.body.appendChild(downloadAnchorNode);
-      downloadAnchorNode.click();
-      downloadAnchorNode.remove();
-    } catch (err) {
-      console.error('Failed to download JSON', err);
-    }
-  };
-
-  /**
    * Expand all nodes in the tree view
    */
   @Method()
@@ -323,55 +305,54 @@ export class JsonViewer {
               ({Object.keys(this.parsedData).length} {Object.keys(this.parsedData).length === 1 ? 'property' : 'properties'})
             </span>
           </div>
-          <div class="flex gap-2">
-            <button
-              onClick={this.copyToClipboard}
-              class="flex items-center gap-1 py-1.5 px-3 rounded-md bg-gray-100 border border-gray-200 text-gray-800 text-xs font-medium cursor-pointer transition-all duration-200 hover:bg-gray-50 hover:border-gray-500 ${this.theme === 'dark' ? 'bg-gray-900 border-gray-600 text-gray-50 hover:bg-gray-700 hover:border-gray-400' : ''}"
-              title="Copy JSON to clipboard"
-            >
+
+          <button
+            onClick={this.toggleView}
+            class={`flex items-center gap-1 py-1.5 px-3 rounded-md text-xs font-medium cursor-pointer transition-all duration-200 ${
+              this.theme === 'dark'
+                ? 'bg-gray-900 border border-gray-600 text-gray-50 hover:bg-gray-700 hover:border-blue-600'
+                : 'bg-gray-100 border border-gray-200 text-gray-800 hover:bg-gray-50 hover:border-blue-400'
+            }`}
+          >
+            {this.currentViewMode === 'tree' ? 'Code View' : 'Tree View'}
+          </button>
+        </div>
+
+        <div class={`relative overflow-auto ${this.theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`} style={containerStyle}>
+          {/* Overlay copy button */}
+          <button
+            onClick={this.copyToClipboard}
+            class={`absolute top-2 right-2 z-10 rounded-md transition-all duration-200 ${
+              this.copied
+                ? this.theme === 'dark'
+                  ? 'bg-green-600 text-white'
+                  : 'bg-green-100 text-green-800'
+                : this.theme === 'dark'
+                  ? 'bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white'
+                  : 'bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-800'
+            } opacity-75 hover:opacity-100`}
+            title={this.copied ? 'Copied!' : 'Copy JSON to clipboard'}
+          >
+            {this.copied ? (
+              <span
+                class="inline-block w-4 h-4 bg-contain bg-no-repeat bg-center"
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E")`,
+                }}
+              ></span>
+            ) : (
               <span
                 class="inline-block w-4 h-4 bg-contain bg-no-repeat bg-center"
                 style={{
                   backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='9' y='9' width='13' height='13' rx='2' ry='2'%3E%3C/rect%3E%3Cpath d='M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1'%3E%3C/path%3E%3C/svg%3E")`,
                 }}
               ></span>
-              {this.copied ? 'Copied!' : 'Copy'}
-            </button>
-            <button
-              onClick={this.toggleView}
-              class="flex items-center gap-1 py-1.5 px-3 rounded-md bg-gray-100 border border-gray-200 text-gray-800 text-xs font-medium cursor-pointer transition-all duration-200 hover:bg-gray-50 hover:border-gray-500 ${this.theme === 'dark' ? 'bg-gray-900 border-gray-600 text-gray-50 hover:bg-gray-700 hover:border-gray-400' : ''}"
-            >
-              <span
-                class="inline-block w-4 h-4 bg-contain bg-no-repeat bg-center"
-                style={{
-                  backgroundImage:
-                    this.currentViewMode === 'tree'
-                      ? `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='16 18 22 12 16 6'%3E%3C/polyline%3E%3Cpolyline points='8 6 2 12 8 18'%3E%3C/polyline%3E%3C/svg%3E")`
-                      : `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z'%3E%3C/path%3E%3C/svg%3E")`,
-                }}
-              ></span>
-              {this.currentViewMode === 'tree' ? 'Code View' : 'Tree View'}
-            </button>
-            <button
-              onClick={this.downloadJson}
-              class="flex items-center gap-1 py-1.5 px-3 rounded-md bg-gray-100 border border-gray-200 text-gray-800 text-xs font-medium cursor-pointer transition-all duration-200 hover:bg-gray-50 hover:border-gray-500 ${this.theme === 'dark' ? 'bg-gray-900 border-gray-600 text-gray-50 hover:bg-gray-700 hover:border-gray-400' : ''}"
-              title="Download JSON file"
-            >
-              <span
-                class="inline-block w-4 h-4 bg-contain bg-no-repeat bg-center"
-                style={{
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4'%3E%3C/path%3E%3Cpolyline points='7 10 12 15 17 10'%3E%3C/polyline%3E%3Cline x1='12' y1='15' x2='12' y2='3'%3E%3C/line%3E%3C/svg%3E")`,
-                }}
-              ></span>
-              Download
-            </button>
-          </div>
-        </div>
+            )}
+          </button>
 
-        <div class={`overflow-auto ${this.theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`} style={containerStyle}>
           {/* Tree View */}
           {this.currentViewMode === 'tree' && (
-            <div class="p-4">
+            <div class={`p-4 pr-12 ${this.theme === 'dark' ? '' : 'bg-gray-50'}`}>
               {Object.entries(this.parsedData).map(([key, value], index) => (
                 <div key={`root-${index}`}>{this.renderTreeNode(key, value, 0, 'root')}</div>
               ))}
@@ -380,7 +361,7 @@ export class JsonViewer {
 
           {/* Code View */}
           {this.currentViewMode === 'code' && (
-            <div class={`font-mono text-sm ${this.theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'}`}>
+            <div class={`font-mono text-sm pr-12 ${this.theme === 'dark' ? '' : 'bg-gray-50'}`}>
               {this.showLineNumbers ? (
                 <div class="flex">
                   <div
