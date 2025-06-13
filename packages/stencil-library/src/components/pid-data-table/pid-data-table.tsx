@@ -154,8 +154,8 @@ export class PidDataTable {
                     </pid-tooltip>
                   </td>
                   <td class={'align-top text-sm p-2 w-full select-text relative'} role="cell">
-                    <div class="w-full min-h-7 pr-10 flex items-start relative gap-2">
-                      <div class="w-full whitespace-normal break-words overflow-y-auto">
+                    <div class="w-full min-h-7 grid grid-cols-[1fr_auto] gap-2 items-start">
+                      <div class="whitespace-normal break-words overflow-y-auto min-w-0">
                         {
                           // Load a foldable subcomponent if subcomponents are not disabled (hideSubcomponents), and the current level of subcomponents is not the total level of subcomponents. If the subcomponent is on the bottom level of the hierarchy, render just a preview. If the value should not be resolved (isFoldable), just render the value as text.
                           this.loadSubcomponents && !this.hideSubcomponents && !value.renderDynamically ? (
@@ -166,7 +166,7 @@ export class PidDataTable {
                               amountOfItems={this.itemsPerPage}
                               settings={this.settings}
                               openByDefault={false}
-                              class="flex-grow"
+                              class="w-full min-w-0 overflow-hidden pr-2"
                             />
                           ) : !this.hideSubcomponents && this.currentLevelOfSubcomponents === this.levelOfSubcomponents && !value.renderDynamically ? (
                             <pid-component
@@ -177,18 +177,20 @@ export class PidDataTable {
                               settings={this.settings}
                               hideSubcomponents={true}
                               openByDefault={false}
-                              class="flex-grow"
+                              class="w-full min-w-0 overflow-hidden pr-2"
                             />
                           ) : (
                             <span class={'font-mono text-sm overflow-x-auto whitespace-normal break-words inline-block max-w-full'}>{value.value}</span>
                           )
                         }
                       </div>
-                      <copy-button
-                        value={value.value}
-                        class="absolute right-2 top-2 flex-shrink-0 z-30 opacity-100 visible hover:z-35 cursor-pointer"
-                        aria-label={`Copy ${value.keyTitle} value`}
-                      />
+                      <div class="flex-shrink-0">
+                        <copy-button
+                          value={value.value}
+                          class="z-50 opacity-100 visible cursor-pointer bg-white/90 hover:bg-white rounded-sm shadow-sm hover:shadow-md transition-all duration-200"
+                          aria-label={`Copy ${value.keyTitle} value`}
+                        />
+                      </div>
                     </div>
                   </td>
                 </tr>
