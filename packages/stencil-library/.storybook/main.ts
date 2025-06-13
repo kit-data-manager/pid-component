@@ -4,7 +4,12 @@ import { dirname, join } from 'node:path';
 const require = createRequire(import.meta.url);
 export default {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
-  addons: [getAbsolutePath('@storybook/addon-links'), getAbsolutePath('@storybook/addon-docs')],
+  addons: [
+    getAbsolutePath('@storybook/addon-links'),
+    getAbsolutePath('@storybook/addon-docs'),
+    getAbsolutePath('@chromatic-com/storybook'),
+    getAbsolutePath('@storybook/addon-a11y'),
+  ],
   staticDirs: [
     { from: '../dist', to: '/assets' },
     { from: '../loader', to: '/assets' },

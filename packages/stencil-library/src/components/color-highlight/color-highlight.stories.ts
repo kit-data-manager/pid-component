@@ -2,7 +2,7 @@ import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 
 const meta: Meta = {
-  title: 'color-highlight',
+  title: 'Renderer/Color Highlight',
   component: 'color-highlight',
   argTypes: {
     text: {

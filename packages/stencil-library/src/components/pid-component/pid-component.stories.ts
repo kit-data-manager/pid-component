@@ -1,150 +1,92 @@
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 
+/**
+ * The pid-component is a versatile component for displaying and interacting with
+ * persistent identifiers (PIDs). It supports various display modes, subcomponent
+ * management, and adaptive pagination.
+ */
 const meta: Meta = {
-  title: 'pid-component',
+  title: 'PID-Component',
   component: 'pid-component',
+  tags: ['autodocs'],
   argTypes: {
     value: {
-      description: 'The text to display (required)',
-      control: {
-        required: true,
-        type: 'text',
+      description: 'The value to parse, evaluate and render',
+      control: { type: 'text' },
+      table: {
+        type: { summary: 'string' },
       },
     },
     settings: {
-      description: 'The settings to use for the component',
-      control: {
-        type: 'text',
+      description: 'A stringified JSON object containing settings for this component',
+      control: { type: 'text' },
+      table: {
+        defaultValue: { summary: '[]' },
+        type: { summary: 'string' },
       },
     },
     openByDefault: {
-      name: 'open-by-default',
-      description: 'Determines whether the component is opened by default',
-      defaultValue: false,
-      control: {
-        type: 'boolean',
-      },
+      description: 'Determines whether the component is open or not by default',
+      control: { type: 'boolean' },
       table: {
-        defaultValue: {
-          summary: 'false',
-        },
-        type: {
-          summary: 'boolean',
-        },
+        type: { summary: 'boolean' },
       },
     },
     amountOfItems: {
-      name: 'amount-of-items',
-      description: 'The amount of items to show in the table',
-      defaultValue: 10,
+      description: 'The number of items to show in the table per page',
       control: {
         type: 'number',
+        min: 1,
       },
       table: {
-        defaultValue: {
-          summary: '10',
-        },
-        type: {
-          summary: 'number',
-        },
-      },
-    },
-    hideSubcomponents: {
-      name: 'hide-subcomponents',
-      description:
-        "Determines whether subcomponents should generally be shown or not. If set to true, the component won't show any subcomponents. If not set, the component will show subcomponents, if the current level of subcomponents is not the total level of subcomponents or greater.",
-      defaultValue: false,
-      control: {
-        type: 'boolean',
-      },
-      table: {
-        defaultValue: {
-          summary: 'false',
-        },
-        type: {
-          summary: 'boolean',
-        },
-      },
-    },
-    emphasizeComponent: {
-      name: 'emphasize-component',
-      description: 'Determines whether components should be emphasized towards their surrounding by border and shadow.',
-      defaultValue: true,
-      control: {
-        type: 'boolean',
-      },
-      table: {
-        defaultValue: {
-          summary: 'true',
-        },
-        type: {
-          summary: 'boolean',
-        },
-      },
-    },
-    showTopLevelCopy: {
-      name: 'show-top-level-copy',
-      description: ' Determines whether on the top level the copy button is shown.',
-      defaultValue: true,
-      control: {
-        type: 'boolean',
-      },
-      table: {
-        defaultValue: {
-          summary: 'true',
-        },
-        type: {
-          summary: 'boolean',
-        },
+        defaultValue: { summary: '10' },
+        type: { summary: 'number' },
       },
     },
     levelOfSubcomponents: {
-      name: 'level-of-subcomponents',
-      description: 'The maximum level of subcomponents to show. ',
-      defaultValue: 1,
+      description: 'The total number of levels of subcomponents to show',
       control: {
         type: 'number',
+        min: 0,
       },
       table: {
-        defaultValue: {
-          summary: '1',
-        },
-        type: {
-          summary: 'number',
-        },
+        defaultValue: { summary: '1' },
+        type: { summary: 'number' },
       },
     },
     currentLevelOfSubcomponents: {
-      name: 'current-level-of-subcomponents',
-      description: 'The current elevation level of the subcomponents.',
-      defaultValue: 0,
+      description: 'The current level of subcomponents',
       control: {
         type: 'number',
+        min: 0,
       },
       table: {
-        defaultValue: {
-          summary: '0',
-        },
-        type: {
-          summary: 'number',
-        },
+        defaultValue: { summary: '0' },
+        type: { summary: 'number' },
       },
     },
-    defaultTTL: {
-      name: 'default-TTL',
-      description: 'The default TTL for entries in the IndexedDB. Is used if no TTL is set in the settings.',
-      defaultValue: 24 * 60 * 60 * 1000,
-      control: {
-        type: 'number',
-      },
+    hideSubcomponents: {
+      description: 'Determines whether subcomponents should generally be shown or not',
+      control: { type: 'boolean' },
       table: {
-        defaultValue: {
-          summary: '24*60*60*1000',
-        },
-        type: {
-          summary: 'number',
-        },
+        type: { summary: 'boolean' },
+      },
+    },
+    emphasizeComponent: {
+      description: 'Determines whether components should be emphasized towards their surrounding by border and shadow',
+      control: { type: 'boolean' },
+      table: {
+        defaultValue: { summary: 'true' },
+        type: { summary: 'boolean' },
+      },
+    },
+    showTopLevelCopy: {
+      description: 'Determines whether on the top level the copy button is shown',
+      control: { type: 'boolean' },
+      table: {
+        defaultValue: { summary: 'true' },
+        type: { summary: 'boolean' },
       },
     },
   },
@@ -153,13 +95,14 @@ const meta: Meta = {
     settings: '[]',
     openByDefault: false,
     amountOfItems: 10,
-    hideSubcomponents: false,
-    emphasizeComponent: true,
     levelOfSubcomponents: 1,
     currentLevelOfSubcomponents: 0,
-    defaultTTL: 24 * 60 * 60 * 1000,
+    hideSubcomponents: false,
+    emphasizeComponent: true,
+    showTopLevelCopy: true,
   },
 };
+
 const textDecorator = (story: () => unknown) =>
   html`<p class="items-center align-middle">
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
@@ -169,6 +112,7 @@ const textDecorator = (story: () => unknown) =>
     aute ${story()} irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
     officia deserunt mollit anim id est laborum.
   </p>`;
+
 export default meta;
 type Story = StoryObj;
 
@@ -426,7 +370,7 @@ export const TypedPIDMakerExampleText: Story = {
   },
   decorators: [
     (story: () => unknown) => html`
-      <p class="align-middle items-center w-1/3">
+      <p class="align-middle items-center w-2/3">
         The Typed PID Maker is an entry point to integrate digital resources into the FAIR Digital Object (FAIR DO) ecosystem. It allows creating PIDs for resources and to provide
         them with the necessary metadata to ensure that the resources can be found and understood. <br />
         As a result, a machine-readable representation of all kinds of research artifacts allows act on such FAIR Digital Objects which present themselves as PID, e.g., ${story()},
