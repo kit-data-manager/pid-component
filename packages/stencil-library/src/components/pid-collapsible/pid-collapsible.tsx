@@ -14,13 +14,24 @@ const CONSTANTS = {
 };
 
 /**
+ * Z-index scale for consistent layering
+ */
+const Z_INDICES = {
+  RESIZE_HANDLE: 10,
+  COPY_BUTTON: 20,
+  FOOTER_CONTENT: 30,
+  PAGINATION: 40,
+  STICKY_ELEMENTS: 50,
+};
+
+/**
  * SVG markup for the resize indicator
  */
 const RESIZE_INDICATOR_SVG = `
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M22 2L2 22" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
-    <path d="M22 8L8 22" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
-    <path d="M22 14L14 22" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+    <path d="M22 2L2 22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <path d="M22 8L8 22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <path d="M22 14L14 22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
   </svg>
 `;
 
@@ -29,6 +40,10 @@ const RESIZE_INDICATOR_SVG = `
  */
 type CollapsibleState = 'expanded' | 'collapsed';
 
+/**
+ * Component for creating collapsible/expandable content sections
+ * with resize capability and cross-browser compatibility
+ */
 @Component({
   tag: 'pid-collapsible',
   styleUrl: 'collapsible.css',
@@ -121,10 +136,37 @@ export class PidCollapsible {
     this.setupResizeObserver();
     this.updateAppearance();
     this.addBrowserCompatibilityListeners();
+
+    // Add clearfix for Safari - prevent text flow issues
+    if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+      this.el.style.display = 'inline-block';
+      this.el.style.verticalAlign = 'top';
+
+      // Create a clearfix element after the component
+      const clearfix = document.createElement('div');
+      clearfix.style.clear = 'both';
+      clearfix.style.display = 'block';
+      clearfix.style.height = '0';
+      clearfix.style.visibility = 'hidden';
+      clearfix.classList.add('pid-collapsible-clearfix');
+
+      // Insert after the component
+      if (this.el.parentNode) {
+        this.el.parentNode.insertBefore(clearfix, this.el.nextSibling);
+      }
+    }
   }
 
   disconnectedCallback() {
     this.cleanupResources();
+
+    // Remove any clearfix elements we created
+    if (this.el.parentNode) {
+      const clearfix = this.el.nextSibling;
+      if (clearfix && clearfix.classList && clearfix.classList.contains('pid-collapsible-clearfix')) {
+        this.el.parentNode.removeChild(clearfix);
+      }
+    }
   }
 
   /**
@@ -227,16 +269,26 @@ export class PidCollapsible {
    * Resets all dynamically applied styles and classes
    */
   private resetStyles() {
-    // Reset classes that might change between states
-    this.el.classList.remove('resize-both', 'overflow-auto', 'w-auto', 'inline-block', 'align-middle', 'overflow-hidden', 'py-0', 'my-0');
+    // Remove all dynamic classes that might change between states
+    const classesToRemove = ['resize-both', 'overflow-auto', 'w-auto', 'inline-block', 'align-middle', 'overflow-hidden', 'py-0', 'my-0', 'float-left', 'bg-white'];
+
+    classesToRemove.forEach(cls => this.el.classList.remove(cls));
+
+    // Reset inline styles
+    this.el.style.width = '';
+    this.el.style.height = '';
+    this.el.style.maxWidth = '';
+    this.el.style.maxHeight = '';
+    this.el.style.resize = '';
+    this.el.style.lineHeight = '';
   }
 
   /**
    * Applies styles for expanded state
    */
   private applyExpandedStyles() {
-    // Apply expanded state classes
-    this.el.classList.add('resize-both', 'overflow-auto', 'float-left', 'bg-white');
+    // Apply Tailwind classes for expanded state
+    this.el.classList.add('resize-both', 'overflow-auto', 'bg-white', 'relative', 'block');
 
     // Calculate optimal dimensions based on content
     const dimensions = this.calculateContentDimensions();
@@ -344,12 +396,19 @@ export class PidCollapsible {
     // Auto width for collapsed state
     this.el.style.width = 'auto';
 
-    // Apply collapsed state classes
-    this.el.classList.add('w-auto', 'float-left', 'inline-block', 'align-middle', 'overflow-hidden', 'py-0', 'my-0');
+    // Apply Tailwind classes for collapsed state
+    this.el.classList.add('w-auto', 'inline-block', 'align-middle', 'overflow-hidden', 'py-0', 'my-0', 'bg-white');
 
-    // Set line height for text
+    // Set line height for text - ensure it doesn't affect text flow
     this.el.style.height = `${this.lineHeight}px`;
     this.el.style.lineHeight = `${this.lineHeight}px`;
+
+    // Ensure proper display in Safari
+    if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+      // Add a small bottom margin to prevent text flow issues in Safari
+      this.el.style.marginBottom = '1px';
+      this.el.style.verticalAlign = 'top';
+    }
 
     // Disable resize
     this.el.style.resize = 'none';
@@ -370,10 +429,11 @@ export class PidCollapsible {
     // Remove existing indicator first
     this.removeResizeIndicator();
 
-    // Create and add new indicator
+    // Create and add new indicator with Tailwind classes
     const resizeIndicator = document.createElement('div');
-    resizeIndicator.className = 'absolute bottom-0 right-0 w-4 h-4 opacity-100 pointer-events-none resize-indicator z-50';
+    resizeIndicator.className = `absolute bottom-0 right-0 w-4 h-4 opacity-60 pointer-events-none resize-indicator cursor-nwse-resize text-slate-400 z-${Z_INDICES.RESIZE_HANDLE}`;
     resizeIndicator.innerHTML = RESIZE_INDICATOR_SVG;
+    resizeIndicator.setAttribute('aria-hidden', 'true');
     this.el.appendChild(resizeIndicator);
   }
 
@@ -438,24 +498,39 @@ export class PidCollapsible {
   }
 
   /**
-   * Generates classes for different component states
+   * Gets host classes based on current state
    */
-  private getClassesForState(state: CollapsibleState) {
-    const baseClasses = ['relative', 'mx-2', 'float-left', 'bg-white', 'font-sans'];
+  private getHostClasses() {
+    const baseClasses = ['relative', 'mx-2', 'font-sans', 'transition-all', 'duration-200', 'ease-in-out', 'box-border'];
 
-    // Add emphasis classes if needed
+    // Add emphasis classes
     if (this.emphasize) {
       baseClasses.push('border', 'border-gray-300', 'rounded-md', 'shadow-sm');
     }
 
     // Add state-specific classes
-    if (state === 'expanded') {
-      baseClasses.push('mb-2', 'overflow-auto', 'max-w-full', 'resize-both', 'text-xs');
+    if (this.expanded) {
+      baseClasses.push('mb-2', 'max-w-full', 'text-xs', 'block');
     } else {
-      baseClasses.push('my-0', 'inline-block', 'align-middle', 'overflow-hidden', 'text-sm', `h-[${this.lineHeight}px]`, `leading-[${this.lineHeight}px]`);
+      baseClasses.push('my-0', 'text-sm', 'float-left');
     }
 
-    return baseClasses.filter(Boolean).join(' ');
+    return baseClasses.join(' ');
+  }
+
+  /**
+   * Gets classes for the details element
+   */
+  private getDetailsClasses() {
+    const baseClasses = ['group', 'w-full', 'font-sans', 'transition-all', 'duration-200', 'ease-in-out', 'flex', 'flex-col'];
+
+    if (this.expanded) {
+      baseClasses.push('h-full', 'overflow-visible');
+    } else {
+      baseClasses.push('text-clip', 'overflow-hidden');
+    }
+
+    return baseClasses.join(' ');
   }
 
   /**
@@ -472,51 +547,91 @@ export class PidCollapsible {
       'focus:outline-none',
       'focus-visible:ring-2',
       'focus-visible:ring-blue-400',
+      'focus-visible:ring-offset-1',
       'rounded-lg',
       'marker:hidden',
+      '[&::-webkit-details-marker]:hidden',
+      'select-none',
     ];
 
-    // Add state-specific classes
     if (this.expanded) {
-      baseClasses.push('sticky', 'top-0', 'bg-white', 'z-10', 'border-b', 'border-gray-100', 'p-1', 'overflow-visible');
+      baseClasses.push(
+        'sticky',
+        'top-0',
+        'bg-white',
+        `z-${Z_INDICES.STICKY_ELEMENTS}`,
+        'border-b',
+        'border-gray-100',
+        'p-2',
+        'overflow-visible',
+        'backdrop-blur-sm',
+        'min-h-[2.5rem]',
+      );
     } else {
-      baseClasses.push('px-0.5', 'py-0', 'whitespace-nowrap', 'text-ellipsis', 'overflow-hidden', `h-[${this.lineHeight}px]`, `leading-[${this.lineHeight}px]`);
+      baseClasses.push('px-1', 'py-0', 'whitespace-nowrap', 'overflow-hidden', 'text-ellipsis', 'max-w-full');
+
+      // Use inline style for precise line height control
+      baseClasses.push(`h-[${this.lineHeight}px]`);
     }
 
     return baseClasses.join(' ');
   }
 
   /**
-   * Gets classes for the footer element
+   * Gets classes for the content area
+   */
+  private getContentClasses() {
+    const baseClasses = ['flex-grow', 'flex', 'flex-col', 'min-h-0'];
+
+    if (this.expanded) {
+      baseClasses.push('overflow-auto', 'p-2');
+    } else {
+      baseClasses.push('overflow-hidden', 'p-0');
+    }
+
+    return baseClasses.join(' ');
+  }
+
+  /**
+   * Gets classes for the footer container
    */
   private getFooterClasses() {
     return [
+      'flex',
+      'flex-col',
+      'w-full',
+      'mt-auto',
       'sticky',
       'bottom-0',
+      'left-0',
+      'right-0',
       'bg-white',
       'border-t',
-      'border-gray-100',
-      'p-2',
-      'flex',
-      'items-center',
-      'justify-between',
-      'gap-2',
-      'z-10',
-      'min-h-[48px]',
-      'flex-shrink-0',
+      'border-gray-200',
+      `z-${Z_INDICES.FOOTER_CONTENT}`,
+      'backdrop-blur-sm',
     ].join(' ');
   }
 
+  /**
+   * Gets classes for footer actions
+   */
+  private getFooterActionsClasses() {
+    return ['flex', 'items-center', 'justify-between', 'gap-2', 'p-2', 'min-h-[3rem]', 'flex-shrink-0', 'bg-white'].join(' ');
+  }
+
   render() {
-    // Get classes for current state
-    const hostClasses = this.getClassesForState(this.expanded ? 'expanded' : 'collapsed');
+    const hostClasses = this.getHostClasses();
+    const detailsClasses = this.getDetailsClasses();
     const summaryClasses = this.getSummaryClasses();
+    const contentClasses = this.getContentClasses();
     const footerClasses = this.getFooterClasses();
+    const footerActionsClasses = this.getFooterActionsClasses();
 
     return (
       <Host class={hostClasses}>
         <details
-          class="group w-full text-clip font-sans transition-all duration-200 ease-in-out flex flex-col h-full"
+          class={detailsClasses}
           open={this.open}
           onToggle={this.handleToggle}
           onClick={e => {
@@ -525,52 +640,58 @@ export class PidCollapsible {
           }}
         >
           <summary
-            class={`${summaryClasses} sticky top-0 z-50 bg-white`}
+            class={summaryClasses}
+            style={!this.expanded ? { lineHeight: `${this.lineHeight}px` } : {}}
             onClick={e => {
               e.stopPropagation();
               e.stopImmediatePropagation();
             }}
           >
-            <span class={`inline-flex pr-1 items-center ${this.expanded ? 'flex-wrap overflow-visible' : 'flex-nowrap overflow-x-auto'}`}>
+            <span class={`inline-flex pr-2 items-center gap-1 ${this.expanded ? 'flex-wrap overflow-visible' : 'flex-nowrap overflow-hidden min-w-0'}`}>
               {this.emphasize && (
-                <span class="flex-shrink-0 pr-1">
+                <span class="flex-shrink-0">
                   <svg
-                    class="transition group-open:-rotate-180"
+                    class="transition-transform duration-200 group-open:rotate-180 text-gray-600"
                     fill="none"
                     height="12"
-                    shape-rendering="geometricPrecision"
+                    width="12"
                     stroke="currentColor"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="1.5"
                     viewBox="0 0 12 12"
-                    width="10"
                     aria-hidden="true"
                   >
                     <path d="M 2 3 l 4 6 l 4 -6"></path>
                   </svg>
                 </span>
               )}
-              <slot name="summary"></slot>
+              <span class={this.expanded ? 'overflow-visible' : 'truncate min-w-0'}>
+                <slot name="summary"></slot>
+              </span>
             </span>
-            <slot name="summary-actions"></slot>
+            <div class="flex-shrink-0 ml-auto">
+              <slot name="summary-actions"></slot>
+            </div>
           </summary>
 
-          <div class={`flex-grow overflow-auto flex flex-col min-h-0 p-1 ${this.showFooter ? 'p-1' : ''}`}>
+          <div class={contentClasses}>
             <slot></slot>
           </div>
 
           {this.showFooter && this.expanded && (
-            <div class="flex flex-col w-full mt-auto sticky bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
+            <div class={footerClasses}>
               {/* Main footer slot for pagination */}
-              <slot name="footer"></slot>
+              <div class="bg-white border-b border-gray-100 overflow-visible z-50">
+                <slot name="footer"></slot>
+              </div>
 
               {/* Actions row */}
-              <div class={footerClasses}>
-                <div class="flex-grow">
+              <div class={footerActionsClasses}>
+                <div class="flex-grow overflow-visible">
                   <slot name="footer-left"></slot>
                 </div>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 flex-shrink-0 overflow-visible">
                   <slot name="footer-actions"></slot>
                 </div>
               </div>

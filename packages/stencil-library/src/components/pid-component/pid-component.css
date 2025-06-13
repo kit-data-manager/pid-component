@@ -2,3 +2,28 @@
 details summary::-webkit-details-marker {
   display: none;
 }
+
+/*
+ * Safari compatibility fix
+ * REASON: Ensures proper text flow in Safari which cannot be handled with Tailwind classes alone
+ */
+pid-component {
+  display: inline-block;
+  vertical-align: top;
+}
+
+/* Ensure content flow in Safari */
+@media all and (-webkit-min-device-pixel-ratio: 0) and (min-resolution: .001dpcm) {
+  pid-component {
+    /* This transform trick forces Safari to establish a new containing block */
+    transform: translateZ(0);
+  }
+
+  /* Clear after the component to prevent text flowing underneath */
+  pid-component::after {
+    content: '';
+    display: block;
+    clear: both;
+    height: 0;
+  }
+}

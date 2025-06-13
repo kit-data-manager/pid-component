@@ -1,16 +1,42 @@
-/* Hide default details marker - can't be done with Tailwind */
+/**
+ * Core CSS features that cannot be implemented with Tailwind
+ */
+
+/*
+ * Hide default details marker
+ * REASON: Browser-specific pseudo-element that cannot be targeted with Tailwind.
+ * Even with marker:hidden, webkit browsers require this specific selector.
+ */
 details summary::-webkit-details-marker {
   display: none;
 }
 
-/* Ensure resize property works correctly */
+/*
+ * Fix Safari text flow issues
+ * REASON: Safari requires explicit display and clear-after to prevent text from flowing under components.
+ * This can't be reliably done with Tailwind alone as it requires precise browser behavior control.
+ */
+pid-collapsible {
+  display: block;
+  clear: both;
+}
+
+/*
+ * Enable resize functionality
+ * REASON: The 'resize' property doesn't have corresponding Tailwind utilities
+ * and requires !important to override browser defaults in some cases.
+ */
 pid-collapsible.resize-both {
   resize: both !important;
   overflow: auto !important;
   max-width: 100% !important; /* Prevent exceeding parent container */
 }
 
-/* Safari-specific fixes */
+/*
+ * Safari-specific fixes using browser detection
+ * REASON: These browser-specific media queries and feature detection
+ * aren't possible with Tailwind's utility classes.
+ */
 @media not all and (min-resolution: .001dpcm) {
   @supports (-webkit-appearance:none) {
     pid-collapsible details {
@@ -28,7 +54,11 @@ pid-collapsible.resize-both {
   }
 }
 
-/* Style for resize handle */
+/*
+ * Custom resize handle with ::after pseudo-element
+ * REASON: Creating decorative elements with pseudo-elements isn't possible
+ * with Tailwind without plugins. The cursor:nwse-resize is also not available.
+ */
 pid-collapsible.resize-both::after {
   content: '';
   position: absolute;
@@ -37,111 +67,169 @@ pid-collapsible.resize-both::after {
   width: 10px;
   height: 10px;
   cursor: nwse-resize;
-  z-index: 30; /* Ensure resize handle is above other elements */
+  background: linear-gradient(-45deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.1) 50%, transparent 50%);
+  z-index: 10; /* Ensure resize handle is above other elements */
 }
 
-/* Ensure details element takes full height */
-pid-collapsible details {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+/*
+ * Safari enhanced support
+ * REASON: Browser-specific feature detection that Tailwind can't handle
+ */
+@supports (-webkit-appearance:none) and (not (display: -webkit-box)) {
+  pid-collapsible.resize-both {
+    resize: both !important;
+    overflow: auto !important;
+    display: block !important;
+    position: relative !important;
+  }
+
+  /* Force Safari to respect resize property */
+  pid-collapsible.resize-both::before {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: -1;
+  }
 }
 
-/* Ensure footer sticks to bottom of container */
-pid-collapsible details > div:last-of-type {
-  margin-top: auto;
-}
-
-/* Fix for Safari to ensure the footer stays at the bottom */
+/*
+ * Safari-specific flexbox fixes
+ * REASON: Webkit-specific properties aren't available in Tailwind
+ */
 @supports (-webkit-appearance:none) {
   pid-collapsible details {
-    min-height: 100%;
+    display: -webkit-box !important;
+    display: -webkit-flex !important;
+    display: flex !important;
+    -webkit-box-orient: vertical !important;
+    -webkit-box-direction: normal !important;
+    -webkit-flex-direction: column !important;
+    flex-direction: column !important;
+    min-height: 100%; /* Fix for Safari to ensure the footer stays at the bottom */
   }
 }
 
-/* Ensure dropdowns are visible */
-pid-collapsible .overflow-visible {
-  overflow: visible !important;
+/*
+ * Force style recalculation in Safari
+ * REASON: This rendering trick forces Safari to recalculate styles
+ * and can't be done with Tailwind classes
+ */
+@media all and (-webkit-min-device-pixel-ratio: 0) and (min-resolution: .001dpcm) {
+  pid-collapsible {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    /* Safari-specific clearfix to prevent text flow issues */
+    display: inline-block;
+    vertical-align: top;
+    margin-bottom: 1px; /* This tiny margin helps with layout stability */
+  }
+
+  /* Ensure collapsed state in Safari doesn't affect text flow */
+  pid-collapsible:not(.resize-both)::after {
+    content: '';
+    display: block;
+    clear: both;
+    height: 0;
+    visibility: hidden;
+  }
 }
 
-/* Ensure footer content is properly layered */
-pid-collapsible [slot="footer"],
-pid-collapsible [slot="footer-actions"],
-pid-collapsible [slot="footer-pagination"] {
-  position: relative;
-  z-index: 40;
+/*
+ * Z-index definitions for stacking contexts
+ * REASON: While Tailwind has z-index utilities, we need specific values
+ * for complex layering scenarios that can be reused consistently
+ */
+:root {
+  --z-back: -1;
+  --z-resize: 10;
+  --z-content: 20;
+  --z-footer: 30;
+  --z-header: 50;
 }
 
-/* Copy buttons should be visible within the table but hidden when scrolling under header/footer */
-pid-collapsible copy-button {
-  z-index: 30;
-}
-
-/* Make pagination container positioned above content */
-pid-collapsible pid-pagination {
-  position: relative;
-  z-index: 55;
-  width: 100%;
-}
-
-/* Ensure summary and footer are always on top */
-pid-collapsible summary {
-  position: sticky;
-  top: 0;
-  z-index: 60;
-  background-color: white;
-}
-
-pid-collapsible [slot="footer"],
-pid-collapsible [slot="footer-actions"] {
-  position: relative;
-  z-index: 60;
-  background-color: white;
-}
-
-/* Prevent pagination dropdowns from being cut off */
-pid-collapsible .overflow-visible,
-pid-pagination .overflow-visible {
-  overflow: visible !important;
-}
-
+/*
+ * Host element styles
+ * REASON: The :host selector is specific to web components and
+ * can't be targeted with Tailwind without plugins
+ */
 :host {
   display: block;
+  --initial-width: 500px;
+  --initial-height: 300px;
+  --min-width: 300px;
+  --min-height: 200px;
 }
 
-.collapsible-container {
-  min-width: var(--initial-width, 300px);
-  min-height: var(--initial-height, 200px);
-}
-
-.collapsible-container.expanded {
-  width: var(--initial-width, 500px);
-  height: var(--initial-height, 300px);
-  overflow: auto;
-  resize: both;
-}
-
+/*
+ * Responsive custom property adjustments
+ * REASON: CSS custom properties with media queries require direct CSS
+ */
 @media (max-width: 768px) {
-  .collapsible-container {
-    min-width: var(--initial-width, 250px);
-  }
-
-  .collapsible-container.expanded {
-    width: var(--initial-width, 400px);
+  :host {
+    --initial-width: 400px;
+    --min-width: 250px;
   }
 }
 
 @media (max-width: 480px) {
-  .collapsible-container {
-    min-width: var(--initial-width, 200px);
-  }
-
-  .collapsible-container.expanded {
-    width: var(--initial-width, 300px);
+  :host {
+    --initial-width: 300px;
+    --min-width: 200px;
   }
 }
-/* Ensure content area takes remaining height */
-pid-collapsible details .flex-grow {
-  flex: 1;
-  min-height: 0; /* Allow flex to shrink below content size */
+
+/*
+ * High contrast mode support
+ * REASON: Accessibility features like high contrast mode support
+ * need media queries that Tailwind doesn't provide
+ */
+@media (prefers-contrast: high) {
+  pid-collapsible summary {
+    border: 1px solid currentColor;
+  }
+
+  pid-collapsible.resize-both::after {
+    background: currentColor;
+    opacity: 0.5;
+  }
+}
+
+/*
+ * Print styles
+ * REASON: Print-specific styles aren't well-supported in Tailwind
+ * without additional configuration
+ */
+@media print {
+  pid-collapsible.resize-both {
+    resize: none !important;
+  }
+
+  pid-collapsible.resize-both::after {
+    display: none !important;
+  }
+}
+
+/*
+ * Enhanced focus management for accessibility
+ * REASON: While Tailwind has focus utilities, these specific combinations
+ * with multiple pseudo-classes aren't directly available
+ */
+pid-collapsible summary:focus-visible {
+  outline: 2px solid #0ea5e9;
+  outline-offset: 2px;
+}
+
+/*
+ * Ensure forced overflow visibility for dropdowns
+ * REASON: The !important flag is needed to override conflicting styles
+ * that might be applied from other components
+ */
+pid-collapsible .overflow-visible,
+pid-pagination .overflow-visible {
+  overflow: visible !important;
 }
