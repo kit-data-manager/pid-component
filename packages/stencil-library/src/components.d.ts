@@ -77,25 +77,26 @@ export namespace Components {
        * @type {string}
        * @public
        */
-      "locale": string;
+      "loc'locale'ring;
       /**
- 'locale'Whether to show the flag of the region.
+       * Whether to show the flag of the region.
        * @type {boolean}
        * @public
        * @default true
        */
-      "showFlag": boolean;
+      "sho'showFlag'olean;
     }
-  'showFlag'e PidActions {
+
+  interface PidActions {
         /**
           * Array of actions to display
           * @default []
          */
         "actions": FoldableAction[];
-      /**
-       * Optional ID for the actions container for ARIA references
-       */
-      'actionsId'?: string;
+    /**
+     * Optional ID for the actions container for ARIA references
+     */
+    'actionsId'?: string;
     }
     /**
      * Component for creating collapsible/expandable content sections
