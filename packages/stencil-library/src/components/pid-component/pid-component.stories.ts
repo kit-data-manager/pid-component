@@ -1,165 +1,192 @@
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
+import { FoldableItem } from '../../utils/FoldableItem';
+import { FoldableAction } from '../../utils/FoldableAction';
 
+/**
+ * Create mock data items for the stories
+ */
+const createMockItems = (count: number): FoldableItem[] => {
+  return Array.from({ length: count }, (_, i) => {
+    return new FoldableItem(
+      i, // priority
+      `Property ${i + 1}`, // keyTitle
+      `Value for property ${i + 1}. This is a sample value that demonstrates the content.`, // value
+      `Tooltip for Property ${i + 1}`, // keyTooltip
+      `https://example.com/property/${i + 1}`, // keyLink
+      undefined, // valueRegex
+      false, // renderDynamically
+    );
+  });
+};
+
+/**
+ * Create mock actions for the stories
+ */
+const createMockActions = (count: number): FoldableAction[] => {
+  const styles: ('primary' | 'secondary' | 'danger')[] = ['primary', 'secondary', 'danger'];
+
+  return Array.from({ length: count }, (_, i) => {
+    const style = styles[i % styles.length];
+    return new FoldableAction(
+      i, // priority
+      `Action ${i + 1}`, // title
+      `https://example.com/action/${i + 1}`, // link
+      style, // style
+    );
+  });
+};
+
+/**
+ * Mock implementation of GenericIdentifierType for demos
+ */
+class MockIdentifier {
+  value: string;
+  items: FoldableItem[];
+  actions: FoldableAction[];
+
+  constructor(value: string, itemCount: number = 5, actionCount: number = 2) {
+    this.value = value;
+    this.items = createMockItems(itemCount);
+    this.actions = createMockActions(actionCount);
+  }
+
+  renderPreview() {
+    return this.value;
+  }
+
+  renderBody() {
+    return null;
+  }
+}
+
+/**
+ * The pid-component is a versatile component for displaying and interacting with
+ * persistent identifiers (PIDs). It supports various display modes, subcomponent
+ * management, and adaptive pagination.
+ */
 const meta: Meta = {
-  title: 'pid-component',
+  title: 'PID-Component',
   component: 'pid-component',
+  tags: ['autodocs'],
   argTypes: {
     value: {
-      description: 'The text to display (required)',
-      control: {
-        required: true,
-        type: 'text',
+      description: 'The value to parse, evaluate and render',
+      control: { type: 'text' },
+      table: {
+        type: { summary: 'string' },
       },
     },
     settings: {
-      description: 'The settings to use for the component',
-      control: {
-        type: 'text',
+      description: 'A stringified JSON object containing settings for this component',
+      control: { type: 'text' },
+      table: {
+        defaultValue: { summary: '[]' },
+        type: { summary: 'string' },
       },
     },
     openByDefault: {
-      name: 'open-by-default',
-      description: 'Determines whether the component is opened by default',
-      defaultValue: false,
-      control: {
-        type: 'boolean',
-      },
+      description: 'Determines whether the component is open or not by default',
+      control: { type: 'boolean' },
       table: {
-        defaultValue: {
-          summary: 'false',
-        },
-        type: {
-          summary: 'boolean',
-        },
+        type: { summary: 'boolean' },
       },
     },
     amountOfItems: {
-      name: 'amount-of-items',
-      description: 'The amount of items to show in the table',
-      defaultValue: 10,
+      description: 'The number of items to show in the table per page',
       control: {
         type: 'number',
+        min: 1,
       },
       table: {
-        defaultValue: {
-          summary: '10',
-        },
-        type: {
-          summary: 'number',
-        },
-      },
-    },
-    hideSubcomponents: {
-      name: 'hide-subcomponents',
-      description:
-        "Determines whether subcomponents should generally be shown or not. If set to true, the component won't show any subcomponents. If not set, the component will show subcomponents, if the current level of subcomponents is not the total level of subcomponents or greater.",
-      defaultValue: false,
-      control: {
-        type: 'boolean',
-      },
-      table: {
-        defaultValue: {
-          summary: 'false',
-        },
-        type: {
-          summary: 'boolean',
-        },
-      },
-    },
-    emphasizeComponent: {
-      name: 'emphasize-component',
-      description: 'Determines whether components should be emphasized towards their surrounding by border and shadow.',
-      defaultValue: true,
-      control: {
-        type: 'boolean',
-      },
-      table: {
-        defaultValue: {
-          summary: 'true',
-        },
-        type: {
-          summary: 'boolean',
-        },
-      },
-    },
-    showTopLevelCopy: {
-      name: 'show-top-level-copy',
-      description: ' Determines whether on the top level the copy button is shown.',
-      defaultValue: true,
-      control: {
-        type: 'boolean',
-      },
-      table: {
-        defaultValue: {
-          summary: 'true',
-        },
-        type: {
-          summary: 'boolean',
-        },
+        defaultValue: { summary: '10' },
+        type: { summary: 'number' },
       },
     },
     levelOfSubcomponents: {
-      name: 'level-of-subcomponents',
-      description: 'The maximum level of subcomponents to show. ',
-      defaultValue: 1,
+      description: 'The total number of levels of subcomponents to show',
       control: {
         type: 'number',
+        min: 0,
       },
       table: {
-        defaultValue: {
-          summary: '1',
-        },
-        type: {
-          summary: 'number',
-        },
+        defaultValue: { summary: '1' },
+        type: { summary: 'number' },
       },
     },
     currentLevelOfSubcomponents: {
-      name: 'current-level-of-subcomponents',
-      description: 'The current elevation level of the subcomponents.',
-      defaultValue: 0,
+      description: 'The current level of subcomponents',
       control: {
         type: 'number',
+        min: 0,
       },
       table: {
-        defaultValue: {
-          summary: '0',
-        },
-        type: {
-          summary: 'number',
-        },
+        defaultValue: { summary: '0' },
+        type: { summary: 'number' },
       },
     },
-    defaultTTL: {
-      name: 'default-TTL',
-      description: 'The default TTL for entries in the IndexedDB. Is used if no TTL is set in the settings.',
-      defaultValue: 24 * 60 * 60 * 1000,
-      control: {
-        type: 'number',
-      },
+    hideSubcomponents: {
+      description: 'Determines whether subcomponents should generally be shown or not',
+      control: { type: 'boolean' },
       table: {
-        defaultValue: {
-          summary: '24*60*60*1000',
-        },
-        type: {
-          summary: 'number',
-        },
+        type: { summary: 'boolean' },
+      },
+    },
+    emphasizeComponent: {
+      description: 'Determines whether components should be emphasized towards their surrounding by border and shadow',
+      control: { type: 'boolean' },
+      table: {
+        defaultValue: { summary: 'true' },
+        type: { summary: 'boolean' },
+      },
+    },
+    showTopLevelCopy: {
+      description: 'Determines whether on the top level the copy button is shown',
+      control: { type: 'boolean' },
+      table: {
+        defaultValue: { summary: 'true' },
+        type: { summary: 'boolean' },
+      },
+    },
+    adaptivePagination: {
+      description: 'Enable adaptive pagination based on available space',
+      control: { type: 'boolean' },
+      table: {
+        defaultValue: { summary: 'false' },
+        type: { summary: 'boolean' },
+      },
+    },
+    width: {
+      description: 'Initial width of the component',
+      control: { type: 'text' },
+      table: {
+        type: { summary: 'string' },
+      },
+    },
+    height: {
+      description: 'Initial height of the component',
+      control: { type: 'text' },
+      table: {
+        type: { summary: 'string' },
       },
     },
   },
   args: {
-    value: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
+    value: 'Example Value',
     settings: '[]',
     openByDefault: false,
     amountOfItems: 10,
-    hideSubcomponents: false,
-    emphasizeComponent: true,
     levelOfSubcomponents: 1,
     currentLevelOfSubcomponents: 0,
-    defaultTTL: 24 * 60 * 60 * 1000,
+    hideSubcomponents: false,
+    emphasizeComponent: true,
+    showTopLevelCopy: true,
+    adaptivePagination: false,
+    width: '500px',
+    height: '300px',
   },
 };
+
 const textDecorator = (story: () => unknown) =>
   html`<p class="items-center align-middle">
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
@@ -169,8 +196,39 @@ const textDecorator = (story: () => unknown) =>
     aute ${story()} irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
     officia deserunt mollit anim id est laborum.
   </p>`;
+
 export default meta;
 type Story = StoryObj;
+
+/**
+ * Helper function to create a pid-component with mock data
+ */
+const createComponentWithMockData = (props: Record<string, any>) => {
+  // Create container with padding and Tailwind classes
+  const container = document.createElement('div');
+  container.className = 'p-4 bg-white rounded-md';
+
+  // Create and configure the component
+  const component = document.createElement('pid-component');
+
+  // Apply all properties
+  Object.entries(props).forEach(([key, value]) => {
+    component[key] = value;
+  });
+
+  // For demo purposes, mock the database retrieval
+  // @ts-ignore - Accessing private state for demo
+  component.identifierObject = new MockIdentifier(props.value, 10, 3);
+  // @ts-ignore - Manually trigger state update
+  component.displayStatus = 'loaded';
+  // @ts-ignore - Manually populate items and actions
+  component.items = createMockItems(10);
+  // @ts-ignore - Manually populate actions
+  component.actions = createMockActions(3);
+
+  container.appendChild(component);
+  return container;
+};
 
 export const Default: Story = {
   args: {
@@ -434,4 +492,209 @@ export const TypedPIDMakerExampleText: Story = {
       </p>
     `,
   ],
+};
+
+/**
+ * Component with adaptive pagination enabled
+ */
+export const WithAdaptivePagination: Story = {
+  args: {
+    value: '21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6',
+    openByDefault: true,
+    adaptivePagination: true,
+    width: '600px',
+    height: '400px',
+  },
+  render: args => {
+    return createComponentWithMockData(args);
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `
+<pid-component
+  value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"
+  openByDefault="true"
+  adaptivePagination="true"
+  width="600px"
+  height="400px"
+></pid-component>
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Component with custom dimensions
+ */
+export const CustomDimensions: Story = {
+  args: {
+    value: 'Custom Size Component',
+    openByDefault: true,
+    width: '700px',
+    height: '350px',
+  },
+  render: args => {
+    return createComponentWithMockData(args);
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `
+<pid-component
+  value="Custom Size Component"
+  openByDefault="true"
+  width="700px"
+  height="350px"
+></pid-component>
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Component with subcomponents hidden
+ */
+export const HiddenSubcomponents: Story = {
+  args: {
+    value: 'No Subcomponents Component',
+    hideSubcomponents: true,
+    openByDefault: true,
+  },
+  render: args => {
+    return createComponentWithMockData(args);
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `
+<pid-component
+  value="No Subcomponents Component"
+  hideSubcomponents="true"
+  openByDefault="true"
+></pid-component>
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Comparison of standard and adaptive pagination
+ */
+export const PaginationComparison: Story = {
+  render: () => {
+    const container = document.createElement('div');
+    container.className = 'space-y-4';
+
+    // Header
+    const header = document.createElement('div');
+    header.className = 'text-center p-2 bg-blue-50 rounded-md';
+    header.innerHTML = 'Compare Standard (fixed) vs Adaptive Pagination';
+    container.appendChild(header);
+
+    // Instructions
+    const instructions = document.createElement('div');
+    instructions.className = 'text-sm p-2 bg-yellow-50 rounded-md mb-2';
+    instructions.innerHTML = `
+      <p><strong>Try these interactions:</strong></p>
+      <ul class="list-disc pl-5">
+        <li>Expand subcomponents in both tables to see how they behave differently</li>
+        <li>In adaptive mode, notice how other items stay on the same page when space allows</li>
+        <li>Resize your browser window to see how adaptive pagination adjusts</li>
+        <li>Use the pagination controls to manually change items per page in both modes</li>
+      </ul>
+    `;
+    container.appendChild(instructions);
+
+    // Wrapper for the two columns
+    const wrapper = document.createElement('div');
+    wrapper.className = 'flex flex-col md:flex-row gap-4 bg-gray-100 p-4 rounded-md';
+
+    // Standard pagination column
+    const standardCol = document.createElement('div');
+    standardCol.className = 'flex-1';
+
+    const standardLabel = document.createElement('div');
+    standardLabel.className = 'font-bold mb-2 p-1 bg-white rounded-md text-center';
+    standardLabel.textContent = 'Standard Pagination';
+    standardCol.appendChild(standardLabel);
+
+    const standardComponent = document.createElement('pid-component');
+    standardComponent.value = '21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6';
+    standardComponent.openByDefault = true;
+    standardComponent.amountOfItems = 10;
+
+    // Mock data for standard component
+    // @ts-ignore - Accessing private state for demo
+    standardComponent.identifierObject = new MockIdentifier('21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6', 25, 3);
+    // @ts-ignore - Manually trigger state update
+    standardComponent.displayStatus = 'loaded';
+    // @ts-ignore - Manually populate items and actions
+    standardComponent.items = createMockItems(25);
+    // @ts-ignore - Manually populate actions
+    standardComponent.actions = createMockActions(3);
+
+    standardCol.appendChild(standardComponent);
+    wrapper.appendChild(standardCol);
+
+    // Adaptive pagination column
+    const adaptiveCol = document.createElement('div');
+    adaptiveCol.className = 'flex-1';
+
+    const adaptiveLabel = document.createElement('div');
+    adaptiveLabel.className = 'font-bold mb-2 p-1 bg-white rounded-md text-center';
+    adaptiveLabel.textContent = 'Adaptive Pagination';
+    adaptiveCol.appendChild(adaptiveLabel);
+
+    const adaptiveComponent = document.createElement('pid-component');
+    adaptiveComponent.value = '21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6';
+    adaptiveComponent.openByDefault = true;
+    adaptiveComponent.adaptivePagination = true;
+    adaptiveComponent.amountOfItems = 10;
+
+    // Mock data for adaptive component
+    // @ts-ignore - Accessing private state for demo
+    adaptiveComponent.identifierObject = new MockIdentifier('21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6', 25, 3);
+    // @ts-ignore - Manually trigger state update
+    adaptiveComponent.displayStatus = 'loaded';
+    // @ts-ignore - Manually populate items and actions
+    adaptiveComponent.items = createMockItems(25);
+    // @ts-ignore - Manually populate actions
+    adaptiveComponent.actions = createMockActions(3);
+
+    adaptiveCol.appendChild(adaptiveComponent);
+    wrapper.appendChild(adaptiveCol);
+
+    container.appendChild(wrapper);
+    return container;
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `
+<!-- Standard Pagination -->
+<pid-component
+  value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"
+  openByDefault="true"
+  width="100%"
+  height="400px"
+  amountOfItems="10"
+></pid-component>
+
+<!-- Adaptive Pagination -->
+<pid-component
+  value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"
+  openByDefault="true"
+  width="100%"
+  height="400px"
+  adaptivePagination="true"
+  amountOfItems="10"
+></pid-component>
+        `,
+      },
+    },
+  },
 };

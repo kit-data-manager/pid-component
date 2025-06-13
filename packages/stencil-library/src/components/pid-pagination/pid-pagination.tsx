@@ -26,6 +26,16 @@ export class PidPagination {
   @Prop() pageSizes: number[] = [5, 10, 25, 50, 100];
 
   /**
+   * Enable adaptive pagination mode
+   */
+  @Prop() adaptivePagination: boolean = false;
+
+  /**
+   * Whether to show the items per page control
+   */
+  @Prop() showItemsPerPageControl: boolean = true;
+
+  /**
    * Event emitted when page changes
    */
   @Event() pageChange: EventEmitter<number>;
@@ -131,23 +141,32 @@ export class PidPagination {
       <div class="flex flex-wrap items-center justify-between gap-2 py-1 px-3 text-sm bg-white w-full resize-none">
         {/* Left side: Page size selector and info - ALWAYS SHOWN */}
         <div class="flex flex-wrap items-center gap-2 text-gray-600">
-          {/* Horizontal page size selector */}
-          <div class="flex items-center gap-1">
-            <span class="text-xs text-gray-600 whitespace-nowrap">Items per page:</span>
-            <div class="flex items-center gap-0.5 rounded border border-gray-200 bg-white p-0.5">
-              {this.pageSizes.map(size => (
-                <button
-                  key={`size-${size}`}
-                  onClick={() => this.handleItemsPerPageChange(size)}
-                  class={`px-2 py-0.5 text-xs rounded transition-colors resize-none ${
-                    this.itemsPerPage === size ? 'bg-blue-600 text-white font-medium' : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  {size}
-                </button>
-              ))}
+          {/* Horizontal page size selector - Only shown when not in adaptive mode and when control is enabled */}
+          {!this.adaptivePagination && this.showItemsPerPageControl && (
+            <div class="flex items-center gap-1">
+              <span class="text-xs text-gray-600 whitespace-nowrap">Items per page:</span>
+              <div class="flex items-center gap-0.5 rounded border border-gray-200 bg-white p-0.5">
+                {this.pageSizes.map(size => (
+                  <button
+                    key={`size-${size}`}
+                    onClick={() => this.handleItemsPerPageChange(size)}
+                    class={`px-2 py-0.5 text-xs rounded transition-colors resize-none ${
+                      this.itemsPerPage === size ? 'bg-blue-600 text-white font-medium' : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
+
+          {/* When in adaptive mode, show indicator */}
+          {this.adaptivePagination && (
+            <div class="flex items-center gap-1">
+              <span class="text-xs text-gray-600 whitespace-nowrap px-2 py-0.5 bg-blue-50 border border-blue-100 rounded-full">Adaptive pagination: {this.itemsPerPage} items</span>
+            </div>
+          )}
 
           <span class="hidden text-xs text-gray-600 sm:block whitespace-nowrap">
             Showing {this.displayRange.start}-{this.displayRange.end} of {this.totalItems}

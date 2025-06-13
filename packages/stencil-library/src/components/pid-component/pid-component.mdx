@@ -138,6 +138,36 @@ You can also render multiple e-mail addresses separated by a comma.
 
 <Canvas of={PIDComponentStories.Fallback} />
 
+## Adaptive Pagination
+
+The component supports adaptive pagination, which automatically adjusts the number of items shown per page based on the available space. This ensures the data table is always fully visible without internal scrolling.
+
+When you enable adaptive pagination:
+- The component will calculate how many items can fit in the available space
+- The pagination will automatically adjust when the container is resized
+- The `amount-of-items` property becomes the initial value that can be unrestricted changed by the user
+- The component will estimate row heights using the `estimated-row-height` property
+- When a subcomponent is expanded, other items remain on the same page if space allows
+- If space is limited, items will automatically reflow to the next page as needed
+- The parent component size remains fixed, ensuring a consistent layout
+
+Users can manually adjust the number of items per page using the pagination controls, even in adaptive mode. This gives users full control over the display while still benefiting from the automatic space optimization.
+
+To enable adaptive pagination, set the `adaptive-pagination` attribute to `true`:
+
+```html
+<pid-component
+  value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"
+  adaptive-pagination="true"
+  amount-of-items="10"
+  estimated-row-height="40">
+</pid-component>
+```
+
+This is particularly useful for responsive layouts where the available space may change based on screen size or user interactions, or when working with complex data that includes expandable subcomponents.
+
+<Canvas of={PIDComponentStories.WithAdaptivePagination} />
+
 ## Inside a text
 
 You can also use the component in text.
@@ -156,3 +186,5 @@ This is an example where the subcomponents are hidden and the component is not e
 This is an example where an ORCiD is rendered in text.
 
 <Canvas of={PIDComponentStories.ORCIDInText} />
+
+## Adaptive Pagination

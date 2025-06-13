@@ -1,22 +1,21 @@
 import { Meta, StoryObj } from '@storybook/web-components-vite';
-import { html } from 'lit';
 import { FoldableItem } from '../../utils/FoldableItem';
 
-// Create mock FoldableItem objects for the story
-const mockItems = [
-  new FoldableItem(1, 'Name', 'John Doe', 'The name of the person', 'https://example.com/john', null, false),
-  new FoldableItem(2, 'Email', 'john.doe@example.com', 'The email address of the person', 'mailto:john.doe@example.com', null, false),
-  new FoldableItem(3, 'Phone', '+1 123-456-7890', 'The phone number of the person', 'tel:+11234567890', null, false),
-  new FoldableItem(4, 'Address', '123 Main St, Anytown, USA', 'The address of the person', 'https://maps.google.com/?q=123+Main+St,+Anytown,+USA', null, false),
-  new FoldableItem(5, 'Birthday', '1990-01-01', 'The birthday of the person', null, null, false),
-  new FoldableItem(6, 'Website', 'https://example.com', 'The website of the person', 'https://example.com', null, false),
-  new FoldableItem(7, 'Bio', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 'The biography of the person', null, null, false),
-  new FoldableItem(8, 'Twitter', '@johndoe', 'The Twitter handle of the person', 'https://twitter.com/johndoe', null, false),
-  new FoldableItem(9, 'GitHub', 'johndoe', 'The GitHub username of the person', 'https://github.com/johndoe', null, false),
-  new FoldableItem(10, 'LinkedIn', 'johndoe', 'The LinkedIn username of the person', 'https://linkedin.com/in/johndoe', null, false),
-  new FoldableItem(11, 'Facebook', 'johndoe', 'The Facebook username of the person', 'https://facebook.com/johndoe', null, false),
-  new FoldableItem(12, 'Instagram', 'johndoe', 'The Instagram username of the person', 'https://instagram.com/johndoe', null, false),
-];
+// Create mock data items
+const createMockItems = (count: number): FoldableItem[] => {
+  return Array.from({ length: count }, (_, i) => {
+    // Create FoldableItem with proper constructor arguments
+    return new FoldableItem(
+      i, // priority
+      `Property ${i + 1}`, // keyTitle
+      `Value for property ${i + 1}. This is a sample value that demonstrates the content.`, // value
+      `Tooltip for Property ${i + 1}`, // keyTooltip
+      `https://example.com/property/${i + 1}`, // keyLink
+      undefined, // valueRegex
+      false, // renderDynamically
+    );
+  });
+};
 
 const meta: Meta = {
   title: 'Internal/Data Table',
@@ -24,14 +23,18 @@ const meta: Meta = {
   argTypes: {
     items: {
       description: 'Array of items to display in the table',
-      control: {
-        type: 'object',
+      control: 'object',
+      table: {
+        type: {
+          summary: 'FoldableItem[]',
+        },
       },
     },
     itemsPerPage: {
       description: 'Number of items to show per page',
       control: {
         type: 'number',
+        min: 1,
       },
       table: {
         defaultValue: {
@@ -46,6 +49,7 @@ const meta: Meta = {
       description: 'Current page (0-based index)',
       control: {
         type: 'number',
+        min: 0,
       },
       table: {
         defaultValue: {
@@ -53,6 +57,20 @@ const meta: Meta = {
         },
         type: {
           summary: 'number',
+        },
+      },
+    },
+    pageSizes: {
+      description: 'Available page sizes',
+      control: {
+        type: 'object',
+      },
+      table: {
+        defaultValue: {
+          summary: '[5, 10, 25, 50, 100]',
+        },
+        type: {
+          summary: 'number[]',
         },
       },
     },
@@ -88,6 +106,7 @@ const meta: Meta = {
       description: 'Current level of subcomponents',
       control: {
         type: 'number',
+        min: 0,
       },
       table: {
         defaultValue: {
@@ -102,6 +121,7 @@ const meta: Meta = {
       description: 'Total level of subcomponents',
       control: {
         type: 'number',
+        min: 0,
       },
       table: {
         defaultValue: {
@@ -126,135 +146,93 @@ const meta: Meta = {
         },
       },
     },
+    adaptivePagination: {
+      description: 'Enable adaptive pagination mode',
+      control: {
+        type: 'boolean',
+      },
+      table: {
+        defaultValue: {
+          summary: 'false',
+        },
+        type: {
+          summary: 'boolean',
+        },
+      },
+    },
   },
   args: {
-    items: mockItems,
-    itemsPerPage: 5,
+    items: createMockItems(25),
+    itemsPerPage: 10,
     currentPage: 0,
+    pageSizes: [5, 10, 25, 50, 100],
     loadSubcomponents: false,
     hideSubcomponents: false,
     currentLevelOfSubcomponents: 0,
     levelOfSubcomponents: 1,
     settings: '[]',
+    adaptivePagination: false,
+  },
+  parameters: {
+    actions: {
+      handles: ['pageChange', 'itemsPerPageChange'],
+    },
   },
 };
+
 export default meta;
 type Story = StoryObj;
 
-export const Default: Story = {
-  args: {
-    items: mockItems,
-    itemsPerPage: 5,
-  },
-  render: args => html`
-    <div style="width: 800px; border: 1px solid #ccc; padding: 10px; margin: 20px;">
-      <pid-data-table
-        .items=${args.items}
-        itemsPerPage=${args.itemsPerPage}
-        currentPage=${args.currentPage}
-        loadSubcomponents=${args.loadSubcomponents}
-        hideSubcomponents=${args.hideSubcomponents}
-        currentLevelOfSubcomponents=${args.currentLevelOfSubcomponents}
-        levelOfSubcomponents=${args.levelOfSubcomponents}
-        settings=${args.settings}
-        @pageChange=${e => console.log('Page changed to', e.detail)}
-      ></pid-data-table>
-    </div>
-  `,
-  parameters: {
-    docs: {
-      source: {
-        code: `
-<pid-data-table
-  itemsPerPage="5"
-  currentPage="0"
-  loadSubcomponents="false"
-  hideSubcomponents="false"
-  currentLevelOfSubcomponents="0"
-  levelOfSubcomponents="1"
-  settings="[]"
-></pid-data-table>
-        `,
-      },
+// Helper function to create data table story
+const createDataTableStory = (props: Record<string, any>) => {
+  return {
+    render: () => {
+      // Create data table element
+      const dataTable = document.createElement('pid-data-table');
+
+      // Apply all properties
+      Object.entries(props).forEach(([key, value]) => {
+        if (key === 'items') {
+          // Special handling for items array
+          dataTable.items = value;
+        } else {
+          dataTable[key] = value;
+        }
+      });
+
+      // Create container with styling
+      const container = document.createElement('div');
+      container.className = 'p-4 max-w-3xl';
+      container.appendChild(dataTable);
+
+      return container;
     },
-  },
+  };
 };
 
-export const WithMoreItemsPerPage: Story = {
-  args: {
-    items: mockItems,
-    itemsPerPage: 10,
-  },
-  render: args => html`
-    <div style="width: 800px; border: 1px solid #ccc; padding: 10px; margin: 20px;">
-      <pid-data-table
-        .items=${args.items}
-        itemsPerPage=${args.itemsPerPage}
-        currentPage=${args.currentPage}
-        loadSubcomponents=${args.loadSubcomponents}
-        hideSubcomponents=${args.hideSubcomponents}
-        currentLevelOfSubcomponents=${args.currentLevelOfSubcomponents}
-        levelOfSubcomponents=${args.levelOfSubcomponents}
-        settings=${args.settings}
-        @pageChange=${e => console.log('Page changed to', e.detail)}
-      ></pid-data-table>
-    </div>
-  `,
-  parameters: {
-    docs: {
-      source: {
-        code: `
-<pid-data-table
-  itemsPerPage="10"
-  currentPage="0"
-  loadSubcomponents="false"
-  hideSubcomponents="false"
-  currentLevelOfSubcomponents="0"
-  levelOfSubcomponents="1"
-  settings="[]"
-></pid-data-table>
-        `,
-      },
-    },
-  },
-};
+export const Default: Story = createDataTableStory({
+  items: createMockItems(25),
+  itemsPerPage: 10,
+});
 
-export const WithLoadSubcomponents: Story = {
-  args: {
-    items: mockItems,
-    itemsPerPage: 5,
-    loadSubcomponents: true,
-  },
-  render: args => html`
-    <div style="width: 800px; border: 1px solid #ccc; padding: 10px; margin: 20px;">
-      <pid-data-table
-        .items=${args.items}
-        itemsPerPage=${args.itemsPerPage}
-        currentPage=${args.currentPage}
-        loadSubcomponents=${args.loadSubcomponents}
-        hideSubcomponents=${args.hideSubcomponents}
-        currentLevelOfSubcomponents=${args.currentLevelOfSubcomponents}
-        levelOfSubcomponents=${args.levelOfSubcomponents}
-        settings=${args.settings}
-        @pageChange=${e => console.log('Page changed to', e.detail)}
-      ></pid-data-table>
-    </div>
-  `,
-  parameters: {
-    docs: {
-      source: {
-        code: `
-<pid-data-table
-  itemsPerPage="5"
-  currentPage="0"
-  loadSubcomponents="true"
-  hideSubcomponents="false"
-  currentLevelOfSubcomponents="0"
-  levelOfSubcomponents="1"
-  settings="[]"
-></pid-data-table>
-        `,
-      },
-    },
-  },
-};
+export const SmallPageSize: Story = createDataTableStory({
+  items: createMockItems(25),
+  itemsPerPage: 5,
+});
+
+export const LargePageSize: Story = createDataTableStory({
+  items: createMockItems(25),
+  itemsPerPage: 25,
+});
+
+export const WithSubcomponents: Story = createDataTableStory({
+  items: createMockItems(15),
+  itemsPerPage: 10,
+  loadSubcomponents: true,
+});
+
+export const AdaptivePagination: Story = createDataTableStory({
+  items: createMockItems(50),
+  itemsPerPage: 10,
+  adaptivePagination: true,
+});

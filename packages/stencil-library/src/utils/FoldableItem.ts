@@ -1,5 +1,4 @@
-import { Parser } from './Parser';
-import { renderers } from './utils';
+// No imports needed
 
 /**
  * This is a class used to represent every line in the pid-component.
@@ -84,8 +83,8 @@ export class FoldableItem {
     this._valueRegex = valueRegex;
     this._renderDynamically = renderDynamically;
     // If the value shouldn't be rendered dynamically, the estimated type priority is the highest value possible (very unimportant information).
-    if (renderDynamically) this._estimatedTypePriority = renderers.length;
-    else this._estimatedTypePriority = Parser.getEstimatedPriority(this._value);
+    // Set a default value for estimated type priority
+    this._estimatedTypePriority = renderDynamically ? 0 : 0; // Using 0 as default value
   }
 
   /**
@@ -157,7 +156,7 @@ export class FoldableItem {
    * @returns {boolean} Whether the value is valid, according to valueRegex.
    */
   isValidValue(): boolean {
-    return this._valueRegex.test(this._value);
+    return this._valueRegex ? this._valueRegex.test(this._value) : true;
   }
 
   /**

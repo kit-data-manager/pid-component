@@ -106,29 +106,36 @@ export const PidActions: StencilReactComponent<PidActionsElement, PidActionsEven
   defineCustomElement: definePidActions,
 });
 
-export type PidCollapsibleEvents = { onCollapsibleToggle: EventName<CustomEvent<boolean>> };
+export type PidCollapsibleEvents = {
+  onCollapsibleToggle: EventName<CustomEvent<boolean>>,
+  onCollapsibleResize: EventName<CustomEvent<{ width: number; height: number }>>
+};
 
 export const PidCollapsible: StencilReactComponent<PidCollapsibleElement, PidCollapsibleEvents> = /*@__PURE__*/ createComponent<PidCollapsibleElement, PidCollapsibleEvents>({
   tagName: 'pid-collapsible',
   elementClass: PidCollapsibleElement,
   // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
   react: React,
-  events: { onCollapsibleToggle: 'collapsibleToggle' } as PidCollapsibleEvents,
+  events: {
+    onCollapsibleToggle: 'collapsibleToggle',
+    onCollapsibleResize: 'collapsibleResize',
+  } as PidCollapsibleEvents,
   defineCustomElement: definePidCollapsible,
 });
 
-export type PidComponentEvents = NonNullable<unknown>;
+export type PidComponentEvents = { onCollapsibleToggle: EventName<CustomEvent<boolean>> };
 
 export const PidComponent: StencilReactComponent<PidComponentElement, PidComponentEvents> = /*@__PURE__*/ createComponent<PidComponentElement, PidComponentEvents>({
   tagName: 'pid-component',
   elementClass: PidComponentElement,
   // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
   react: React,
-  events: {} as PidComponentEvents,
+  events: { onCollapsibleToggle: 'collapsibleToggle' } as PidComponentEvents,
   defineCustomElement: definePidComponent,
 });
 
 export type PidDataTableEvents = {
+  onRowHeightsChange: EventName<CustomEvent<{ totalHeight: number, averageHeight: number }>>,
   onPageChange: EventName<CustomEvent<number>>,
   onItemsPerPageChange: EventName<CustomEvent<number>>
 };
@@ -139,6 +146,7 @@ export const PidDataTable: StencilReactComponent<PidDataTableElement, PidDataTab
   // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
   react: React,
   events: {
+    onRowHeightsChange: 'rowHeightsChange',
     onPageChange: 'pageChange',
     onItemsPerPageChange: 'itemsPerPageChange',
   } as PidDataTableEvents,
