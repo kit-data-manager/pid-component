@@ -51,6 +51,10 @@ A collapsible component that can be toggled between expanded and collapsed state
 | `(default)`       | Main content of the collapsible    |
 <!-- Auto Generated Below -->
 
+## Overview
+
+Component for creating collapsible/expandable content sections
+with resize capability and cross-browser compatibility
 
 ## Properties
 

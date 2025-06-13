@@ -86,6 +86,10 @@ export namespace Components {
          */
         "actions": FoldableAction[];
     }
+    /**
+     * Component for creating collapsible/expandable content sections
+     * with resize capability and cross-browser compatibility
+     */
     interface PidCollapsible {
         /**
           * Whether to emphasize the component with border and shadow
@@ -340,6 +344,10 @@ declare global {
     interface HTMLPidCollapsibleElementEventMap {
         "collapsibleToggle": boolean;
     }
+    /**
+     * Component for creating collapsible/expandable content sections
+     * with resize capability and cross-browser compatibility
+     */
     interface HTMLPidCollapsibleElement extends Components.PidCollapsible, HTMLStencilElement {
         addEventListener<K extends keyof HTMLPidCollapsibleElementEventMap>(type: K, listener: (this: HTMLPidCollapsibleElement, ev: PidCollapsibleCustomEvent<HTMLPidCollapsibleElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
@@ -495,6 +503,10 @@ declare namespace LocalJSX {
          */
         "actions"?: FoldableAction[];
     }
+    /**
+     * Component for creating collapsible/expandable content sections
+     * with resize capability and cross-browser compatibility
+     */
     interface PidCollapsible {
         /**
           * Whether to emphasize the component with border and shadow
@@ -740,6 +752,10 @@ declare module "@stencil/core" {
             "json-viewer": LocalJSX.JsonViewer & JSXBase.HTMLAttributes<HTMLJsonViewerElement>;
             "locale-visualization": LocalJSX.LocaleVisualization & JSXBase.HTMLAttributes<HTMLLocaleVisualizationElement>;
             "pid-actions": LocalJSX.PidActions & JSXBase.HTMLAttributes<HTMLPidActionsElement>;
+            /**
+             * Component for creating collapsible/expandable content sections
+             * with resize capability and cross-browser compatibility
+             */
             "pid-collapsible": LocalJSX.PidCollapsible & JSXBase.HTMLAttributes<HTMLPidCollapsibleElement>;
             "pid-component": LocalJSX.PidComponent & JSXBase.HTMLAttributes<HTMLPidComponentElement>;
             "pid-data-table": LocalJSX.PidDataTable & JSXBase.HTMLAttributes<HTMLPidDataTableElement>;

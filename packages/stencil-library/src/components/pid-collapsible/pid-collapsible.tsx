@@ -36,11 +36,6 @@ const RESIZE_INDICATOR_SVG = `
 `;
 
 /**
- * Type definition for component states
- */
-type CollapsibleState = 'expanded' | 'collapsed';
-
-/**
  * Component for creating collapsible/expandable content sections
  * with resize capability and cross-browser compatibility
  */
@@ -163,7 +158,8 @@ export class PidCollapsible {
     // Remove any clearfix elements we created
     if (this.el.parentNode) {
       const clearfix = this.el.nextSibling;
-      if (clearfix && clearfix.classList && clearfix.classList.contains('pid-collapsible-clearfix')) {
+      // Fix: Check if it's an HTMLElement and has our class
+      if (clearfix instanceof HTMLElement && clearfix.classList.contains('pid-collapsible-clearfix')) {
         this.el.parentNode.removeChild(clearfix);
       }
     }
@@ -173,6 +169,12 @@ export class PidCollapsible {
    * Sets up the resize observer to track dimension changes
    */
   private setupResizeObserver() {
+    // Check for ResizeObserver support
+    if (!window.ResizeObserver) {
+      console.warn('ResizeObserver not supported in this browser');
+      return;
+    }
+
     // Clean up existing observer if present
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
@@ -211,12 +213,18 @@ export class PidCollapsible {
   }
 
   /**
+   * Checks if the current browser is Safari
+   */
+  private isSafari(): boolean {
+    return /^((?!chrome|android).)*safari/i.test(navigator.userAgent) && !/CriOS|FxiOS|EdgiOS/i.test(navigator.userAgent);
+  }
+
+  /**
    * Handles Safari-specific compatibility issues
    */
   private handleSafariCompatibility = (e: Event) => {
     // Only apply for Safari
-    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    if (!isSafari || this.isToggling) return;
+    if (!this.isSafari() || this.isToggling) return;
 
     this.isToggling = true;
     e.preventDefault();
@@ -272,7 +280,11 @@ export class PidCollapsible {
     // Remove all dynamic classes that might change between states
     const classesToRemove = ['resize-both', 'overflow-auto', 'w-auto', 'inline-block', 'align-middle', 'overflow-hidden', 'py-0', 'my-0', 'float-left', 'bg-white'];
 
-    classesToRemove.forEach(cls => this.el.classList.remove(cls));
+    classesToRemove.forEach(cls => {
+      if (this.el.classList.contains(cls)) {
+        this.el.classList.remove(cls);
+      }
+    });
 
     // Reset inline styles
     this.el.style.width = '';
@@ -287,26 +299,30 @@ export class PidCollapsible {
    * Applies styles for expanded state
    */
   private applyExpandedStyles() {
-    // Apply Tailwind classes for expanded state
-    this.el.classList.add('resize-both', 'overflow-auto', 'bg-white', 'relative', 'block');
+    try {
+      // Apply Tailwind classes for expanded state
+      this.el.classList.add('resize-both', 'overflow-auto', 'bg-white', 'relative', 'block');
 
-    // Calculate optimal dimensions based on content
-    const dimensions = this.calculateContentDimensions();
+      // Calculate optimal dimensions based on content
+      const dimensions = this.calculateContentDimensions();
 
-    // Apply size constraints
-    this.el.style.maxWidth = `${dimensions.maxWidth}px`;
-    this.el.style.maxHeight = `${dimensions.maxHeight}px`;
+      // Apply size constraints
+      this.el.style.maxWidth = `${dimensions.maxWidth}px`;
+      this.el.style.maxHeight = `${dimensions.maxHeight}px`;
 
-    // Set dimensions - use stored dimensions if available
-    this.updateDimensions(dimensions);
+      // Set dimensions - use stored dimensions if available
+      this.updateDimensions(dimensions);
 
-    // Enable resize and add visual indicator
-    this.el.style.resize = 'both';
-    this.addResizeIndicator();
+      // Enable resize and add visual indicator
+      this.el.style.resize = 'both';
+      this.addResizeIndicator();
 
-    // Observe for resize events
-    if (this.resizeObserver) {
-      this.resizeObserver.observe(this.el);
+      // Observe for resize events
+      if (this.resizeObserver) {
+        this.resizeObserver.observe(this.el);
+      }
+    } catch (error) {
+      console.error('Failed to apply expanded styles:', error);
     }
   }
 
@@ -404,7 +420,7 @@ export class PidCollapsible {
     this.el.style.lineHeight = `${this.lineHeight}px`;
 
     // Ensure proper display in Safari
-    if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+    if (this.isSafari()) {
       // Add a small bottom margin to prevent text flow issues in Safari
       this.el.style.marginBottom = '1px';
       this.el.style.verticalAlign = 'top';
@@ -426,15 +442,19 @@ export class PidCollapsible {
    * Adds resize indicator to the component
    */
   private addResizeIndicator() {
-    // Remove existing indicator first
-    this.removeResizeIndicator();
+    try {
+      // Remove existing indicator first
+      this.removeResizeIndicator();
 
-    // Create and add new indicator with Tailwind classes
-    const resizeIndicator = document.createElement('div');
-    resizeIndicator.className = `absolute bottom-0 right-0 w-4 h-4 opacity-60 pointer-events-none resize-indicator cursor-nwse-resize text-slate-400 z-${Z_INDICES.RESIZE_HANDLE}`;
-    resizeIndicator.innerHTML = RESIZE_INDICATOR_SVG;
-    resizeIndicator.setAttribute('aria-hidden', 'true');
-    this.el.appendChild(resizeIndicator);
+      // Create and add new indicator with Tailwind classes
+      const resizeIndicator = document.createElement('div');
+      resizeIndicator.className = `absolute bottom-0 right-0 w-4 h-4 opacity-60 pointer-events-none resize-indicator cursor-nwse-resize text-slate-400 z-${Z_INDICES.RESIZE_HANDLE}`;
+      resizeIndicator.innerHTML = RESIZE_INDICATOR_SVG;
+      resizeIndicator.setAttribute('aria-hidden', 'true');
+      this.el.appendChild(resizeIndicator);
+    } catch (error) {
+      console.error('Failed to add resize indicator:', error);
+    }
   }
 
   /**
