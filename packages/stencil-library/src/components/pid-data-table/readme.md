@@ -6,7 +6,7 @@
 ## Properties
 
 | Property                      | Attribute                        | Description                            | Type             | Default                |
-|-------------------------------|----------------------------------|----------------------------------------|------------------|------------------------|
+| ----------------------------- | -------------------------------- | -------------------------------------- | ---------------- | ---------------------- |
 | `currentLevelOfSubcomponents` | `current-level-of-subcomponents` | Current level of subcomponents         | `number`         | `0`                    |
 | `currentPage`                 | `current-page`                   | Current page (0-based index)           | `number`         | `0`                    |
 | `hideSubcomponents`           | `hide-subcomponents`             | Whether to hide subcomponents          | `boolean`        | `false`                |
@@ -21,7 +21,7 @@
 ## Events
 
 | Event                | Description                               | Type                  |
-|----------------------|-------------------------------------------|-----------------------|
+| -------------------- | ----------------------------------------- | --------------------- |
 | `itemsPerPageChange` | Event emitted when items per page changes | `CustomEvent<number>` |
 | `pageChange`         | Event emitted when page changes           | `CustomEvent<number>` |
 

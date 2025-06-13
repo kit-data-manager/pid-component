@@ -6,7 +6,7 @@
 ## Properties
 
 | Property                  | Attribute                     | Description                                | Type       | Default                |
-|---------------------------|-------------------------------|--------------------------------------------|------------|------------------------|
+| ------------------------- | ----------------------------- | ------------------------------------------ | ---------- | ---------------------- |
 | `adaptivePagination`      | `adaptive-pagination`         | Enable adaptive pagination mode            | `boolean`  | `false`                |
 | `currentPage`             | `current-page`                | Current page (0-based index)               | `number`   | `0`                    |
 | `itemsPerPage`            | `items-per-page`              | Number of items per page                   | `number`   | `10`                   |

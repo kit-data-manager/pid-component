@@ -60,7 +60,7 @@ with resize capability and cross-browser compatibility
 ## Properties
 
 | Property        | Attribute        | Description                                               | Type      | Default     |
-|-----------------|------------------|-----------------------------------------------------------|-----------|-------------|
+| --------------- | ---------------- | --------------------------------------------------------- | --------- | ----------- |
 | `emphasize`     | `emphasize`      | Whether to emphasize the component with border and shadow | `boolean` | `false`     |
 | `expanded`      | `expanded`       | Whether the component is in expanded mode (full size)     | `boolean` | `false`     |
 | `initialHeight` | `initial-height` | Initial height when expanded                              | `string`  | `undefined` |
@@ -73,7 +73,7 @@ with resize capability and cross-browser compatibility
 ## Events
 
 | Event               | Description                                   | Type                   |
-|---------------------|-----------------------------------------------|------------------------|
+| ------------------- | --------------------------------------------- | ---------------------- |
 | `collapsibleToggle` | Event emitted when the collapsible is toggled | `CustomEvent<boolean>` |
 
 

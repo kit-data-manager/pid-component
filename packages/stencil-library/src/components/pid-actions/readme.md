@@ -6,7 +6,7 @@
 ## Properties
 
 | Property    | Attribute    | Description                                               | Type               | Default     |
-|-------------|--------------|-----------------------------------------------------------|--------------------|-------------|
+| ----------- | ------------ | --------------------------------------------------------- | ------------------ | ----------- |
 | `actions`   | `actions`    | Array of actions to display                               | `FoldableAction[]` | `[]`        |
 | `actionsId` | `actions-id` | Optional ID for the actions container for ARIA references | `string`           | `undefined` |
 

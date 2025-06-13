@@ -6,7 +6,7 @@
 ## Properties
 
 | Property            | Attribute     | Description                                               | Type                | Default     |
-|---------------------|---------------|-----------------------------------------------------------|---------------------|-------------|
+| ------------------- | ------------- | --------------------------------------------------------- | ------------------- | ----------- |
 | `fitContent`        | `fit-content` | Whether the tooltip should fit its content height exactly | `boolean`           | `true`      |
 | `maxHeight`         | `max-height`  | The maximum height of the tooltip                         | `string`            | `'150px'`   |
 | `maxWidth`          | `max-width`   | The maximum width of the tooltip                          | `string`            | `'250px'`   |
@@ -17,8 +17,9 @@
 ## Events
 
 | Event                    | Description                                       | Type                                                        |
-|--------------------------|---------------------------------------------------|-------------------------------------------------------------|
+| ------------------------ | ------------------------------------------------- | ----------------------------------------------------------- |
 | `tooltipExpansionChange` | Event emitted when tooltip requires row expansion | `CustomEvent<{ expand: boolean; requiredHeight: number; }>` |
+
 
 ## Dependencies
 
