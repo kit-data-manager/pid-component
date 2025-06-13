@@ -185,10 +185,14 @@ export class PidComponent {
   }
 
   componentDidLoad() {
-    // // Add clear-after to prevent text from flowing under the component
-    // this.el.classList.add('after:content-[""]', 'after:block', 'after:clear-both');
-
     // Initialize component ID for references
+    this.ensureComponentId();
+  }
+
+  /**
+   * Ensures the component has a unique ID for accessibility references
+   */
+  private ensureComponentId() {
     if (!this.el.id) {
       this.el.id = `pid-component-${Math.random().toString(36).substr(2, 9)}`;
     }
@@ -277,6 +281,9 @@ export class PidComponent {
    * It is used to parse the value and settings, generate the items and actions, and set the displayStatus to "loaded".
    */
   async componentWillLoad() {
+    // Ensure component has an ID for accessibility references
+    this.ensureComponentId();
+
     // Validate amountOfItems to prevent division by zero
     this.validateAmountOfItems(this.amountOfItems);
 
@@ -360,7 +367,6 @@ export class PidComponent {
       this.actions.sort((a, b) => a.priority - b.priority);
     }
     this.displayStatus = 'loaded';
-    console.log('Finished loading for ', this.value, this.identifierObject);
     await clearCache();
   }
 
@@ -402,6 +408,10 @@ export class PidComponent {
   render() {
     return (
       <Host class="relative font-sans">
+        {/* Hidden description for accessibility */}
+        <span id={`${this.el.id}-description`} class="sr-only">
+          This component displays information about the identifier {this.value}. It can be expanded to show more details.
+        </span>
         {
           // Check if there are any items or actions to show, or if there's a body to render
           (this.items.length === 0 && this.actions.length === 0 && !this.identifierObject?.renderBody()) || this.hideSubcomponents ? (
@@ -418,7 +428,9 @@ export class PidComponent {
                     : ''
                 }
                 tabIndex={0}
-                aria-label="Identifier preview"
+                role="button"
+                aria-label={`Identifier preview for ${this.value}`}
+                aria-expanded={this.isExpanded}
               >
                 <span
                   class={`font-medium font-mono inline-flex flex-nowrap overflow-hidden text-ellipsis select-all whitespace-nowrap max-w-full ${this.isExpanded ? 'text-xs' : 'text-sm'}`}
@@ -428,19 +440,23 @@ export class PidComponent {
                 </span>
                 {
                   // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
-                  this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy ? <copy-button value={this.identifierObject.value} class="ml-2 flex-shrink-0" /> : ''
+                  this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy ? (
+                    <copy-button value={this.identifierObject.value} class="ml-2 flex-shrink-0" aria-label={`Copy value: ${this.identifierObject.value}`} />
+                  ) : (
+                    ''
+                  )
                 }
               </span>
             ) : this.displayStatus === 'error' ? (
-              <span class={'inline-flex items-center text-red-600 font-medium'}>
+              <span class={'inline-flex items-center text-red-600 font-medium'} role="alert" aria-live="assertive">
                 <svg class="mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                   <path fill-rule="evenodd" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-2h2v2h-2zm0-10v6h2V7h-2z" clip-rule="evenodd" />
                 </svg>
                 Error loading data for: {this.value}
               </span>
             ) : (
-              <span class={'inline-flex items-center transition ease-in-out'}>
-                <svg class="animate-spin ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-label="Loading indicator">
+              <span class={'inline-flex items-center transition ease-in-out'} role="status" aria-live="polite">
+                <svg class="animate-spin ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
                   <path
                     class="opacity-75"
@@ -448,7 +464,7 @@ export class PidComponent {
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   />
                 </svg>
-                Loading... {this.value}
+                <span>Loading... {this.value}</span>
               </span>
             )
           ) : (
@@ -466,16 +482,19 @@ export class PidComponent {
                 e.stopPropagation();
                 e.stopImmediatePropagation();
               }}
+              aria-label={`Collapsible section for ${this.value}`}
+              aria-describedby={`${this.el.id}-description`}
             >
               <span
                 slot="summary"
                 class={`font-medium font-mono inline-flex text-sm select-all ${this.isExpanded ? 'flex-wrap overflow-visible break-words' : 'flex-nowrap overflow-x-auto whitespace-nowrap'}`}
+                aria-label={`Preview of ${this.value}`}
               >
                 {this.identifierObject?.renderPreview()}
               </span>
 
               {this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy && (this.emphasizeComponent || this.temporarilyEmphasized) ? (
-                <copy-button slot="summary-actions" value={this.value} class="relative ml-auto flex-shrink-0" />
+                <copy-button slot="summary-actions" value={this.value} class="relative ml-auto flex-shrink-0" aria-label={`Copy value: ${this.value}`} />
               ) : null}
 
               {/* Table and content */}
@@ -491,8 +510,17 @@ export class PidComponent {
                   settings={this.settings}
                   onPageChange={e => (this.tablePage = e.detail)}
                   class="flex-grow overflow-auto"
+                  aria-label={`Data table for ${this.value}`}
+                  aria-describedby={`${this.el.id}-table-description`}
                 />
               ) : null}
+
+              {/* Hidden description for data table accessibility */}
+              {this.items.length > 0 && (
+                <span id={`${this.el.id}-table-description`} class="sr-only">
+                  This table displays properties and values associated with the identifier {this.value}.
+                </span>
+              )}
 
               {this.identifierObject?.renderBody()}
 
@@ -505,12 +533,16 @@ export class PidComponent {
                     itemsPerPage={this.amountOfItems}
                     onPageChange={e => (this.tablePage = e.detail)}
                     onItemsPerPageChange={e => (this.amountOfItems = e.detail)}
+                    aria-label={`Pagination controls for ${this.value} data`}
+                    aria-controls={`${this.el.id}-table`}
                   />
                 </div>
               )}
 
               {/* Footer Actions - in a separate line below pagination */}
-              {this.actions.length > 0 && <pid-actions slot="footer-actions" actions={this.actions} class="flex-shrink-0 mt-0" />}
+              {this.actions.length > 0 && (
+                <pid-actions slot="footer-actions" actions={this.actions} class="flex-shrink-0 mt-0" aria-label={`Available actions for ${this.value}`} />
+              )}
             </pid-collapsible>
           )
         }

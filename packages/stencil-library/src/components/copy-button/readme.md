@@ -5,9 +5,10 @@
 
 ## Properties
 
-| Property             | Attribute | Description                         | Type     | Default     |
-| -------------------- | --------- | ----------------------------------- | -------- | ----------- |
-| `value` _(required)_ | `value`   | The value to copy to the clipboard. | `string` | `undefined` |
+| Property             | Attribute | Description                                                                          | Type     | Default     |
+|----------------------|-----------|--------------------------------------------------------------------------------------|----------|-------------|
+| `label`              | `label`   | Optional custom label for the button. If not provided, a default label will be used. | `string` | `undefined` |
+| `value` _(required)_ | `value`   | The value to copy to the clipboard.                                                  | `string` | `undefined` |
 
 
 ## Dependencies

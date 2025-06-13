@@ -19,12 +19,18 @@ export namespace Components {
         "text": string;
     }
     interface CopyButton {
-        /**
-          * The value to copy to the clipboard.
-          * @type {string}
-          * @public
-         */
-        "value": string;
+      /**
+       * Optional custom label for the button. If not provided, a default label will be used.
+       * @type {string}
+       * @public
+       */
+      label?: string;
+      /**
+       * The value to copy to the clipboard.
+       * @type {string}
+       * @public
+       */
+      value: string;
     }
     interface JsonViewer {
         /**
@@ -71,21 +77,25 @@ export namespace Components {
        * @type {string}
        * @public
        */
-      locale: string;
+      "locale": string;
       /**
-       * Whether to show the flag of the region.
+ 'locale'Whether to show the flag of the region.
        * @type {boolean}
        * @public
        * @default true
        */
-      showFlag: boolean;
+      "showFlag": boolean;
     }
-    interface PidActions {
+  'showFlag'e PidActions {
         /**
           * Array of actions to display
           * @default []
          */
         "actions": FoldableAction[];
+      /**
+       * Optional ID for the actions container for ARIA references
+       */
+      'actionsId'?: string;
     }
     /**
      * Component for creating collapsible/expandable content sections
@@ -132,72 +142,72 @@ export namespace Components {
        * @type {number}
        * @default 10
        */
-      "amo'amountOfItems'mber;
+      'amountOfItems': number;
       /**
        * The current level of subcomponents. Defaults to 0. (optional)
        * @type {number}
        * @default 0
        */
-      "cur'currentLevelOfSubcomponents'mber;
+      'currentLevelOfSubcomponents': number;
       /**
        * Determines the default time to live (TTL) for entries in the IndexedDB. Defaults to 24 hours. Units are in milliseconds. (optional)
        * @type {number}
        * @default 24 * 60 * 60 * 1000
        */
-      "def'defaultTTL'mber;
+      'defaultTTL': number;
       /**
        * Determines whether components should be emphasized towards their surrounding by border and shadow. If set to true, border and shadows will be shown around the component. It not set, the component won't be surrounded by border and shadow. (optional)
        * @type {boolean}
        * @default true
        */
-      "emp'emphasizeComponent'olean;
+      'emphasizeComponent': boolean;
       /**
        * Initial height of the component (e.g. '300px', '50vh'). If not set, defaults to 300px.
        * @type {string}
        */
-      "hei'height'tring;
+      'height'?: string;
       /**
        * Determines whether subcomponents should generally be shown or not. If set to true, the component won't show any subcomponents. If not set, the component will show subcomponents if the current level of subcomponents is not the total level of subcomponents or greater. (optional)
        * @type {boolean}
        */
-      "hid'hideSubcomponents'olean;
+      'hideSubcomponents': boolean;
       /**
        * The total number of levels of subcomponents to show. Defaults to 1. (optional)
        * @type {number}
        * @default 1
        */
-      "lev'levelOfSubcomponents'mber;
+      'levelOfSubcomponents': number;
       /**
        * Determines whether the component is open or not by default. (optional)
        * @type {boolean}
        */
-      "ope'openByDefault'olean;
+      'openByDefault': boolean;
       /**
        * A stringified JSON object containing settings for this component. The resulting object is passed to every subcomponent, so that every component has the same settings. Values and the according type are defined by the components themselves. (optional)  Schema: ```typescript {  type: string,  values: {   name: string,   value: any  }[] }[] ```
        * @type {string}
        * @default '[]'
        */
-      "set'settings'ring;
+      'settings': string;
       /**
        * Determines whether on the top level the copy button is shown. If set to true, the copy button is shown also on the top level. It not set, the copy button is only shown for sub-components. (optional)
        * @type {boolean}
        * @default true
        */
-      "sho'showTopLevelCopy'olean;
+      'showTopLevelCopy': boolean;
       /**
        * Updates the component sizing and styling based on the expanded state This method is now handled by the pid-collapsible component
        */
-      "upd'updateComponentSizing' => Promise<void>;
+      'updateComponentSizing': () => Promise<void>;
       /**
        * The value to parse, evaluate and render.
        * @type {string}
        */
-      "val'value'ring;
+      'value': string;
       /**
        * Initial width of the component (e.g. '500px', '50%'). If not set, defaults to 500px on large screens, 400px on medium screens, and 300px on small screens.
        * @type {string}
        */
-      "wid'width'tring;
+      'width'?: string;
     }
 
   interface PidDataTable {
@@ -456,6 +466,12 @@ declare namespace LocalJSX {
     }
     interface CopyButton {
         /**
+         * Optional custom label for the button. If not provided, a default label will be used.
+         * @type {string}
+         * @public
+         */
+        'label'?: string;
+      /**
           * The value to copy to the clipboard.
           * @type {string}
           * @public
@@ -514,6 +530,10 @@ declare namespace LocalJSX {
           * @default []
          */
         "actions"?: FoldableAction[];
+      /**
+       * Optional ID for the actions container for ARIA references
+       */
+      'actionsId'?: string;
     }
     /**
      * Component for creating collapsible/expandable content sections

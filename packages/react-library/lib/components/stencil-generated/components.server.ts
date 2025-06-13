@@ -42,7 +42,10 @@ export type CopyButtonEvents = NonNullable<unknown>;
 
 export const CopyButton: StencilReactComponent<CopyButtonElement, CopyButtonEvents> = /*@__PURE__*/ createComponent<CopyButtonElement, CopyButtonEvents>({
   tagName: 'copy-button',
-  properties: { value: 'value' },
+  properties: {
+    value: 'value',
+    label: 'label',
+  },
   hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
   serializeShadowRoot,
 });
@@ -79,7 +82,10 @@ export type PidActionsEvents = NonNullable<unknown>;
 
 export const PidActions: StencilReactComponent<PidActionsElement, PidActionsEvents> = /*@__PURE__*/ createComponent<PidActionsElement, PidActionsEvents>({
   tagName: 'pid-actions',
-  properties: { actions: 'actions' },
+  properties: {
+    actions: 'actions',
+    actionsId: 'actions-id',
+  },
   hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
   serializeShadowRoot,
 });

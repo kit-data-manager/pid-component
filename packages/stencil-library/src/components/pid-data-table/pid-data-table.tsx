@@ -1,4 +1,4 @@
-import { Component, Event, EventEmitter, h, Listen, Prop, State, Watch } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Prop, State, Watch } from '@stencil/core';
 import { FoldableItem } from '../../utils/FoldableItem';
 
 @Component({
@@ -6,6 +6,10 @@ import { FoldableItem } from '../../utils/FoldableItem';
   shadow: false,
 })
 export class PidDataTable {
+  /**
+   * Unique ID for the table element
+   */
+  private tableId: string = `pid-data-table-${Math.random().toString(36).substring(2, 9)}`;
   /**
    * Array of items to display in the table
    */
@@ -67,23 +71,6 @@ export class PidDataTable {
   @State() filteredItems: FoldableItem[] = [];
 
   /**
-   * Listen for tooltip expansion events to adjust table layout if needed
-   */
-  @Listen('tooltipExpansionChange')
-  handleTooltipExpansion(event: CustomEvent<{ expand: boolean; requiredHeight: number }>) {
-    const { expand, requiredHeight } = event.detail;
-
-    if (expand) {
-      // Optionally handle table-wide adjustments when tooltip expands
-      // For now, the row expansion is handled by the tooltip itself
-      console.log(`Tooltip expanded, requiring ${requiredHeight}px height`);
-    } else {
-      // Handle cleanup when tooltip collapses
-      console.log('Tooltip collapsed');
-    }
-  }
-
-  /**
    * Watch for changes in items
    */
   @Watch('items')
@@ -108,8 +95,8 @@ export class PidDataTable {
   render() {
     if (this.items.length === 0) {
       return (
-        <div class="rounded-lg border border-gray-200 bg-gray-50 m-1 p-4 text-center text-gray-500" role="status" aria-live="polite">
-          No data available
+        <div class="rounded-lg border border-gray-200 bg-gray-50 m-1 p-4 text-center text-gray-500" role="status" aria-live="polite" aria-label="No data available">
+          <p class="m-0">No data available</p>
         </div>
       );
     }
@@ -118,7 +105,12 @@ export class PidDataTable {
       <div class="rounded-lg border border-gray-200 bg-gray-50 m-1 flex flex-col h-full">
         {/* Table container with scrollable content */}
         <div class="overflow-auto flex-grow relative z-10">
-          <table class="w-full text-left text-sm font-sans select-text border-collapse table-fixed" aria-label="Data table" role="table">
+          <table
+            id={this.tableId}
+            class="w-full text-left text-sm font-sans select-text border-collapse table-fixed"
+            aria-label="Data table with properties and values"
+            role="table"
+          >
             <thead class="bg-slate-600 text-slate-200 rounded-t-lg sticky top-0 z-20">
               <tr class="font-semibold" role="row">
                 <th class="px-2 py-2 min-w-[150px] w-[30%] rounded-tl-lg" scope="col" role="columnheader">
@@ -138,7 +130,7 @@ export class PidDataTable {
                   role="row"
                 >
                   <td class={'p-2 min-w-[150px] w-auto font-mono align-top'} role="cell">
-                    <pid-tooltip text={value.keyTooltip || `Details for ${value.keyTitle}`} position="top" maxHeight="200px">
+                    <pid-tooltip text={value.keyTooltip || `Details for ${value.keyTitle}`} position="top" maxHeight="200px" aria-label={`Information about ${value.keyTitle}`}>
                       <div slot="trigger" class="min-h-7 overflow-hidden w-full flex items-center">
                         <a
                           href={value.keyLink}
@@ -188,7 +180,8 @@ export class PidDataTable {
                         <copy-button
                           value={value.value}
                           class="z-50 opacity-100 visible cursor-pointer bg-white/90 hover:bg-white rounded-sm shadow-sm hover:shadow-md transition-all duration-200"
-                          aria-label={`Copy ${value.keyTitle} value`}
+                          aria-label={`Copy ${value.keyTitle} value to clipboard`}
+                          title={`Copy ${value.keyTitle} value to clipboard`}
                         />
                       </div>
                     </div>

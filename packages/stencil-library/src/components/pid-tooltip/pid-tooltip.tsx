@@ -250,6 +250,12 @@ export class PidTooltip {
   private estimateTooltipHeight(content: string): number {
     // Create a temporary element to measure content height
     const tempDiv = document.createElement('div');
+
+    // Add accessibility attributes to hide from screen readers and assistive tech
+    tempDiv.setAttribute('aria-hidden', 'true');
+    tempDiv.setAttribute('tabindex', '-1');
+    tempDiv.setAttribute('role', 'presentation');
+
     tempDiv.style.cssText = `
       position: absolute;
       visibility: hidden;
@@ -260,6 +266,7 @@ export class PidTooltip {
       font-size: 12px;
       line-height: 1.4;
       border: 1px solid transparent;
+      pointer-events: none;
     `;
     tempDiv.textContent = content;
 
@@ -274,8 +281,18 @@ export class PidTooltip {
     // Don't show the tooltip icon if there's no text
     const hasTooltipText = this.text && this.text.trim().length > 0;
 
+    // Determine appropriate button label based on visibility state
+    const buttonLabel = `${this.isVisible ? 'Hide' : 'Show'} additional information`;
+
     return (
       <Host class="relative inline-block w-full" onMouseEnter={this.showTooltip} onMouseLeave={this.hideTooltip}>
+        {/* Screen reader announcement for tooltip state changes */}
+        {this.isVisible && (
+          <span class="sr-only" aria-live="assertive">
+            Information tooltip opened
+          </span>
+        )}
+
         <div class="flex items-center justify-between">
           <slot name="trigger"></slot>
           {hasTooltipText && (
@@ -283,7 +300,7 @@ export class PidTooltip {
               ref={el => (this.buttonRef = el)}
               type="button"
               class="flex items-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 rounded-full p-0.5 transition-colors duration-200 hover:bg-gray-100"
-              aria-label={`${this.isVisible ? 'Hide' : 'Show'} additional information`}
+              aria-label={buttonLabel}
               aria-expanded={this.isVisible ? 'true' : 'false'}
               aria-controls={this.tooltipId}
               aria-describedby={this.isVisible ? this.tooltipId : undefined}
@@ -292,6 +309,7 @@ export class PidTooltip {
               onFocus={this.showTooltip}
               onBlur={this.hideTooltip}
               tabIndex={0}
+              title={buttonLabel}
             >
               <svg
                 aria-hidden="true"
@@ -301,11 +319,14 @@ export class PidTooltip {
                 height="20"
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
-                stroke="#A0AEC0"
+                stroke="currentColor"
                 fill="none"
                 stroke-linecap="round"
                 stroke-linejoin="round"
+                role="img"
               >
+                <title>Information icon</title>
+                <desc>An icon indicating additional information is available</desc>
                 <path stroke="none" d="M0 0h24v24H0z" />
                 <circle cx="12" cy="12" r="9" />
                 <line x1="12" y1="8" x2="12.01" y2="8" />
@@ -314,6 +335,7 @@ export class PidTooltip {
             </button>
           )}
         </div>
+
         {hasTooltipText && (
           <div
             ref={el => (this.tooltipRef = el)}
@@ -323,7 +345,8 @@ export class PidTooltip {
             style={this.getTooltipStyles()}
             aria-live="polite"
           >
-            {this.text}
+            {/* Use paragraph for better semantics */}
+            <p class="m-0 p-0">{this.text}</p>
           </div>
         )}
       </Host>

@@ -52,7 +52,7 @@ export class JsonViewer {
   /**
    * Internal state to store the parsed JSON data
    */
-  @State() parsedData: any = null;
+  @State() parsedData: unknown = null;
 
   /**
    * Internal state to track error during JSON parsing
@@ -105,22 +105,52 @@ export class JsonViewer {
 
   /**
    * Parse the input data into a JavaScript object
+   * and remove Stencil/other private helper props.
    */
   private parseData() {
     try {
+      let raw: unknown;
+
       if (typeof this.data === 'string') {
-        this.parsedData = JSON.parse(this.data);
+        raw = JSON.parse(this.data);
       } else if (this.data !== null && typeof this.data === 'object') {
-        this.parsedData = this.data;
+        raw = this.data;
       } else {
         throw new Error('Invalid data format');
       }
+
+      // 👇 NEW: deep-clone while stripping keys that start with "$"
+      this.parsedData = this.sanitizeData(raw);
       this.error = null;
     } catch (err) {
       this.error = err.message;
       this.parsedData = null;
     }
   }
+
+  /**
+   * Recursively clone `data`, dropping every property
+   * whose key begins with "$" (e.g. "$elm$", "$cmp$", …).
+   */
+  private sanitizeData = (data: unknown): unknown => {
+    if (Array.isArray(data)) {
+      return data.map(this.sanitizeData);
+    }
+
+    if (data !== null && typeof data === 'object') {
+      const cleaned: Record<string, unknown> = {};
+
+      Object.entries(data).forEach(([key, value]) => {
+        if (!key.startsWith('$')) {
+          cleaned[key] = this.sanitizeData(value);
+        }
+      });
+
+      return cleaned;
+    }
+
+    return data; // primitives stay as-is
+  };
 
   /**
    * Toggle between tree view and code view
@@ -137,13 +167,60 @@ export class JsonViewer {
       const jsonString = JSON.stringify(this.parsedData, null, 2);
       await navigator.clipboard.writeText(jsonString);
       this.copied = true;
+
+      // Reset copied state after delay
       setTimeout(() => {
         this.copied = false;
       }, 2000);
     } catch (err) {
-      console.error('Failed to copy JSON to clipboard', err);
+      console.error('Failed to copy JSON to clipboard:', err);
+      // Silent error handling to not disrupt user experience
+      // Create a temporary fallback for browsers without clipboard API
+      this.createFallbackCopyMethod(JSON.stringify(this.parsedData, null, 2));
     }
   };
+
+  /**
+   * Fallback method for copying text when Clipboard API is not available
+   */
+  private createFallbackCopyMethod(text: string) {
+    // Create a temporary textarea element
+    const textArea = document.createElement('textarea');
+
+    // Hide the element
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+    textArea.style.opacity = '0';
+    textArea.style.pointerEvents = 'none';
+
+    // Set the text content
+    textArea.value = text;
+
+    // Add to DOM
+    document.body.appendChild(textArea);
+
+    // Focus and select the text
+    textArea.focus();
+    textArea.select();
+
+    // Try to copy
+    try {
+      const successful = document.execCommand('copy');
+      if (successful) {
+        this.copied = true;
+        setTimeout(() => {
+          this.copied = false;
+        }, 2000);
+      }
+    } catch (err) {
+      console.error('Fallback copy failed:', err);
+      // Silent error handling
+    } finally {
+      // Clean up
+      document.body.removeChild(textArea);
+    }
+  }
 
   /**
    * Expand all nodes in the tree view
@@ -164,7 +241,7 @@ export class JsonViewer {
   /**
    * Recursive function to expand all nodes
    */
-  private expandNodeRecursive(data: any, path: string) {
+  private expandNodeRecursive(data: unknown, path: string) {
     if (data !== null && typeof data === 'object') {
       this.expandedNodes.add(path);
 
@@ -181,14 +258,37 @@ export class JsonViewer {
   /**
    * Renders a JSON node as part of the tree view
    */
-  private renderTreeNode = (key: string, value: any, depth: number = 0, path: string = '') => {
+  private renderTreeNode = (key: string, value: unknown, depth: number = 0, path: string = '') => {
     const isExpandable = typeof value === 'object' && value !== null;
     const currentPath = path ? `${path}.${key}` : key;
     const nodeId = `node-${currentPath}`;
+    const isArray = Array.isArray(value);
+
+    // Handle keyboard navigation for details/summary elements
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        const details = (e.target as HTMLElement).closest('details');
+        if (details) {
+          details.open = !details.open;
+          // Update expanded nodes state
+          if (details.open) {
+            this.expandedNodes.add(nodeId);
+          } else {
+            this.expandedNodes.delete(nodeId);
+          }
+          // Create a new Set to trigger state update
+          this.expandedNodes = new Set(this.expandedNodes);
+        }
+      }
+    };
 
     if (isExpandable) {
-      const isArray = Array.isArray(value);
       const entries = isArray ? Object.entries(value) : Object.entries(value);
+      const itemCount = entries.length;
+      const itemText = `${itemCount} ${itemCount === 1 ? 'item' : 'items'}`;
+      const nodeType = isArray ? 'array' : 'object';
+      const expandedState = this.expandedNodes.has(nodeId);
 
       // Handle toggling of node expansion
       const toggleExpand = (e: Event) => {
@@ -204,25 +304,39 @@ export class JsonViewer {
 
       return (
         <div class="ml-4">
-          <details class="mb-1" open={this.expandedNodes.has(nodeId)} onToggle={toggleExpand}>
+          <details class="mb-1" open={expandedState} onToggle={toggleExpand} id={nodeId}>
             <summary
-              class={`list-none relative pl-5 cursor-pointer font-mono flex items-center py-1 rounded group ${this.theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}`}
+              class={`list-none relative pl-5 cursor-pointer font-mono flex items-center py-1 rounded group ${
+                this.theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
+              } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1`}
+              onKeyDown={handleKeyDown}
+              tabIndex={0}
+              role="button"
+              aria-expanded={expandedState ? 'true' : 'false'}
+              aria-controls={`${nodeId}-content`}
+              aria-label={`${key}: ${nodeType} with ${itemText}, ${expandedState ? 'click to collapse' : 'click to expand'}`}
             >
               <div class="flex items-center w-full">
                 <span class={`font-medium mr-2 ${this.theme === 'dark' ? 'text-blue-400' : 'text-blue-600'}`}>{key}: </span>
                 <span class={`flex items-center gap-1 ${this.theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
                   <span>{isArray ? '[' : '{'}</span>
-                  <span>
-                    {entries.length} {entries.length === 1 ? 'item' : 'items'}
-                  </span>
+                  <span>{itemText}</span>
                   <span>{isArray ? ']' : '}'}</span>
-                  <span class={`text-xs ml-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100 ${this.theme === 'dark' ? 'text-blue-400' : 'text-blue-500'}`}>
-                    {this.expandedNodes.has(nodeId) ? 'Click to collapse' : 'Click to expand'}
+                  <span
+                    class={`text-xs ml-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100 ${this.theme === 'dark' ? 'text-blue-400' : 'text-blue-500'}`}
+                    aria-hidden="true"
+                  >
+                    {expandedState ? 'Click to collapse' : 'Click to expand'}
                   </span>
                 </span>
               </div>
             </summary>
-            <div class={`ml-4 border-l-2 pl-3 ${this.theme === 'dark' ? 'border-gray-600' : 'border-gray-200'}`}>
+            <div
+              id={`${nodeId}-content`}
+              class={`ml-4 border-l-2 pl-3 ${this.theme === 'dark' ? 'border-gray-600' : 'border-gray-200'}`}
+              role="group"
+              aria-label={`Contents of ${key} ${nodeType}`}
+            >
               {entries.map(([k, v], index) => (
                 <div key={`${nodeId}-${index}`}>{this.renderTreeNode(isArray ? `${k}` : k, v, depth + 1, currentPath)}</div>
               ))}
@@ -235,20 +349,27 @@ export class JsonViewer {
     // Render primitive values with syntax highlighting
     let valueClass = '';
     let displayValue = JSON.stringify(value);
+    let valueType = typeof value;
 
-    if (typeof value === 'string') {
+    if (valueType === 'string') {
       valueClass = this.theme === 'dark' ? 'text-green-400' : 'text-green-600';
-    } else if (typeof value === 'number') {
+    } else if (valueType === 'number') {
       valueClass = this.theme === 'dark' ? 'text-blue-400' : 'text-blue-600';
-    } else if (typeof value === 'boolean') {
+    } else if (valueType === 'boolean') {
       valueClass = this.theme === 'dark' ? 'text-purple-400' : 'text-purple-600';
     } else if (value === null) {
       valueClass = this.theme === 'dark' ? 'text-gray-400' : 'text-gray-500';
       displayValue = 'null';
+      valueType = 'undefined';
     }
 
     return (
-      <div class={`flex items-center py-1 font-mono text-sm ${this.theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}`}>
+      <div
+        class={`flex items-center py-1 font-mono text-sm ${this.theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'} rounded`}
+        tabIndex={0}
+        role="treeitem"
+        aria-label={`${key}: ${displayValue} (${valueType})`}
+      >
         <span class={`font-medium ${this.theme === 'dark' ? 'text-blue-400' : 'text-blue-600'}`}>{key}: </span>
         <span class={valueClass}>{displayValue}</span>
       </div>
@@ -275,7 +396,7 @@ export class JsonViewer {
     // Show error if JSON is invalid
     if (this.error) {
       return (
-        <div class="p-4 text-red-500 text-center">
+        <div class="p-4 text-red-500 text-center" role="alert" aria-live="assertive">
           <p>Invalid JSON: {this.error}</p>
           <slot></slot>
         </div>
@@ -285,7 +406,7 @@ export class JsonViewer {
     // Show message if no data
     if (!this.parsedData) {
       return (
-        <div class="p-4 text-gray-500 text-center">
+        <div class="p-4 text-gray-500 text-center" role="status" aria-live="polite">
           <p>No data provided</p>
           <slot></slot>
         </div>
@@ -296,12 +417,22 @@ export class JsonViewer {
     const formattedJson = JSON.stringify(this.parsedData, null, 2);
     const containerStyle = this.maxHeight > 0 ? { maxHeight: `${this.maxHeight}px` } : {};
 
+    // Generate unique IDs for ARIA relationships
+    const viewerId = `json-viewer-${Math.random().toString(36).substring(2, 11)}`;
+    const contentId = `${viewerId}-content`;
+
     return (
-      <div class={`rounded-lg overflow-hidden shadow border ${this.theme === 'dark' ? 'bg-gray-800 text-gray-50 border-gray-600' : 'bg-white text-gray-800 border-gray-200'}`}>
+      <div
+        class={`rounded-lg overflow-hidden shadow border ${this.theme === 'dark' ? 'bg-gray-800 text-gray-50 border-gray-600' : 'bg-white text-gray-800 border-gray-200'}`}
+        role="region"
+        aria-labelledby={`${viewerId}-title`}
+      >
         <div class={`flex justify-between items-center p-3 border-b ${this.theme === 'dark' ? 'border-gray-600' : 'border-gray-200'}`}>
           <div class="flex items-center gap-2">
-            <span class={`font-medium text-sm ${this.theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>JSON Viewer</span>
-            <span class={`text-xs ${this.theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+            <span id={`${viewerId}-title`} class={`font-medium text-sm ${this.theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
+              JSON Viewer
+            </span>
+            <span class={`text-xs ${this.theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`} aria-live="polite">
               ({Object.keys(this.parsedData).length} {Object.keys(this.parsedData).length === 1 ? 'property' : 'properties'})
             </span>
           </div>
@@ -312,17 +443,26 @@ export class JsonViewer {
               this.theme === 'dark'
                 ? 'bg-gray-900 border border-gray-600 text-gray-50 hover:bg-gray-700 hover:border-blue-600'
                 : 'bg-gray-100 border border-gray-200 text-gray-800 hover:bg-gray-50 hover:border-blue-400'
-            }`}
+            } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1`}
+            aria-controls={contentId}
+            aria-label={`Switch to ${this.currentViewMode === 'tree' ? 'code' : 'tree'} view`}
+            type="button"
           >
             {this.currentViewMode === 'tree' ? 'Code View' : 'Tree View'}
           </button>
         </div>
 
-        <div class={`relative overflow-auto ${this.theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`} style={containerStyle}>
+        <div
+          id={contentId}
+          class={`relative overflow-auto ${this.theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}
+          style={containerStyle}
+          role="group"
+          aria-label={`JSON data in ${this.currentViewMode} view`}
+        >
           {/* Overlay copy button */}
           <button
             onClick={this.copyToClipboard}
-            class={`absolute top-2 right-2 z-10 rounded-md transition-all duration-200 ${
+            class={`absolute top-2 right-2 z-10 rounded-md transition-all duration-200 p-1 ${
               this.copied
                 ? this.theme === 'dark'
                   ? 'bg-green-600 text-white'
@@ -330,23 +470,46 @@ export class JsonViewer {
                 : this.theme === 'dark'
                   ? 'bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white'
                   : 'bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-800'
-            } opacity-75 hover:opacity-100`}
+            } opacity-75 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1`}
             title={this.copied ? 'Copied!' : 'Copy JSON to clipboard'}
+            aria-label={this.copied ? 'JSON copied to clipboard' : 'Copy JSON to clipboard'}
+            type="button"
           >
+            {/* Screen reader text */}
+            <span class="sr-only">{this.copied ? 'Copied!' : 'Copy JSON'}</span>
+
+            {/* Visual icon */}
             {this.copied ? (
-              <span
-                class="inline-block w-4 h-4 bg-contain bg-no-repeat bg-center"
-                style={{
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E")`,
-                }}
-              ></span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="w-4 h-4"
+                aria-hidden="true"
+              >
+                <title>Check mark</title>
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
             ) : (
-              <span
-                class="inline-block w-4 h-4 bg-contain bg-no-repeat bg-center"
-                style={{
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='9' y='9' width='13' height='13' rx='2' ry='2'%3E%3C/rect%3E%3Cpath d='M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1'%3E%3C/path%3E%3C/svg%3E")`,
-                }}
-              ></span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="w-4 h-4"
+                aria-hidden="true"
+              >
+                <title>Copy icon</title>
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path>
+              </svg>
             )}
           </button>
 

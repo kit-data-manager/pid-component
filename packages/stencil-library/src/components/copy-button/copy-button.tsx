@@ -9,12 +9,21 @@ export class CopyButton {
    * Internal state to track if copy was successful
    */
   @State() copied: boolean = false;
+
   /**
    * The value to copy to the clipboard.
    * @type {string}
    * @public
    */
   @Prop() value!: string;
+
+  /**
+   * Optional custom label for the button.
+   * If not provided, a default label will be used.
+   * @type {string}
+   * @public
+   */
+  @Prop() label?: string;
 
   /**
    * Copies the given value to the clipboard and updates the state to show success message.
@@ -24,18 +33,14 @@ export class CopyButton {
     event.stopPropagation();
     event.preventDefault();
 
-    console.log('Copying value:', this.value);
-
     try {
       // Try the Async Clipboard API first
       if ('clipboard' in navigator) {
         try {
           await navigator.clipboard.writeText(this.value);
-          console.debug('Copied to clipboard using Async Clipboard API:', this.value);
           this.showSuccess();
           return;
         } catch (err) {
-          console.error('Async Clipboard API failed, falling back to execCommand:', err);
           // Fall through to execCommand fallback
         }
       }
@@ -44,7 +49,10 @@ export class CopyButton {
       const textArea = document.createElement('textarea');
       textArea.value = this.value;
 
-      // Add to DOM with Tailwind classes for positioning
+      // Add accessibility attributes and Tailwind classes for positioning
+      textArea.setAttribute('aria-hidden', 'true');
+      textArea.setAttribute('tabindex', '-1');
+      textArea.setAttribute('readonly', 'readonly');
       textArea.className = 'fixed top-0 left-0 opacity-0 pointer-events-none z-[9999] w-[10em] h-[10em]';
 
       document.body.appendChild(textArea);
@@ -57,7 +65,6 @@ export class CopyButton {
 
         try {
           const success = document.execCommand('copy');
-          console.log(`execCommand copy was ${success ? 'successful' : 'unsuccessful'}.`);
           if (success) {
             this.showSuccess();
           } else {
@@ -71,20 +78,19 @@ export class CopyButton {
               textArea.setSelectionRange(0, textArea.value.length); // For mobile devices
 
               const secondAttempt = document.execCommand('copy');
-              console.log(`Second attempt execCommand copy was ${secondAttempt ? 'successful' : 'unsuccessful'}.`);
               if (secondAttempt) {
                 this.showSuccess();
               }
             }
           }
         } catch (err) {
-          console.error('Failed to copy text with execCommand:', err);
+          // Error handling is silent to not disrupt user experience
         } finally {
           document.body.removeChild(textArea);
         }
       }, 200); // Increased timeout for better reliability
     } catch (err) {
-      console.error('Failed to copy text:', err);
+      // Error handling is silent to not disrupt user experience
     }
   };
 
@@ -100,16 +106,43 @@ export class CopyButton {
     }, 1500);
   }
 
+  /**
+   * Get the appropriate aria-label based on component state and props
+   */
+  private getAriaLabel(): string {
+    const baseLabel = this.label || 'content';
+    return this.copied ? `${baseLabel} copied to clipboard` : `Copy ${baseLabel} to clipboard`;
+  }
+
   render() {
+    // Determine button text based on state
+    const buttonText = this.copied ? '✓ Copied!' : 'Copy';
+
+    // Get appropriate aria-label
+    const ariaLabel = this.getAriaLabel();
+
     return (
       <Host class={'inline-block align-baseline text-xs'}>
+        {/* Hidden live region for screen readers */}
+        {this.copied && (
+          <span class="sr-only" aria-live="assertive">
+            Content copied to clipboard
+          </span>
+        )}
+
         <button
-          class={`${this.copied ? 'bg-green-200' : 'bg-white hover:bg-blue-200'} border border-slate-500 text-slate-800 font-medium font-mono rounded-md px-2 py-0.5 hover:text-slate-900 flex-none max-h-min items-center z-30 relative`}
+          class={`${this.copied ? 'bg-green-200' : 'bg-white hover:bg-blue-200'}
+            border border-slate-500 text-slate-800 font-medium font-mono
+            rounded-md px-2 py-0.5 hover:text-slate-900 flex-none max-h-min
+            items-center z-30 relative
+            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1
+            transition-colors duration-200`}
           onClick={e => this.copyValue(e)}
-          aria-label={this.copied ? 'Copied to clipboard' : 'Copy to clipboard'}
+          aria-label={ariaLabel}
+          title={ariaLabel}
           type="button"
         >
-          {this.copied ? '✓ Copied!' : 'Copy'}
+          {buttonText}
         </button>
       </Host>
     );
