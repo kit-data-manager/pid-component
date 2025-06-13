@@ -66,19 +66,19 @@ export namespace Components {
         "viewMode": 'tree' | 'code';
     }
     interface LocaleVisualization {
-        /**
-          * The locale to visualize.
-          * @type {string}
-          * @public
-         */
-        "locale": string;
-        /**
-          * Whether to show the flag of the region.
-          * @type {boolean}
-          * @public
-          * @default true
-         */
-        "showFlag": boolean;
+      /**
+       * The locale to visualize.
+       * @type {string}
+       * @public
+       */
+      locale: string;
+      /**
+       * Whether to show the flag of the region.
+       * @type {boolean}
+       * @public
+       * @default true
+       */
+      showFlag: boolean;
     }
     interface PidActions {
         /**
@@ -132,86 +132,76 @@ export namespace Components {
        * @type {boolean}
        * @default false
        */
-      adaptivePagination: boolean;
-      /**
-       * The number of items to show in the table per page. Defaults to 10. (optional)
+      "adaptivePagination": boolean;
+      'adaptivePagination'ber of items to show in the table per page. Defaults to 10. (optional)
        * @type {number}
        * @default 10
        */
-      amountOfItems: number;
+      "amountOfItems": number;
       /**
-       * The current level of subcomponents. Defaults to 0. (optional)
+  'amountOfItems'ent level of subcomponents. Defaults to 0. (optional)
        * @type {number}
        * @default 0
        */
-      currentLevelOfSubcomponents: number;
-      /**
-       * Determines the default time to live (TTL) for entries in the IndexedDB. Defaults to 24 hours. Units are in milliseconds. (optional)
+      "currentLevelOfSubcomponents": number'currentLevelOfSubcomponents'es the default time to live (TTL) for entries in the IndexedDB. Defaults to 24 hours. Units are in milliseconds. (optional)
        * @type {number}
        * @default 24 * 60 * 60 * 1000
        */
-      defaultTTL: number;
+      "defaultTTL": number;
       /**
-       * Determines whether components should be emphasized towards their surrounding by border and shadow. If set to true, border and shadows will be shown around the component. It not set, the component won't be surrounded by border and shadow. (optional)
+     'defaultTTL'es whether components should be emphasized towards their surrounding by border and shadow. If set to true, border and shadows will be shown around the component. It not set, the component won't be surrounded by border and shadow. (optional)
        * @type {boolean}
        * @default true
        */
-      emphasizeComponent: boolean;
-      /**
-       * Estimated height of each table row in pixels (used for adaptive pagination). This is used as a fallback when no actual measurements are available.
+      "emphasizeComponent": boolean;
+      'emphasizeComponent'ed height of each table row in pixels (used for adaptive pagination). This is used as a fallback when no actual measurements are available.
        * @type {number}
        * @default 40
        */
-      estimatedRowHeight: number;
-      /**
-       * Initial height of the component (e.g. '300px''estimatedRowHeight't, defaults to 300px.
+      "estimatedRowHeight": number;
+      /'estimatedRowHeight'height of the component (e.g. '300px', '50vh'). If not set, defaults to 300px.
        * @type {string}
        */
-      height?: string;
+      "height"?: string;
       /**
-       * Determines whether subcomponents should generally be shown or not. If set to true, the component won't show any subcomponents. If not set, the component will show subcomponents if the current level of subcomponents is not the total level of subcomponents or greater. (optional)
+       *'height'nes whether subcomponents should generally be shown or not. If set to true, the component won't show any subcomponents. If not set, the component will show subcomponents if the current level of subcomponents is not the total level of subcomponents or greater. (optional)
        * @type {boolean}
        */
-      hideSubcomponents: boolean;
-      /**
-       * The total number of levels of subcomponents to show. Defaults to 1. (optional)
+      "hideSubcomponents": boolean;
+      /'hideSubcomponents'al number of levels of subcomponents to show. Defaults to 1. (optional)
        * @type {number}
        * @default 1
        */
-      levelOfSubcomponents: number;
-      /**
-       * Determines whether the component is open or not by default. (optional)
+      "levelOfSubcomponents": number;
+     'levelOfSubcomponents'es whether the component is open or not by default. (optional)
        * @type {boolean}
        */
-      openByDefault: boolean;
+      "openByDefault": boolean;
       /**
-       * A stringified JSON object containing settings for this component. The resulting object is passed to every subcomponent, so that every component has the same settings. Values and the according type are defined by the components themselves. (optional)  Schema: ```typescript {  type: string,  values: {   name: string,   value: any  }[] }[] ```
+ 'openByDefault'gified JSON object containing settings for this component. The resulting object is passed to every subcomponent, so that every component has the same settings. Values and the according type are defined by the components themselves. (optional)  Schema: ```typescript {  type: string,  values: {   name: string,   value: any  }[] }[] ```
        * @type {string}
        * @default '[]'
        */
-      settings: string;
+      "settings": string;
       /**
-       * Determines whether on the top level the copy button is shown. If set to true, the copy button is shown also on the top level. It not set, the copy button is only shown for sub-components. (optional)
+       'settings'es whether on the top level the copy button is shown. If set to true, the copy button is shown also on the top level. It not set, the copy button is only shown for sub-components. (optional)
        * @type {boolean}
        * @default true
        */
-      showTopLevelCopy: boolean;
-      /**
-       * Updates the component sizing and styling based on the expanded state This method is now handled by the pid-collapsible component
+      "showTopLevelCopy": boolean;
+      /*'showTopLevelCopy' the component sizing and styling based on the expanded state This method is now handled by the pid-collapsible component
        */
-      updateComponentSizing: () => Promise<void>;
-      /**
-       * The value to parse, evaluate and render.
+      "updateComponentSizing": () => Promis'updateComponentSizing'   * The value to parse, evaluate and render.
        * @type {string}
        */
-      value: string;
+      "value": string;
       /**
-       * Initial width of the component (e.g. '500px', '50%'). If not set, defaults to 500px on large screens, 400px on medium screens, and 300px on small screens.
+       * I'value'width of the component (e.g. '500px', '50%'). If not set, defaults to 500px on large screens, 400px on medium screens, and 300px on small screens.
        * @type {string}
        */
-      width?: string;
+      "width"?: string;
     }
-    interface PidDataTable {
+    interface'width'aTable {
         /**
           * Current level of subcomponents
           * @default 0
@@ -263,31 +253,32 @@ export namespace Components {
        * Enable adaptive pagination mode
        * @default false
        */
-      adaptivePagination: boolean;
+      'adaptivePagination': boolean;
       /**
        * Current page (0-based index)
        * @default 0
        */
-      currentPage: number;
+      'currentPage': number;
       /**
        * Number of items per page
        * @default 10
        */
-      itemsPerPage: number;
+      'itemsPerPage': number;
       /**
        * Available page sizes
        * @default [5, 10, 25, 50, 100]
        */
-      pageSizes: number[];
+      'pageSizes': number[];
       /**
        * Whether to show the items per page control
        * @default true
        */
-      showItemsPerPageControl: boolean;
+      'showItemsPerPageControl': boolean;
       /**
-       * Total num'showItemsPerPageControl'fault 0
+       * Total number of items
+       * @default 0
        */
-      totalItems: number;
+      'totalItems': number;
     }
     interface PidTooltip {
         /**
@@ -320,7 +311,6 @@ export interface PidCollapsibleCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPidCollapsibleElement;
 }
-
 export interface PidComponentCustomEvent<T> extends CustomEvent<T> {
   detail: T;
   target: HTMLPidComponentElement;
@@ -391,38 +381,22 @@ declare global {
     };
 
   interface HTMLPidComponentElementEventMap {
-    collapsibleToggle: boolean;
+    'collapsibleToggle': boolean;
   }
     interface HTMLPidComponentElement extends Components.PidComponent, HTMLStencilElement {
-      addEventListener<K extends keyof HTMLPidComponentElementEventMap>(
-        type: K,
-        listener: (this: HTMLPidComponentElement, ev: PidComponentCustomEvent<HTMLPidComponentElementEventMap[K]>) => any,
-        options?: boolean | AddEventListenerOptions,
-      ): void;
+      addEventListener<K extends keyof HTMLPidComponentElementEventMap>(type: K, listener: (this: HTMLPidComponentElement, ev: PidComponentCustomEvent<HTMLPidComponentElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
 
       addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
 
-      addEventListener<K extends keyof HTMLElementEventMap>(
-        type: K,
-        listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any,
-        options?: boolean | AddEventListenerOptions,
-      ): void;
+      addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
 
       addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
 
-      removeEventListener<K extends keyof HTMLPidComponentElementEventMap>(
-        type: K,
-        listener: (this: HTMLPidComponentElement, ev: PidComponentCustomEvent<HTMLPidComponentElementEventMap[K]>) => any,
-        options?: boolean | EventListenerOptions,
-      ): void;
+      removeEventListener<K extends keyof HTMLPidComponentElementEventMap>(type: K, listener: (this: HTMLPidComponentElement, ev: PidComponentCustomEvent<HTMLPidComponentElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
 
       removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
 
-      removeEventListener<K extends keyof HTMLElementEventMap>(
-        type: K,
-        listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any,
-        options?: boolean | EventListenerOptions,
-      ): void;
+      removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
 
       removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
@@ -553,7 +527,7 @@ declare namespace LocalJSX {
         /**
           * Whether to show the flag of the region.
           * @type {boolean}
-          * @public
+         * @public
           * @default true
          */
         "showFlag"?: boolean;
@@ -574,124 +548,125 @@ declare namespace LocalJSX {
        * Whether to emphasize the component with border and shadow
        * @default false
        */
-      emphasize?: boolean;
+      'emphasize'?: boolean;
       /**
        * Whether the component is in expanded mode (full size)
        * @default false
        */
-      expanded?: boolean;
+      'expanded'?: boolean;
       /**
        * Initial height when expanded
        */
-      initialHeight?: string;
+      'initialHeight'?: string;
       /**
        * Initial width when expanded
        */
-      initialWidth?: string;
+      'initialWidth'?: string;
       /**
        * Line height for collapsed state
        * @default 24
        */
-      lineHeight?: number;
+      'lineHeight'?: number;
       /**
        * Event emitted when the collapsible is toggled
        */
-      onCollapsibleToggle?: (event: PidCollapsibleCustomEvent<boolean>) => void;
+      'onCollapsibleToggle'?: (event: PidCollapsibleCustomEvent<boolean>) => void;
       /**
        * Whether the collapsible is open by default
        * @default false
        */
-      open?: boolean;
+      'open'?: boolean;
       /**
        * Whether to show the footer section
        * @default false
        */
-      showFooter?: boolean;
+      'showFooter'?: boolean;
     }
     interface PidComponent {
       /**
-       * Enable adaptive pagination based on available space. When true, amountOfItems becomes the i'adaptivePagination'n be unrestricted changed by the user.
+       * Enable adaptive pagination based on available space. When true, amountOfItems becomes the initial value that can be unrestricted changed by the user.
        * @type {boolean}
        * @default false
        */
-      adaptivePagination?: boolean;
+      'adaptivePagination'?: boolean;
       /**
        * The number of items to show in the table per page. Defaults to 10. (optional)
        * @type {number}
        * @default 10
        */
-      amountOfItems?: number;
+      'amountOfItems'?: number;
       /**
        * The current level of subcomponents. Defaults to 0. (optional)
        * @type {number}
        * @default 0
        */
-      currentLevelOfSubcomponents?: number;
+      'currentLevelOfSubcomponents'?: number;
       /**
        * Determines the default time to live (TTL) for entries in the IndexedDB. Defaults to 24 hours. Units are in milliseconds. (optional)
        * @type {number}
        * @default 24 * 60 * 60 * 1000
        */
-      defaultTTL?: number;
+      'defaultTTL'?: number;
       /**
        * Determines whether components should be emphasized towards their surrounding by border and shadow. If set to true, border and shadows will be shown around the component. It not set, the component won't be surrounded by border and shadow. (optional)
        * @type {boolean}
        * @default true
        */
-      emphasizeComponent?: boolean;
+      'emphasizeComponent'?: boolean;
       /**
        * Estimated height of each table row in pixels (used for adaptive pagination). This is used as a fallback when no actual measurements are available.
        * @type {number}
        * @default 40
        */
-      estimatedRowHeight?: number;
+      'estimatedRowHeight'?: number;
       /**
        * Initial height of the component (e.g. '300px', '50vh'). If not set, defaults to 300px.
        * @type {string}
        */
-      height?: string;
-   'estimatedRowHeight'rmines whether subcomponents should generally be shown or not. If set to true, the component won't show any subcomponents. If not set, the component will show subcomponents if the current level of subcomponents is not the total level of subcomponents or greater. (optional)
+      'height'?: string;
+      /**
+       * Determines whether subcomponents should generally be shown or not. If set to true, the component won't show any subcomponents. If not set, the component will show subcomponents if the current level of subcomponents is not the total level of subcomponents or greater. (optional)
        * @type {boolean}
        */
-      hideSubcomponents?: boolean;
+      'hideSubcomponents'?: boolean;
       /**
        * The total number of levels of subcomponents to show. Defaults to 1. (optional)
        * @type {number}
        * @default 1
        */
-      levelOfSubcomponents?: number;
+      'levelOfSubcomponents'?: number;
       /**
        * Event emitted when the collapsible is toggled (expanded/collapsed). This event is emitted with a boolean value indicating whether the component is expanded (true) or collapsed (false).
        * @event collapsibleToggle
        */
-      onCollapsibleToggle?: (event: PidComponentCustomEvent<boolean>) => void;
+      'onCollapsibleToggle'?: (event: PidComponentCustomEvent<boolean>) => void;
       /**
        * Determines whether the component is open or not by default. (optional)
        * @type {boolean}
        */
-      openByDefault?: boolean;
+      'openByDefault'?: boolean;
       /**
        * A stringified JSON object containing settings for this component. The resulting object is passed to every subcomponent, so that every component has the same settings. Values and the according type are defined by the components themselves. (optional)  Schema: ```typescript {  type: string,  values: {   name: string,   value: any  }[] }[] ```
        * @type {string}
        * @default '[]'
        */
-      settings?: string;
+      'settings'?: string;
       /**
        * Determines whether on the top level the copy button is shown. If set to true, the copy button is shown also on the top level. It not set, the copy button is only shown for sub-components. (optional)
        * @type {boolean}
        * @default true
        */
-      showTopLevelCopy?: boolean;
+      'showTopLevelCopy'?: boolean;
       /**
        * The value to parse, evaluate and render.
        * @type {string}
        */
-      value?: string;
+      'value'?: string;
       /**
        * Initial width of the component (e.g. '500px', '50%'). If not set, defaults to 500px on large screens, 400px on medium screens, and 300px on small screens.
        * @type {string}
        */
-      width?: string;
+      'width'?: string;
     }
     interface PidDataTable {
         /**
