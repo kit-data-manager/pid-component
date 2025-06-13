@@ -133,13 +133,13 @@ export class PidDataTable {
               {this.filteredItems.map((value, index) => (
                 <tr
                   key={`item-${value.keyTitle}-${index}`}
-                  class={`odd:bg-slate-200 even:bg-gray-50 leading-7 ${index !== this.filteredItems.length - 1 ? 'border-b border-gray-200' : ''}`}
-                  style={{ minHeight: '28px' }} // Base minimum height for rows
+                  class={`odd:bg-slate-200 even:bg-gray-50 ${index !== this.filteredItems.length - 1 ? 'border-b border-gray-200' : ''}`}
+                  aria-label={`Row for ${value.keyTitle} with value ${value.value}`}
                   role="row"
                 >
                   <td class={'p-2 min-w-[150px] w-auto font-mono align-top'} role="cell">
                     <pid-tooltip text={value.keyTooltip || `Details for ${value.keyTitle}`} position="top" maxHeight="200px">
-                      <div slot="trigger" class="min-h-7 leading-7 overflow-hidden w-full flex items-center">
+                      <div slot="trigger" class="min-h-7 overflow-hidden w-full flex items-center">
                         <a
                           href={value.keyLink}
                           target={'_blank'}
@@ -154,8 +154,8 @@ export class PidDataTable {
                     </pid-tooltip>
                   </td>
                   <td class={'align-top text-sm p-2 w-full select-text relative'} role="cell">
-                    <div class="w-full min-h-7 grid grid-cols-[1fr_auto] gap-2 items-start">
-                      <div class="whitespace-normal break-words overflow-y-auto min-w-0">
+                    <div class="w-full grid grid-cols-[1fr_auto] gap-2 items-start">
+                      <div class="whitespace-normal break-words min-w-0">
                         {
                           // Load a foldable subcomponent if subcomponents are not disabled (hideSubcomponents), and the current level of subcomponents is not the total level of subcomponents. If the subcomponent is on the bottom level of the hierarchy, render just a preview. If the value should not be resolved (isFoldable), just render the value as text.
                           this.loadSubcomponents && !this.hideSubcomponents && !value.renderDynamically ? (
@@ -166,7 +166,7 @@ export class PidDataTable {
                               amountOfItems={this.itemsPerPage}
                               settings={this.settings}
                               openByDefault={false}
-                              class="w-full min-w-0 overflow-hidden pr-2"
+                              class="w-full min-w-0 block"
                             />
                           ) : !this.hideSubcomponents && this.currentLevelOfSubcomponents === this.levelOfSubcomponents && !value.renderDynamically ? (
                             <pid-component
@@ -177,7 +177,7 @@ export class PidDataTable {
                               settings={this.settings}
                               hideSubcomponents={true}
                               openByDefault={false}
-                              class="w-full min-w-0 overflow-hidden pr-2"
+                              class="w-full min-w-0 block"
                             />
                           ) : (
                             <span class={'font-mono text-sm overflow-x-auto whitespace-normal break-words inline-block max-w-full'}>{value.value}</span>

@@ -185,8 +185,8 @@ export class PidComponent {
   }
 
   componentDidLoad() {
-    // Add clear-after to prevent text from flowing under the component
-    this.el.classList.add('after:content-[""]', 'after:block', 'after:clear-both');
+    // // Add clear-after to prevent text from flowing under the component
+    // this.el.classList.add('after:content-[""]', 'after:block', 'after:clear-both');
 
     // Initialize component ID for references
     if (!this.el.id) {
