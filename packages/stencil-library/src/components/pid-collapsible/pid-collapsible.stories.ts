@@ -2,7 +2,7 @@ import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 
 const meta: Meta = {
-  title: 'pid-collapsible',
+  title: 'Internal/Collapsible',
   component: 'pid-collapsible',
   argTypes: {
     open: {

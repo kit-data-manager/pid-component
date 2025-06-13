@@ -154,8 +154,8 @@ export class PidDataTable {
                     </pid-tooltip>
                   </td>
                   <td class={'align-top text-sm p-2 w-full select-text relative'} role="cell">
-                    <div class="w-full min-h-7 pr-8 flex items-start relative">
-                      <div class="w-full overflow-x-auto whitespace-normal break-words max-h-[200px] overflow-y-auto">
+                    <div class="w-full min-h-7 pr-10 flex items-start relative gap-2">
+                      <div class="w-full whitespace-normal break-words overflow-y-auto">
                         {
                           // Load a foldable subcomponent if subcomponents are not disabled (hideSubcomponents), and the current level of subcomponents is not the total level of subcomponents. If the subcomponent is on the bottom level of the hierarchy, render just a preview. If the value should not be resolved (isFoldable), just render the value as text.
                           this.loadSubcomponents && !this.hideSubcomponents && !value.renderDynamically ? (
@@ -184,12 +184,12 @@ export class PidDataTable {
                           )
                         }
                       </div>
+                      <copy-button
+                        value={value.value}
+                        class="absolute right-2 top-2 flex-shrink-0 z-30 opacity-100 visible hover:z-35 cursor-pointer"
+                        aria-label={`Copy ${value.keyTitle} value`}
+                      />
                     </div>
-                    <copy-button
-                      value={value.value}
-                      class="absolute right-2 top-2 flex-shrink-0 z-30 opacity-100 visible hover:z-35 cursor-pointer"
-                      aria-label={`Copy ${value.keyTitle} value`}
-                    />
                   </td>
                 </tr>
               ))}

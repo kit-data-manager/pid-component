@@ -2,7 +2,7 @@ import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 
 const meta: Meta = {
-  title: 'pid-pagination',
+  title: 'Internal/Pagination',
   component: 'pid-pagination',
   argTypes: {
     currentPage: {

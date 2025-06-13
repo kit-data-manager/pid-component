@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 
 const meta: Meta = {
-  title: 'locale-visualization',
+  title: 'Renderer/Locale Visualization',
   component: 'locale-visualization',
   argTypes: {
     locale: {

@@ -1,24 +1,31 @@
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { FoldableAction } from '../../utils/FoldableAction';
 
-// Create mock FoldableAction objects for the story
+/**
+ * The pid-actions component displays a set of action buttons that can be used
+ * for navigation or triggering operations. It supports different styles for
+ * primary, secondary, and danger actions.
+ */
+
+// Create sample actions for demonstration
 const mockActions = [
-  new FoldableAction(1, 'View Details', 'https://example.com/details', 'primary'),
-  new FoldableAction(2, 'Edit', 'https://example.com/edit', 'secondary'),
-  new FoldableAction(3, 'Delete', 'https://example.com/delete', 'danger'),
-  new FoldableAction(4, 'Share', 'https://example.com/share', 'primary'),
-  new FoldableAction(5, 'Download', 'https://example.com/download', 'secondary'),
-  new FoldableAction(6, 'Archive', 'https://example.com/archive', 'danger'),
+  new FoldableAction(1, 'Primary Action', 'https://example.com/primary', 'primary'),
+  new FoldableAction(2, 'Secondary Action', 'https://example.com/secondary', 'secondary'),
+  new FoldableAction(3, 'Danger Action', 'https://example.com/danger', 'danger'),
+  new FoldableAction(4, 'Another Primary', 'https://example.com/another', 'primary'),
+  new FoldableAction(5, 'Another Secondary', 'https://example.com/another-secondary', 'secondary'),
 ];
 
 const meta: Meta = {
-  title: 'pid-actions',
+  title: 'Internal/PID Actions',
   component: 'pid-actions',
+  tags: ['autodocs'],
   argTypes: {
     actions: {
       description: 'Array of actions to display',
-      control: {
-        type: 'object',
+      control: 'object',
+      table: {
+        type: { summary: 'FoldableAction[]' },
       },
     },
   },
@@ -26,16 +33,19 @@ const meta: Meta = {
     actions: mockActions,
   },
 };
+
 export default meta;
 type Story = StoryObj;
 
-// Helper function to create stories
+/**
+ * Helper function to create a story with different sets of actions
+ */
 const createStory = (actions: FoldableAction[]) => {
   return {
     render: () => {
       // Use a div with Tailwind classes for container
       const container = document.createElement('div');
-      container.className = 'p-4 border rounded'; // Using Tailwind classes
+      container.className = 'p-4 border rounded bg-white'; // Using Tailwind classes
 
       // Create pid-actions element
       const pidActions = document.createElement('pid-actions');
@@ -64,7 +74,7 @@ const createStory = (actions: FoldableAction[]) => {
 <pid-actions></pid-actions>
 <script>
   document.querySelector('pid-actions').actions = ${JSON.stringify(
-    mockActions.map(a => ({
+    actions.map(a => ({
       priority: a.priority,
       title: a.title,
       link: a.link,
@@ -81,6 +91,9 @@ const createStory = (actions: FoldableAction[]) => {
   };
 };
 
+/**
+ * Default story showing all action types
+ */
 export const Default: Story = {
   args: {
     actions: mockActions,
@@ -88,23 +101,117 @@ export const Default: Story = {
   ...createStory(mockActions),
 };
 
+/**
+ * Story showing only primary actions
+ */
 export const PrimaryOnly: Story = {
   args: {
-    actions: [mockActions[0]],
+    actions: [mockActions[0], mockActions[3]],
   },
-  ...createStory([mockActions[0]]),
+  ...createStory([mockActions[0], mockActions[3]]),
 };
 
+/**
+ * Story showing only secondary actions
+ */
 export const SecondaryOnly: Story = {
   args: {
-    actions: [mockActions[1]],
+    actions: [mockActions[1], mockActions[4]],
   },
-  ...createStory([mockActions[1]]),
+  ...createStory([mockActions[1], mockActions[4]]),
 };
 
+/**
+ * Story showing only danger actions
+ */
 export const DangerOnly: Story = {
   args: {
     actions: [mockActions[2]],
   },
   ...createStory([mockActions[2]]),
+};
+
+/**
+ * Story showing actions with custom priority order
+ */
+export const CustomPriorityOrder: Story = {
+  args: {
+    actions: [
+      new FoldableAction(3, 'Third Priority', 'https://example.com/3', 'secondary'),
+      new FoldableAction(1, 'First Priority', 'https://example.com/1', 'primary'),
+      new FoldableAction(2, 'Second Priority', 'https://example.com/2', 'danger'),
+    ],
+  },
+  ...createStory([
+    new FoldableAction(3, 'Third Priority', 'https://example.com/3', 'secondary'),
+    new FoldableAction(1, 'First Priority', 'https://example.com/1', 'primary'),
+    new FoldableAction(2, 'Second Priority', 'https://example.com/2', 'danger'),
+  ]),
+};
+
+/**
+ * Story showing many actions that will wrap to multiple lines
+ */
+export const ManyActions: Story = {
+  args: {
+    actions: [
+      ...mockActions,
+      new FoldableAction(6, 'Extra Action 1', 'https://example.com/extra1', 'primary'),
+      new FoldableAction(7, 'Extra Action 2', 'https://example.com/extra2', 'secondary'),
+      new FoldableAction(8, 'Extra Action 3', 'https://example.com/extra3', 'danger'),
+      new FoldableAction(9, 'Extra Action 4', 'https://example.com/extra4', 'primary'),
+    ],
+  },
+  render: () => {
+    // Use a div with Tailwind classes for container
+    const container = document.createElement('div');
+    container.className = 'p-4 border rounded bg-white max-w-md'; // Using Tailwind classes with width constraint
+
+    // Create pid-actions element
+    const pidActions = document.createElement('pid-actions');
+
+    // Create actions
+    const actions = [
+      ...mockActions,
+      new FoldableAction(6, 'Extra Action 1', 'https://example.com/extra1', 'primary'),
+      new FoldableAction(7, 'Extra Action 2', 'https://example.com/extra2', 'secondary'),
+      new FoldableAction(8, 'Extra Action 3', 'https://example.com/extra3', 'danger'),
+      new FoldableAction(9, 'Extra Action 4', 'https://example.com/extra4', 'primary'),
+    ];
+
+    // Create plain object array from FoldableAction instances
+    const actionObjects = actions.map(action => ({
+      priority: action.priority,
+      title: action.title,
+      link: action.link,
+      style: action.style,
+    }));
+
+    // Set the actions property manually
+    // @ts-expect-error - Property assignment is expected to work at runtime
+    pidActions.actions = actionObjects;
+
+    // Append to container
+    container.appendChild(pidActions);
+
+    return container;
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `
+<pid-actions></pid-actions>
+<script>
+  document.querySelector('pid-actions').actions = [
+    ...mockActions,
+    { priority: 6, title: "Extra Action 1", link: "https://example.com/extra1", style: "primary" },
+    { priority: 7, title: "Extra Action 2", link: "https://example.com/extra2", style: "secondary" },
+    { priority: 8, title: "Extra Action 3", link: "https://example.com/extra3", style: "danger" },
+    { priority: 9, title: "Extra Action 4", link: "https://example.com/extra4", style: "primary" }
+  ];
+</script>
+        `,
+      },
+    },
+  },
 };

@@ -19,7 +19,7 @@ const mockItems = [
 ];
 
 const meta: Meta = {
-  title: 'pid-data-table',
+  title: 'Internal/Data Table',
   component: 'pid-data-table',
   argTypes: {
     items: {

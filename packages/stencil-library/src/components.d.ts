@@ -291,7 +291,6 @@ export namespace Components {
       "tex'text'ring;
     }
 }
-
 export interface PidCollapsibleCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPidCollapsibleElement;
