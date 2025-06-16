@@ -112,6 +112,7 @@ export abstract class GenericIdentifierType {
    * It must be implemented by the child classes as it is abstract.
    * @param data The data that is needed for rendering the component.
    * @abstract
+   * @returns {Promise<void>} A promise that resolves when the initialization is complete
    */
   abstract init(data?: unknown): Promise<void>;
 

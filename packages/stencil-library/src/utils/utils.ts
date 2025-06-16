@@ -10,6 +10,7 @@ import { URLType } from '../rendererModules/URLType';
 import { FallbackType } from '../rendererModules/FallbackType';
 import { LocaleType } from '../rendererModules/LocaleType';
 import { JSONType } from '../rendererModules/JSONType';
+import { RORType } from '../rendererModules/RORType';
 
 /**
  * Array of all component objects that can be used to parse a given value, ordered by priority (lower is better)
@@ -37,26 +38,31 @@ export const renderers: {
   },
   {
     priority: 3,
+    key: 'RORType',
+    constructor: RORType,
+  },
+  {
+    priority: 4,
     key: 'EmailType',
     constructor: EmailType,
   },
   {
-    priority: 4,
+    priority: 5,
     key: 'URLType',
     constructor: URLType,
   },
   {
-    priority: 5,
+    priority: 6,
     key: 'LocaleType',
     constructor: LocaleType,
   },
   {
-    priority: 5,
+    priority: 7,
     key: 'JSONType',
     constructor: JSONType,
   },
   {
-    priority: 6,
+    priority: 99,
     key: 'FallbackType',
     constructor: FallbackType,
   },
