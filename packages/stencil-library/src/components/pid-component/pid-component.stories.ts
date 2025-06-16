@@ -178,6 +178,19 @@ export const ORCID: Story = {
   },
 };
 
+export const ROR: Story = {
+  args: {
+    value: 'https://ror.org/04t3en479',
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `<pid-component value='https://ror.org/04t3en479'></pid-component>`,
+      },
+    },
+  },
+};
+
 export const Date: Story = {
   args: {
     value: '2022-11-11T08:01:20.557+00:00',
@@ -370,7 +383,7 @@ export const TypedPIDMakerExampleText: Story = {
   },
   decorators: [
     (story: () => unknown) => html`
-      <p class="align-middle items-center w-2/3">
+      <p class="w-2/3 items-center align-middle">
         The Typed PID Maker is an entry point to integrate digital resources into the FAIR Digital Object (FAIR DO) ecosystem. It allows creating PIDs for resources and to provide
         them with the necessary metadata to ensure that the resources can be found and understood. <br />
         As a result, a machine-readable representation of all kinds of research artifacts allows act on such FAIR Digital Objects which present themselves as PID, e.g., ${story()},
