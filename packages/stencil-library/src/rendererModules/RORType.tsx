@@ -143,7 +143,7 @@ export class RORType extends GenericIdentifierType {
       }
 
       // Add external references
-      if (this.rorData.links && this.rorData.relationships.links > 0) {
+      if (this.rorData.links && this.rorData.links.length > 0) {
         for (const link of this.rorData.links) {
           if (link.type && link.type.isEmpty()) {
             this.items.push(new FoldableItem(35, `Link to ${link.type}`, link.value, 'External link related to the organization'));
