@@ -151,7 +151,7 @@ export class PidDataTable {
                       <div class="min-w-0 break-words whitespace-normal">
                         {
                           // Load a foldable subcomponent if subcomponents are not disabled (hideSubcomponents), and the current level of subcomponents is not the total level of subcomponents. If the subcomponent is on the bottom level of the hierarchy, render just a preview. If the value should not be resolved (isFoldable), just render the value as text.
-                          this.loadSubcomponents && !this.hideSubcomponents && !value.renderDynamically ? (
+                          this.loadSubcomponents && !this.hideSubcomponents && value.renderDynamically ? (
                             <pid-component
                               value={value.value}
                               levelOfSubcomponents={this.levelOfSubcomponents}
@@ -161,7 +161,7 @@ export class PidDataTable {
                               openByDefault={false}
                               class="block w-full min-w-0"
                             />
-                          ) : !this.hideSubcomponents && this.currentLevelOfSubcomponents === this.levelOfSubcomponents && !value.renderDynamically ? (
+                          ) : !this.hideSubcomponents && this.currentLevelOfSubcomponents === this.levelOfSubcomponents && value.renderDynamically ? (
                             <pid-component
                               value={value.value}
                               levelOfSubcomponents={this.currentLevelOfSubcomponents}

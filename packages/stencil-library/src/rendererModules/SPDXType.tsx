@@ -484,6 +484,66 @@ export class SPDXType extends GenericIdentifierType {
         name: 'Apache License 2.0',
         isOsiApproved: true,
       },
+      'GPL-3.0-only': {
+        licenseId: 'GPL-3.0-only',
+        name: 'GNU General Public License v3.0 only',
+        isOsiApproved: true,
+      },
+      'GPL-2.0-only': {
+        licenseId: 'GPL-2.0-only',
+        name: 'GNU General Public License v2.0 only',
+        isOsiApproved: true,
+      },
+      'BSD-3-Clause': {
+        licenseId: 'BSD-3-Clause',
+        name: 'BSD 3-Clause License',
+        isOsiApproved: true,
+      },
+      'BSD-2-Clause': {
+        licenseId: 'BSD-2-Clause',
+        name: 'BSD 2-Clause License',
+        isOsiApproved: true,
+      },
+      'LGPL-3.0-only': {
+        licenseId: 'LGPL-3.0-only',
+        name: 'GNU Lesser General Public License v3.0 only',
+        isOsiApproved: true,
+      },
+      'CC-BY-4.0': {
+        licenseId: 'CC-BY-4.0',
+        name: 'Creative Commons Attribution 4.0 International',
+        isOsiApproved: false,
+      },
+      'CC-BY-SA-4.0': {
+        licenseId: 'CC-BY-SA-4.0',
+        name: 'Creative Commons Attribution-ShareAlike 4.0 International',
+        isOsiApproved: false,
+      },
+      'CC0-1.0': {
+        licenseId: 'CC0-1.0',
+        name: 'Creative Commons Zero v1.0 Universal',
+        isOsiApproved: false,
+      },
+      'Unlicense': {
+        licenseId: 'Unlicense',
+        name: 'The Unlicense',
+        isOsiApproved: false,
+      },
+      'ISC': {
+        licenseId: 'ISC',
+        name: 'ISC License (ISCL)',
+        isOsiApproved: true,
+      },
+      'MPL-2.0': {
+        licenseId: 'MPL-2.0',
+        name: 'Mozilla Public License 2.0',
+        isOsiApproved: true,
+      },
+      'AGPL-3.0-only': {
+        licenseId: 'AGPL-3.0-only',
+        name: 'GNU Affero General Public License v3.0 only',
+        isOsiApproved: true,
+      },
     };
 
     return commonLicenses[licenseId] || null;
@@ -504,17 +564,6 @@ export class SPDXType extends GenericIdentifierType {
         <span class={'items-center px-1'}>
           <span class="font-medium">{this.licenseData.name || this.licenseId}</span>
           {this.licenseData.licenseId && <span class="ml-1 text-gray-500">({this.licenseData.licenseId})</span>}
-          {/*<span class="ml-2">*/}
-          {/*  {this.licenseData.isDeprecatedLicenseId && (*/}
-          {/*    <span class="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-red-600/20 ring-inset">Deprecated</span>*/}
-          {/*  )}*/}
-          {/*  {this.licenseData.isOsiApproved && (*/}
-          {/*    <span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset">OSI Approved</span>*/}
-          {/*  )}*/}
-          {/*  {this.licenseData.isFsfLibre && (*/}
-          {/*    <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-blue-600/20 ring-inset">FSF Free</span>*/}
-          {/*  )}*/}
-          {/*</span>*/}
         </span>
       </span>
     );
