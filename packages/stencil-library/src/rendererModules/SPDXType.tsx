@@ -405,9 +405,15 @@ export class SPDXType extends GenericIdentifierType {
    * Finds the most official-looking URL from a list of URLs
    */
   private findOfficialUrl(urls: string[]): string | undefined {
+    const allowedHosts = ['opensource.org', 'fsf.org', 'gnu.org', 'apache.org', 'creativecommons.org'];
     return urls.find((url: string) => {
-      const lower = url.toLowerCase();
-      return lower.includes('opensource.org') || lower.includes('fsf.org') || lower.includes('gnu.org') || lower.includes('apache.org') || lower.includes('creativecommons.org');
+      try {
+        const parsedUrl = new URL(url);
+        return allowedHosts.includes(parsedUrl.host);
+      } catch {
+        // Ignore invalid URLs
+        return false;
+      }
     });
   }
 
