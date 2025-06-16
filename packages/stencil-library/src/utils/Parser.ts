@@ -34,7 +34,7 @@ export class Parser {
       type: string;
       values: {
         name: string;
-        value: any;
+        value: unknown;
       }[];
     }[],
   ): Promise<GenericIdentifierType> {

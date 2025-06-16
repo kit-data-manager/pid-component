@@ -9,6 +9,7 @@ import { EmailType } from '../rendererModules/EmailType';
 import { URLType } from '../rendererModules/URLType';
 import { FallbackType } from '../rendererModules/FallbackType';
 import { LocaleType } from '../rendererModules/LocaleType';
+import { JSONType } from '../rendererModules/JSONType';
 
 /**
  * Array of all component objects that can be used to parse a given value, ordered by priority (lower is better)
@@ -17,7 +18,7 @@ import { LocaleType } from '../rendererModules/LocaleType';
 export const renderers: {
   priority: number;
   key: string;
-  constructor: new (value: string, settings?: { name: string; value: any }[]) => GenericIdentifierType;
+  constructor: new (value: string, settings?: { name: string; value: unknown }[]) => GenericIdentifierType;
 }[] = [
   {
     priority: 0,
@@ -51,6 +52,11 @@ export const renderers: {
   },
   {
     priority: 5,
+    key: 'JSONType',
+    constructor: JSONType,
+  },
+  {
+    priority: 6,
     key: 'FallbackType',
     constructor: FallbackType,
   },

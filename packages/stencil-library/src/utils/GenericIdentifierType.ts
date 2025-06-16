@@ -28,7 +28,7 @@ export abstract class GenericIdentifierType {
    * @param settings The settings of the environment from which the settings for the component are extracted.
    * @constructor
    */
-  constructor(value: string, settings?: { name: string; value: any }[]) {
+  constructor(value: string, settings?: { name: string; value: unknown }[]) {
     this._value = value;
     this._settings = settings;
   }
@@ -36,18 +36,18 @@ export abstract class GenericIdentifierType {
   /**
    * The settings of the environment from which the settings for the component are extracted.
    * @private
-   * @type {{name: string, value: any}[]}
+   * @type {{name: string, value: unknown}[]}
    */
   private _settings: {
     name: string;
-    value: any;
+    value: unknown;
   }[] = [];
 
   /**
    * Returns the settings of the environment from which the settings for the component are extracted.
-   * @returns {{name: string, value: any}[]} The settings of the environment from which the settings for the component are extracted.
+   * @returns {{name: string, value: unknown}[]} The settings of the environment from which the settings for the component are extracted.
    */
-  get settings(): { name: string; value: any }[] {
+  get settings(): { name: string; value: unknown }[] {
     return this._settings;
   }
 
@@ -55,7 +55,7 @@ export abstract class GenericIdentifierType {
    * Sets the settings of the environment from which the settings for the component are extracted.
    * @param value The settings of the environment from which the settings for the component are extracted.
    */
-  set settings(value: { name: string; value: any }[]) {
+  set settings(value: { name: string; value: unknown }[]) {
     this._settings = value;
   }
 
@@ -100,9 +100,9 @@ export abstract class GenericIdentifierType {
   /**
    * Returns the data that is being rendered in the component.
    * By default, it returns undefined, which means that there is no meaningful data.
-   * @returns {any} The data that is needed for rendering the component.
+   * @returns {unknown} The data that is needed for rendering the component.
    */
-  get data(): any {
+  get data(): unknown {
     return undefined;
   }
 
@@ -113,7 +113,7 @@ export abstract class GenericIdentifierType {
    * @param data The data that is needed for rendering the component.
    * @abstract
    */
-  abstract init(data?: any): Promise<void>;
+  abstract init(data?: unknown): Promise<void>;
 
   /**
    * This method indicates if a value has the correct format or not.
@@ -137,19 +137,19 @@ export abstract class GenericIdentifierType {
    * It is e.g. used in the summary of the detail element (The part you see when the component is folded).
    * It is recommended to use TSX syntax to implement this method.
    * It must be implemented by the child classes as it is abstract.
-   * @returns {FunctionalComponent<any>} The preview of the component.
+   * @returns {FunctionalComponent<unknown>} The preview of the component.
    * @abstract
    */
-  abstract renderPreview(): FunctionalComponent<any>;
+  abstract renderPreview(): FunctionalComponent<unknown>;
 
   /**
    * This method renders the body of the component.
    * It is shown between the table and actions in the detail element (The part you see when the component is unfolded).
    * It is recommended to use TSX syntax to implement this method.
    * By default, it returns undefined, which means that it is not rendered.
-   * @returns {FunctionalComponent<any> | undefined} The body of the component.
+   * @returns {FunctionalComponent<unknown> | undefined} The body of the component.
    */
-  renderBody(): FunctionalComponent<any> | undefined {
+  renderBody(): FunctionalComponent<unknown> | undefined {
     return undefined;
   }
 }

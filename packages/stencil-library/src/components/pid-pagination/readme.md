@@ -1,0 +1,41 @@
+# pid-pagination
+
+<!-- Auto Generated Below -->
+
+
+## Properties
+
+| Property                  | Attribute                     | Description                                | Type       | Default                |
+| ------------------------- | ----------------------------- | ------------------------------------------ | ---------- | ---------------------- |
+| `adaptivePagination`      | `adaptive-pagination`         | Enable adaptive pagination mode            | `boolean`  | `false`                |
+| `currentPage`             | `current-page`                | Current page (0-based index)               | `number`   | `0`                    |
+| `itemsPerPage`            | `items-per-page`              | Number of items per page                   | `number`   | `10`                   |
+| `pageSizes`               | `page-sizes`                  | Available page sizes                       | `number[]` | `[5, 10, 25, 50, 100]` |
+| `showItemsPerPageControl` | `show-items-per-page-control` | Whether to show the items per page control | `boolean`  | `true`                 |
+| `totalItems`              | `total-items`                 | Total number of items                      | `number`   | `0`                    |
+
+
+## Events
+
+| Event                | Description                               | Type                  |
+| -------------------- | ----------------------------------------- | --------------------- |
+| `itemsPerPageChange` | Event emitted when items per page changes | `CustomEvent<number>` |
+| `pageChange`         | Event emitted when page changes           | `CustomEvent<number>` |
+
+
+## Dependencies
+
+### Used by
+
+ - [pid-component](../pid-component)
+
+### Graph
+```mermaid
+graph TD;
+  pid-component --> pid-pagination
+  style pid-pagination fill:#f9f,stroke:#333,stroke-width:4px
+```
+
+----------------------------------------------
+
+*Built with [StencilJS](https://stenciljs.com/)*

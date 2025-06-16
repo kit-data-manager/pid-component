@@ -5,6 +5,10 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { FoldableAction } from "./utils/FoldableAction";
+import { FoldableItem } from "./utils/FoldableItem";
+export { FoldableAction } from "./utils/FoldableAction";
+export { FoldableItem } from "./utils/FoldableItem";
 export namespace Components {
     interface ColorHighlight {
         /**
@@ -15,11 +19,56 @@ export namespace Components {
     }
     interface CopyButton {
         /**
+          * Optional custom label for the button. If not provided, a default label will be used.
+          * @type {string}
+          * @public
+         */
+        "label"?: string;
+        /**
           * The value to copy to the clipboard.
           * @type {string}
           * @public
          */
         "value": string;
+    }
+    interface JsonViewer {
+        /**
+          * Collapse all nodes in the tree view
+         */
+        "collapseAllNodes": () => Promise<void>;
+        /**
+          * The JSON data to display. Can be a JSON string or a JavaScript object.
+         */
+        "data": string | object;
+        /**
+          * Set to true to open all nodes in tree view initially.
+          * @default false
+         */
+        "expandAll": boolean;
+        /**
+          * Expand all nodes in the tree view
+         */
+        "expandAllNodes": () => Promise<void>;
+        /**
+          * Maximum height of the viewer in pixels. Set to 0 for no limit.
+          * @default 500
+         */
+        "maxHeight": number;
+        /**
+          * Set to true to enable line numbers in code view.
+          * @default true
+         */
+        "showLineNumbers": boolean;
+        /**
+          * Theme for syntax highlighting. Options: 'light' or 'dark'.
+          * @default 'light'
+         */
+        "theme": 'light' | 'dark';
+        /**
+          * Initial view mode for the JSON data. Can be 'tree' or 'code'.
+          * @default 'tree'
+         */
+        "viewMode": 'tree' | 'code';
     }
     interface LocaleVisualization {
         /**
@@ -31,19 +80,72 @@ export namespace Components {
         /**
           * Whether to show the flag of the region.
           * @type {boolean}
-          * @public
+          * @public 
+          * @default true
          */
         "showFlag": boolean;
+    }
+    interface PidActions {
+        /**
+          * Array of actions to display
+          * @default []
+         */
+        "actions": FoldableAction[];
+        /**
+          * Optional ID for the actions container for ARIA references
+         */
+        "actionsId"?: string;
+    }
+    /**
+     * Component for creating collapsible/expandable content sections
+     * with resize capability and cross-browser compatibility
+     */
+    interface PidCollapsible {
+        /**
+          * Whether to emphasize the component with border and shadow
+          * @default false
+         */
+        "emphasize": boolean;
+        /**
+          * Whether the component is in expanded mode (full size)
+          * @default false
+         */
+        "expanded": boolean;
+        /**
+          * Initial height when expanded
+         */
+        "initialHeight"?: string;
+        /**
+          * Initial width when expanded
+         */
+        "initialWidth"?: string;
+        /**
+          * Line height for collapsed state
+          * @default 24
+         */
+        "lineHeight": number;
+        /**
+          * Whether the collapsible is open by default
+          * @default false
+         */
+        "open": boolean;
+        /**
+          * Whether to show the footer section
+          * @default false
+         */
+        "showFooter": boolean;
     }
     interface PidComponent {
         /**
           * The number of items to show in the table per page. Defaults to 10. (optional)
           * @type {number}
+          * @default 10
          */
         "amountOfItems": number;
         /**
           * The current level of subcomponents. Defaults to 0. (optional)
           * @type {number}
+          * @default 0
          */
         "currentLevelOfSubcomponents": number;
         /**
@@ -55,8 +157,14 @@ export namespace Components {
         /**
           * Determines whether components should be emphasized towards their surrounding by border and shadow. If set to true, border and shadows will be shown around the component. It not set, the component won't be surrounded by border and shadow. (optional)
           * @type {boolean}
+          * @default true
          */
         "emphasizeComponent": boolean;
+        /**
+          * Initial height of the component (e.g. '300px', '50vh'). If not set, defaults to 300px.
+          * @type {string}
+         */
+        "height"?: string;
         /**
           * Determines whether subcomponents should generally be shown or not. If set to true, the component won't show any subcomponents. If not set, the component will show subcomponents if the current level of subcomponents is not the total level of subcomponents or greater. (optional)
           * @type {boolean}
@@ -65,6 +173,7 @@ export namespace Components {
         /**
           * The total number of levels of subcomponents to show. Defaults to 1. (optional)
           * @type {number}
+          * @default 1
          */
         "levelOfSubcomponents": number;
         /**
@@ -75,11 +184,13 @@ export namespace Components {
         /**
           * A stringified JSON object containing settings for this component. The resulting object is passed to every subcomponent, so that every component has the same settings. Values and the according type are defined by the components themselves. (optional)  Schema: ```typescript {  type: string,  values: {   name: string,   value: any  }[] }[] ```
           * @type {string}
+          * @default '[]'
          */
         "settings": string;
         /**
           * Determines whether on the top level the copy button is shown. If set to true, the copy button is shown also on the top level. It not set, the copy button is only shown for sub-components. (optional)
           * @type {boolean}
+          * @default true
          */
         "showTopLevelCopy": boolean;
         /**
@@ -87,7 +198,133 @@ export namespace Components {
           * @type {string}
          */
         "value": string;
+        /**
+          * Initial width of the component (e.g. '500px', '50%'). If not set, defaults to 500px on large screens, 400px on medium screens, and 300px on small screens.
+          * @type {string}
+         */
+        "width"?: string;
     }
+    interface PidDataTable {
+        /**
+          * Current level of subcomponents
+          * @default 0
+         */
+        "currentLevelOfSubcomponents": number;
+        /**
+          * Current page (0-based index)
+          * @default 0
+         */
+        "currentPage": number;
+        /**
+          * Whether to hide subcomponents
+          * @default false
+         */
+        "hideSubcomponents": boolean;
+        /**
+          * Array of items to display in the table
+          * @default []
+         */
+        "items": FoldableItem[];
+        /**
+          * Number of items to show per page
+          * @default 10
+         */
+        "itemsPerPage": number;
+        /**
+          * Total level of subcomponents
+          * @default 1
+         */
+        "levelOfSubcomponents": number;
+        /**
+          * Whether to load subcomponents
+          * @default false
+         */
+        "loadSubcomponents": boolean;
+        /**
+          * Available page sizes
+          * @default [5, 10, 25, 50, 100]
+         */
+        "pageSizes": number[];
+        /**
+          * Settings to pass to subcomponents
+          * @default '[]'
+         */
+        "settings": string;
+    }
+    interface PidPagination {
+        /**
+          * Enable adaptive pagination mode
+          * @default false
+         */
+        "adaptivePagination": boolean;
+        /**
+          * Current page (0-based index)
+          * @default 0
+         */
+        "currentPage": number;
+        /**
+          * Number of items per page
+          * @default 10
+         */
+        "itemsPerPage": number;
+        /**
+          * Available page sizes
+          * @default [5, 10, 25, 50, 100]
+         */
+        "pageSizes": number[];
+        /**
+          * Whether to show the items per page control
+          * @default true
+         */
+        "showItemsPerPageControl": boolean;
+        /**
+          * Total number of items
+          * @default 0
+         */
+        "totalItems": number;
+    }
+    interface PidTooltip {
+        /**
+          * Whether the tooltip should fit its content height exactly
+          * @default true
+         */
+        "fitContent": boolean;
+        /**
+          * The maximum height of the tooltip
+          * @default '150px'
+         */
+        "maxHeight": string;
+        /**
+          * The maximum width of the tooltip
+          * @default '250px'
+         */
+        "maxWidth": string;
+        /**
+          * The preferred position of the tooltip (top or bottom)
+          * @default 'top'
+         */
+        "position": 'top' | 'bottom';
+        /**
+          * The text to display in the tooltip
+         */
+        "text": string;
+    }
+}
+export interface PidCollapsibleCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPidCollapsibleElement;
+}
+export interface PidDataTableCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPidDataTableElement;
+}
+export interface PidPaginationCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPidPaginationElement;
+}
+export interface PidTooltipCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPidTooltipElement;
 }
 declare global {
     interface HTMLColorHighlightElement extends Components.ColorHighlight, HTMLStencilElement {
@@ -102,11 +339,44 @@ declare global {
         prototype: HTMLCopyButtonElement;
         new (): HTMLCopyButtonElement;
     };
+    interface HTMLJsonViewerElement extends Components.JsonViewer, HTMLStencilElement {
+    }
+    var HTMLJsonViewerElement: {
+        prototype: HTMLJsonViewerElement;
+        new (): HTMLJsonViewerElement;
+    };
     interface HTMLLocaleVisualizationElement extends Components.LocaleVisualization, HTMLStencilElement {
     }
     var HTMLLocaleVisualizationElement: {
         prototype: HTMLLocaleVisualizationElement;
         new (): HTMLLocaleVisualizationElement;
+    };
+    interface HTMLPidActionsElement extends Components.PidActions, HTMLStencilElement {
+    }
+    var HTMLPidActionsElement: {
+        prototype: HTMLPidActionsElement;
+        new (): HTMLPidActionsElement;
+    };
+    interface HTMLPidCollapsibleElementEventMap {
+        "collapsibleToggle": boolean;
+    }
+    /**
+     * Component for creating collapsible/expandable content sections
+     * with resize capability and cross-browser compatibility
+     */
+    interface HTMLPidCollapsibleElement extends Components.PidCollapsible, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPidCollapsibleElementEventMap>(type: K, listener: (this: HTMLPidCollapsibleElement, ev: PidCollapsibleCustomEvent<HTMLPidCollapsibleElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPidCollapsibleElementEventMap>(type: K, listener: (this: HTMLPidCollapsibleElement, ev: PidCollapsibleCustomEvent<HTMLPidCollapsibleElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLPidCollapsibleElement: {
+        prototype: HTMLPidCollapsibleElement;
+        new (): HTMLPidCollapsibleElement;
     };
     interface HTMLPidComponentElement extends Components.PidComponent, HTMLStencilElement {
     }
@@ -114,11 +384,70 @@ declare global {
         prototype: HTMLPidComponentElement;
         new (): HTMLPidComponentElement;
     };
+    interface HTMLPidDataTableElementEventMap {
+        "pageChange": number;
+        "itemsPerPageChange": number;
+    }
+    interface HTMLPidDataTableElement extends Components.PidDataTable, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPidDataTableElementEventMap>(type: K, listener: (this: HTMLPidDataTableElement, ev: PidDataTableCustomEvent<HTMLPidDataTableElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPidDataTableElementEventMap>(type: K, listener: (this: HTMLPidDataTableElement, ev: PidDataTableCustomEvent<HTMLPidDataTableElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLPidDataTableElement: {
+        prototype: HTMLPidDataTableElement;
+        new (): HTMLPidDataTableElement;
+    };
+    interface HTMLPidPaginationElementEventMap {
+        "pageChange": number;
+        "itemsPerPageChange": number;
+    }
+    interface HTMLPidPaginationElement extends Components.PidPagination, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPidPaginationElementEventMap>(type: K, listener: (this: HTMLPidPaginationElement, ev: PidPaginationCustomEvent<HTMLPidPaginationElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPidPaginationElementEventMap>(type: K, listener: (this: HTMLPidPaginationElement, ev: PidPaginationCustomEvent<HTMLPidPaginationElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLPidPaginationElement: {
+        prototype: HTMLPidPaginationElement;
+        new (): HTMLPidPaginationElement;
+    };
+    interface HTMLPidTooltipElementEventMap {
+        "tooltipExpansionChange": { expand: boolean; requiredHeight: number };
+    }
+    interface HTMLPidTooltipElement extends Components.PidTooltip, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPidTooltipElementEventMap>(type: K, listener: (this: HTMLPidTooltipElement, ev: PidTooltipCustomEvent<HTMLPidTooltipElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPidTooltipElementEventMap>(type: K, listener: (this: HTMLPidTooltipElement, ev: PidTooltipCustomEvent<HTMLPidTooltipElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLPidTooltipElement: {
+        prototype: HTMLPidTooltipElement;
+        new (): HTMLPidTooltipElement;
+    };
     interface HTMLElementTagNameMap {
         "color-highlight": HTMLColorHighlightElement;
         "copy-button": HTMLCopyButtonElement;
+        "json-viewer": HTMLJsonViewerElement;
         "locale-visualization": HTMLLocaleVisualizationElement;
+        "pid-actions": HTMLPidActionsElement;
+        "pid-collapsible": HTMLPidCollapsibleElement;
         "pid-component": HTMLPidComponentElement;
+        "pid-data-table": HTMLPidDataTableElement;
+        "pid-pagination": HTMLPidPaginationElement;
+        "pid-tooltip": HTMLPidTooltipElement;
     }
 }
 declare namespace LocalJSX {
@@ -131,11 +460,48 @@ declare namespace LocalJSX {
     }
     interface CopyButton {
         /**
+          * Optional custom label for the button. If not provided, a default label will be used.
+          * @type {string}
+          * @public
+         */
+        "label"?: string;
+        /**
           * The value to copy to the clipboard.
           * @type {string}
           * @public
          */
         "value": string;
+    }
+    interface JsonViewer {
+        /**
+          * The JSON data to display. Can be a JSON string or a JavaScript object.
+         */
+        "data"?: string | object;
+        /**
+          * Set to true to open all nodes in tree view initially.
+          * @default false
+         */
+        "expandAll"?: boolean;
+        /**
+          * Maximum height of the viewer in pixels. Set to 0 for no limit.
+          * @default 500
+         */
+        "maxHeight"?: number;
+        /**
+          * Set to true to enable line numbers in code view.
+          * @default true
+         */
+        "showLineNumbers"?: boolean;
+        /**
+          * Theme for syntax highlighting. Options: 'light' or 'dark'.
+          * @default 'light'
+         */
+        "theme"?: 'light' | 'dark';
+        /**
+          * Initial view mode for the JSON data. Can be 'tree' or 'code'.
+          * @default 'tree'
+         */
+        "viewMode"?: 'tree' | 'code';
     }
     interface LocaleVisualization {
         /**
@@ -147,19 +513,76 @@ declare namespace LocalJSX {
         /**
           * Whether to show the flag of the region.
           * @type {boolean}
-          * @public
+          * @public 
+          * @default true
          */
         "showFlag"?: boolean;
+    }
+    interface PidActions {
+        /**
+          * Array of actions to display
+          * @default []
+         */
+        "actions"?: FoldableAction[];
+        /**
+          * Optional ID for the actions container for ARIA references
+         */
+        "actionsId"?: string;
+    }
+    /**
+     * Component for creating collapsible/expandable content sections
+     * with resize capability and cross-browser compatibility
+     */
+    interface PidCollapsible {
+        /**
+          * Whether to emphasize the component with border and shadow
+          * @default false
+         */
+        "emphasize"?: boolean;
+        /**
+          * Whether the component is in expanded mode (full size)
+          * @default false
+         */
+        "expanded"?: boolean;
+        /**
+          * Initial height when expanded
+         */
+        "initialHeight"?: string;
+        /**
+          * Initial width when expanded
+         */
+        "initialWidth"?: string;
+        /**
+          * Line height for collapsed state
+          * @default 24
+         */
+        "lineHeight"?: number;
+        /**
+          * Event emitted when the collapsible is toggled
+         */
+        "onCollapsibleToggle"?: (event: PidCollapsibleCustomEvent<boolean>) => void;
+        /**
+          * Whether the collapsible is open by default
+          * @default false
+         */
+        "open"?: boolean;
+        /**
+          * Whether to show the footer section
+          * @default false
+         */
+        "showFooter"?: boolean;
     }
     interface PidComponent {
         /**
           * The number of items to show in the table per page. Defaults to 10. (optional)
           * @type {number}
+          * @default 10
          */
         "amountOfItems"?: number;
         /**
           * The current level of subcomponents. Defaults to 0. (optional)
           * @type {number}
+          * @default 0
          */
         "currentLevelOfSubcomponents"?: number;
         /**
@@ -171,8 +594,14 @@ declare namespace LocalJSX {
         /**
           * Determines whether components should be emphasized towards their surrounding by border and shadow. If set to true, border and shadows will be shown around the component. It not set, the component won't be surrounded by border and shadow. (optional)
           * @type {boolean}
+          * @default true
          */
         "emphasizeComponent"?: boolean;
+        /**
+          * Initial height of the component (e.g. '300px', '50vh'). If not set, defaults to 300px.
+          * @type {string}
+         */
+        "height"?: string;
         /**
           * Determines whether subcomponents should generally be shown or not. If set to true, the component won't show any subcomponents. If not set, the component will show subcomponents if the current level of subcomponents is not the total level of subcomponents or greater. (optional)
           * @type {boolean}
@@ -181,6 +610,7 @@ declare namespace LocalJSX {
         /**
           * The total number of levels of subcomponents to show. Defaults to 1. (optional)
           * @type {number}
+          * @default 1
          */
         "levelOfSubcomponents"?: number;
         /**
@@ -191,11 +621,13 @@ declare namespace LocalJSX {
         /**
           * A stringified JSON object containing settings for this component. The resulting object is passed to every subcomponent, so that every component has the same settings. Values and the according type are defined by the components themselves. (optional)  Schema: ```typescript {  type: string,  values: {   name: string,   value: any  }[] }[] ```
           * @type {string}
+          * @default '[]'
          */
         "settings"?: string;
         /**
           * Determines whether on the top level the copy button is shown. If set to true, the copy button is shown also on the top level. It not set, the copy button is only shown for sub-components. (optional)
           * @type {boolean}
+          * @default true
          */
         "showTopLevelCopy"?: boolean;
         /**
@@ -203,12 +635,148 @@ declare namespace LocalJSX {
           * @type {string}
          */
         "value"?: string;
+        /**
+          * Initial width of the component (e.g. '500px', '50%'). If not set, defaults to 500px on large screens, 400px on medium screens, and 300px on small screens.
+          * @type {string}
+         */
+        "width"?: string;
+    }
+    interface PidDataTable {
+        /**
+          * Current level of subcomponents
+          * @default 0
+         */
+        "currentLevelOfSubcomponents"?: number;
+        /**
+          * Current page (0-based index)
+          * @default 0
+         */
+        "currentPage"?: number;
+        /**
+          * Whether to hide subcomponents
+          * @default false
+         */
+        "hideSubcomponents"?: boolean;
+        /**
+          * Array of items to display in the table
+          * @default []
+         */
+        "items"?: FoldableItem[];
+        /**
+          * Number of items to show per page
+          * @default 10
+         */
+        "itemsPerPage"?: number;
+        /**
+          * Total level of subcomponents
+          * @default 1
+         */
+        "levelOfSubcomponents"?: number;
+        /**
+          * Whether to load subcomponents
+          * @default false
+         */
+        "loadSubcomponents"?: boolean;
+        /**
+          * Event emitted when items per page changes
+         */
+        "onItemsPerPageChange"?: (event: PidDataTableCustomEvent<number>) => void;
+        /**
+          * Event emitted when page changes
+         */
+        "onPageChange"?: (event: PidDataTableCustomEvent<number>) => void;
+        /**
+          * Available page sizes
+          * @default [5, 10, 25, 50, 100]
+         */
+        "pageSizes"?: number[];
+        /**
+          * Settings to pass to subcomponents
+          * @default '[]'
+         */
+        "settings"?: string;
+    }
+    interface PidPagination {
+        /**
+          * Enable adaptive pagination mode
+          * @default false
+         */
+        "adaptivePagination"?: boolean;
+        /**
+          * Current page (0-based index)
+          * @default 0
+         */
+        "currentPage"?: number;
+        /**
+          * Number of items per page
+          * @default 10
+         */
+        "itemsPerPage"?: number;
+        /**
+          * Event emitted when items per page changes
+         */
+        "onItemsPerPageChange"?: (event: PidPaginationCustomEvent<number>) => void;
+        /**
+          * Event emitted when page changes
+         */
+        "onPageChange"?: (event: PidPaginationCustomEvent<number>) => void;
+        /**
+          * Available page sizes
+          * @default [5, 10, 25, 50, 100]
+         */
+        "pageSizes"?: number[];
+        /**
+          * Whether to show the items per page control
+          * @default true
+         */
+        "showItemsPerPageControl"?: boolean;
+        /**
+          * Total number of items
+          * @default 0
+         */
+        "totalItems"?: number;
+    }
+    interface PidTooltip {
+        /**
+          * Whether the tooltip should fit its content height exactly
+          * @default true
+         */
+        "fitContent"?: boolean;
+        /**
+          * The maximum height of the tooltip
+          * @default '150px'
+         */
+        "maxHeight"?: string;
+        /**
+          * The maximum width of the tooltip
+          * @default '250px'
+         */
+        "maxWidth"?: string;
+        /**
+          * Event emitted when tooltip requires row expansion
+         */
+        "onTooltipExpansionChange"?: (event: PidTooltipCustomEvent<{ expand: boolean; requiredHeight: number }>) => void;
+        /**
+          * The preferred position of the tooltip (top or bottom)
+          * @default 'top'
+         */
+        "position"?: 'top' | 'bottom';
+        /**
+          * The text to display in the tooltip
+         */
+        "text": string;
     }
     interface IntrinsicElements {
         "color-highlight": ColorHighlight;
         "copy-button": CopyButton;
+        "json-viewer": JsonViewer;
         "locale-visualization": LocaleVisualization;
+        "pid-actions": PidActions;
+        "pid-collapsible": PidCollapsible;
         "pid-component": PidComponent;
+        "pid-data-table": PidDataTable;
+        "pid-pagination": PidPagination;
+        "pid-tooltip": PidTooltip;
     }
 }
 export { LocalJSX as JSX };
@@ -217,8 +785,18 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "color-highlight": LocalJSX.ColorHighlight & JSXBase.HTMLAttributes<HTMLColorHighlightElement>;
             "copy-button": LocalJSX.CopyButton & JSXBase.HTMLAttributes<HTMLCopyButtonElement>;
+            "json-viewer": LocalJSX.JsonViewer & JSXBase.HTMLAttributes<HTMLJsonViewerElement>;
             "locale-visualization": LocalJSX.LocaleVisualization & JSXBase.HTMLAttributes<HTMLLocaleVisualizationElement>;
+            "pid-actions": LocalJSX.PidActions & JSXBase.HTMLAttributes<HTMLPidActionsElement>;
+            /**
+             * Component for creating collapsible/expandable content sections
+             * with resize capability and cross-browser compatibility
+             */
+            "pid-collapsible": LocalJSX.PidCollapsible & JSXBase.HTMLAttributes<HTMLPidCollapsibleElement>;
             "pid-component": LocalJSX.PidComponent & JSXBase.HTMLAttributes<HTMLPidComponentElement>;
+            "pid-data-table": LocalJSX.PidDataTable & JSXBase.HTMLAttributes<HTMLPidDataTableElement>;
+            "pid-pagination": LocalJSX.PidPagination & JSXBase.HTMLAttributes<HTMLPidPaginationElement>;
+            "pid-tooltip": LocalJSX.PidTooltip & JSXBase.HTMLAttributes<HTMLPidTooltipElement>;
         }
     }
 }

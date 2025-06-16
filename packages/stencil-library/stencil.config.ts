@@ -4,7 +4,6 @@ import { reactOutputTarget } from '@stencil/react-output-target';
 
 export const config: Config = {
   namespace: 'pid-component',
-  jsxFragmentFactory: 'Fragment',
   outputTargets: [
     {
       type: 'dist-hydrate-script',
@@ -30,7 +29,7 @@ export const config: Config = {
     },
   ],
   testing: {
-    browserHeadless: 'new',
+    browserHeadless: true,
   },
   plugins: [tailwind(), tailwindHMR()],
   extras: {
@@ -44,7 +43,7 @@ export const config: Config = {
     'you may not use this file except in compliance with the License.\n' +
     'You may obtain a copy of the License at\n' +
     '\n' +
-    '      http://www.apache.org/licenses/LICENSE-2.0\n' +
+    '      https://www.apache.org/licenses/LICENSE-2.0\n' +
     '\n' +
     'Unless required by applicable law or agreed to in writing, software\n' +
     'distributed under the License is distributed on an "AS IS" BASIS,\n' +

@@ -1,6 +1,7 @@
 import { PIDRecord } from './PIDRecord';
 import { PID } from './PID';
 import { PIDDataType } from './PIDDataType';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FunctionalComponent, h } from '@stencil/core';
 import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
 import { FoldableItem } from '../../utils/FoldableItem';
@@ -95,14 +96,14 @@ export class HandleType extends GenericIdentifierType {
     return this._pidRecord.values.length > 0;
   }
 
-  renderPreview(): FunctionalComponent<any> {
+  renderPreview(): FunctionalComponent {
     return (
-      <span class={'font-mono bg-inherit font-bold rounded-md'}>
+      <span class={'rounded-md bg-inherit font-mono font-bold'}>
         {this._parts.map(element => {
           return (
-            <span class={'font-bold font-mono'}>
+            <span class={'font-mono font-bold'}>
               <color-highlight text={element.text} />
-              <span class={'font-mono font-bold text-gray-800 mx-0.5'}>{element.nextExists ? '/' : ''}</span>
+              <span class={'mx-0.5 font-mono font-bold text-gray-800'}>{element.nextExists ? '/' : ''}</span>
             </span>
           );
         })}

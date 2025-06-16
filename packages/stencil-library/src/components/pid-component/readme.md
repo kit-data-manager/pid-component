@@ -6,7 +6,7 @@
 ## Properties
 
 | Property                      | Attribute                        | Description                                                                                                                                                                                                                                                                                                                                            | Type      | Default               |
-|-------------------------------|----------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------|-----------------------|
+| ----------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------- | --------------------- |
 | `amountOfItems`               | `amount-of-items`                | The number of items to show in the table per page. Defaults to 10. (optional)                                                                                                                                                                                                                                                                          | `number`  | `10`                  |
 | `currentLevelOfSubcomponents` | `current-level-of-subcomponents` | The current level of subcomponents. Defaults to 0. (optional)                                                                                                                                                                                                                                                                                          | `number`  | `0`                   |
 | `defaultTTL`                  | `default-t-t-l`                  | Determines the default time to live (TTL) for entries in the IndexedDB. Defaults to 24 hours. Units are in milliseconds. (optional)                                                                                                                                                                                                                    | `number`  | `24 * 60 * 60 * 1000` |
@@ -20,31 +20,30 @@
 | `value`                       | `value`                          | The value to parse, evaluate and render.                                                                                                                                                                                                                                                                                                               | `string`  | `undefined`           |
 | `width`                       | `width`                          | Initial width of the component (e.g. '500px', '50%'). If not set, defaults to 500px on large screens, 400px on medium screens, and 300px on small screens.                                                                                                                                                                                             | `string`  | `undefined`           |
 
-## Methods
-
-### `updateComponentSizing() => Promise<void>`
-
-Updates the component sizing and styling based on the expanded state
-
-#### Returns
-
-Type: `Promise<void>`
 
 ## Dependencies
 
 ### Used by
 
- - [pid-component](.)
+ - [pid-data-table](../pid-data-table)
 
 ### Depends on
 
 - [copy-button](../copy-button)
-- [pid-component](.)
+- [pid-collapsible](../pid-collapsible)
+- [pid-data-table](../pid-data-table)
+- [pid-pagination](../pid-pagination)
+- [pid-actions](../pid-actions)
 
 ### Graph
 ```mermaid
 graph TD;
-  pid-component --> pid-component
+  pid-component --> copy-button
+  pid-component --> pid-collapsible
+  pid-component --> pid-data-table
+  pid-component --> pid-pagination
+  pid-component --> pid-actions
+  pid-data-table --> pid-component
   style pid-component fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FunctionalComponent, h } from '@stencil/core';
 import { GenericIdentifierType } from '../utils/GenericIdentifierType';
 
@@ -19,11 +20,7 @@ export class LocaleType extends GenericIdentifierType {
     return;
   }
 
-  isResolvable(): boolean {
-    return false;
-  }
-
-  renderPreview(): FunctionalComponent<any> {
+  renderPreview(): FunctionalComponent {
     // mail icon from: https://heroicons.com/ (MIT license)
     return <locale-visualization locale={this.value} showFlag={true}></locale-visualization>;
   }

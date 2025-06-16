@@ -1,4 +1,5 @@
-import { Component, h, Host, Prop, State, Watch } from '@stencil/core';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { Component, Element, h, Host, Prop, State, Watch } from '@stencil/core';
 import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
 import { FoldableItem } from '../../utils/FoldableItem';
 import { FoldableAction } from '../../utils/FoldableAction';
@@ -11,6 +12,11 @@ import { clearCache } from '../../utils/DataCache';
   shadow: false,
 })
 export class PidComponent {
+  /**
+   * Reference to the host element for direct DOM manipulation
+   */
+  @Element() el: HTMLElement;
+
   /**
    * The value to parse, evaluate and render.
    * @type {string}
@@ -107,6 +113,20 @@ export class PidComponent {
   @Prop() defaultTTL: number = 24 * 60 * 60 * 1000;
 
   /**
+   * Initial width of the component (e.g. '500px', '50%').
+   * If not set, defaults to 500px on large screens, 400px on medium screens, and 300px on small screens.
+   * @type {string}
+   */
+  @Prop() width?: string;
+
+  /**
+   * Initial height of the component (e.g. '300px', '50vh').
+   * If not set, defaults to 300px.
+   * @type {string}
+   */
+  @Prop() height?: string;
+
+  /**
    * Stores the parsed identifier object.
    */
   @State() identifierObject: GenericIdentifierType;
@@ -141,7 +161,31 @@ export class PidComponent {
   /**
    * Determines whether the component should be temporarily visible or not.
    */
-  @State() temporarilyEmphasized: boolean = this.emphasizeComponent;
+  @State() temporarilyEmphasized: boolean = false;
+
+  /**
+   * Tracks whether the component is expanded/unfolded or not
+   */
+  @State() isExpanded: boolean = false;
+
+  constructor() {
+    this.temporarilyEmphasized = this.emphasizeComponent;
+    this.isExpanded = this.openByDefault || false;
+  }
+
+  componentDidLoad() {
+    // Initialize component ID for references
+    this.ensureComponentId();
+  }
+
+  /**
+   * Ensures the component has a unique ID for accessibility references
+   */
+  private ensureComponentId() {
+    if (!this.el.id) {
+      this.el.id = `pid-component-${Math.random().toString(36).substring(2, 9)}`;
+    }
+  }
 
   /**
    * Watches the value property and calls connectedCallback() if it changes.
@@ -155,30 +199,106 @@ export class PidComponent {
   }
 
   /**
-   * Watches the loadSubcomponents property and sets the temporarilyEmphasized property to the value of loadSubcomponents.
+   * Watches the loadSubcomponents property and sets the temporarilyEmphasized property based on emphasizeComponent and loadSubcomponents.
    */
   @Watch('loadSubcomponents')
   async watchLoadSubcomponents() {
-    this.temporarilyEmphasized = this.loadSubcomponents;
+    this.temporarilyEmphasized = this.emphasizeComponent || this.loadSubcomponents;
+
+    // Default line height based on typical text
+    this._lineHeight = 24; // Default value before computation
   }
+
+  /**
+   * Watches the emphasizeComponent property to update temporarilyEmphasized.
+   */
+  @Watch('emphasizeComponent')
+  watchEmphasizeComponent() {
+    this.temporarilyEmphasized = this.emphasizeComponent || this.loadSubcomponents;
+  }
+
+  @Watch('openByDefault')
+  watchOpenByDefault() {
+    // Update expanded state based on openByDefault
+    this.isExpanded = this.openByDefault;
+  }
+
+  /**
+   * Toggles the loadSubcomponents property if the current level of subcomponents is not the total level of subcomponents.
+   * The expanded state is now handled by the pid-collapsible component.
+   */
+  private toggleSubcomponents = (event?: CustomEvent<boolean>) => {
+    // Update expanded state based on collapsible event
+    if (event) {
+      // Stop propagation to prevent parent pid-components from collapsing
+      event.stopPropagation();
+
+      this.isExpanded = event.detail;
+
+      // Only toggle loadSubcomponents when expanding, not when collapsing
+      if (event.detail && !this.hideSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) {
+        this.loadSubcomponents = true;
+      }
+    }
+  };
+
+  // Tooltip functionality has been moved to the pid-tooltip component
 
   /**
    * Parses the value and settings, generates the items and actions and sets the displayStatus to "loaded".
    */
+
+  @Watch('items')
+  onItemsChange(): void {
+    // Reset page if we're beyond the available pages
+    const maxPage = Math.ceil(this.items.length / this.amountOfItems) - 1;
+    if (this.tablePage > maxPage && maxPage >= 0) {
+      this.tablePage = maxPage;
+    }
+  }
+
+  @Watch('amountOfItems')
+  validateAmountOfItems(newValue: number): void {
+    if (newValue <= 0) {
+      console.warn(`pid-component: amountOfItems prop must be positive. Received ${newValue}, defaulting to 10.`);
+      this.amountOfItems = 10;
+    }
+  }
+
+  /**
+   * Lifecycle method that is called before the component is loaded.
+   * It is used to parse the value and settings, generate the items and actions, and set the displayStatus to "loaded".
+   */
   async componentWillLoad() {
+    // Ensure component has an ID for accessibility references
+    this.ensureComponentId();
+
+    // Validate amountOfItems to prevent division by zero
+    this.validateAmountOfItems(this.amountOfItems);
+
+    // Clear items and actions before loading new data to prevent double rendering
+    this.items = [];
+    this.actions = [];
     let settings: {
       type: string;
       values: {
         name: string;
-        value: any;
+        value: unknown;
       }[];
-    }[] = [];
+    }[];
 
-    try {
-      settings = JSON.parse(this.settings);
-    } catch (e) {
-      console.error('Failed to parse settings.', e);
+    // Robust JSON parsing: handle empty or invalid JSON gracefully
+    if (typeof this.settings === 'string' && this.settings.trim().length > 0) {
+      try {
+        settings = JSON.parse(this.settings);
+      } catch (e) {
+        console.error('Failed to parse settings.', e);
+        settings = [];
+      }
+    } else {
+      settings = [];
     }
+
     settings.forEach(value => {
       if (!value.values.some(v => v.name === 'ttl')) {
         value.values.push({ name: 'ttl', value: this.defaultTTL });
@@ -191,12 +311,23 @@ export class PidComponent {
       this.identifierObject = await db.getEntity(this.value, settings);
     } catch (e) {
       console.error('Failed to get entity from db', e);
+      this.displayStatus = 'error';
+      this.identifierObject = undefined;
+      this.items = [];
+      this.actions = [];
       return;
     }
 
     // Generate items and actions if subcomponents should be shown
     if (!this.hideSubcomponents) {
-      this.items = this.identifierObject.items;
+      // Deduplicate items using the equals method
+      const uniqueItems: FoldableItem[] = [];
+      (this.identifierObject?.items || []).forEach(item => {
+        if (!uniqueItems.some(existing => item.equals(existing))) {
+          uniqueItems.push(item);
+        }
+      });
+      this.items = uniqueItems;
       this.items.sort((a, b) => {
         // Sort by priority defined in the specific implementation of GenericIdentifierType (lower is better)
         if (a.priority > b.priority) return 1;
@@ -205,14 +336,59 @@ export class PidComponent {
         // Sort by priority defined by the index in the array of all data types in the parser (lower is better)
         if (a.estimatedTypePriority > b.estimatedTypePriority) return 1;
         if (a.estimatedTypePriority < b.estimatedTypePriority) return -1;
-      });
 
-      this.actions = this.identifierObject.actions;
+        // If both have same priority, sort by title alphabetically
+        if (a.keyTitle && b.keyTitle) {
+          return a.keyTitle.localeCompare(b.keyTitle);
+        }
+
+        // Return 0 if both items have the same priority and no titles to compare
+        return 0;
+      });
+      // Deduplicate actions using the equals method
+      const uniqueActions: FoldableAction[] = [];
+      (this.identifierObject?.actions || []).forEach(action => {
+        if (!uniqueActions.some(existing => action.equals(existing))) {
+          uniqueActions.push(action);
+        }
+      });
+      this.actions = uniqueActions;
       this.actions.sort((a, b) => a.priority - b.priority);
     }
     this.displayStatus = 'loaded';
-    console.log('Finished loading for ', this.value, this.identifierObject);
     await clearCache();
+  }
+
+  /**
+   * Lifecycle method that is called when the component is removed from the DOM.
+   * Used for cleanup to prevent memory leaks.
+   */
+  disconnectedCallback() {
+    // Clear references that might cause memory leaks
+    this.identifierObject = undefined;
+    this.items = [];
+    this.actions = [];
+
+    // Cancel any pending operations
+    if (this._abortController) {
+      this._abortController.abort();
+      this._abortController = undefined;
+    }
+  }
+
+  // AbortController for canceling pending operations
+  private _abortController?: AbortController;
+
+  // Store computed line height for collapsed state
+  private _lineHeight: number = 24; // Default fallback
+
+  /**
+   * Determines if footer should be shown based on whether there are actions or items with pagination
+   */
+  private get shouldShowFooter(): boolean {
+    const hasActions = this.actions.length > 0;
+    const hasPagination = this.items.length > this.amountOfItems;
+    return hasActions || hasPagination;
   }
 
   /**
@@ -220,10 +396,14 @@ export class PidComponent {
    */
   render() {
     return (
-      <Host class="inline flex-grow max-w-full font-sans flex-wrap align-baseline items-center text-xs">
+      <Host class="relative font-sans">
+        {/* Hidden description for accessibility */}
+        <span id={`${this.el.id}-description`} class="sr-only">
+          This component displays information about the identifier {this.value}. It can be expanded to show more details.
+        </span>
         {
-          // Check if there are any items or actions to show
-          (this.items.length === 0 && this.actions.length === 0) || this.hideSubcomponents ? (
+          // Check if there are any items or actions to show, or if there's a body to render
+          (this.items.length === 0 && this.actions.length === 0 && !this.identifierObject?.renderBody()) || this.hideSubcomponents ? (
             this.identifierObject !== undefined && this.displayStatus === 'loaded' ? (
               // If loaded but no items available render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
               <span
@@ -231,25 +411,41 @@ export class PidComponent {
                   this.currentLevelOfSubcomponents === 0
                     ? //(w/o sub components)
                       'group ' +
-                      (this.emphasizeComponent || this.temporarilyEmphasized ? 'rounded-md shadow-md border px-1 bg-white ' : 'bg-white/40') +
-                      'text-xs text-clip inline-flex flex-grow open:align-top open:w-full ease-in-out transition-all duration-200 overflow-y-hidden font-bold font-mono cursor-pointer list-none overflow-x-hidden space-x-3 flex-nowrap flex-shrink-0 items-center'
+                      (this.emphasizeComponent || this.temporarilyEmphasized ? 'rounded-md border border-gray-300 bg-white px-2 py-0 shadow' : 'bg-white/60') +
+                      ' inline-flex w-full cursor-pointer list-none flex-nowrap items-center overflow-hidden font-mono font-bold text-clip transition-all duration-200 ease-in-out open:w-full open:align-top' +
+                      (!this.isExpanded ? ` h-[${this._lineHeight || 24}px] leading-[${this._lineHeight || 24}px]` : '')
                     : ''
                 }
+                tabIndex={0}
+                role="button"
+                aria-label={`Identifier preview for ${this.value}`}
+                aria-expanded={this.isExpanded}
               >
-                <span class={'font-medium font-mono inline-flex flex-nowrap overflow-x-auto text-xs select-all'}>
-                  {
-                    // Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
-                    this.identifierObject.renderPreview()
-                  }
+                <span
+                  class={`inline-flex max-w-full flex-nowrap overflow-x-auto font-mono font-medium text-ellipsis whitespace-nowrap select-all ${this.isExpanded ? 'text-xs' : 'text-sm'}`}
+                >
+                  {// Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
+                  this.identifierObject?.renderPreview()}
                 </span>
                 {
                   // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
-                  this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy && this.emphasizeComponent ? <copy-button value={this.identifierObject.value} /> : ''
+                  this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy ? (
+                    <copy-button value={this.identifierObject.value} class="ml-2 flex-shrink-0" aria-label={`Copy value: ${this.identifierObject.value}`} />
+                  ) : (
+                    ''
+                  )
                 }
               </span>
+            ) : this.displayStatus === 'error' ? (
+              <span class={'inline-flex items-center font-medium text-red-600'} role="alert" aria-live="assertive">
+                <svg class="mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-2h2v2h-2zm0-10v6h2V7h-2z" clip-rule="evenodd" />
+                </svg>
+                Error loading data for: {this.value}
+              </span>
             ) : (
-              <span class={'inline-flex items-center transition ease-in-out'}>
-                <svg class="animate-spin ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <span class={'inline-flex items-center transition ease-in-out'} role="status" aria-live="polite">
+                <svg class="mr-3 ml-1 h-5 w-5 animate-spin text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
                   <path
                     class="opacity-75"
@@ -257,289 +453,89 @@ export class PidComponent {
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   />
                 </svg>
-                Loading... {this.value}
+                <span>Loading... {this.value}</span>
               </span>
             )
           ) : (
-            <details
-              class={
-                'group ' +
-                (this.emphasizeComponent || this.temporarilyEmphasized ? 'rounded-md border pl-0.5 py-0 bg-white bg-opacity-0' : 'bg-white/60') +
-                'text-clip inline flex-grow font-sans open:align-top open:w-full ease-in-out transition-all duration-200'
-              }
+            <pid-collapsible
               open={this.openByDefault}
-              onToggle={this.toggleSubcomponents}
+              emphasize={this.emphasizeComponent || this.temporarilyEmphasized}
+              expanded={this.isExpanded}
+              initialWidth={this.width}
+              initialHeight={this.height}
+              lineHeight={this._lineHeight}
+              showFooter={this.shouldShowFooter}
+              onCollapsibleToggle={e => this.toggleSubcomponents(e)}
+              onClick={e => {
+                // Isolate click events to prevent bubbling to parent components
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+              }}
+              aria-label={`Collapsible section for ${this.value}`}
+              aria-describedby={`${this.el.id}-description`}
             >
-              <summary class="overflow-y-hidden font-bold font-mono cursor-pointer list-none overflow-x-hidden inline-flex flex-nowrap flex-shrink-0 items-center">
-                <span class={'inline-flex flex-nowrap overflow-x-auto pr-1 items-center'}>
-                  {this.emphasizeComponent || this.temporarilyEmphasized ? (
-                    <span class={'flex-shrink-0 pr-1'}>
-                      <svg
-                        class="transition group-open:-rotate-180"
-                        fill="none"
-                        height="12"
-                        shape-rendering="geometricPrecision"
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="1.5"
-                        viewBox="0 0 12 12"
-                        width="10"
-                      >
-                        <path d="M 2 3 l 4 6 l 4 -6"></path>
-                      </svg>
-                    </span>
-                  ) : (
-                    ''
-                  )}
-                  <span class={'font-medium font-mono inline-flex flex-nowrap overflow-x-auto text-sm select-all'}>
-                    {
-                      // Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
-                      this.identifierObject.renderPreview()
-                    }
-                  </span>
-                </span>
-                {
-                  // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
-                  this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy && (this.emphasizeComponent || this.temporarilyEmphasized) ? (
-                    <copy-button value={this.identifierObject.value} />
-                  ) : (
-                    ''
-                  )
-                }
-              </summary>
-              {
-                // If there are any items to show, render the table
-                this.items.length > 0 ? (
-                  <div>
-                    <div class="resize-y divide-y text-sm leading-6 bg-gray-100 m-1 p-0.5 h-64 max-h-fit overflow-y-scroll border rounded min-h-[4rem]">
-                      <table class="text-left w-full text-sm font-sans select-text">
-                        <thead class="bg-slate-600 flex text-slate-200 w-full rounded-t">
-                          <tr class="flex w-full rounded font-semibold">
-                            <th class="px-1 w-1/4">Key</th>
-                            <th class="px-1 w-3/4">Value</th>
-                          </tr>
-                        </thead>
-                        <tbody class="bg-grey-100 flex flex-col items-center justify-between overflow-y-scroll w-full rounded-b">
-                          {this.items
-                            .filter((_, index) => {
-                              // Filter out items that are not on the current page
-                              return index >= this.tablePage * this.amountOfItems && index < this.tablePage * this.amountOfItems + this.amountOfItems;
-                            })
-                            .map(value => (
-                              // Render a row for every item
-                              // return (
-                              <tr class={'odd:bg-slate-200 flex w-full'}>
-                                <td class={'overflow-x-auto p-1 w-1/4 font-mono'}>
-                                  <a
-                                    role="link"
-                                    class="right-0 focus:outline-none focus:ring-gray-300 rounded-md focus:ring-offset-2 focus:ring-2 focus:bg-gray-200 relative md:mt-0 inline flex-nowrap"
-                                    onMouseOver={this.showTooltip}
-                                    onFocus={this.showTooltip}
-                                    onMouseOut={this.hideTooltip}
-                                  >
-                                    <div class="cursor-pointer align-top justify-between flex-nowrap">
-                                      <a href={value.keyLink} target={'_blank'} rel={'noopener noreferrer'} class={'mr-2 text-blue-400 justify-start float-left'}>
-                                        {value.keyTitle}
-                                      </a>
-                                      <svg
-                                        aria-haspopup="true"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        class="icon icon-tabler icon-tabler-info-circle justify-end min-w-[1rem] min-h-[1rem] flex-none float-right"
-                                        width="25"
-                                        height="25"
-                                        viewBox="0 0 24 24"
-                                        stroke-width="1.5"
-                                        stroke="#A0AEC0"
-                                        fill="none"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                      >
-                                        <path stroke="none" d="M0 0h24v24H0z" />
-                                        <circle cx="12" cy="12" r="9" />
-                                        <line x1="12" y1="8" x2="12.01" y2="8" />
-                                        <polyline points="11 12 12 12 12 16 13 16" />
-                                      </svg>
-                                    </div>
-                                    <p
-                                      role="tooltip"
-                                      class="hidden z-20 mt-1 transition duration-100 ease-in-out shadow-md bg-white rounded text-xs text-gray-600 p-1 flex-wrap overflow-clip"
-                                    >
-                                      {value.keyTooltip}
-                                    </p>
-                                  </a>
-                                </td>
-                                <td class={'align-top overflow-x-auto text-sm p-1 w-3/4 select-text flex '}>
-                                  <span class={'flex-grow'}>
-                                    {
-                                      // Load a foldable subcomponent if subcomponents are not disabled (hideSubcomponents), and the current level of subcomponents is not the total level of subcomponents. If the subcomponent is on the bottom level of the hierarchy, render just a preview. If the value should not be resolved (isFoldable), just render the value as text.
-                                      this.loadSubcomponents && !this.hideSubcomponents && !value.renderDynamically ? (
-                                        <pid-component
-                                          value={value.value}
-                                          levelOfSubcomponents={this.levelOfSubcomponents}
-                                          // emphasizeComponent={this.emphasizeComponent}
-                                          currentLevelOfSubcomponents={this.currentLevelOfSubcomponents + 1}
-                                          amountOfItems={this.amountOfItems}
-                                          settings={this.settings}
-                                        />
-                                      ) : !this.hideSubcomponents && this.currentLevelOfSubcomponents === this.levelOfSubcomponents && !value.renderDynamically ? (
-                                        <pid-component
-                                          value={value.value}
-                                          levelOfSubcomponents={this.currentLevelOfSubcomponents}
-                                          // emphasizeComponent={this.emphasizeComponent}
-                                          currentLevelOfSubcomponents={this.currentLevelOfSubcomponents}
-                                          amountOfItems={this.amountOfItems}
-                                          settings={this.settings}
-                                          hideSubcomponents={true}
-                                        />
-                                      ) : (
-                                        <span class={'font-mono text-sm'}>{value.value}</span>
-                                      )
-                                    }
-                                  </span>
-                                  <copy-button value={value.value} />
-                                </td>
-                              </tr>
-                            ))}
-                        </tbody>
-                      </table>
-                    </div>
-                    <div class="flex items-center justify-between border-t border-gray-200 bg-white px-1 py-1 sm:px-1 max-h-12">
-                      <div class="hidden sm:flex sm:flex-1 sm:flex-nowrap sm:items-center sm:justify-between text-sm">
-                        <div class={''}>
-                          <p class="text-sm text-gray-700">
-                            Showing
-                            <span class="font-medium"> {1 + this.tablePage * this.amountOfItems} </span>
-                            to
-                            <span class="font-medium"> {Math.min(this.tablePage * this.amountOfItems + this.amountOfItems, this.items.length)} </span>
-                            of
-                            <span class="font-medium"> {this.items.length} </span>
-                            entries
-                          </p>
-                        </div>
-                        <div>
-                          {this.items.length > this.amountOfItems ? (
-                            <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-                              <button
-                                onClick={() => {
-                                  this.tablePage = Math.max(this.tablePage - 1, 0);
-                                }}
-                                class="relative inline-flex items-center rounded-l-md px-1 py-1 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-                              >
-                                <span class="sr-only">Previous</span>
-                                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                  <path
-                                    fill-rule="evenodd"
-                                    d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
-                                    clip-rule="evenodd"
-                                  />
-                                </svg>
-                              </button>
-                              {Array(Math.ceil(this.items.length / this.amountOfItems))
-                                .fill(0)
-                                .map((_, index) => {
-                                  return (
-                                    <button
-                                      onClick={() => (this.tablePage = index)}
-                                      class={
-                                        index === this.tablePage
-                                          ? 'relative z-10 inline-flex items-center bg-blue-600 px-2 py-1 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
-                                          : 'relative hidden items-center px-2 py-1 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex'
-                                      }
-                                    >
-                                      {index + 1}
-                                    </button>
-                                  );
-                                })}
-                              <button
-                                onClick={() => {
-                                  this.tablePage = Math.min(this.tablePage + 1, Math.floor(this.items.length / this.amountOfItems));
-                                }}
-                                class="relative inline-flex items-center rounded-r-md px-1 py-1 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-                              >
-                                <span class="sr-only">Next</span>
-                                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                  <path
-                                    fill-rule="evenodd"
-                                    d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
-                                    clip-rule="evenodd"
-                                  />
-                                </svg>
-                              </button>
-                            </nav>
-                          ) : (
-                            ''
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  ''
-                )
-              }
-              {this.identifierObject.renderBody()}
-              {this.actions.length > 0 ? (
-                <span class={'m-0.5 flex justify-between gap-1'}>
-                  {this.actions.map(action => {
-                    let style = 'p-1 font-semibold text-sm rounded border ';
-                    switch (action.style) {
-                      case 'primary':
-                        style += 'bg-blue-500 text-white';
-                        break;
-                      case 'secondary':
-                        style += 'bg-slate-200 text-blue-500';
-                        break;
-                      case 'danger':
-                        style += 'bg-red-500 text-white';
-                        break;
-                    }
+              <span
+                slot="summary"
+                class={`inline-flex overflow-x-auto font-mono text-sm font-medium select-all ${this.isExpanded ? 'flex-wrap overflow-visible break-words' : 'flex-nowrap whitespace-nowrap'}`}
+                aria-label={`Preview of ${this.value}`}
+              >
+                {this.identifierObject?.renderPreview()}
+              </span>
 
-                    return (
-                      <a href={action.link} class={style} rel={'noopener noreferrer'} target={'_blank'}>
-                        {action.title}
-                      </a>
-                    );
-                  })}
+              {this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy && (this.emphasizeComponent || this.temporarilyEmphasized) ? (
+                <copy-button slot="summary-actions" value={this.value} class="relative ml-auto flex-shrink-0" aria-label={`Copy value: ${this.value}`} />
+              ) : null}
+
+              {/* Table and content */}
+              {this.items.length > 0 ? (
+                <pid-data-table
+                  items={this.items}
+                  itemsPerPage={this.amountOfItems}
+                  currentPage={this.tablePage}
+                  loadSubcomponents={this.loadSubcomponents}
+                  hideSubcomponents={this.hideSubcomponents}
+                  currentLevelOfSubcomponents={this.currentLevelOfSubcomponents}
+                  levelOfSubcomponents={this.levelOfSubcomponents}
+                  settings={this.settings}
+                  onPageChange={e => (this.tablePage = e.detail)}
+                  class="flex-grow overflow-auto"
+                  aria-label={`Data table for ${this.value}`}
+                  aria-describedby={`${this.el.id}-table-description`}
+                />
+              ) : null}
+
+              {/* Hidden description for data table accessibility */}
+              {this.items.length > 0 && (
+                <span id={`${this.el.id}-table-description`} class="sr-only">
+                  This table displays properties and values associated with the identifier {this.value}.
                 </span>
-              ) : (
-                ''
               )}
-            </details>
+
+              {this.identifierObject?.renderBody()}
+
+              {/* Pagination in a separate line above actions */}
+              {this.items.length > 0 && (
+                <div slot="footer" class="relative z-50 w-full overflow-visible bg-white">
+                  <pid-pagination
+                    currentPage={this.tablePage}
+                    totalItems={this.items.length}
+                    itemsPerPage={this.amountOfItems}
+                    onPageChange={e => (this.tablePage = e.detail)}
+                    onItemsPerPageChange={e => (this.amountOfItems = e.detail)}
+                    aria-label={`Pagination controls for ${this.value} data`}
+                    aria-controls={`${this.el.id}-table`}
+                  />
+                </div>
+              )}
+
+              {/* Footer Actions - in a separate line below pagination */}
+              {this.actions.length > 0 && (
+                <pid-actions slot="footer-actions" actions={this.actions} class="mt-0 flex-shrink-0" aria-label={`Available actions for ${this.value}`} />
+              )}
+            </pid-collapsible>
           )
         }
       </Host>
     );
   }
-
-  /**
-   * Toggles the loadSubcomponents property if the current level of subcomponents is not the total level of subcomponents.
-   */
-  private toggleSubcomponents = () => {
-    if (!this.hideSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) this.loadSubcomponents = !this.loadSubcomponents;
-  };
-
-  /**
-   * Shows the tooltip of the hovered element.
-   * @param event The event that triggered this function.
-   */
-  private showTooltip = (event: Event) => {
-    let target = event.target as HTMLElement;
-    do {
-      target = target.parentElement as HTMLElement;
-    } while (target !== null && target.tagName !== 'A');
-    if (target !== null) target.children[1].classList.remove('hidden');
-  };
-
-  /**
-   * Hides the tooltip of the hovered element.
-   * @param event The event that triggered this function.
-   */
-  private hideTooltip = (event: Event) => {
-    let target = event.target as HTMLElement;
-    do {
-      target = target.parentElement as HTMLElement;
-    } while (target !== null && target.tagName !== 'A');
-    if (target !== null) target.children[1].classList.add('hidden');
-  };
 }

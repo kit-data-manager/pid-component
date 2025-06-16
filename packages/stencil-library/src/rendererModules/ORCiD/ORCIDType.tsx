@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FunctionalComponent, h } from '@stencil/core';
 import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
 import { ORCIDInfo } from './ORCIDInfo';
@@ -54,10 +55,10 @@ export class ORCIDType extends GenericIdentifierType {
       for (const i of this.settings) {
         switch (i['name']) {
           case 'affiliationAt':
-            this.affiliationAt = new Date(i['value']);
+            this.affiliationAt = new Date(i['value'] as string);
             break;
           case 'showAffiliation':
-            this.showAffiliation = i['value'];
+            this.showAffiliation = i['value'] === true || i['value'] === 'true' || i['value'] === '1';
             break;
         }
       }
@@ -169,10 +170,10 @@ export class ORCIDType extends GenericIdentifierType {
     return this._orcidInfo.ORCiDJSON !== undefined;
   }
 
-  renderPreview(): FunctionalComponent<any> {
+  renderPreview(): FunctionalComponent {
     return (
-      <span class={'inline-flex items-center font-mono flex-nowrap align-top'}>
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" class={'h-5 p-0.5 mr-1 flex-none items-center'}>
+      <span class={'inline-flex flex-nowrap items-center align-top font-mono'}>
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" class={'mr-1 h-5 flex-none items-center p-0.5'}>
           <style type="text/css">
             {`.st0{fill:#A6CE39;}`}
             {`.st1{fill:#FFFFFF;}`}
@@ -192,7 +193,7 @@ export class ORCIDType extends GenericIdentifierType {
             />
           </g>
         </svg>
-        <span class={'flex-none px-1 items-center'}>
+        <span class={'flex-none items-center px-1'}>
           {this._orcidInfo.familyName}, {this._orcidInfo.givenNames}{' '}
           {this.showAffiliation && this._orcidInfo.getAffiliationsAt(new Date()).length > 0
             ? `(${this._orcidInfo.getAffiliationAsString(this._orcidInfo.getAffiliationsAt(new Date())[0], false)}${

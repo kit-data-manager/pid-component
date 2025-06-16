@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 
 const meta: Meta = {
-  title: 'copy-button',
+  title: 'Internal/Copy Button',
   component: 'copy-button',
   argTypes: {
     value: {
@@ -13,7 +13,7 @@ const meta: Meta = {
     },
   },
   args: {
-    value: 'Hello world!',
+    value: 'This is an example.',
   },
 };
 export default meta;
@@ -21,13 +21,13 @@ type Story = StoryObj;
 
 export const Default: Story = {
   args: {
-    value: 'Hello world!',
+    value: 'This is an example.',
   },
   parameters: {
     docs: {
       source: {
         code: `
-<copy-button value="Hello world!"></copy-button>
+<copy-button value="This is an example."></copy-button>
         `,
       },
     },

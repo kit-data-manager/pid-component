@@ -19,7 +19,7 @@ export interface PIDComponentDB extends DBSchema {
       rendererKey: string;
       context: string;
       lastAccess: Date;
-      lastData: any;
+      lastData: unknown;
     };
     indexes: {
       'by-context': string;
@@ -134,7 +134,7 @@ export class Database {
       type: string;
       values: {
         name: string;
-        value: any;
+        value: unknown;
       }[];
     }[],
   ): Promise<GenericIdentifierType> {
@@ -149,7 +149,7 @@ export class Database {
             rendererKey: string;
             context: string;
             lastAccess: Date;
-            lastData: any;
+            lastData: unknown;
           }
         | undefined = await db.get('entities', entityKey);
 
@@ -159,7 +159,7 @@ export class Database {
         const entitySettings = settings.find(value => value.type === entity.rendererKey)?.values;
         const ttl = entitySettings?.find(value => value.name === 'ttl');
 
-        if (ttl != undefined && ttl.value != undefined && (new Date().getTime() - entity.lastAccess.getTime() > ttl.value || ttl.value === 0)) {
+        if (ttl != undefined && ttl.value != undefined && (new Date().getTime() - entity.lastAccess.getTime() > (ttl.value as number) || ttl.value === 0)) {
           // If the TTL has expired, delete the entity from the database and move on to creating a new one (down below)
           console.log('TTL expired! Deleting entry in db', ttl.value, new Date().getTime() - entity.lastAccess.getTime());
           await this.deleteEntity(value);
