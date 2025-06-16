@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Component, Event, EventEmitter, h, Prop, State, Watch } from '@stencil/core';
 import { FoldableItem } from '../../utils/FoldableItem';
 
@@ -95,28 +96,28 @@ export class PidDataTable {
   render() {
     if (this.items.length === 0) {
       return (
-        <div class="rounded-lg border border-gray-200 bg-gray-50 m-1 p-4 text-center text-gray-500" role="status" aria-live="polite" aria-label="No data available">
+        <div class="m-1 rounded-lg border border-gray-200 bg-gray-50 p-4 text-center text-gray-500" role="status" aria-live="polite" aria-label="No data available">
           <p class="m-0">No data available</p>
         </div>
       );
     }
 
     return (
-      <div class="rounded-lg border border-gray-200 bg-gray-50 m-1 flex flex-col h-full">
+      <div class="m-1 flex h-full flex-col rounded-lg border border-gray-200 bg-gray-50">
         {/* Table container with scrollable content */}
-        <div class="overflow-auto flex-grow relative z-10">
+        <div class="relative z-10 flex-grow overflow-auto">
           <table
             id={this.tableId}
-            class="w-full text-left text-sm font-sans select-text border-collapse table-fixed"
+            class="w-full table-fixed border-collapse text-left font-sans text-sm select-text"
             aria-label="Data table with properties and values"
             role="table"
           >
-            <thead class="bg-slate-600 text-slate-200 rounded-t-lg sticky top-0 z-20">
+            <thead class="sticky top-0 z-20 rounded-t-lg bg-slate-600 text-slate-200">
               <tr class="font-semibold" role="row">
-                <th class="px-2 py-2 min-w-[150px] w-[30%] rounded-tl-lg" scope="col" role="columnheader">
+                <th class="w-[30%] min-w-[150px] rounded-tl-lg px-2 py-2" scope="col" role="columnheader">
                   Key
                 </th>
-                <th class="px-2 py-2 w-[70%] rounded-tr-lg" scope="col" role="columnheader">
+                <th class="w-[70%] rounded-tr-lg px-2 py-2" scope="col" role="columnheader">
                   Value
                 </th>
               </tr>
@@ -129,14 +130,14 @@ export class PidDataTable {
                   aria-label={`Row for ${value.keyTitle} with value ${value.value}`}
                   role="row"
                 >
-                  <td class={'p-2 min-w-[150px] w-auto font-mono align-top'} role="cell">
+                  <td class={'w-auto min-w-[150px] p-2 align-top font-mono'} role="cell">
                     <pid-tooltip text={value.keyTooltip || `Details for ${value.keyTitle}`} position="top" maxHeight="200px" aria-label={`Information about ${value.keyTitle}`}>
-                      <div slot="trigger" class="min-h-7 overflow-hidden w-full flex items-center">
+                      <div slot="trigger" class="flex min-h-7 w-full items-center overflow-hidden">
                         <a
                           href={value.keyLink}
                           target={'_blank'}
                           rel={'noopener noreferrer'}
-                          class="mr-2 text-blue-600 underline hover:text-blue-800 focus:text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 rounded truncate"
+                          class="mr-2 truncate rounded text-blue-600 underline hover:text-blue-800 focus:text-blue-900 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-none"
                           onClick={e => e.stopPropagation()}
                           aria-label={`Open ${value.keyTitle} in new tab`}
                         >
@@ -145,9 +146,9 @@ export class PidDataTable {
                       </div>
                     </pid-tooltip>
                   </td>
-                  <td class={'align-top text-sm p-2 w-full select-text relative'} role="cell">
-                    <div class="w-full grid grid-cols-[1fr_auto] gap-2 items-start">
-                      <div class="whitespace-normal break-words min-w-0">
+                  <td class={'relative w-full p-2 align-top text-sm select-text'} role="cell">
+                    <div class="grid w-full grid-cols-[1fr_auto] items-start gap-2">
+                      <div class="min-w-0 break-words whitespace-normal">
                         {
                           // Load a foldable subcomponent if subcomponents are not disabled (hideSubcomponents), and the current level of subcomponents is not the total level of subcomponents. If the subcomponent is on the bottom level of the hierarchy, render just a preview. If the value should not be resolved (isFoldable), just render the value as text.
                           this.loadSubcomponents && !this.hideSubcomponents && !value.renderDynamically ? (
@@ -158,7 +159,7 @@ export class PidDataTable {
                               amountOfItems={this.itemsPerPage}
                               settings={this.settings}
                               openByDefault={false}
-                              class="w-full min-w-0 block"
+                              class="block w-full min-w-0"
                             />
                           ) : !this.hideSubcomponents && this.currentLevelOfSubcomponents === this.levelOfSubcomponents && !value.renderDynamically ? (
                             <pid-component
@@ -169,17 +170,17 @@ export class PidDataTable {
                               settings={this.settings}
                               hideSubcomponents={true}
                               openByDefault={false}
-                              class="w-full min-w-0 block"
+                              class="block w-full min-w-0"
                             />
                           ) : (
-                            <span class={'font-mono text-sm overflow-x-auto whitespace-normal break-words inline-block max-w-full'}>{value.value}</span>
+                            <span class={'inline-block max-w-full overflow-x-auto font-mono text-sm break-words whitespace-normal'}>{value.value}</span>
                           )
                         }
                       </div>
                       <div class="flex-shrink-0">
                         <copy-button
                           value={value.value}
-                          class="z-50 opacity-100 visible cursor-pointer bg-white/90 hover:bg-white rounded-sm shadow-sm hover:shadow-md transition-all duration-200"
+                          class="visible z-50 cursor-pointer rounded-sm bg-white/90 opacity-100 shadow-sm transition-all duration-200 hover:bg-white hover:shadow-md"
                           aria-label={`Copy ${value.keyTitle} value to clipboard`}
                           title={`Copy ${value.keyTitle} value to clipboard`}
                         />

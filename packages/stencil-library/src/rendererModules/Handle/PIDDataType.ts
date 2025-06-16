@@ -150,12 +150,18 @@ export class PIDDataType {
           // Extract weight
           try {
             newLocation.weight = parseInt(xmlLocations[j].getAttribute('weight'));
-          } catch (ignored) {}
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          } catch (_ignored) {
+            /* empty */
+          }
 
           // Extract view e.g. json or html
           try {
             newLocation.view = xmlLocations[j].getAttribute('view');
-          } catch (ignored) {}
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          } catch (ignored) {
+            /* empty */
+          }
 
           // Try to resolve the data from the link
           try {
@@ -170,7 +176,10 @@ export class PIDDataType {
               // if view is html set the redirect URL (activated on user click) to the link
               tempDataType.redirectURL = newLocation.href;
             }
-          } catch (ignored) {}
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          } catch (ignored) {
+            /* empty */
+          }
         }
       }
     }

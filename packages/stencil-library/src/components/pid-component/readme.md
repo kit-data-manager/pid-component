@@ -21,20 +21,6 @@
 | `width`                       | `width`                          | Initial width of the component (e.g. '500px', '50%'). If not set, defaults to 500px on large screens, 400px on medium screens, and 300px on small screens.                                                                                                                                                                                             | `string`  | `undefined`           |
 
 
-## Methods
-
-### `updateComponentSizing() => Promise<void>`
-
-Updates the component sizing and styling based on the expanded state
-This method is now handled by the pid-collapsible component
-
-#### Returns
-
-Type: `Promise<void>`
-
-
-
-
 ## Dependencies
 
 ### Used by

@@ -18,7 +18,7 @@ import { JSONType } from '../rendererModules/JSONType';
 export const renderers: {
   priority: number;
   key: string;
-  constructor: new (value: string, settings?: { name: string; value: any }[]) => GenericIdentifierType;
+  constructor: new (value: string, settings?: { name: string; value: unknown }[]) => GenericIdentifierType;
 }[] = [
   {
     priority: 0,

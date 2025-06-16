@@ -389,7 +389,7 @@ export class ORCIDInfo {
       rawOrcidJSON['person']['addresses']['address'].length > 0 ? rawOrcidJSON['person']['addresses']['address'][0]['country']['value'] : undefined;
 
     // Return the ORCIDInfo object
-    return new ORCIDInfo(orcid, rawOrcidJSON, familyName, givenNames, employments, preferredLocale, biography, emails, keywords, researcherUrls, country);
+    return new ORCIDInfo(orcid, rawOrcidJSON as object, familyName, givenNames, employments, preferredLocale, biography, emails, keywords, researcherUrls, country);
   }
 
   static fromJSON(serialized: string): ORCIDInfo {

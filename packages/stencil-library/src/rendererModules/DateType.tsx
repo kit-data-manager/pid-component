@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FunctionalComponent, h } from '@stencil/core';
 import { GenericIdentifierType } from '../utils/GenericIdentifierType';
 
@@ -29,11 +30,7 @@ export class DateType extends GenericIdentifierType {
     return;
   }
 
-  isResolvable(): boolean {
-    return false;
-  }
-
-  renderPreview(): FunctionalComponent<any> {
+  renderPreview(): FunctionalComponent {
     return <span>{this._date.toLocaleString()}</span>;
   }
 }

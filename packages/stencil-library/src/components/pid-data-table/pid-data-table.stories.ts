@@ -184,7 +184,7 @@ export default meta;
 type Story = StoryObj;
 
 // Helper function to create data table story
-const createDataTableStory = (props: Record<string, any>) => {
+const createDataTableStory = (props: Record<string, unknown>) => {
   return {
     render: () => {
       // Create data table element
@@ -194,7 +194,7 @@ const createDataTableStory = (props: Record<string, any>) => {
       Object.entries(props).forEach(([key, value]) => {
         if (key === 'items') {
           // Special handling for items array
-          dataTable.items = value;
+          dataTable.items = value as FoldableItem[];
         } else {
           dataTable[key] = value;
         }

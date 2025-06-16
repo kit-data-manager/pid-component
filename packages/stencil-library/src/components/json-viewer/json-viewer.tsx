@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Component, h, Method, Prop, State, Watch } from '@stencil/core';
 
 /**
@@ -306,9 +307,9 @@ export class JsonViewer {
         <div class="ml-4">
           <details class="mb-1" open={expandedState} onToggle={toggleExpand} id={nodeId}>
             <summary
-              class={`list-none relative pl-5 cursor-pointer font-mono flex items-center py-1 rounded group ${
+              class={`group relative flex cursor-pointer list-none items-center rounded py-1 pl-5 font-mono ${
                 this.theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
-              } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1`}
+              } focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-none`}
               onKeyDown={handleKeyDown}
               tabIndex={0}
               role="button"
@@ -316,14 +317,14 @@ export class JsonViewer {
               aria-controls={`${nodeId}-content`}
               aria-label={`${key}: ${nodeType} with ${itemText}, ${expandedState ? 'click to collapse' : 'click to expand'}`}
             >
-              <div class="flex items-center w-full">
-                <span class={`font-medium mr-2 ${this.theme === 'dark' ? 'text-blue-400' : 'text-blue-600'}`}>{key}: </span>
+              <div class="flex w-full items-center">
+                <span class={`mr-2 font-medium ${this.theme === 'dark' ? 'text-blue-400' : 'text-blue-600'}`}>{key}: </span>
                 <span class={`flex items-center gap-1 ${this.theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
                   <span>{isArray ? '[' : '{'}</span>
                   <span>{itemText}</span>
                   <span>{isArray ? ']' : '}'}</span>
                   <span
-                    class={`text-xs ml-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100 ${this.theme === 'dark' ? 'text-blue-400' : 'text-blue-500'}`}
+                    class={`ml-2 text-xs opacity-0 transition-opacity duration-200 group-hover:opacity-100 ${this.theme === 'dark' ? 'text-blue-400' : 'text-blue-500'}`}
                     aria-hidden="true"
                   >
                     {expandedState ? 'Click to collapse' : 'Click to expand'}
@@ -396,7 +397,7 @@ export class JsonViewer {
     // Show error if JSON is invalid
     if (this.error) {
       return (
-        <div class="p-4 text-red-500 text-center" role="alert" aria-live="assertive">
+        <div class="p-4 text-center text-red-500" role="alert" aria-live="assertive">
           <p>Invalid JSON: {this.error}</p>
           <slot></slot>
         </div>
@@ -406,7 +407,7 @@ export class JsonViewer {
     // Show message if no data
     if (!this.parsedData) {
       return (
-        <div class="p-4 text-gray-500 text-center" role="status" aria-live="polite">
+        <div class="p-4 text-center text-gray-500" role="status" aria-live="polite">
           <p>No data provided</p>
           <slot></slot>
         </div>
@@ -423,13 +424,13 @@ export class JsonViewer {
 
     return (
       <div
-        class={`rounded-lg overflow-hidden shadow border ${this.theme === 'dark' ? 'bg-gray-800 text-gray-50 border-gray-600' : 'bg-white text-gray-800 border-gray-200'}`}
+        class={`overflow-hidden rounded-lg border shadow ${this.theme === 'dark' ? 'border-gray-600 bg-gray-800 text-gray-50' : 'border-gray-200 bg-white text-gray-800'}`}
         role="region"
         aria-labelledby={`${viewerId}-title`}
       >
-        <div class={`flex justify-between items-center p-3 border-b ${this.theme === 'dark' ? 'border-gray-600' : 'border-gray-200'}`}>
+        <div class={`flex items-center justify-between border-b p-3 ${this.theme === 'dark' ? 'border-gray-600' : 'border-gray-200'}`}>
           <div class="flex items-center gap-2">
-            <span id={`${viewerId}-title`} class={`font-medium text-sm ${this.theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
+            <span id={`${viewerId}-title`} class={`text-sm font-medium ${this.theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
               JSON Viewer
             </span>
             <span class={`text-xs ${this.theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`} aria-live="polite">
@@ -439,11 +440,11 @@ export class JsonViewer {
 
           <button
             onClick={this.toggleView}
-            class={`flex items-center gap-1 py-1.5 px-3 rounded-md text-xs font-medium cursor-pointer transition-all duration-200 ${
+            class={`flex cursor-pointer items-center gap-1 rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-200 ${
               this.theme === 'dark'
-                ? 'bg-gray-900 border border-gray-600 text-gray-50 hover:bg-gray-700 hover:border-blue-600'
-                : 'bg-gray-100 border border-gray-200 text-gray-800 hover:bg-gray-50 hover:border-blue-400'
-            } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1`}
+                ? 'border border-gray-600 bg-gray-900 text-gray-50 hover:border-blue-600 hover:bg-gray-700'
+                : 'border border-gray-200 bg-gray-100 text-gray-800 hover:border-blue-400 hover:bg-gray-50'
+            } focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-none`}
             aria-controls={contentId}
             aria-label={`Switch to ${this.currentViewMode === 'tree' ? 'code' : 'tree'} view`}
             type="button"
@@ -462,15 +463,15 @@ export class JsonViewer {
           {/* Overlay copy button */}
           <button
             onClick={this.copyToClipboard}
-            class={`absolute top-2 right-2 z-10 rounded-md transition-all duration-200 p-1 ${
+            class={`absolute top-2 right-2 z-10 rounded-md p-1 transition-all duration-200 ${
               this.copied
                 ? this.theme === 'dark'
                   ? 'bg-green-600 text-white'
                   : 'bg-green-100 text-green-800'
                 : this.theme === 'dark'
-                  ? 'bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white'
-                  : 'bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-800'
-            } opacity-75 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1`}
+                  ? 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-800'
+            } opacity-75 hover:opacity-100 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-none`}
             title={this.copied ? 'Copied!' : 'Copy JSON to clipboard'}
             aria-label={this.copied ? 'JSON copied to clipboard' : 'Copy JSON to clipboard'}
             type="button"
@@ -488,7 +489,7 @@ export class JsonViewer {
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                class="w-4 h-4"
+                class="h-4 w-4"
                 aria-hidden="true"
               >
                 <title>Check mark</title>
@@ -503,7 +504,7 @@ export class JsonViewer {
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                class="w-4 h-4"
+                class="h-4 w-4"
                 aria-hidden="true"
               >
                 <title>Copy icon</title>
@@ -524,11 +525,11 @@ export class JsonViewer {
 
           {/* Code View */}
           {this.currentViewMode === 'code' && (
-            <div class={`font-mono text-sm pr-12 ${this.theme === 'dark' ? '' : 'bg-gray-50'}`}>
+            <div class={`pr-12 font-mono text-sm ${this.theme === 'dark' ? '' : 'bg-gray-50'}`}>
               {this.showLineNumbers ? (
                 <div class="flex">
                   <div
-                    class={`py-4 px-2 text-right border-r select-none ${this.theme === 'dark' ? 'border-gray-600 text-gray-400 bg-gray-900' : 'border-gray-200 text-gray-500 bg-gray-100'}`}
+                    class={`border-r px-2 py-4 text-right select-none ${this.theme === 'dark' ? 'border-gray-600 bg-gray-900 text-gray-400' : 'border-gray-200 bg-gray-100 text-gray-500'}`}
                   >
                     {formattedJson.split('\n').map((_, i) => (
                       <div class="min-h-5" key={`line-${i}`}>
@@ -536,14 +537,14 @@ export class JsonViewer {
                       </div>
                     ))}
                   </div>
-                  <pre class={`p-4 whitespace-pre-wrap flex-grow overflow-x-auto ${this.theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
+                  <pre class={`flex-grow overflow-x-auto p-4 whitespace-pre-wrap ${this.theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
                     {formattedJson.split('\n').map((line, i) => (
                       <div class="min-h-5" key={`code-${i}`} innerHTML={this.formatCodeLine(line)} />
                     ))}
                   </pre>
                 </div>
               ) : (
-                <pre class="p-4 whitespace-pre-wrap flex-grow overflow-x-auto">
+                <pre class="flex-grow overflow-x-auto p-4 whitespace-pre-wrap">
                   {formattedJson.split('\n').map((line, i) => (
                     <div class="min-h-5" key={`code-${i}`} innerHTML={this.formatCodeLine(line)} />
                   ))}

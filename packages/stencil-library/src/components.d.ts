@@ -194,10 +194,6 @@ export namespace Components {
          */
         "showTopLevelCopy": boolean;
         /**
-          * Updates the component sizing and styling based on the expanded state This method is now handled by the pid-collapsible component
-         */
-        "updateComponentSizing": () => Promise<void>;
-        /**
           * The value to parse, evaluate and render.
           * @type {string}
          */

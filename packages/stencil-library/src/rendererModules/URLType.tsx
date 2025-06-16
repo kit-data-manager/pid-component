@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FunctionalComponent, h } from '@stencil/core';
 import { GenericIdentifierType } from '../utils/GenericIdentifierType';
 
@@ -19,11 +20,7 @@ export class URLType extends GenericIdentifierType {
     return;
   }
 
-  isResolvable(): boolean {
-    return false;
-  }
-
-  renderPreview(): FunctionalComponent<any> {
+  renderPreview(): FunctionalComponent {
     return (
       <a href={this.value} target="_blank" rel={'noopener noreferrer'} class={'font-mono text-sm text-blue-400'}>
         {this.value}

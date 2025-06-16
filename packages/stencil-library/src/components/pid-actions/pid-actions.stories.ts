@@ -51,16 +51,14 @@ const createStory = (actions: FoldableAction[]) => {
       const pidActions = document.createElement('pid-actions');
 
       // Create plain object array from FoldableAction instances
-      const actionObjects = actions.map(action => ({
+      // Set the actions property manually
+      // @ts-expect-error - Property assignment is expected to work at runtime
+      pidActions.actions = actions.map(action => ({
         priority: action.priority,
         title: action.title,
         link: action.link,
         style: action.style,
       }));
-
-      // Set the actions property manually
-      // @ts-expect-error - Property assignment is expected to work at runtime
-      pidActions.actions = actionObjects;
 
       // Append to container
       container.appendChild(pidActions);
@@ -180,16 +178,14 @@ export const ManyActions: Story = {
     ];
 
     // Create plain object array from FoldableAction instances
-    const actionObjects = actions.map(action => ({
+    // Set the actions property manually
+    // @ts-expect-error - Property assignment is expected to work at runtime
+    pidActions.actions = actions.map(action => ({
       priority: action.priority,
       title: action.title,
       link: action.link,
       style: action.style,
     }));
-
-    // Set the actions property manually
-    // @ts-expect-error - Property assignment is expected to work at runtime
-    pidActions.actions = actionObjects;
 
     // Append to container
     container.appendChild(pidActions);

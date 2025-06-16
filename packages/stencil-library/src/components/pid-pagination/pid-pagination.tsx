@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Component, Event, EventEmitter, h, Prop } from '@stencil/core';
 
 @Component({
@@ -141,7 +142,7 @@ export class PidPagination {
     const paginationId = `pagination-${Math.random().toString(36).substring(2, 11)}`;
 
     return (
-      <div class="flex flex-wrap items-center justify-between gap-2 py-1 px-3 text-sm bg-white w-full resize-none" role="navigation" aria-labelledby={`${paginationId}-label`}>
+      <div class="flex w-full resize-none flex-wrap items-center justify-between gap-2 bg-white px-3 py-1 text-sm" role="navigation" aria-labelledby={`${paginationId}-label`}>
         {/* Hidden label for screen readers */}
         <span id={`${paginationId}-label`} class="sr-only">
           Pagination controls and display settings
@@ -152,7 +153,7 @@ export class PidPagination {
           {/* Horizontal page size selector - Only shown when not in adaptive mode and when control is enabled */}
           {!this.adaptivePagination && this.showItemsPerPageControl && (
             <div class="flex items-center gap-1" role="group" aria-label="Items per page options">
-              <span class="text-xs text-gray-600 whitespace-nowrap" id={`${paginationId}-itemsperpage-label`}>
+              <span class="text-xs whitespace-nowrap text-gray-600" id={`${paginationId}-itemsperpage-label`}>
                 Items per page:
               </span>
               <div class="flex items-center gap-0.5 rounded border border-gray-200 bg-white p-0.5" role="toolbar" aria-labelledby={`${paginationId}-itemsperpage-label`}>
@@ -160,8 +161,8 @@ export class PidPagination {
                   <button
                     key={`size-${size}`}
                     onClick={() => this.handleItemsPerPageChange(size)}
-                    class={`px-2 py-0.5 text-xs rounded transition-colors resize-none ${
-                      this.itemsPerPage === size ? 'bg-blue-600 text-white font-medium' : 'text-gray-700 hover:bg-gray-100'
+                    class={`resize-none rounded px-2 py-0.5 text-xs transition-colors ${
+                      this.itemsPerPage === size ? 'bg-blue-600 font-medium text-white' : 'text-gray-700 hover:bg-gray-100'
                     }`}
                     aria-label={`Show ${size} items per page`}
                     aria-pressed={this.itemsPerPage === size ? 'true' : 'false'}
@@ -178,7 +179,7 @@ export class PidPagination {
           {/* When in adaptive mode, show indicator */}
           {this.adaptivePagination && (
             <div class="flex items-center gap-1">
-              <span class="text-xs text-gray-600 whitespace-nowrap px-2 py-0.5 bg-blue-50 border border-blue-100 rounded-full" role="status" aria-live="polite">
+              <span class="rounded-full border border-blue-100 bg-blue-50 px-2 py-0.5 text-xs whitespace-nowrap text-gray-600" role="status" aria-live="polite">
                 <span class="sr-only">Currently using </span>
                 Adaptive pagination: {this.itemsPerPage} items
               </span>
@@ -186,7 +187,7 @@ export class PidPagination {
           )}
 
           {/* Item range display */}
-          <span class="hidden text-xs text-gray-600 sm:block whitespace-nowrap" role="status" aria-live="polite">
+          <span class="hidden text-xs whitespace-nowrap text-gray-600 sm:block" role="status" aria-live="polite">
             Showing {this.displayRange.start}-{this.displayRange.end} of {this.totalItems}
           </span>
         </div>
@@ -194,12 +195,12 @@ export class PidPagination {
         {/* Right side: Pagination controls - ONLY SHOWN WHEN NEEDED */}
         {needsPagination && (
           <div class="flex items-center">
-            <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm resize-none" aria-label="Pagination" role="navigation">
+            <nav class="isolate inline-flex resize-none -space-x-px rounded-md shadow-sm" aria-label="Pagination" role="navigation">
               {/* Previous button */}
               <button
                 onClick={() => this.handlePageChange(this.currentPage - 1)}
                 disabled={this.currentPage === 0}
-                class="relative inline-flex items-center rounded-l-md px-2 py-1.5 text-gray-500 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed resize-none"
+                class="relative inline-flex resize-none items-center rounded-l-md px-2 py-1.5 text-gray-500 ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
                 aria-label="Previous page"
                 title="Go to previous page"
                 type="button"
@@ -222,7 +223,7 @@ export class PidPagination {
                   return (
                     <span
                       key={`ellipsis-${i}`}
-                      class="relative inline-flex items-center px-2 py-1.5 text-sm text-gray-700 ring-1 ring-inset ring-gray-300 resize-none"
+                      class="relative inline-flex resize-none items-center px-2 py-1.5 text-sm text-gray-700 ring-1 ring-gray-300 ring-inset"
                       role="separator"
                       aria-label="More pages"
                       aria-hidden="true"
@@ -244,8 +245,8 @@ export class PidPagination {
                     onClick={() => this.handlePageChange(pageNum)}
                     class={
                       isCurrentPage
-                        ? 'relative z-10 inline-flex items-center bg-blue-600 px-2 py-1.5 text-xs font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 resize-none'
-                        : 'relative inline-flex items-center px-2 py-1.5 text-xs text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 resize-none'
+                        ? 'relative z-10 inline-flex resize-none items-center bg-blue-600 px-2 py-1.5 text-xs font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
+                        : 'relative inline-flex resize-none items-center px-2 py-1.5 text-xs text-gray-900 ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500'
                     }
                     aria-label={`Page ${humanPageNum}`}
                     aria-current={isCurrentPage ? 'page' : undefined}
@@ -261,7 +262,7 @@ export class PidPagination {
               <button
                 onClick={() => this.handlePageChange(this.currentPage + 1)}
                 disabled={this.currentPage >= this.totalPages - 1}
-                class="relative inline-flex items-center rounded-r-md px-2 py-1.5 text-gray-500 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed resize-none"
+                class="relative inline-flex resize-none items-center rounded-r-md px-2 py-1.5 text-gray-500 ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
                 aria-label="Next page"
                 title="Go to next page"
                 type="button"

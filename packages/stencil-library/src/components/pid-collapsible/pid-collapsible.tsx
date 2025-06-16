@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Component, Element, Event, EventEmitter, h, Host, Prop, State, Watch } from '@stencil/core';
 
 /**
@@ -667,11 +668,11 @@ export class PidCollapsible {
               e.stopImmediatePropagation();
             }}
           >
-            <span class={`inline-flex pr-2 items-center gap-1 ${this.expanded ? 'flex-wrap overflow-visible' : 'flex-nowrap overflow-hidden min-w-0'}`}>
+            <span class={`inline-flex items-center gap-1 pr-2 ${this.expanded ? 'flex-wrap overflow-visible' : 'min-w-0 flex-nowrap overflow-hidden'}`}>
               {this.emphasize && (
                 <span class="flex-shrink-0">
                   <svg
-                    class="transition-transform duration-200 group-open:rotate-180 text-gray-600"
+                    class="text-gray-600 transition-transform duration-200 group-open:rotate-180"
                     fill="none"
                     height="12"
                     width="12"
@@ -686,11 +687,11 @@ export class PidCollapsible {
                   </svg>
                 </span>
               )}
-              <span class={this.expanded ? 'overflow-visible' : 'truncate min-w-0'}>
+              <span class={this.expanded ? 'overflow-visible' : 'min-w-0 truncate'}>
                 <slot name="summary"></slot>
               </span>
             </span>
-            <div class="flex-shrink-0 ml-auto">
+            <div class="ml-auto flex-shrink-0">
               <slot name="summary-actions"></slot>
             </div>
           </summary>
@@ -702,7 +703,7 @@ export class PidCollapsible {
           {this.showFooter && this.expanded && (
             <div class={footerClasses}>
               {/* Main footer slot for pagination */}
-              <div class="bg-white border-b border-gray-100 overflow-visible z-50">
+              <div class="z-50 overflow-visible border-b border-gray-100 bg-white">
                 <slot name="footer"></slot>
               </div>
 
@@ -711,7 +712,7 @@ export class PidCollapsible {
                 <div class="flex-grow overflow-visible">
                   <slot name="footer-left"></slot>
                 </div>
-                <div class="flex items-center gap-2 flex-shrink-0 overflow-visible">
+                <div class="flex flex-shrink-0 items-center gap-2 overflow-visible">
                   <slot name="footer-actions"></slot>
                 </div>
               </div>

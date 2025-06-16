@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Component, h, Prop } from '@stencil/core';
 import { FoldableAction } from '../../utils/FoldableAction';
 
@@ -27,7 +28,7 @@ export class PidActions {
     return (
       <div
         id={containerId}
-        class="actions-container sticky bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-1 z-20 mt-auto w-full"
+        class="actions-container sticky right-0 bottom-0 left-0 z-20 mt-auto w-full border-t border-gray-200 bg-white p-1"
         role="toolbar"
         aria-label="Available actions"
       >
@@ -36,12 +37,12 @@ export class PidActions {
           The following links open related resources in new tabs
         </span>
 
-        <div class="flex justify-between gap-1 flex-wrap" aria-describedby={`${containerId}-desc`}>
+        <div class="flex flex-wrap justify-between gap-1" aria-describedby={`${containerId}-desc`}>
           {this.actions.map((action, index) => {
             // Use Tailwind classes directly instead of concatenating strings
             const baseClasses = 'p-1 font-semibold text-sm rounded border transition-colors duration-200';
             const focusClasses = 'focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500';
-            let styleClasses = '';
+            let styleClasses: string;
 
             switch (action.style) {
               case 'primary':

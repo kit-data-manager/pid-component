@@ -13,7 +13,7 @@ async function open() {
  * @param init The options for the fetch request.
  * @returns {Promise<Response>} The response of the fetch request.
  */
-export async function cachedFetch(url: string, init?: any): Promise<any> {
+export async function cachedFetch(url: string, init?: unknown): Promise<unknown> {
   await open();
   if (cacheInstance) {
     // If there is a cache available, check if the resource is cached.

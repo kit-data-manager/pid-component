@@ -188,7 +188,7 @@ pid-collapsible.resize-both::after {
  * REASON: Accessibility features like high contrast mode support
  * need media queries that Tailwind doesn't provide
  */
-@media (prefers-contrast: high) {
+@media (prefers-contrast: more) {
   pid-collapsible summary {
     border: 1px solid currentColor;
   }

@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FunctionalComponent, h } from '@stencil/core';
 import { GenericIdentifierType } from '../utils/GenericIdentifierType';
 import '../components/json-viewer/json-viewer';
@@ -86,10 +87,10 @@ export class JSONType extends GenericIdentifierType {
       const entryCount = Object.keys(jsonObj).length;
       return (
         <div class="w-full">
-          <div class="bg-gray-100 rounded-md text-xs font-mono flex items-center">
-            <span class="font-medium mr-1">{isArray ? 'Array' : 'Object'}</span>
+          <div class="flex items-center rounded-md bg-gray-100 font-mono text-xs">
+            <span class="mr-1 font-medium">{isArray ? 'Array' : 'Object'}</span>
             <span class="text-gray-500">{isArray ? '[' : '{'}</span>
-            <span class="text-gray-500 text-xs">
+            <span class="text-xs text-gray-500">
               {entryCount} {entryCount === 1 ? 'item' : 'items'}
             </span>
             <span class="text-gray-500">{isArray ? ']' : '}'}</span>
@@ -101,7 +102,7 @@ export class JSONType extends GenericIdentifierType {
     // For simple JSON values (strings, numbers, booleans, null), show the stringified value
     return (
       <div class="w-full">
-        <pre class="bg-gray-100 rounded-md text-xs font-mono overflow-x-auto whitespace-pre-wrap max-w-full">{JSON.stringify(jsonObj, null, 2)}</pre>
+        <pre class="max-w-full overflow-x-auto rounded-md bg-gray-100 font-mono text-xs whitespace-pre-wrap">{JSON.stringify(jsonObj, null, 2)}</pre>
       </div>
     );
   }

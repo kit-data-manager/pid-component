@@ -1,9 +1,11 @@
 # Ignore artifacts:
 /src/index.html
-/www/
-/node_modules/
-/dist/
-/loader/
-/.storybook/
-/.stencil/
-/storybook-static/
+/**/www/
+/**/node_modules/
+/**/dist/
+/**/loader/
+/**/hydrate/
+/**/.storybook/
+/**/.stencil/
+/**/storybook-static/
+

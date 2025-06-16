@@ -8,7 +8,7 @@ export default [
   { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'] },
   { files: ['**/*.js'], languageOptions: { sourceType: 'commonjs' } },
   { languageOptions: { globals: globals.browser } },
-  { ignores: ['node_modules/', 'dist/', 'www/', 'loader/', '.stencil/', '.storybook/', 'storybook-static'] },
+  { ignores: ['node_modules/', 'dist/', 'www/', 'loader/', '.stencil/', '.storybook/', 'storybook-static', 'hydrate/'] },
   ...storybook.configs['flat/recommended'],
   eslintConfigPrettier,
   pluginJs.configs.recommended,

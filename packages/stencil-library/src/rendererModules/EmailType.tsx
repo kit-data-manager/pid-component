@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FunctionalComponent, h } from '@stencil/core';
 import { GenericIdentifierType } from '../utils/GenericIdentifierType';
 
@@ -19,14 +20,10 @@ export class EmailType extends GenericIdentifierType {
     return;
   }
 
-  isResolvable(): boolean {
-    return false;
-  }
-
-  renderPreview(): FunctionalComponent<any> {
+  renderPreview(): FunctionalComponent {
     // mail icon from: https://heroicons.com/ (MIT license)
     return (
-      <span class={'items-center gap-2 inline-flex font-mono text-sm text-blue-400'}>
+      <span class={'inline-flex items-center gap-2 font-mono text-sm text-blue-400'}>
         {this.value
           .split(new RegExp(/\s*,\s*/))
           .filter(email => email.length > 0)
@@ -36,7 +33,7 @@ export class EmailType extends GenericIdentifierType {
                 href={'mailto:' + email}
                 rel={'noopener noreferrer'}
                 target="_blank"
-                class={'items-center inline-flex font-mono text-sm text-blue-400 border border-slate-400 rounded-md px-1 py-0.5'}
+                class={'inline-flex items-center rounded-md border border-slate-400 px-1 py-0.5 font-mono text-sm text-blue-400'}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" aria-hidden="true" viewBox="0 0 24 24" stroke-width="1" stroke="black" height="20px" class={'mr-2'}>
                   <path

@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Component, h, Host, Prop, State } from '@stencil/core';
 
 @Component({
@@ -40,7 +41,8 @@ export class CopyButton {
           await navigator.clipboard.writeText(this.value);
           this.showSuccess();
           return;
-        } catch (err) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (ignored) {
           // Fall through to execCommand fallback
         }
       }
@@ -83,13 +85,15 @@ export class CopyButton {
               }
             }
           }
-        } catch (err) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (ignored) {
           // Error handling is silent to not disrupt user experience
         } finally {
           document.body.removeChild(textArea);
         }
       }, 200); // Increased timeout for better reliability
     } catch (err) {
+      console.error('Failed to copy text: ', err);
       // Error handling is silent to not disrupt user experience
     }
   };
@@ -131,12 +135,7 @@ export class CopyButton {
         )}
 
         <button
-          class={`${this.copied ? 'bg-green-200' : 'bg-white hover:bg-blue-200'}
-            border border-slate-500 text-slate-800 font-medium font-mono
-            rounded-md px-2 py-0.5 hover:text-slate-900 flex-none max-h-min
-            items-center z-30 relative
-            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1
-            transition-colors duration-200`}
+          class={`${this.copied ? 'bg-green-200' : 'bg-white hover:bg-blue-200'} relative z-30 max-h-min flex-none items-center rounded-md border border-slate-500 px-2 py-0.5 font-mono font-medium text-slate-800 transition-colors duration-200 hover:text-slate-900 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-none`}
           onClick={e => this.copyValue(e)}
           aria-label={ariaLabel}
           title={ariaLabel}

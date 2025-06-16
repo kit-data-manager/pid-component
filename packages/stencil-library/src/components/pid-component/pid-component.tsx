@@ -1,4 +1,5 @@
-import { Component, Element, h, Host, Method, Prop, State, Watch } from '@stencil/core';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { Component, Element, h, Host, Prop, State, Watch } from '@stencil/core';
 import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
 import { FoldableItem } from '../../utils/FoldableItem';
 import { FoldableAction } from '../../utils/FoldableAction';
@@ -126,18 +127,6 @@ export class PidComponent {
   @Prop() height?: string;
 
   /**
-   * Updates the component sizing and styling based on the expanded state
-   * This method is now handled by the pid-collapsible component
-   */
-  @Method()
-  async updateComponentSizing() {
-    // This method is kept for backward compatibility
-    console.log('updateComponentSizing is now handled by the pid-collapsible component');
-  }
-
-  // Height property already defined above in updateComponentSizing method
-
-  /**
    * Stores the parsed identifier object.
    */
   @State() identifierObject: GenericIdentifierType;
@@ -194,7 +183,7 @@ export class PidComponent {
    */
   private ensureComponentId() {
     if (!this.el.id) {
-      this.el.id = `pid-component-${Math.random().toString(36).substr(2, 9)}`;
+      this.el.id = `pid-component-${Math.random().toString(36).substring(2, 9)}`;
     }
   }
 
@@ -294,9 +283,9 @@ export class PidComponent {
       type: string;
       values: {
         name: string;
-        value: any;
+        value: unknown;
       }[];
-    }[] = [];
+    }[];
 
     // Robust JSON parsing: handle empty or invalid JSON gracefully
     if (typeof this.settings === 'string' && this.settings.trim().length > 0) {
@@ -422,8 +411,8 @@ export class PidComponent {
                   this.currentLevelOfSubcomponents === 0
                     ? //(w/o sub components)
                       'group ' +
-                      (this.emphasizeComponent || this.temporarilyEmphasized ? 'rounded-md shadow border border-gray-300 px-2 py-0 bg-white ' : 'bg-white/60') +
-                      ' text-clip inline-flex w-full open:align-top open:w-full ease-in-out transition-all duration-200 overflow-hidden font-bold font-mono cursor-pointer list-none flex-nowrap items-center' +
+                      (this.emphasizeComponent || this.temporarilyEmphasized ? 'rounded-md border border-gray-300 bg-white px-2 py-0 shadow' : 'bg-white/60') +
+                      ' inline-flex w-full cursor-pointer list-none flex-nowrap items-center overflow-hidden font-mono font-bold text-clip transition-all duration-200 ease-in-out open:w-full open:align-top' +
                       (!this.isExpanded ? ` h-[${this._lineHeight || 24}px] leading-[${this._lineHeight || 24}px]` : '')
                     : ''
                 }
@@ -433,7 +422,7 @@ export class PidComponent {
                 aria-expanded={this.isExpanded}
               >
                 <span
-                  class={`font-medium font-mono inline-flex flex-nowrap overflow-hidden text-ellipsis select-all whitespace-nowrap max-w-full ${this.isExpanded ? 'text-xs' : 'text-sm'}`}
+                  class={`inline-flex max-w-full flex-nowrap overflow-x-auto font-mono font-medium text-ellipsis whitespace-nowrap select-all ${this.isExpanded ? 'text-xs' : 'text-sm'}`}
                 >
                   {// Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
                   this.identifierObject?.renderPreview()}
@@ -448,7 +437,7 @@ export class PidComponent {
                 }
               </span>
             ) : this.displayStatus === 'error' ? (
-              <span class={'inline-flex items-center text-red-600 font-medium'} role="alert" aria-live="assertive">
+              <span class={'inline-flex items-center font-medium text-red-600'} role="alert" aria-live="assertive">
                 <svg class="mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                   <path fill-rule="evenodd" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-2h2v2h-2zm0-10v6h2V7h-2z" clip-rule="evenodd" />
                 </svg>
@@ -456,7 +445,7 @@ export class PidComponent {
               </span>
             ) : (
               <span class={'inline-flex items-center transition ease-in-out'} role="status" aria-live="polite">
-                <svg class="animate-spin ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                <svg class="mr-3 ml-1 h-5 w-5 animate-spin text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
                   <path
                     class="opacity-75"
@@ -487,7 +476,7 @@ export class PidComponent {
             >
               <span
                 slot="summary"
-                class={`font-medium font-mono inline-flex text-sm select-all ${this.isExpanded ? 'flex-wrap overflow-visible break-words' : 'flex-nowrap overflow-x-auto whitespace-nowrap'}`}
+                class={`inline-flex overflow-x-auto font-mono text-sm font-medium select-all ${this.isExpanded ? 'flex-wrap overflow-visible break-words' : 'flex-nowrap whitespace-nowrap'}`}
                 aria-label={`Preview of ${this.value}`}
               >
                 {this.identifierObject?.renderPreview()}
@@ -526,7 +515,7 @@ export class PidComponent {
 
               {/* Pagination in a separate line above actions */}
               {this.items.length > 0 && (
-                <div slot="footer" class="relative w-full bg-white z-50 overflow-visible">
+                <div slot="footer" class="relative z-50 w-full overflow-visible bg-white">
                   <pid-pagination
                     currentPage={this.tablePage}
                     totalItems={this.items.length}
@@ -541,7 +530,7 @@ export class PidComponent {
 
               {/* Footer Actions - in a separate line below pagination */}
               {this.actions.length > 0 && (
-                <pid-actions slot="footer-actions" actions={this.actions} class="flex-shrink-0 mt-0" aria-label={`Available actions for ${this.value}`} />
+                <pid-actions slot="footer-actions" actions={this.actions} class="mt-0 flex-shrink-0" aria-label={`Available actions for ${this.value}`} />
               )}
             </pid-collapsible>
           )

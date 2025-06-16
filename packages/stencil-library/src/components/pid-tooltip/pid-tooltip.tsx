@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Component, Element, Event, EventEmitter, h, Host, Listen, Prop, State } from '@stencil/core';
 
 @Component({
@@ -165,7 +166,7 @@ export class PidTooltip {
     const requiredSpace = tooltipHeight + 20; // Add margin
 
     // Determine position based on available space
-    let useBottom = false;
+    let useBottom: boolean;
     let needsExpansion = false;
 
     if (this.position === 'top' && spaceAbove >= requiredSpace) {
@@ -299,7 +300,7 @@ export class PidTooltip {
             <button
               ref={el => (this.buttonRef = el)}
               type="button"
-              class="flex items-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 rounded-full p-0.5 transition-colors duration-200 hover:bg-gray-100"
+              class="flex items-center rounded-full p-0.5 transition-colors duration-200 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-none"
               aria-label={buttonLabel}
               aria-expanded={this.isVisible ? 'true' : 'false'}
               aria-controls={this.tooltipId}
@@ -314,7 +315,7 @@ export class PidTooltip {
               <svg
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
-                class="icon icon-tabler icon-tabler-info-circle min-w-[1rem] min-h-[1rem] flex-shrink-0"
+                class="icon icon-tabler icon-tabler-info-circle min-h-[1rem] min-w-[1rem] flex-shrink-0"
                 width="20"
                 height="20"
                 viewBox="0 0 24 24"
@@ -341,7 +342,7 @@ export class PidTooltip {
             ref={el => (this.tooltipRef = el)}
             id={this.tooltipId}
             role="tooltip"
-            class={`${this.isVisible ? 'block' : 'hidden'} z-50 absolute ${this.getPositionClasses(this.calculatedPosition)} transition-opacity duration-200 ease-in-out shadow-lg bg-white rounded text-xs text-gray-700 p-3 w-full whitespace-normal border border-gray-300`}
+            class={`${this.isVisible ? 'block' : 'hidden'} absolute z-50 ${this.getPositionClasses(this.calculatedPosition)} w-full rounded border border-gray-300 bg-white p-3 text-xs whitespace-normal text-gray-700 shadow-lg transition-opacity duration-200 ease-in-out`}
             style={this.getTooltipStyles()}
             aria-live="polite"
           >
