@@ -191,6 +191,32 @@ export const ROR: Story = {
   },
 };
 
+export const SPDXLong: Story = {
+  args: {
+    value: 'https://spdx.org/licenses/Apache-2.0',
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `<pid-component value='https://spdx.org/licenses/Apache-2.0'></pid-component>`,
+      },
+    },
+  },
+};
+
+export const SPDXShort: Story = {
+  args: {
+    value: 'Apache-2.0',
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `<pid-component value='Apache-2.0'></pid-component>`,
+      },
+    },
+  },
+};
+
 export const Date: Story = {
   args: {
     value: '2022-11-11T08:01:20.557+00:00',
