@@ -14,6 +14,45 @@ export class RORType extends GenericIdentifierType {
   private label: string;
   private acronym: string;
 
+  private relationshipTypes = {
+    parent: {
+      title: 'Parent Organization',
+      tooltip: 'Organization that this organization is part of',
+    },
+    child: {
+      title: 'Child Organization',
+      tooltip: 'Organization that is part of this organization',
+    },
+    related: {
+      title: 'Related Organization',
+      tooltip: 'Organization that is related to this organization',
+    },
+    predecessor: {
+      title: 'Predecessor Organization',
+      tooltip: 'Organization that preceded this organization',
+    },
+    successor: {
+      title: 'Successor Organization',
+      tooltip: 'Organization that succeeded this organization',
+    },
+  };
+
+  private contentMappings = {
+    active: '🟢 Active',
+    inactive: '⚪️ Inactive',
+    withdrawn: '⚠️ Withdrawn',
+    education: '🏫 Education',
+    funder: '💰 Funder',
+    healthcare: '🏥 Healthcare',
+    company: '🏢 Company',
+    archive: '📚 Archive',
+    nonprofit: '🎗️ Nonprofit',
+    government: '🏛️ Government',
+    facility: '🔬 Facility',
+    other: 'Other',
+    unknown: '❓ Unknown',
+  };
+
   getSettingsKey(): string {
     return 'RORType';
   }
@@ -34,6 +73,15 @@ export class RORType extends GenericIdentifierType {
    */
   private getRorId(): string {
     return this.value.split('/').pop();
+  }
+
+  private getOptimizedContent(content: string): string {
+    // Check if the content is in the contentMappings
+    if (this.contentMappings[content.toLowerCase()]) {
+      return this.contentMappings[content.toLowerCase()];
+    }
+    // If not, return the content as is
+    return content;
   }
 
   /**
@@ -82,14 +130,15 @@ export class RORType extends GenericIdentifierType {
       this.actions.push(new FoldableAction(10, 'View on ROR', this.rorData.id, 'primary'));
 
       // Add status of the organization
-      this.items.push(new FoldableItem(30, 'Status', this.rorData.status || 'Unknown', 'Current status of the organization in the ROR registry'));
+
+      this.items.push(new FoldableItem(30, 'Status', this.getOptimizedContent(this.rorData.status || 'unknown'), 'Current status of the organization in the ROR registry'));
 
       // Add types of the organization
       if (!this.rorData.types || this.rorData.types.length === 0) {
-        this.items.push(new FoldableItem(25, 'Type', 'Unknown', 'Type of organization'));
+        this.items.push(new FoldableItem(25, 'Type', this.getOptimizedContent('unknown'), 'Type of organization'));
       } else {
         for (const type of this.rorData.types) {
-          this.items.push(new FoldableItem(25, 'Type', type, 'Type of organization'));
+          this.items.push(new FoldableItem(25, 'Type', this.getOptimizedContent(type), 'Type of organization'));
         }
       }
 
@@ -115,33 +164,10 @@ export class RORType extends GenericIdentifierType {
 
       // Add related organizations with tooltips for relationship types
       if (this.rorData.relationships && this.rorData.relationships.length > 0) {
-        const relationshipTypes = {
-          parent: {
-            title: 'Parent Organization',
-            tooltip: 'Organization that this organization is part of',
-          },
-          child: {
-            title: 'Child Organization',
-            tooltip: 'Organization that is part of this organization',
-          },
-          related: {
-            title: 'Related Organization',
-            tooltip: 'Organization that is related to this organization',
-          },
-          predecessor: {
-            title: 'Predecessor Organization',
-            tooltip: 'Organization that preceded this organization',
-          },
-          successor: {
-            title: 'Successor Organization',
-            tooltip: 'Organization that succeeded this organization',
-          },
-        };
-
         for (const rel of this.rorData.relationships) {
-          const relationType = relationshipTypes[rel.type] || { title: rel.type, tooltip: `${rel.type} organization` };
+          const relationType = this.relationshipTypes[rel.type] || { title: rel.type, tooltip: `${rel.type} organization` };
 
-          this.items.push(new FoldableItem(90, relationType.title, `https://ror.org/${rel.id}`, relationType.tooltip));
+          this.items.push(new FoldableItem(90, relationType.title, rel.id, relationType.tooltip));
         }
       }
 
