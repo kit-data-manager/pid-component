@@ -11,6 +11,7 @@ import { FallbackType } from '../rendererModules/FallbackType';
 import { LocaleType } from '../rendererModules/LocaleType';
 import { JSONType } from '../rendererModules/JSONType';
 import { RORType } from '../rendererModules/RORType';
+import { SPDXType } from '../rendererModules/SPDXType';
 
 /**
  * Array of all component objects that can be used to parse a given value, ordered by priority (lower is better)
@@ -43,21 +44,26 @@ export const renderers: {
   },
   {
     priority: 4,
+    key: 'SPDXType',
+    constructor: SPDXType,
+  },
+  {
+    priority: 5,
     key: 'EmailType',
     constructor: EmailType,
   },
   {
-    priority: 5,
+    priority: 6,
     key: 'URLType',
     constructor: URLType,
   },
   {
-    priority: 6,
+    priority: 7,
     key: 'LocaleType',
     constructor: LocaleType,
   },
   {
-    priority: 7,
+    priority: 8,
     key: 'JSONType',
     constructor: JSONType,
   },
