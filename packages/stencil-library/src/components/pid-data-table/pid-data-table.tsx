@@ -99,14 +99,22 @@ export class PidDataTable {
       this.currentPage = maxPage;
     }
 
-    // Trigger recalculation of content dimensions in parent collapsible
-    // Delayed to ensure the DOM has updated with new page content
-    setTimeout(() => {
+    // Immediately recalculate content dimensions to prevent resizing beyond content
+    this.recalculateContentDimensions();
+  }
+
+  /**
+   * Separate method to recalculate content dimensions after DOM updates
+   * This ensures content dimensions are updated on every page change
+   */
+  private recalculateContentDimensions() {
+    // Use requestAnimationFrame to ensure DOM has updated before measuring
+    requestAnimationFrame(() => {
       const collapsible = this.el.closest('pid-collapsible');
       if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
         (collapsible as any).recalculateContentDimensions();
       }
-    }, 50);
+    });
   }
 
   componentWillLoad() {

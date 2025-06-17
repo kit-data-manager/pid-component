@@ -94,7 +94,7 @@ export const PidCollapsible: StencilReactComponent<PidCollapsibleElement, PidCol
   react: React,
   events: {
     onCollapsibleToggle: 'collapsibleToggle',
-    onContentHeightChange: 'contentHeightChange,',
+    onContentHeightChange: 'contentHeightChange',
   } as PidCollapsibleEvents,
   defineCustomElement: definePidCollapsible,
 });

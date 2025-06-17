@@ -112,7 +112,7 @@ export class PidCollapsible {
    */
   @State() isDarkMode: boolean = false;
 
-  // Add these new private properties to store the last expanded dimensions
+  // Properties to store the last expanded dimensions for restoration when toggling
   private lastExpandedWidth: string;
   private lastExpandedHeight: string;
 
@@ -164,6 +164,7 @@ export class PidCollapsible {
     this.setupResizeObserver();
     this.updateAppearance();
     this.addBrowserCompatibilityListeners();
+    this.addComponentEventListeners();
 
     // Add clearfix for Safari - prevent text flow issues
     if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
@@ -261,6 +262,16 @@ export class PidCollapsible {
   }
 
   /**
+   * Listens to page changes from pid-data-table and recalculates dimensions
+   * @param event The page change event
+   */
+  private handlePageChange = (event: CustomEvent<number>) => {
+    // When the page changes, recalculate dimensions after the DOM updates
+    console.debug('Page changed to:', event.detail);
+    this.recalculateContentDimensions();
+  };
+
+  /**
    * Public method to recalculate content dimensions
    * Can be called externally, for example when pagination changes
    */
@@ -268,7 +279,23 @@ export class PidCollapsible {
   public async recalculateContentDimensions() {
     if (this.expanded) {
       const dimensions = this.calculateContentDimensions();
-      this.updateDimensions(dimensions);
+      // Instead of using updateDimensions which might maintain user-defined sizes,
+      // directly apply content-based dimensions to prevent expanding beyond content
+      this.el.style.maxWidth = `${dimensions.maxWidth}px`;
+      this.el.style.maxHeight = `${dimensions.maxHeight}px`;
+
+      // Update current dimensions to match content exactly
+      this.currentWidth = `${dimensions.contentWidth + CONSTANTS.PADDING_WIDTH}px`;
+      this.currentHeight = `${dimensions.contentHeight + CONSTANTS.PADDING_HEIGHT + (this.showFooter ? CONSTANTS.FOOTER_HEIGHT : 0)}px`;
+
+      // Apply the content-based dimensions
+      this.el.style.width = this.currentWidth;
+      this.el.style.height = this.currentHeight;
+
+      // Store these as the last expanded dimensions
+      this.lastExpandedWidth = this.currentWidth;
+      this.lastExpandedHeight = this.currentHeight;
+
       // Emit event with calculated dimensions for external components
       this.contentHeightChange.emit({ maxHeight: dimensions.maxHeight });
       return dimensions;
@@ -353,12 +380,38 @@ export class PidCollapsible {
   /**
    * Cleans up resources when component is destroyed
    */
+  /**
+   * Adds event listeners for specific child components
+   * This ensures proper communication between components
+   */
+  private addComponentEventListeners() {
+    // Listen for pageChange events from any pid-data-table inside this component
+    const dataTables = this.el.querySelectorAll('pid-data-table');
+    dataTables.forEach(dataTable => {
+      dataTable.addEventListener('pageChange', this.handlePageChange as EventListener);
+    });
+  }
+
+  /**
+   * Removes component-specific event listeners
+   */
+  private removeComponentEventListeners() {
+    // Remove pageChange event listeners
+    const dataTables = this.el.querySelectorAll('pid-data-table');
+    dataTables.forEach(dataTable => {
+      dataTable.removeEventListener('pageChange', this.handlePageChange as EventListener);
+    });
+  }
+
   private cleanupResources() {
     // Disconnect ResizeObserver
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
       this.resizeObserver = null;
     }
+
+    // Remove component-specific event listeners
+    this.removeComponentEventListeners();
 
     // Remove event listeners
     const details = this.el.querySelector('details');
@@ -463,50 +516,24 @@ export class PidCollapsible {
 
   /**
    * Updates dimensions based on content and constraints
+   * Revised to strictly adhere to content dimensions and prevent expanding beyond them
    */
   private updateDimensions(dimensions: { contentWidth: number; contentHeight: number; maxWidth: number; maxHeight: number }) {
     const { contentWidth, contentHeight, maxWidth, maxHeight } = dimensions;
 
-    // Width handling - use last expanded width if available, otherwise calculate
-    if (this.lastExpandedWidth && this.lastExpandedWidth !== CONSTANTS.DEFAULT_WIDTH) {
-      this.currentWidth = this.lastExpandedWidth;
-      // Ensure width doesn't exceed max
-      const numericWidth = parseInt(this.currentWidth, 10);
-      if (numericWidth > maxWidth) {
-        this.currentWidth = `${maxWidth}px`;
-      }
-    } else if (!this.currentWidth || this.currentWidth === CONSTANTS.DEFAULT_WIDTH) {
-      // Calculate optimal width - use 75% of the available width instead of full width
-      const viewportWidth = window.innerWidth;
-      const calculatedWidth = Math.min(Math.max(contentWidth + CONSTANTS.PADDING_WIDTH, CONSTANTS.MIN_WIDTH), maxWidth);
-      const reducedWidth = Math.min(calculatedWidth, Math.floor(viewportWidth * 0.75));
-      this.currentWidth = `${reducedWidth}px`;
-    } else {
-      // Ensure width doesn't exceed max
-      const numericWidth = parseInt(this.currentWidth, 10);
-      if (numericWidth > maxWidth) {
-        this.currentWidth = `${maxWidth}px`;
-      }
-    }
+    // Always set exact content dimensions to prevent resizing beyond content
+    // Ensure width is within minimum and maximum bounds
+    const optimalWidth = Math.min(Math.max(contentWidth + CONSTANTS.PADDING_WIDTH, CONSTANTS.MIN_WIDTH), maxWidth);
+    this.currentWidth = `${optimalWidth}px`;
 
-    // Height handling - use last expanded height if available, otherwise calculate
-    if (this.lastExpandedHeight && this.lastExpandedHeight !== CONSTANTS.DEFAULT_HEIGHT) {
-      this.currentHeight = this.lastExpandedHeight;
-      // Ensure height doesn't exceed max
-      const numericHeight = parseInt(this.currentHeight, 10);
-      if (numericHeight > maxHeight) {
-        this.currentHeight = `${maxHeight}px`;
-      }
-    } else if (!this.currentHeight || this.currentHeight === CONSTANTS.DEFAULT_HEIGHT) {
-      // Calculate optimal height
-      this.currentHeight = `${Math.min(Math.max(contentHeight + CONSTANTS.PADDING_HEIGHT, CONSTANTS.MIN_HEIGHT), maxHeight)}px`;
-    } else {
-      // Ensure height doesn't exceed max
-      const numericHeight = parseInt(this.currentHeight, 10);
-      if (numericHeight > maxHeight) {
-        this.currentHeight = `${maxHeight}px`;
-      }
-    }
+    // Calculate optimal height including padding and footer if needed
+    const footerHeight = this.showFooter ? CONSTANTS.FOOTER_HEIGHT : 0;
+    const optimalHeight = Math.min(Math.max(contentHeight + CONSTANTS.PADDING_HEIGHT + footerHeight, CONSTANTS.MIN_HEIGHT), maxHeight);
+    this.currentHeight = `${optimalHeight}px`;
+
+    // Store these dimensions for future reference
+    this.lastExpandedWidth = this.currentWidth;
+    this.lastExpandedHeight = this.currentHeight;
 
     // Apply dimensions
     this.el.style.width = this.currentWidth;
@@ -525,6 +552,11 @@ export class PidCollapsible {
     if (this.el.style.height && this.el.style.height !== `${this.lineHeight}px`) {
       this.lastExpandedHeight = this.el.style.height;
       this.currentHeight = this.el.style.height;
+    }
+
+    // Use the stored dimensions for logging/debugging
+    if (this.lastExpandedWidth || this.lastExpandedHeight) {
+      console.debug('Storing dimensions for later restoration:', { width: this.lastExpandedWidth, height: this.lastExpandedHeight });
     }
 
     // Clear size constraints

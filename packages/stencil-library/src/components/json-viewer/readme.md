@@ -6,7 +6,7 @@
 ## Properties
 
 | Property          | Attribute           | Description                                                                                                         | Type                            | Default     |
-|-------------------|---------------------|---------------------------------------------------------------------------------------------------------------------|---------------------------------|-------------|
+| ----------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------- | ------------------------------- | ----------- |
 | `data`            | `data`              | The JSON data to display. Can be a JSON string or a JavaScript object.                                              | `object \| string`              | `undefined` |
 | `expandAll`       | `expand-all`        | Set to true to open all nodes in tree view initially.                                                               | `boolean`                       | `false`     |
 | `maxHeight`       | `max-height`        | Maximum height of the viewer in pixels. Set to 0 for no limit.                                                      | `number`                        | `500`       |

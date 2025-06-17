@@ -64,15 +64,9 @@ export class PidPagination {
     if (page >= 0 && page <= this.totalPages - 1) {
       this.pageChange.emit(page);
 
-      // Trigger recalculation of content dimensions in parent collapsible
-      // Use setTimeout to ensure the DOM has updated with new page content
-      setTimeout(() => {
-        // Find closest pid-collapsible ancestor
-        const collapsible = this.el.closest('pid-collapsible');
-        if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
-          (collapsible as any).recalculateContentDimensions();
-        }
-      }, 50);
+      // The recalculation will be handled by the pid-data-table component
+      // which watches for page changes and recalculates accordingly
+      // No need for setTimeout here as the data-table component will handle it
     }
   };
 
@@ -81,6 +75,15 @@ export class PidPagination {
    */
   private handleItemsPerPageChange = (size: number) => {
     this.itemsPerPageChange.emit(size);
+
+    // The pid-data-table component will recalculate dimensions when itemsPerPage changes
+    // as it watches for these changes, but we'll trigger it here as well to be certain
+    requestAnimationFrame(() => {
+      const collapsible = this.el.closest('pid-collapsible');
+      if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
+        (collapsible as any).recalculateContentDimensions();
+      }
+    });
   };
 
   /**

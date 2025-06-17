@@ -6,7 +6,7 @@
 ## Properties
 
 | Property                  | Attribute                     | Description                                                                                  | Type                            | Default                |
-|---------------------------|-------------------------------|----------------------------------------------------------------------------------------------|---------------------------------|------------------------|
+| ------------------------- | ----------------------------- | -------------------------------------------------------------------------------------------- | ------------------------------- | ---------------------- |
 | `adaptivePagination`      | `adaptive-pagination`         | Enable adaptive pagination mode                                                              | `boolean`                       | `false`                |
 | `currentPage`             | `current-page`                | Current page (0-based index)                                                                 | `number`                        | `0`                    |
 | `darkMode`                | `dark-mode`                   | The dark mode setting for the component Options: "light", "dark", "system" Default: "system" | `"dark" \| "light" \| "system"` | `'system'`             |
