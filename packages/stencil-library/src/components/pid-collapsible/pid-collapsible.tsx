@@ -402,6 +402,14 @@ export class PidCollapsible {
       // Set dimensions - use stored dimensions if available
       this.updateDimensions(dimensions);
 
+      // Ensure we're not adding extra padding to the summary
+      const summary = this.el.querySelector('summary');
+      if (summary) {
+        summary.style.height = `${this.lineHeight}px`;
+        summary.style.minHeight = `${this.lineHeight}px`;
+        summary.style.maxHeight = `${this.lineHeight}px`;
+      }
+
       // Enable resize and add visual indicator
       this.el.style.resize = 'both';
       this.addResizeIndicator();
@@ -504,9 +512,11 @@ export class PidCollapsible {
     // Apply Tailwind classes for collapsed state (without background)
     this.el.classList.add('w-auto', 'inline-block', 'align-middle', 'overflow-hidden', 'py-0', 'my-0');
 
-    // Set line height for text - ensure it doesn't affect text flow
+    // Set strict height and line height for text to ensure smooth text flow
     this.el.style.height = `${this.lineHeight}px`;
     this.el.style.lineHeight = `${this.lineHeight}px`;
+    this.el.style.minHeight = `${this.lineHeight}px`;
+    this.el.style.maxHeight = `${this.lineHeight}px`;
 
     // Ensure proper display in Safari
     if (this.isSafari()) {
@@ -610,7 +620,7 @@ export class PidCollapsible {
    * Gets host classes based on current state
    */
   private getHostClasses() {
-    const baseClasses = ['relative', 'mx-2', 'font-sans', 'transition-all', 'duration-200', 'ease-in-out', 'box-border'];
+    const baseClasses = ['relative', 'mx-2', 'font-sans', 'transition-all', 'duration-200', 'ease-in-out', 'box-border', 'leading-normal'];
 
     // Add emphasis classes
     if (this.emphasize) {
@@ -675,42 +685,21 @@ export class PidCollapsible {
       'marker:hidden',
       '[&::-webkit-details-marker]:hidden',
       'select-none',
+      'box-border',
     ];
 
     if (this.expanded) {
       if (this.isDarkMode) {
-        baseClasses.push(
-          'sticky',
-          'top-0',
-          'bg-gray-800',
-          `z-${Z_INDICES.STICKY_ELEMENTS}`,
-          'border-b',
-          'border-gray-700',
-          'p-2',
-          'overflow-visible',
-          'backdrop-blur-sm',
-          'min-h-[2.5rem]',
-        );
+        baseClasses.push('sticky', 'top-0', 'bg-gray-800', `z-${Z_INDICES.STICKY_ELEMENTS}`, 'border-b', 'border-gray-700', 'px-2', 'py-0', 'overflow-visible', 'backdrop-blur-sm');
       } else {
-        baseClasses.push(
-          'sticky',
-          'top-0',
-          'bg-white',
-          `z-${Z_INDICES.STICKY_ELEMENTS}`,
-          'border-b',
-          'border-gray-100',
-          'p-2',
-          'overflow-visible',
-          'backdrop-blur-sm',
-          'min-h-[2.5rem]',
-        );
+        baseClasses.push('sticky', 'top-0', 'bg-white', `z-${Z_INDICES.STICKY_ELEMENTS}`, 'border-b', 'border-gray-100', 'px-2', 'py-0', 'overflow-visible', 'backdrop-blur-sm');
       }
     } else {
       baseClasses.push('px-1', 'py-0', 'whitespace-nowrap', 'overflow-hidden', 'text-ellipsis', 'max-w-full');
-
-      // Use inline style for precise line height control
-      baseClasses.push(`h-[${this.lineHeight}px]`);
     }
+
+    // Apply consistent height for both states
+    baseClasses.push(`h-[${this.lineHeight}px]`);
 
     return baseClasses.join(' ');
   }
@@ -788,15 +777,15 @@ export class PidCollapsible {
         >
           <summary
             class={summaryClasses}
-            style={!this.expanded ? { lineHeight: `${this.lineHeight}px` } : {}}
+            style={{ lineHeight: `${this.lineHeight}px`, height: `${this.lineHeight}px` }}
             onClick={e => {
               e.stopPropagation();
               e.stopImmediatePropagation();
             }}
           >
-            <span class={`inline-flex items-center gap-1 pr-2 ${this.expanded ? 'flex-wrap overflow-visible' : 'min-w-0 flex-nowrap overflow-hidden'}`}>
+            <span class={`inline-flex h-full items-center gap-1 pr-2 ${this.expanded ? 'flex-nowrap whitespace-nowrap' : 'min-w-0 flex-nowrap overflow-hidden'}`}>
               {this.emphasize && (
-                <span class="flex-shrink-0">
+                <span class="flex h-full flex-shrink-0 items-center">
                   <svg
                     class={`${this.isDarkMode ? 'text-gray-300' : 'text-gray-600'} transition-transform duration-200 group-open:rotate-180`}
                     fill="none"
@@ -813,16 +802,16 @@ export class PidCollapsible {
                   </svg>
                 </span>
               )}
-              <span class={this.expanded ? 'overflow-visible' : 'min-w-0 truncate'}>
+              <span class={`${this.expanded ? 'overflow-visible' : 'min-w-0 truncate'} flex h-full items-center`}>
                 <slot name="summary"></slot>
               </span>
             </span>
-            <div class="ml-auto flex-shrink-0">
+            <div class="ml-auto flex h-full flex-shrink-0 items-center">
               <slot name="summary-actions"></slot>
             </div>
           </summary>
 
-          <div class={contentClasses}>
+          <div class={`${contentClasses} ${this.expanded ? 'mt-[8px]' : ''}`}>
             <slot></slot>
           </div>
 

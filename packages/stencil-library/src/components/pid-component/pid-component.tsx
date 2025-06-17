@@ -611,14 +611,14 @@ export class PidComponent {
             >
               <span
                 slot="summary"
-                class={`inline-flex overflow-x-auto font-mono text-sm font-medium select-all ${this.isExpanded ? 'flex-wrap overflow-visible break-words' : 'flex-nowrap whitespace-nowrap'}`}
+                class={`inline-flex items-center overflow-x-auto font-mono text-sm font-medium select-all ${this.isExpanded ? 'flex-wrap overflow-visible break-words' : 'flex-nowrap whitespace-nowrap'}`}
                 aria-label={`Preview of ${this.value}`}
               >
                 {this.identifierObject?.renderPreview()}
               </span>
 
               {this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy && (this.emphasizeComponent || this.temporarilyEmphasized) ? (
-                <copy-button slot="summary-actions" value={this.value} class="relative ml-auto flex-shrink-0" aria-label={`Copy value: ${this.value}`} />
+                <copy-button slot="summary-actions" value={this.value} class="relative my-auto ml-auto flex-shrink-0" aria-label={`Copy value: ${this.value}`} />
               ) : null}
 
               {/* Table and content */}
