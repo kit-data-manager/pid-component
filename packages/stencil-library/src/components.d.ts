@@ -140,9 +140,9 @@ export namespace Components {
          */
         "open": boolean;
         /**
-          * Public method to recalculate content dimensions Can be called externally, for example when pagination changes
+          * Public method to recalculate content dimensions Can be called externally, for example when pagination changes Optimized for better performance
          */
-        "recalculateContentDimensions": () => Promise<{ contentWidth: number; contentHeight: number; maxWidth: number; maxHeight: number; }>;
+        "recalculateContentDimensions": () => Promise<any>;
         /**
           * Whether to show the footer section
           * @default false

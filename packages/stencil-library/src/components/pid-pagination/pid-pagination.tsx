@@ -61,7 +61,13 @@ export class PidPagination {
 
       // The recalculation will be handled by the pid-data-table component
       // which watches for page changes and recalculates accordingly
-      // No need for setTimeout here as the data-table component will handle it
+      // But we'll trigger it here as well to ensure it happens
+      requestAnimationFrame(() => {
+        const collapsible = this.el.closest('pid-collapsible');
+        if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
+          (collapsible as any).recalculateContentDimensions();
+        }
+      });
     }
   };
 

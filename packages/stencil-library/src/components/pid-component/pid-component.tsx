@@ -192,6 +192,14 @@ export class PidComponent {
   componentDidLoad() {
     // Initialize component ID for references
     this.ensureComponentId();
+
+    // Ensure collapsible gets proper initial width after load
+    setTimeout(() => {
+      const collapsible = this.el.querySelector('pid-collapsible');
+      if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
+        (collapsible as any).recalculateContentDimensions();
+      }
+    }, 0);
   }
 
   /**
@@ -212,6 +220,14 @@ export class PidComponent {
     this.displayStatus = 'loading';
     // this.identifierObject = undefined;
     await this.componentWillLoad();
+
+    // After value updates, ensure dimensions are properly recalculated
+    setTimeout(() => {
+      const collapsible = this.el.querySelector('pid-collapsible');
+      if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
+        (collapsible as any).recalculateContentDimensions();
+      }
+    }, 10);
   }
 
   /**
@@ -254,6 +270,14 @@ export class PidComponent {
       // Only toggle loadSubcomponents when expanding, not when collapsing
       if (event.detail && !this.hideSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) {
         this.loadSubcomponents = true;
+
+        // After loading subcomponents, ensure dimensions are recalculated
+        setTimeout(() => {
+          const collapsible = this.el.querySelector('pid-collapsible');
+          if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
+            (collapsible as any).recalculateContentDimensions();
+          }
+        }, 50); // Give it a bit more time for the DOM to update with new content
       }
     }
   };
@@ -636,7 +660,7 @@ export class PidComponent {
                   settings={this.settings}
                   darkMode={this.darkMode}
                   onPageChange={e => (this.tablePage = e.detail)}
-                  // class="flex-grow overflow-auto"
+                  class="w-full flex-grow overflow-auto"
                   aria-label={`Data table for ${this.value}`}
                   aria-describedby={`${this.el.id}-table-description`}
                 />

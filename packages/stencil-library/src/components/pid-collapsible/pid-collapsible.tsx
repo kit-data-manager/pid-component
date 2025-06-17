@@ -125,6 +125,12 @@ export class PidCollapsible {
   // Flag to prevent recursive toggle calls
   private isToggling = false;
 
+  // Debounce timer for resize optimization
+  private resizeDebounceTimer: number = null;
+
+  // Last known resize dimensions
+  private lastResizeDimensions = { width: 0, height: 0 };
+
   /**
    * Watch for changes in the open property
    */
@@ -140,6 +146,14 @@ export class PidCollapsible {
   @Watch('expanded')
   watchExpanded() {
     this.updateAppearance();
+
+    // When expanded, ensure content dimensions are properly calculated
+    if (this.expanded) {
+      // Use setTimeout to ensure DOM is updated before recalculating
+      setTimeout(() => {
+        this.recalculateContentDimensions();
+      }, 0);
+    }
   }
 
   /**
@@ -153,7 +167,8 @@ export class PidCollapsible {
   componentWillLoad() {
     // Initialize state from props
     this.expanded = this.open;
-    this.currentWidth = this.initialWidth || CONSTANTS.DEFAULT_WIDTH;
+    // Default to 75% width if no initial width is provided
+    this.currentWidth = this.initialWidth || '75%'; // Changed from DEFAULT_WIDTH to use 75% (w-3/4)
     this.currentHeight = this.initialHeight || CONSTANTS.DEFAULT_HEIGHT;
 
     // Initialize dark mode
@@ -274,31 +289,77 @@ export class PidCollapsible {
   /**
    * Public method to recalculate content dimensions
    * Can be called externally, for example when pagination changes
+   * Optimized for better performance
    */
   @Method()
   public async recalculateContentDimensions() {
     if (this.expanded) {
-      const dimensions = this.calculateContentDimensions();
-      // Instead of using updateDimensions which might maintain user-defined sizes,
-      // directly apply content-based dimensions to prevent expanding beyond content
-      this.el.style.maxWidth = `${dimensions.maxWidth}px`;
-      this.el.style.maxHeight = `${dimensions.maxHeight}px`;
+      // Add a class to optimize rendering during recalculation
+      this.el.classList.add('resizing');
 
-      // Update current dimensions to match content exactly
-      this.currentWidth = `${dimensions.contentWidth + CONSTANTS.PADDING_WIDTH}px`;
-      this.currentHeight = `${dimensions.contentHeight + CONSTANTS.PADDING_HEIGHT + (this.showFooter ? CONSTANTS.FOOTER_HEIGHT : 0)}px`;
+      // Use a small delay to avoid excessive recalculations
+      // when multiple events happen in quick succession
+      if (this.resizeDebounceTimer !== null) {
+        window.cancelAnimationFrame(this.resizeDebounceTimer);
+      }
 
-      // Apply the content-based dimensions
-      this.el.style.width = this.currentWidth;
-      this.el.style.height = this.currentHeight;
+      return new Promise<any>(resolve => {
+        this.resizeDebounceTimer = window.requestAnimationFrame(() => {
+          const dimensions = this.calculateContentDimensions();
 
-      // Store these as the last expanded dimensions
-      this.lastExpandedWidth = this.currentWidth;
-      this.lastExpandedHeight = this.currentHeight;
+          // Batch all style changes in a single rendering frame
+          // to avoid forced reflows and optimize performance
+          requestAnimationFrame(() => {
+            // Set max dimensions first - add a buffer to prevent too tight constraints
+            const maxWidth = Math.max(dimensions.maxWidth, dimensions.contentWidth + CONSTANTS.PADDING_WIDTH);
+            const maxHeight = Math.max(dimensions.maxHeight, dimensions.contentHeight + CONSTANTS.PADDING_HEIGHT + (this.showFooter ? CONSTANTS.FOOTER_HEIGHT : 0));
 
-      // Emit event with calculated dimensions for external components
-      this.contentHeightChange.emit({ maxHeight: dimensions.maxHeight });
-      return dimensions;
+            this.el.style.maxWidth = `${maxWidth}px`;
+            this.el.style.maxHeight = `${maxHeight}px`;
+
+            // Update current dimensions to match content exactly
+            // Ensure width is at least 75% of container if no width is explicitly provided
+            const optimalWidth = dimensions.contentWidth + CONSTANTS.PADDING_WIDTH;
+            const optimalHeight = dimensions.contentHeight + CONSTANTS.PADDING_HEIGHT + (this.showFooter ? CONSTANTS.FOOTER_HEIGHT : 0);
+
+            // If initial width/height is specified, prefer that for first calculation
+            if (!this.currentWidth || this.currentWidth === 'auto') {
+              // Default to 75% width if no initial width is provided
+              this.currentWidth = this.initialWidth || '75%';
+            } else if (!this.initialWidth) {
+              // If no initial width was specified but we have a current width,
+              // preserve the 75% width setting rather than calculating a pixel value
+              this.currentWidth = '75%';
+            } else {
+              // Otherwise use the calculated optimal width with extra space for content
+              this.currentWidth = `${Math.max(optimalWidth, dimensions.contentWidth * 1)}px`;
+            }
+
+            if (!this.currentHeight || this.currentHeight === `${this.lineHeight}px`) {
+              this.currentHeight = this.initialHeight || `${optimalHeight}px`;
+            } else {
+              this.currentHeight = `${optimalHeight}px`;
+            }
+
+            // Apply the content-based dimensions
+            this.el.style.width = this.currentWidth;
+            this.el.style.height = this.currentHeight;
+
+            // Store these as the last expanded dimensions
+            this.lastExpandedWidth = this.currentWidth;
+            this.lastExpandedHeight = this.currentHeight;
+
+            // Emit event with calculated dimensions for external components
+            this.contentHeightChange.emit({ maxHeight });
+
+            // Remove optimization class
+            this.el.classList.remove('resizing');
+            this.resizeDebounceTimer = null;
+
+            resolve(dimensions);
+          });
+        });
+      });
     }
     return null;
   }
@@ -318,16 +379,38 @@ export class PidCollapsible {
       this.resizeObserver.disconnect();
     }
 
-    // Create new observer
+    // Create new observer with debouncing for better performance
     this.resizeObserver = new ResizeObserver(entries => {
       // Only track dimensions when expanded
       if (!this.expanded) return;
 
-      for (const entry of entries) {
-        // Update current dimensions based on observed changes
-        this.currentWidth = `${entry.contentRect.width}px`;
-        this.currentHeight = `${entry.contentRect.height}px`;
+      // Get the entry from the first parameter
+      const entry = entries[0];
+      if (!entry) return;
+
+      const width = entry.contentRect.width;
+      const height = entry.contentRect.height;
+
+      // Skip if dimensions haven't changed significantly (avoid needless updates)
+      if (Math.abs(width - this.lastResizeDimensions.width) < 2 && Math.abs(height - this.lastResizeDimensions.height) < 2) {
+        return;
       }
+
+      // Update last known dimensions
+      this.lastResizeDimensions = { width, height };
+
+      // Clear any existing debounce timer
+      if (this.resizeDebounceTimer !== null) {
+        window.cancelAnimationFrame(this.resizeDebounceTimer);
+      }
+
+      // Use requestAnimationFrame for smoother visual updates
+      this.resizeDebounceTimer = window.requestAnimationFrame(() => {
+        // Update current dimensions based on observed changes
+        this.currentWidth = `${width}px`;
+        this.currentHeight = `${height}px`;
+        this.resizeDebounceTimer = null;
+      });
     });
 
     // Start observing if expanded
@@ -404,6 +487,12 @@ export class PidCollapsible {
   }
 
   private cleanupResources() {
+    // Cancel any pending resize animation frame
+    if (this.resizeDebounceTimer !== null) {
+      window.cancelAnimationFrame(this.resizeDebounceTimer);
+      this.resizeDebounceTimer = null;
+    }
+
     // Disconnect ResizeObserver
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
@@ -516,9 +605,12 @@ export class PidCollapsible {
 
   /**
    * Updates dimensions based on content and constraints
-   * Revised to strictly adhere to content dimensions and prevent expanding beyond them
+   * Optimized for better resize performance
    */
   private updateDimensions(dimensions: { contentWidth: number; contentHeight: number; maxWidth: number; maxHeight: number }) {
+    // Add a rendering optimization class during dimension updates
+    this.el.classList.add('resizing');
+
     const { contentWidth, contentHeight, maxWidth, maxHeight } = dimensions;
 
     // Always set exact content dimensions to prevent resizing beyond content
@@ -535,9 +627,15 @@ export class PidCollapsible {
     this.lastExpandedWidth = this.currentWidth;
     this.lastExpandedHeight = this.currentHeight;
 
-    // Apply dimensions
-    this.el.style.width = this.currentWidth;
-    this.el.style.height = this.currentHeight;
+    // Use direct property setting for better performance
+    // Batch dimension changes in a single rendering frame
+    requestAnimationFrame(() => {
+      this.el.style.width = this.currentWidth;
+      this.el.style.height = this.currentHeight;
+
+      // Remove the optimization class after updates are applied
+      this.el.classList.remove('resizing');
+    });
   }
 
   /**
@@ -677,7 +775,13 @@ export class PidCollapsible {
    * Gets host classes based on current state
    */
   private getHostClasses() {
-    const baseClasses = ['relative', 'mx-2', 'font-sans', 'transition-all', 'duration-200', 'ease-in-out', 'box-border', 'leading-normal', 'w-3/4'];
+    // Start with base classes without width since we'll calculate that properly
+    const baseClasses = ['relative', 'mx-2', 'font-sans', 'transition-all', 'duration-200', 'ease-in-out', 'box-border', 'leading-normal'];
+
+    // Add w-3/4 class by default to maintain consistent width
+    baseClasses.push('w-3/4');
+
+    // When expanded, additional classes will be applied through inline styles
 
     // Add emphasis classes
     if (this.emphasize) {

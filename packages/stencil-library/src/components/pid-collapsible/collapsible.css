@@ -30,6 +30,8 @@ pid-collapsible.resize-both {
   resize: both !important;
   overflow: auto !important;
   max-width: 100% !important; /* Prevent exceeding parent container */
+  will-change: width, height; /* Hint to the browser to optimize for resizing */
+  transition: none !important; /* Disable transitions during resize for better performance */
 }
 
 /*
@@ -127,6 +129,12 @@ pid-collapsible.resize-both::after {
     display: inline-block;
     vertical-align: top;
     margin-bottom: 1px; /* This tiny margin helps with layout stability */
+  }
+
+  /* Optimization class for resize operations */
+  pid-collapsible.resizing {
+    pointer-events: none; /* Prevent interaction during resize for better performance */
+    contain: layout size; /* CSS containment for better performance */
   }
 
   /* Ensure collapsed state in Safari doesn't affect text flow */

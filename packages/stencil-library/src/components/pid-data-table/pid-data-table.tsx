@@ -108,17 +108,30 @@ export class PidDataTable {
    * This ensures content dimensions are updated on every page change
    */
   private recalculateContentDimensions() {
-    // Use requestAnimationFrame to ensure DOM has updated before measuring
+    // Use double requestAnimationFrame to ensure DOM has fully updated before measuring
     requestAnimationFrame(() => {
-      const collapsible = this.el.closest('pid-collapsible');
-      if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
-        (collapsible as any).recalculateContentDimensions();
-      }
+      requestAnimationFrame(() => {
+        const collapsible = this.el.closest('pid-collapsible');
+        if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
+          // Call the method on collapsible to calculate proper dimensions based on content
+          (collapsible as any).recalculateContentDimensions();
+        }
+      });
     });
   }
 
   componentWillLoad() {
     this.updateFilteredItems();
+  }
+
+  /**
+   * After the component loads, ensure dimensions are properly initialized
+   */
+  componentDidLoad() {
+    // Wait for DOM to be fully rendered then recalculate dimensions
+    setTimeout(() => {
+      this.recalculateContentDimensions();
+    }, 0);
   }
 
   render() {
@@ -144,10 +157,14 @@ export class PidDataTable {
 
     return (
       <div
-        class={isDarkMode ? 'mx-1 flex h-full flex-col rounded-lg border border-gray-700 bg-gray-800' : 'mx-1 flex h-full flex-col rounded-lg border border-gray-200 bg-gray-50'}
+        class={
+          isDarkMode
+            ? 'mx-1 flex h-full w-full flex-col rounded-lg border border-gray-700 bg-gray-800'
+            : 'mx-1 flex h-full w-full flex-col rounded-lg border border-gray-200 bg-gray-50'
+        }
       >
         {/* Table container with scrollable content */}
-        <div class="relative z-10 flex-grow overflow-auto">
+        <div class="relative z-10 w-full flex-grow overflow-auto">
           <table
             id={this.tableId}
             class={`w-full table-fixed border-collapse text-left font-sans text-sm select-text ${isDarkMode ? 'text-gray-200' : ''}`}
@@ -156,10 +173,10 @@ export class PidDataTable {
           >
             <thead class="sticky top-0 z-20 rounded-t-lg bg-slate-600 text-slate-200">
               <tr class="font-semibold" role="row">
-                <th class="w-[30%] min-w-[150px] rounded-tl-lg p-2" scope="col" role="columnheader">
+                <th class="w-[25%] min-w-[150px] rounded-tl-lg p-2" scope="col" role="columnheader">
                   Key
                 </th>
-                <th class="w-[70%] rounded-tr-lg p-2" scope="col" role="columnheader">
+                <th class="w-[75%] rounded-tr-lg p-2" scope="col" role="columnheader">
                   Value
                 </th>
               </tr>
@@ -193,8 +210,8 @@ export class PidDataTable {
                     </pid-tooltip>
                   </td>
                   <td class={'relative w-full p-2 align-top text-sm select-text'} role="cell">
-                    <div class="grid w-full grid-cols-[1fr_auto] items-start gap-2">
-                      <div class="min-w-0 break-words whitespace-normal">
+                    <div class="grid w-full grid-cols-[minmax(0,1fr)_auto] items-start gap-2">
+                      <div class="min-w-0 overflow-x-auto break-words whitespace-normal">
                         {
                           // Load a foldable subcomponent if subcomponents are not disabled (hideSubcomponents), and the current level of subcomponents is not the total level of subcomponents. If the subcomponent is on the bottom level of the hierarchy, render just a preview. If the value should not be resolved (isFoldable), just render the value as text.
                           this.loadSubcomponents && !this.hideSubcomponents && value.renderDynamically ? (
@@ -221,7 +238,7 @@ export class PidDataTable {
                               class="block w-full min-w-0"
                             />
                           ) : (
-                            <span class={'inline-block max-w-full overflow-x-auto font-mono text-sm break-words whitespace-normal'}>{value.value}</span>
+                            <span class={'inline-block w-full max-w-full overflow-x-auto font-mono text-sm break-words whitespace-normal'}>{value.value}</span>
                           )
                         }
                       </div>
