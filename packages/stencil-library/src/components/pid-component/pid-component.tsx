@@ -258,12 +258,9 @@ export class PidComponent {
     }
   };
 
-  // Tooltip functionality has been moved to the pid-tooltip component
-
   /**
    * Parses the value and settings, generates the items and actions and sets the displayStatus to "loaded".
    */
-
   @Watch('items')
   onItemsChange(): void {
     // Reset page if we're beyond the available pages

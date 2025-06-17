@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Component, Element, Event, EventEmitter, h, Host, Prop, State, Watch } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, h, Host, Method, Prop, State, Watch } from '@stencil/core';
 
 /**
  * Constants for CSS class management
@@ -94,6 +94,12 @@ export class PidCollapsible {
    * Event emitted when the collapsible is toggled
    */
   @Event() collapsibleToggle: EventEmitter<boolean>;
+
+  /**
+   * Event emitted when content dimensions need to be recalculated
+   * Useful for pagination to ensure proper height
+   */
+  @Event() contentHeightChange: EventEmitter<{ maxHeight: number }>;
 
   /**
    * Internal state to track current dimensions
@@ -252,6 +258,22 @@ export class PidCollapsible {
         this.darkModeMediaQuery.removeListener(this.handleDarkModeChange);
       }
     }
+  }
+
+  /**
+   * Public method to recalculate content dimensions
+   * Can be called externally, for example when pagination changes
+   */
+  @Method()
+  public async recalculateContentDimensions() {
+    if (this.expanded) {
+      const dimensions = this.calculateContentDimensions();
+      this.updateDimensions(dimensions);
+      // Emit event with calculated dimensions for external components
+      this.contentHeightChange.emit({ maxHeight: dimensions.maxHeight });
+      return dimensions;
+    }
+    return null;
   }
 
   /**
@@ -454,8 +476,11 @@ export class PidCollapsible {
         this.currentWidth = `${maxWidth}px`;
       }
     } else if (!this.currentWidth || this.currentWidth === CONSTANTS.DEFAULT_WIDTH) {
-      // Calculate optimal width
-      this.currentWidth = `${Math.min(Math.max(contentWidth + CONSTANTS.PADDING_WIDTH, CONSTANTS.MIN_WIDTH), maxWidth)}px`;
+      // Calculate optimal width - use 75% of the available width instead of full width
+      const viewportWidth = window.innerWidth;
+      const calculatedWidth = Math.min(Math.max(contentWidth + CONSTANTS.PADDING_WIDTH, CONSTANTS.MIN_WIDTH), maxWidth);
+      const reducedWidth = Math.min(calculatedWidth, Math.floor(viewportWidth * 0.75));
+      this.currentWidth = `${reducedWidth}px`;
     } else {
       // Ensure width doesn't exceed max
       const numericWidth = parseInt(this.currentWidth, 10);

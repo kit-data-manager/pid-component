@@ -73,10 +73,22 @@ with resize capability and cross-browser compatibility
 
 ## Events
 
-| Event               | Description                                   | Type                   |
-| ------------------- | --------------------------------------------- | ---------------------- |
-| `collapsibleToggle` | Event emitted when the collapsible is toggled | `CustomEvent<boolean>` |
+| Event                 | Description                                                                                                 | Type                                  |
+| --------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| `collapsibleToggle`   | Event emitted when the collapsible is toggled                                                               | `CustomEvent<boolean>`                |
+| `contentHeightChange` | Event emitted when content dimensions need to be recalculated Useful for pagination to ensure proper height | `CustomEvent<{ maxHeight: number; }>` |
 
+## Methods
+
+###
+`recalculateContentDimensions() => Promise<{ contentWidth: number; contentHeight: number; maxWidth: number; maxHeight: number; }>`
+
+Public method to recalculate content dimensions
+Can be called externally, for example when pagination changes
+
+#### Returns
+
+Type: `Promise<{ contentWidth: number; contentHeight: number; maxWidth: number; maxHeight: number; }>`
 
 ## Dependencies
 

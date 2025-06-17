@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Component, Event, EventEmitter, h, Prop, State, Watch } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, h, Prop, State, Watch } from '@stencil/core';
 import { FoldableItem } from '../../utils/FoldableItem';
 
 @Component({
@@ -7,6 +7,10 @@ import { FoldableItem } from '../../utils/FoldableItem';
   shadow: false,
 })
 export class PidDataTable {
+  /**
+   * Reference to host element
+   */
+  @Element() el: HTMLElement;
   /**
    * Unique ID for the table element
    */
@@ -94,6 +98,15 @@ export class PidDataTable {
     if (this.currentPage > maxPage && maxPage >= 0) {
       this.currentPage = maxPage;
     }
+
+    // Trigger recalculation of content dimensions in parent collapsible
+    // Delayed to ensure the DOM has updated with new page content
+    setTimeout(() => {
+      const collapsible = this.el.closest('pid-collapsible');
+      if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
+        (collapsible as any).recalculateContentDimensions();
+      }
+    }, 50);
   }
 
   componentWillLoad() {

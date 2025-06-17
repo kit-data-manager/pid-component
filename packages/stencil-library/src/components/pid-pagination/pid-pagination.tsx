@@ -1,11 +1,15 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Component, Event, EventEmitter, h, Prop } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, h, Prop } from '@stencil/core';
 
 @Component({
   tag: 'pid-pagination',
   shadow: false,
 })
 export class PidPagination {
+  /**
+   * Reference to host element
+   */
+  @Element() el: HTMLElement;
   /**
    * Current page (0-based index)
    */
@@ -59,6 +63,16 @@ export class PidPagination {
   private handlePageChange = (page: number) => {
     if (page >= 0 && page <= this.totalPages - 1) {
       this.pageChange.emit(page);
+
+      // Trigger recalculation of content dimensions in parent collapsible
+      // Use setTimeout to ensure the DOM has updated with new page content
+      setTimeout(() => {
+        // Find closest pid-collapsible ancestor
+        const collapsible = this.el.closest('pid-collapsible');
+        if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
+          (collapsible as any).recalculateContentDimensions();
+        }
+      }, 50);
     }
   };
 

@@ -140,6 +140,15 @@ export namespace Components {
          */
         "open": boolean;
         /**
+         * Public method to recalculate content dimensions Can be called externally, for example when pagination changes
+         */
+        'recalculateContentDimensions': () => Promise<{
+          contentWidth: number;
+          contentHeight: number;
+          maxWidth: number;
+          maxHeight: number;
+        }>;
+    /**
           * Whether to show the footer section
           * @default false
          */
@@ -385,6 +394,7 @@ declare global {
     };
     interface HTMLPidCollapsibleElementEventMap {
         "collapsibleToggle": boolean;
+      'contentHeightChange': { maxHeight: number };
     }
     /**
      * Component for creating collapsible/expandable content sections
@@ -598,6 +608,10 @@ declare namespace LocalJSX {
          */
         "onCollapsibleToggle"?: (event: PidCollapsibleCustomEvent<boolean>) => void;
         /**
+         * Event emitted when content dimensions need to be recalculated Useful for pagination to ensure proper height
+         */
+        'onContentHeightChange'?: (event: PidCollapsibleCustomEvent<{ maxHeight: number }>) => void;
+      /**
           * Whether the collapsible is open by default
           * @default false
          */

@@ -93,7 +93,10 @@ export const PidActions: StencilReactComponent<PidActionsElement, PidActionsEven
     serializeShadowRoot
 });
 
-export type PidCollapsibleEvents = { onCollapsibleToggle: EventName<CustomEvent<boolean>> };
+export type PidCollapsibleEvents = {
+  onCollapsibleToggle: EventName<CustomEvent<boolean>>,
+  onContentHeightChange: EventName<CustomEvent<{ maxHeight: number }>>
+};
 
 export const PidCollapsible: StencilReactComponent<PidCollapsibleElement, PidCollapsibleEvents> = /*@__PURE__*/ createComponent<PidCollapsibleElement, PidCollapsibleEvents>({
     tagName: 'pid-collapsible',
