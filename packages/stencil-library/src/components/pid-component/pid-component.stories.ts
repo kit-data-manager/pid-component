@@ -436,10 +436,11 @@ export const DarkMode: Story = {
   args: {
     value: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
     darkMode: 'dark',
-    openByDefault: true,
+  },
+  globals: {
+    backgrounds: { value: 'dark' },
   },
   parameters: {
-    backgrounds: { default: 'dark' },
     docs: {
       source: {
         code: `
@@ -457,10 +458,11 @@ export const LightMode: Story = {
   args: {
     value: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
     darkMode: 'light',
-    openByDefault: true,
+  },
+  globals: {
+    backgrounds: { value: 'light' },
   },
   parameters: {
-    backgrounds: { default: 'light' },
     docs: {
       source: {
         code: `
@@ -478,7 +480,6 @@ export const SystemMode: Story = {
   args: {
     value: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
     darkMode: 'system',
-    openByDefault: true,
   },
   parameters: {
     docs: {
