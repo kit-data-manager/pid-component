@@ -207,18 +207,13 @@ export class RORType extends GenericIdentifierType {
       <span class={`inline-flex flex-nowrap items-center align-top font-mono`}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          // xmlns:xlink="http://www.w3.org/1999/xlink"
-          // xmlns:serif="http://www.serif.com/"
-          // width="100%"
-          // height="100%"
           viewBox="0 0 164 118"
           version="1.1"
-          // xml:space="preserve"
           class={'mr-1 h-5 flex-none items-center p-0.5'}
           style={{ fillRule: 'evenodd', clipRule: 'evenodd', strokeLinejoin: 'round', strokeMiterlimit: '2' }}
         >
           <g transform="matrix(0.994301,0,0,0.989352,0,0)">
-            <rect x="0" y="0" width="164.94" height="119.27" style={{ fill: 'rgb(31, 41, 55)' }} />
+            <rect x="0" y="0" width="164.94" height="119.27" style={{ fill: 'white' }} />
           </g>
           <g transform="matrix(1,0,0,1,-0.945,-0.815)">
             <path d="M68.65,4.16L56.52,22.74L44.38,4.16L68.65,4.16Z" style={{ fill: 'rgb(83,186,161)', fillRule: 'nonzero' }} />

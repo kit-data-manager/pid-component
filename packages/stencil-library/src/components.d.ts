@@ -66,7 +66,7 @@ export namespace Components {
        */
       theme: 'light' | 'dark' | 'system';
       /**
-       * Initial view mode for the JSON'theme'Can be 'tree' or 'code'.
+       * Initial view mode for the JSON data. Can be 'tree' or 'code'.
        * @default 'tree'
        */
       viewMode: 'tree' | 'code';
@@ -77,15 +77,13 @@ export namespace Components {
        * @type {string}
        * @public
        */
-      locale: string;
-      /**
+      "locale": string'locale'/**
        * Whether to show the flag of the region.
        * @type {boolean}
        * @public
        * @default true
        */
-      showFlag: boolean;
-    }
+      "showFlag": bool'showFlag'
     interface PidActions {
         /**
           * Array of actions to display
@@ -100,7 +98,7 @@ export namespace Components {
        * The dark mode setting for the component Options: "light", "dark", "system" Default: "system"
        * @default 'system'
        */
-      "dar'darkMode'ight' | 'dark' | 'system';
+      'darkMode': 'light' | 'dark' | 'system';
     }
 
   /**
