@@ -35,6 +35,25 @@ export class SPDXType extends GenericIdentifierType {
   private readonly fileFormat: string = 'json';
   private readonly requestTimeout: number = 10000; // 10 seconds
 
+  // Dark mode property
+  private isDarkMode: boolean = false;
+
+  // Check for dark mode in settings
+  private checkDarkMode(): boolean {
+    const darkModeSetting = this.settings?.find(setting => setting.name === 'darkMode');
+    if (darkModeSetting) {
+      const darkMode = darkModeSetting.value as 'light' | 'dark' | 'system';
+      if (darkMode === 'dark') {
+        return true;
+      } else if (darkMode === 'light') {
+        return false;
+      } else if (darkMode === 'system' && window.matchMedia) {
+        return window.matchMedia('(prefers-color-scheme: dark)').matches;
+      }
+    }
+    return false;
+  }
+
   getSettingsKey(): string {
     return 'SPDXType';
   }
@@ -444,17 +463,20 @@ export class SPDXType extends GenericIdentifierType {
    * Renders a preview of the SPDX license
    */
   renderPreview(): FunctionalComponent {
+    // Update dark mode state
+    this.isDarkMode = this.checkDarkMode();
+
     // If data is not yet loaded, show the SPDX ID
     if (!this.licenseData) {
-      return <span class="font-mono text-sm">SPDX: {this.licenseId || this.value}</span>;
+      return <span class={`font-mono text-sm ${this.isDarkMode ? 'text-gray-300' : ''}`}>SPDX: {this.licenseId || this.value}</span>;
     }
 
     // If data is loaded, show license name and ID with badges
     return (
-      <span class={'flex flex-nowrap items-center align-top font-mono'}>
+      <span class={`flex flex-nowrap items-center align-top font-mono ${this.isDarkMode ? 'text-gray-200' : ''}`}>
         <span class={'items-center px-1'}>
-          <span class="font-medium">{this.licenseData.name || this.licenseId}</span>
-          {this.licenseData.licenseId && <span class="ml-1 text-gray-500">({this.licenseData.licenseId})</span>}
+          <span class={`font-medium ${this.isDarkMode ? 'text-gray-200' : ''}`}>{this.licenseData.name || this.licenseId}</span>
+          {this.licenseData.licenseId && <span class={`ml-1 ${this.isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>({this.licenseData.licenseId})</span>}
         </span>
       </span>
     );

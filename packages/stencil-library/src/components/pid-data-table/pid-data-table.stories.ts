@@ -160,6 +160,15 @@ const meta: Meta = {
         },
       },
     },
+    darkMode: {
+      description: 'The dark mode setting for the component',
+      control: 'select',
+      options: ['light', 'dark', 'system'],
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: 'system' },
+      },
+    },
   },
   args: {
     items: createMockItems(25),
@@ -172,6 +181,7 @@ const meta: Meta = {
     levelOfSubcomponents: 1,
     settings: '[]',
     adaptivePagination: false,
+    darkMode: 'system',
   },
   parameters: {
     actions: {
@@ -235,4 +245,22 @@ export const AdaptivePagination: Story = createDataTableStory({
   items: createMockItems(50),
   itemsPerPage: 10,
   adaptivePagination: true,
+});
+
+export const DarkMode: Story = createDataTableStory({
+  items: createMockItems(25),
+  itemsPerPage: 10,
+  darkMode: 'dark',
+});
+
+export const LightMode: Story = createDataTableStory({
+  items: createMockItems(25),
+  itemsPerPage: 10,
+  darkMode: 'light',
+});
+
+export const SystemMode: Story = createDataTableStory({
+  items: createMockItems(25),
+  itemsPerPage: 10,
+  darkMode: 'system',
 });

@@ -28,9 +28,19 @@ const meta: Meta = {
         type: { summary: 'FoldableAction[]' },
       },
     },
+    darkMode: {
+      description: 'The dark mode setting for the component',
+      control: 'select',
+      options: ['light', 'dark', 'system'],
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: 'system' },
+      },
+    },
   },
   args: {
     actions: mockActions,
+    darkMode: 'system',
   },
 };
 
@@ -40,7 +50,7 @@ type Story = StoryObj;
 /**
  * Helper function to create a story with different sets of actions
  */
-const createStory = (actions: FoldableAction[]) => {
+const createStory = (actions: FoldableAction[], darkMode: 'light' | 'dark' | 'system' = 'system') => {
   return {
     render: () => {
       // Use a div with Tailwind classes for container
@@ -60,6 +70,9 @@ const createStory = (actions: FoldableAction[]) => {
         style: action.style,
       }));
 
+      // Set the darkMode property
+      pidActions.setAttribute('darkMode', darkMode);
+
       // Append to container
       container.appendChild(pidActions);
 
@@ -69,7 +82,7 @@ const createStory = (actions: FoldableAction[]) => {
       docs: {
         source: {
           code: `
-<pid-actions></pid-actions>
+<pid-actions darkMode="${darkMode}"></pid-actions>
 <script>
   document.querySelector('pid-actions').actions = ${JSON.stringify(
     actions.map(a => ({
@@ -95,8 +108,9 @@ const createStory = (actions: FoldableAction[]) => {
 export const Default: Story = {
   args: {
     actions: mockActions,
+    darkMode: 'system',
   },
-  ...createStory(mockActions),
+  ...createStory(mockActions, 'system'),
 };
 
 /**
@@ -105,8 +119,9 @@ export const Default: Story = {
 export const PrimaryOnly: Story = {
   args: {
     actions: [mockActions[0], mockActions[3]],
+    darkMode: 'system',
   },
-  ...createStory([mockActions[0], mockActions[3]]),
+  ...createStory([mockActions[0], mockActions[3]], 'system'),
 };
 
 /**
@@ -115,8 +130,9 @@ export const PrimaryOnly: Story = {
 export const SecondaryOnly: Story = {
   args: {
     actions: [mockActions[1], mockActions[4]],
+    darkMode: 'system',
   },
-  ...createStory([mockActions[1], mockActions[4]]),
+  ...createStory([mockActions[1], mockActions[4]], 'system'),
 };
 
 /**
@@ -125,8 +141,9 @@ export const SecondaryOnly: Story = {
 export const DangerOnly: Story = {
   args: {
     actions: [mockActions[2]],
+    darkMode: 'system',
   },
-  ...createStory([mockActions[2]]),
+  ...createStory([mockActions[2]], 'system'),
 };
 
 /**
@@ -139,12 +156,38 @@ export const CustomPriorityOrder: Story = {
       new FoldableAction(1, 'First Priority', 'https://example.com/1', 'primary'),
       new FoldableAction(2, 'Second Priority', 'https://example.com/2', 'danger'),
     ],
+    darkMode: 'system',
   },
-  ...createStory([
-    new FoldableAction(3, 'Third Priority', 'https://example.com/3', 'secondary'),
-    new FoldableAction(1, 'First Priority', 'https://example.com/1', 'primary'),
-    new FoldableAction(2, 'Second Priority', 'https://example.com/2', 'danger'),
-  ]),
+  ...createStory(
+    [
+      new FoldableAction(3, 'Third Priority', 'https://example.com/3', 'secondary'),
+      new FoldableAction(1, 'First Priority', 'https://example.com/1', 'primary'),
+      new FoldableAction(2, 'Second Priority', 'https://example.com/2', 'danger'),
+    ],
+    'system',
+  ),
+};
+
+/**
+ * Story showing actions in light mode
+ */
+export const LightMode: Story = {
+  args: {
+    actions: mockActions,
+    darkMode: 'light',
+  },
+  ...createStory(mockActions, 'light'),
+};
+
+/**
+ * Story showing actions in dark mode
+ */
+export const DarkMode: Story = {
+  args: {
+    actions: mockActions,
+    darkMode: 'dark',
+  },
+  ...createStory(mockActions, 'dark'),
 };
 
 /**
@@ -159,6 +202,7 @@ export const ManyActions: Story = {
       new FoldableAction(8, 'Extra Action 3', 'https://example.com/extra3', 'danger'),
       new FoldableAction(9, 'Extra Action 4', 'https://example.com/extra4', 'primary'),
     ],
+    darkMode: 'system',
   },
   render: () => {
     // Use a div with Tailwind classes for container
@@ -187,6 +231,9 @@ export const ManyActions: Story = {
       style: action.style,
     }));
 
+    // Set the darkMode property
+    pidActions.setAttribute('darkMode', 'system');
+
     // Append to container
     container.appendChild(pidActions);
 
@@ -196,7 +243,7 @@ export const ManyActions: Story = {
     docs: {
       source: {
         code: `
-<pid-actions></pid-actions>
+<pid-actions darkMode="system"></pid-actions>
 <script>
   document.querySelector('pid-actions').actions = [
     ...mockActions,

@@ -59,6 +59,13 @@ export class PidCollapsible {
   @Prop() emphasize: boolean = false;
 
   /**
+   * The dark mode setting for the component
+   * Options: "light", "dark", "system"
+   * Default: "system"
+   */
+  @Prop() darkMode: 'light' | 'dark' | 'system' = 'system';
+
+  /**
    * Whether the component is in expanded mode (full size)
    */
   @Prop({ mutable: true }) expanded: boolean = false;
@@ -94,9 +101,17 @@ export class PidCollapsible {
   @State() currentWidth: string;
   @State() currentHeight: string;
 
+  /**
+   * Tracks the effective dark mode state (true for dark, false for light)
+   */
+  @State() isDarkMode: boolean = false;
+
   // Add these new private properties to store the last expanded dimensions
   private lastExpandedWidth: string;
   private lastExpandedHeight: string;
+
+  // Media query for detecting system dark mode preference
+  private darkModeMediaQuery: MediaQueryList;
 
   // ResizeObserver to track resize events
   private resizeObserver: ResizeObserver;
@@ -121,11 +136,22 @@ export class PidCollapsible {
     this.updateAppearance();
   }
 
+  /**
+   * Watch for changes in the darkMode property
+   */
+  @Watch('darkMode')
+  watchDarkMode() {
+    this.updateDarkMode();
+  }
+
   componentWillLoad() {
     // Initialize state from props
     this.expanded = this.open;
     this.currentWidth = this.initialWidth || CONSTANTS.DEFAULT_WIDTH;
     this.currentHeight = this.initialHeight || CONSTANTS.DEFAULT_HEIGHT;
+
+    // Initialize dark mode
+    this.initializeDarkMode();
   }
 
   componentDidLoad() {
@@ -162,6 +188,68 @@ export class PidCollapsible {
       // Fix: Check if it's an HTMLElement and has our class
       if (clearfix instanceof HTMLElement && clearfix.classList.contains('pid-collapsible-clearfix')) {
         this.el.parentNode.removeChild(clearfix);
+      }
+    }
+
+    // Clean up dark mode media query listener
+    this.cleanupDarkModeListener();
+  }
+
+  /**
+   * Initializes dark mode based on property and system preference
+   */
+  private initializeDarkMode() {
+    // Check if the browser supports matchMedia
+    if (window.matchMedia) {
+      // Create media query for dark mode
+      this.darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+      // Set initial dark mode state
+      this.updateDarkMode();
+
+      // Add listener for system preference changes
+      if (this.darkModeMediaQuery.addEventListener) {
+        this.darkModeMediaQuery.addEventListener('change', this.handleDarkModeChange);
+      } else if (this.darkModeMediaQuery.addListener) {
+        // For older browsers
+        this.darkModeMediaQuery.addListener(this.handleDarkModeChange);
+      }
+    } else {
+      // Default to light mode if matchMedia is not supported
+      this.isDarkMode = this.darkMode === 'dark';
+    }
+  }
+
+  /**
+   * Handles changes in system dark mode preference
+   */
+  private handleDarkModeChange = () => {
+    this.updateDarkMode();
+  };
+
+  /**
+   * Updates the dark mode state based on property and system preference
+   */
+  private updateDarkMode() {
+    if (this.darkMode === 'dark') {
+      this.isDarkMode = true;
+    } else if (this.darkMode === 'light') {
+      this.isDarkMode = false;
+    } else if (this.darkMode === 'system' && this.darkModeMediaQuery) {
+      this.isDarkMode = this.darkModeMediaQuery.matches;
+    }
+  }
+
+  /**
+   * Cleans up dark mode media query listener
+   */
+  private cleanupDarkModeListener() {
+    if (this.darkModeMediaQuery) {
+      if (this.darkModeMediaQuery.removeEventListener) {
+        this.darkModeMediaQuery.removeEventListener('change', this.handleDarkModeChange);
+      } else if (this.darkModeMediaQuery.removeListener) {
+        // For older browsers
+        this.darkModeMediaQuery.removeListener(this.handleDarkModeChange);
       }
     }
   }
@@ -413,8 +501,8 @@ export class PidCollapsible {
     // Auto width for collapsed state
     this.el.style.width = 'auto';
 
-    // Apply Tailwind classes for collapsed state
-    this.el.classList.add('w-auto', 'inline-block', 'align-middle', 'overflow-hidden', 'py-0', 'my-0', 'bg-white');
+    // Apply Tailwind classes for collapsed state (without background)
+    this.el.classList.add('w-auto', 'inline-block', 'align-middle', 'overflow-hidden', 'py-0', 'my-0');
 
     // Set line height for text - ensure it doesn't affect text flow
     this.el.style.height = `${this.lineHeight}px`;
@@ -526,7 +614,11 @@ export class PidCollapsible {
 
     // Add emphasis classes
     if (this.emphasize) {
-      baseClasses.push('border', 'border-gray-300', 'rounded-md', 'shadow-sm');
+      if (this.isDarkMode) {
+        baseClasses.push('border', 'border-gray-600', 'rounded-md', 'shadow-sm');
+      } else {
+        baseClasses.push('border', 'border-gray-300', 'rounded-md', 'shadow-sm');
+      }
     }
 
     // Add state-specific classes
@@ -534,6 +626,11 @@ export class PidCollapsible {
       baseClasses.push('mb-2', 'max-w-full', 'text-xs', 'block');
     } else {
       baseClasses.push('my-0', 'text-sm', 'float-left');
+    }
+
+    // Add dark mode text color only (no background)
+    if (this.isDarkMode) {
+      baseClasses.push('text-white');
     }
 
     return baseClasses.join(' ');
@@ -549,6 +646,11 @@ export class PidCollapsible {
       baseClasses.push('h-full', 'overflow-visible');
     } else {
       baseClasses.push('text-clip', 'overflow-hidden');
+    }
+
+    // Add dark mode classes
+    if (this.isDarkMode) {
+      baseClasses.push('bg-gray-800', 'text-white');
     }
 
     return baseClasses.join(' ');
@@ -576,18 +678,33 @@ export class PidCollapsible {
     ];
 
     if (this.expanded) {
-      baseClasses.push(
-        'sticky',
-        'top-0',
-        'bg-white',
-        `z-${Z_INDICES.STICKY_ELEMENTS}`,
-        'border-b',
-        'border-gray-100',
-        'p-2',
-        'overflow-visible',
-        'backdrop-blur-sm',
-        'min-h-[2.5rem]',
-      );
+      if (this.isDarkMode) {
+        baseClasses.push(
+          'sticky',
+          'top-0',
+          'bg-gray-800',
+          `z-${Z_INDICES.STICKY_ELEMENTS}`,
+          'border-b',
+          'border-gray-700',
+          'p-2',
+          'overflow-visible',
+          'backdrop-blur-sm',
+          'min-h-[2.5rem]',
+        );
+      } else {
+        baseClasses.push(
+          'sticky',
+          'top-0',
+          'bg-white',
+          `z-${Z_INDICES.STICKY_ELEMENTS}`,
+          'border-b',
+          'border-gray-100',
+          'p-2',
+          'overflow-visible',
+          'backdrop-blur-sm',
+          'min-h-[2.5rem]',
+        );
+      }
     } else {
       baseClasses.push('px-1', 'py-0', 'whitespace-nowrap', 'overflow-hidden', 'text-ellipsis', 'max-w-full');
 
@@ -610,6 +727,11 @@ export class PidCollapsible {
       baseClasses.push('overflow-hidden', 'p-0');
     }
 
+    // Add dark mode classes
+    if (this.isDarkMode) {
+      baseClasses.push('bg-gray-800', 'text-white');
+    }
+
     return baseClasses.join(' ');
   }
 
@@ -617,28 +739,32 @@ export class PidCollapsible {
    * Gets classes for the footer container
    */
   private getFooterClasses() {
-    return [
-      'flex',
-      'flex-col',
-      'w-full',
-      'mt-auto',
-      'sticky',
-      'bottom-0',
-      'left-0',
-      'right-0',
-      'bg-white',
-      'border-t',
-      'border-gray-200',
-      `z-${Z_INDICES.FOOTER_CONTENT}`,
-      'backdrop-blur-sm',
-    ].join(' ');
+    const baseClasses = ['flex', 'flex-col', 'w-full', 'mt-auto', 'sticky', 'bottom-0', 'left-0', 'right-0', 'border-t', `z-${Z_INDICES.FOOTER_CONTENT}`, 'backdrop-blur-sm'];
+
+    // Add dark mode classes
+    if (this.isDarkMode) {
+      baseClasses.push('bg-gray-800', 'border-gray-700');
+    } else {
+      baseClasses.push('bg-white', 'border-gray-200');
+    }
+
+    return baseClasses.join(' ');
   }
 
   /**
    * Gets classes for footer actions
    */
   private getFooterActionsClasses() {
-    return ['flex', 'items-center', 'justify-between', 'gap-2', 'p-2', 'min-h-[3rem]', 'flex-shrink-0', 'bg-white'].join(' ');
+    const baseClasses = ['flex', 'items-center', 'justify-between', 'gap-2', 'p-2', 'min-h-[3rem]', 'flex-shrink-0'];
+
+    // Add dark mode classes
+    if (this.isDarkMode) {
+      baseClasses.push('bg-gray-800');
+    } else {
+      baseClasses.push('bg-white');
+    }
+
+    return baseClasses.join(' ');
   }
 
   render() {
@@ -672,7 +798,7 @@ export class PidCollapsible {
               {this.emphasize && (
                 <span class="flex-shrink-0">
                   <svg
-                    class="text-gray-600 transition-transform duration-200 group-open:rotate-180"
+                    class={`${this.isDarkMode ? 'text-gray-300' : 'text-gray-600'} transition-transform duration-200 group-open:rotate-180`}
                     fill="none"
                     height="12"
                     width="12"
@@ -703,7 +829,7 @@ export class PidCollapsible {
           {this.showFooter && this.expanded && (
             <div class={footerClasses}>
               {/* Main footer slot for pagination */}
-              <div class="z-50 overflow-visible border-b border-gray-100 bg-white">
+              <div class={`z-50 overflow-visible border-b ${this.isDarkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-100 bg-white'}`}>
                 <slot name="footer"></slot>
               </div>
 

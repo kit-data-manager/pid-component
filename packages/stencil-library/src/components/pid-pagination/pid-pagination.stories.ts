@@ -58,6 +58,15 @@ const meta: Meta = {
         type: { summary: 'boolean' },
       },
     },
+    darkMode: {
+      description: 'The dark mode setting for the component',
+      control: 'select',
+      options: ['light', 'dark', 'system'],
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: 'system' },
+      },
+    },
   },
   args: {
     currentPage: 0,
@@ -65,6 +74,7 @@ const meta: Meta = {
     itemsPerPage: 10,
     adaptivePagination: false,
     showItemsPerPageControl: true,
+    darkMode: 'system',
   },
 };
 

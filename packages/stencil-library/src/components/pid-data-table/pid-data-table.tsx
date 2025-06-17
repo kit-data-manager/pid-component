@@ -57,6 +57,13 @@ export class PidDataTable {
   @Prop() settings: string = '[]';
 
   /**
+   * The dark mode setting for the component
+   * Options: "light", "dark", "system"
+   * Default: "system"
+   */
+  @Prop() darkMode: 'light' | 'dark' | 'system' = 'system';
+
+  /**
    * Event emitted when page changes
    */
   @Event() pageChange: EventEmitter<number>;
@@ -94,21 +101,33 @@ export class PidDataTable {
   }
 
   render() {
+    // Check if dark mode is active
+    const isDarkMode = this.darkMode === 'dark' || (this.darkMode === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
     if (this.items.length === 0) {
       return (
-        <div class="m-1 rounded-lg border border-gray-200 bg-gray-50 p-4 text-center text-gray-500" role="status" aria-live="polite" aria-label="No data available">
+        <div
+          class={
+            isDarkMode
+              ? 'm-1 rounded-lg border border-gray-700 bg-gray-800 p-4 text-center text-gray-300'
+              : 'm-1 rounded-lg border border-gray-200 bg-gray-50 p-4 text-center text-gray-500'
+          }
+          role="status"
+          aria-live="polite"
+          aria-label="No data available"
+        >
           <p class="m-0">No data available</p>
         </div>
       );
     }
 
     return (
-      <div class="m-1 flex h-full flex-col rounded-lg border border-gray-200 bg-gray-50">
+      <div class={isDarkMode ? 'm-1 flex h-full flex-col rounded-lg border border-gray-700 bg-gray-800' : 'm-1 flex h-full flex-col rounded-lg border border-gray-200 bg-gray-50'}>
         {/* Table container with scrollable content */}
         <div class="relative z-10 flex-grow overflow-auto">
           <table
             id={this.tableId}
-            class="w-full table-fixed border-collapse text-left font-sans text-sm select-text"
+            class={`w-full table-fixed border-collapse text-left font-sans text-sm select-text ${isDarkMode ? 'text-gray-200' : ''}`}
             aria-label="Data table with properties and values"
             role="table"
           >
@@ -122,11 +141,15 @@ export class PidDataTable {
                 </th>
               </tr>
             </thead>
-            <tbody class="bg-gray-50" role="rowgroup">
+            <tbody class={isDarkMode ? 'bg-gray-800' : 'bg-gray-50'} role="rowgroup">
               {this.filteredItems.map((value, index) => (
                 <tr
                   key={`item-${value.keyTitle}-${index}`}
-                  class={`odd:bg-slate-200 even:bg-gray-50 ${index !== this.filteredItems.length - 1 ? 'border-b border-gray-200' : ''}`}
+                  class={
+                    isDarkMode
+                      ? `odd:bg-gray-700 even:bg-gray-800 ${index !== this.filteredItems.length - 1 ? 'border-b border-gray-700' : ''}`
+                      : `odd:bg-slate-200 even:bg-gray-50 ${index !== this.filteredItems.length - 1 ? 'border-b border-gray-200' : ''}`
+                  }
                   aria-label={`Row for ${value.keyTitle} with value ${value.value}`}
                   role="row"
                 >
@@ -180,7 +203,7 @@ export class PidDataTable {
                       <div class="flex-shrink-0">
                         <copy-button
                           value={value.value}
-                          class="visible z-50 cursor-pointer rounded-sm bg-white/90 opacity-100 shadow-sm transition-all duration-200 hover:bg-white hover:shadow-md"
+                          class={`visible z-50 cursor-pointer rounded-sm ${isDarkMode ? 'bg-gray-700/90 hover:bg-gray-600' : 'bg-white/90 hover:bg-white'} opacity-100 shadow-sm transition-all duration-200 hover:shadow-md`}
                           aria-label={`Copy ${value.keyTitle} value to clipboard`}
                           title={`Copy ${value.keyTitle} value to clipboard`}
                         />

@@ -285,6 +285,10 @@ export class PidTooltip {
     // Determine appropriate button label based on visibility state
     const buttonLabel = `${this.isVisible ? 'Hide' : 'Show'} additional information`;
 
+    // Check if dark mode is active by looking at the closest pid-component
+    const parentComponent = this.el.closest('pid-component');
+    const isDarkMode = parentComponent?.classList.contains('bg-gray-800');
+
     return (
       <Host class="relative inline-block w-full" onMouseEnter={this.showTooltip} onMouseLeave={this.hideTooltip}>
         {/* Screen reader announcement for tooltip state changes */}
@@ -300,7 +304,9 @@ export class PidTooltip {
             <button
               ref={el => (this.buttonRef = el)}
               type="button"
-              class="flex items-center rounded-full p-0.5 transition-colors duration-200 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-none"
+              class={`flex items-center rounded-full p-0.5 transition-colors duration-200 ${
+                isDarkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100'
+              } focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-none`}
               aria-label={buttonLabel}
               aria-expanded={this.isVisible ? 'true' : 'false'}
               aria-controls={this.tooltipId}
@@ -342,7 +348,9 @@ export class PidTooltip {
             ref={el => (this.tooltipRef = el)}
             id={this.tooltipId}
             role="tooltip"
-            class={`${this.isVisible ? 'block' : 'hidden'} absolute z-50 ${this.getPositionClasses(this.calculatedPosition)} w-full rounded border border-gray-300 bg-white p-3 text-xs whitespace-normal text-gray-700 shadow-lg transition-opacity duration-200 ease-in-out`}
+            class={`${this.isVisible ? 'block' : 'hidden'} absolute z-50 ${this.getPositionClasses(this.calculatedPosition)} w-full rounded border ${
+              isDarkMode ? 'border-gray-600 bg-gray-700 text-gray-200' : 'border-gray-300 bg-white text-gray-700'
+            } p-3 text-xs whitespace-normal shadow-lg transition-opacity duration-200 ease-in-out`}
             style={this.getTooltipStyles()}
             aria-live="polite"
           >

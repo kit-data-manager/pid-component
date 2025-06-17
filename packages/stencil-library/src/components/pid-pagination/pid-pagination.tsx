@@ -37,6 +37,13 @@ export class PidPagination {
   @Prop() showItemsPerPageControl: boolean = true;
 
   /**
+   * The dark mode setting for the component
+   * Options: "light", "dark", "system"
+   * Default: "system"
+   */
+  @Prop() darkMode: 'light' | 'dark' | 'system' = 'system';
+
+  /**
    * Event emitted when page changes
    */
   @Event() pageChange: EventEmitter<number>;
@@ -138,31 +145,42 @@ export class PidPagination {
     const visiblePages = this.getVisiblePageNumbers();
     const needsPagination = this.totalItems > this.itemsPerPage;
 
+    // Check if dark mode is active
+    const isDarkMode = this.darkMode === 'dark' || (this.darkMode === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
     // Generate a unique ID for this pagination component for ARIA relationships
     const paginationId = `pagination-${Math.random().toString(36).substring(2, 11)}`;
 
     return (
-      <div class="flex w-full resize-none flex-wrap items-center justify-between gap-2 bg-white px-3 py-1 text-sm" role="navigation" aria-labelledby={`${paginationId}-label`}>
+      <div
+        class={`flex w-full resize-none flex-wrap items-center justify-between gap-2 ${isDarkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-800'} px-3 py-1 text-sm`}
+        role="navigation"
+        aria-labelledby={`${paginationId}-label`}
+      >
         {/* Hidden label for screen readers */}
         <span id={`${paginationId}-label`} class="sr-only">
           Pagination controls and display settings
         </span>
 
         {/* Left side: Page size selector and info - ALWAYS SHOWN */}
-        <div class="flex flex-wrap items-center gap-2 text-gray-600">
+        <div class={`flex flex-wrap items-center gap-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
           {/* Horizontal page size selector - Only shown when not in adaptive mode and when control is enabled */}
           {!this.adaptivePagination && this.showItemsPerPageControl && (
             <div class="flex items-center gap-1" role="group" aria-label="Items per page options">
-              <span class="text-xs whitespace-nowrap text-gray-600" id={`${paginationId}-itemsperpage-label`}>
+              <span class={`text-xs whitespace-nowrap ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`} id={`${paginationId}-itemsperpage-label`}>
                 Items per page:
               </span>
-              <div class="flex items-center gap-0.5 rounded border border-gray-200 bg-white p-0.5" role="toolbar" aria-labelledby={`${paginationId}-itemsperpage-label`}>
+              <div
+                class={`flex items-center gap-0.5 rounded border ${isDarkMode ? 'border-gray-600 bg-gray-700' : 'border-gray-200 bg-white'} p-0.5`}
+                role="toolbar"
+                aria-labelledby={`${paginationId}-itemsperpage-label`}
+              >
                 {this.pageSizes.map(size => (
                   <button
                     key={`size-${size}`}
                     onClick={() => this.handleItemsPerPageChange(size)}
                     class={`resize-none rounded px-2 py-0.5 text-xs transition-colors ${
-                      this.itemsPerPage === size ? 'bg-blue-600 font-medium text-white' : 'text-gray-700 hover:bg-gray-100'
+                      this.itemsPerPage === size ? 'bg-blue-600 font-medium text-white' : isDarkMode ? 'text-gray-200 hover:bg-gray-600' : 'text-gray-700 hover:bg-gray-100'
                     }`}
                     aria-label={`Show ${size} items per page`}
                     aria-pressed={this.itemsPerPage === size ? 'true' : 'false'}
@@ -179,7 +197,13 @@ export class PidPagination {
           {/* When in adaptive mode, show indicator */}
           {this.adaptivePagination && (
             <div class="flex items-center gap-1">
-              <span class="rounded-full border border-blue-100 bg-blue-50 px-2 py-0.5 text-xs whitespace-nowrap text-gray-600" role="status" aria-live="polite">
+              <span
+                class={`rounded-full border ${
+                  isDarkMode ? 'border-blue-700 bg-blue-800 text-gray-200' : 'border-blue-100 bg-blue-50 text-gray-600'
+                } px-2 py-0.5 text-xs whitespace-nowrap`}
+                role="status"
+                aria-live="polite"
+              >
                 <span class="sr-only">Currently using </span>
                 Adaptive pagination: {this.itemsPerPage} items
               </span>
@@ -187,7 +211,7 @@ export class PidPagination {
           )}
 
           {/* Item range display */}
-          <span class="hidden text-xs whitespace-nowrap text-gray-600 sm:block" role="status" aria-live="polite">
+          <span class={`hidden text-xs whitespace-nowrap ${isDarkMode ? 'text-gray-300' : 'text-gray-600'} sm:block`} role="status" aria-live="polite">
             Showing {this.displayRange.start}-{this.displayRange.end} of {this.totalItems}
           </span>
         </div>
@@ -200,7 +224,9 @@ export class PidPagination {
               <button
                 onClick={() => this.handlePageChange(this.currentPage - 1)}
                 disabled={this.currentPage === 0}
-                class="relative inline-flex resize-none items-center rounded-l-md px-2 py-1.5 text-gray-500 ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+                class={`relative inline-flex resize-none items-center rounded-l-md px-2 py-1.5 ${
+                  isDarkMode ? 'text-gray-300 ring-1 ring-gray-600 ring-inset hover:bg-gray-700' : 'text-gray-500 ring-1 ring-gray-300 ring-inset hover:bg-gray-50'
+                } focus:z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50`}
                 aria-label="Previous page"
                 title="Go to previous page"
                 type="button"
@@ -223,7 +249,9 @@ export class PidPagination {
                   return (
                     <span
                       key={`ellipsis-${i}`}
-                      class="relative inline-flex resize-none items-center px-2 py-1.5 text-sm text-gray-700 ring-1 ring-gray-300 ring-inset"
+                      class={`relative inline-flex resize-none items-center px-2 py-1.5 text-sm ${
+                        isDarkMode ? 'text-gray-300 ring-1 ring-gray-600 ring-inset' : 'text-gray-700 ring-1 ring-gray-300 ring-inset'
+                      }`}
                       role="separator"
                       aria-label="More pages"
                       aria-hidden="true"
@@ -246,7 +274,9 @@ export class PidPagination {
                     class={
                       isCurrentPage
                         ? 'relative z-10 inline-flex resize-none items-center bg-blue-600 px-2 py-1.5 text-xs font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
-                        : 'relative inline-flex resize-none items-center px-2 py-1.5 text-xs text-gray-900 ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500'
+                        : `relative inline-flex resize-none items-center px-2 py-1.5 text-xs ${
+                            isDarkMode ? 'text-gray-200 ring-1 ring-gray-600 ring-inset hover:bg-gray-700' : 'text-gray-900 ring-1 ring-gray-300 ring-inset hover:bg-gray-50'
+                          } focus:z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500`
                     }
                     aria-label={`Page ${humanPageNum}`}
                     aria-current={isCurrentPage ? 'page' : undefined}
@@ -262,7 +292,9 @@ export class PidPagination {
               <button
                 onClick={() => this.handlePageChange(this.currentPage + 1)}
                 disabled={this.currentPage >= this.totalPages - 1}
-                class="relative inline-flex resize-none items-center rounded-r-md px-2 py-1.5 text-gray-500 ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+                class={`relative inline-flex resize-none items-center rounded-r-md px-2 py-1.5 ${
+                  isDarkMode ? 'text-gray-300 ring-1 ring-gray-600 ring-inset hover:bg-gray-700' : 'text-gray-500 ring-1 ring-gray-300 ring-inset hover:bg-gray-50'
+                } focus:z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50`}
                 aria-label="Next page"
                 title="Go to next page"
                 type="button"

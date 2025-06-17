@@ -72,6 +72,15 @@ const meta: Meta = {
         type: { summary: 'boolean' },
       },
     },
+    darkMode: {
+      description: 'The dark mode setting for the component',
+      control: 'select',
+      options: ['light', 'dark', 'system'],
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: 'system' },
+      },
+    },
   },
   args: {
     open: false,
@@ -80,6 +89,7 @@ const meta: Meta = {
     lineHeight: 24,
     showFooter: false,
     resizable: false,
+    darkMode: 'system',
   },
 };
 
@@ -93,9 +103,10 @@ export const Default: Story = {
   args: {
     open: false,
     emphasize: true,
+    darkMode: 'system',
   },
   render: args => html`
-    <div class="p-4 bg-gray-50 rounded-md">
+    <div class="rounded-md bg-gray-50 p-4">
       <pid-collapsible
         open=${args.open}
         emphasize=${args.emphasize}
@@ -105,6 +116,7 @@ export const Default: Story = {
         lineHeight=${args.lineHeight}
         showFooter=${args.showFooter}
         resizable=${args.resizable}
+        darkMode=${args.darkMode}
         @toggle=${e => console.log('Toggle event:', e.detail)}
         @resize=${e => console.log('Resize event:', e.detail)}
       >
@@ -121,7 +133,7 @@ export const Default: Story = {
     docs: {
       source: {
         code: `
-<pid-collapsible open="false" emphasize="true">
+<pid-collapsible open="false" emphasize="true" darkMode="system">
   <span slot="summary">Collapsible Component</span>
   <div>
     <p>This is the content of the collapsible component.</p>
@@ -141,9 +153,10 @@ export const OpenByDefault: Story = {
   args: {
     open: true,
     emphasize: true,
+    darkMode: 'system',
   },
   render: args => html`
-    <div class="p-4 bg-gray-50 rounded-md">
+    <div class="rounded-md bg-gray-50 p-4">
       <pid-collapsible
         open=${args.open}
         emphasize=${args.emphasize}
@@ -153,6 +166,7 @@ export const OpenByDefault: Story = {
         lineHeight=${args.lineHeight}
         showFooter=${args.showFooter}
         resizable=${args.resizable}
+        darkMode=${args.darkMode}
         @toggle=${e => console.log('Toggle event:', e.detail)}
         @resize=${e => console.log('Resize event:', e.detail)}
       >
@@ -169,7 +183,7 @@ export const OpenByDefault: Story = {
     docs: {
       source: {
         code: `
-<pid-collapsible open="true" emphasize="true">
+<pid-collapsible open="true" emphasize="true" darkMode="system">
   <span slot="summary">Collapsible Component (Open by Default)</span>
   <div>
     <p>This is the content of the collapsible component.</p>
@@ -193,9 +207,10 @@ export const WithFooterAndResize: Story = {
     resizable: true,
     initialWidth: '500px',
     initialHeight: '300px',
+    darkMode: 'system',
   },
   render: args => html`
-    <div class="p-4 bg-gray-50 rounded-md">
+    <div class="rounded-md bg-gray-50 p-4">
       <pid-collapsible
         open=${args.open}
         emphasize=${args.emphasize}
@@ -205,6 +220,7 @@ export const WithFooterAndResize: Story = {
         lineHeight=${args.lineHeight}
         showFooter=${args.showFooter}
         resizable=${args.resizable}
+        darkMode=${args.darkMode}
         @toggle=${e => console.log('Toggle event:', e.detail)}
         @resize=${e => console.log('Resize event:', e.detail)}
       >
@@ -212,13 +228,13 @@ export const WithFooterAndResize: Story = {
         <div class="p-4">
           <p class="mb-2">This component has a footer and can be resized.</p>
           <p class="mb-2">Try dragging the bottom-right corner to resize.</p>
-          <div class="bg-blue-50 p-3 rounded-md border border-blue-200 text-sm"><strong>Tip:</strong> The resize handle appears in the bottom-right corner when hovering.</div>
+          <div class="rounded-md border border-blue-200 bg-blue-50 p-3 text-sm"><strong>Tip:</strong> The resize handle appears in the bottom-right corner when hovering.</div>
         </div>
-        <div slot="footer" class="p-2 flex justify-between items-center border-t border-gray-200">
+        <div slot="footer" class="flex items-center justify-between border-t border-gray-200 p-2">
           <span class="text-sm text-gray-500">Footer content</span>
           <div class="flex gap-2">
-            <button class="px-3 py-1 bg-blue-500 text-white rounded text-sm">Action 1</button>
-            <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded text-sm">Action 2</button>
+            <button class="rounded bg-blue-500 px-3 py-1 text-sm text-white">Action 1</button>
+            <button class="rounded bg-gray-200 px-3 py-1 text-sm text-gray-700">Action 2</button>
           </div>
         </div>
       </pid-collapsible>
@@ -234,7 +250,8 @@ export const WithFooterAndResize: Story = {
   showFooter="true"
   resizable="true"
   initialWidth="500px"
-  initialHeight="300px">
+  initialHeight="300px"
+  darkMode="system">
   <span slot="summary">Resizable Collapsible with Footer</span>
   <div>
     <p>This component has a footer and can be resized.</p>
@@ -263,6 +280,7 @@ export const AdaptiveWithResizeEvents: Story = {
     showFooter: true,
     initialWidth: '500px',
     initialHeight: '300px',
+    darkMode: 'system',
   },
   render: args => {
     // Create a unique ID for this instance
@@ -277,8 +295,8 @@ export const AdaptiveWithResizeEvents: Story = {
     };
 
     return html`
-      <div class="p-4 bg-gray-50 rounded-md">
-        <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded text-sm">Resize the component to see resize events in the footer.</div>
+      <div class="rounded-md bg-gray-50 p-4">
+        <div class="mb-4 rounded border border-blue-200 bg-blue-50 p-3 text-sm">Resize the component to see resize events in the footer.</div>
 
         <pid-collapsible
           open=${args.open}
@@ -289,15 +307,16 @@ export const AdaptiveWithResizeEvents: Story = {
           lineHeight=${args.lineHeight}
           showFooter=${args.showFooter}
           resizable=${args.resizable}
+          darkMode=${args.darkMode}
           @toggle=${e => console.log('Toggle event:', e.detail)}
           @collapsibleResize=${handleResize}
         >
           <span slot="summary" class="font-medium">Adaptive Collapsible</span>
-          <div class="p-4 flex-grow">
+          <div class="flex-grow p-4">
             <p class="mb-2">This collapsible demonstrates the adaptive resizing feature.</p>
             <p>Resize events will be shown in the footer.</p>
           </div>
-          <div slot="footer" class="p-2 text-center text-sm bg-blue-50" id=${resizeInfoId}>Resize the component to see dimensions</div>
+          <div slot="footer" class="bg-blue-50 p-2 text-center text-sm" id=${resizeInfoId}>Resize the component to see dimensions</div>
         </pid-collapsible>
       </div>
     `;
@@ -313,6 +332,7 @@ export const AdaptiveWithResizeEvents: Story = {
   resizable="true"
   initialWidth="500px"
   initialHeight="300px"
+  darkMode="system"
   @collapsibleResize="handleResizeEvent">
   <span slot="summary">Adaptive Collapsible</span>
   <div>
@@ -340,6 +360,118 @@ export const AdaptiveWithResizeEvents: Story = {
 };
 
 /**
+ * Demonstrates the dark mode appearance
+ */
+export const DarkMode: Story = {
+  args: {
+    open: true,
+    emphasize: true,
+    darkMode: 'dark',
+    showFooter: true,
+  },
+  render: args => html`
+    <div class="rounded-md bg-gray-900 p-4">
+      <pid-collapsible
+        open=${args.open}
+        emphasize=${args.emphasize}
+        expanded=${args.expanded}
+        initialWidth=${args.initialWidth}
+        initialHeight=${args.initialHeight}
+        lineHeight=${args.lineHeight}
+        showFooter=${args.showFooter}
+        resizable=${args.resizable}
+        darkMode=${args.darkMode}
+        @toggle=${e => console.log('Toggle event:', e.detail)}
+        @resize=${e => console.log('Resize event:', e.detail)}
+      >
+        <span slot="summary" class="font-medium">Dark Mode Collapsible</span>
+        <div class="p-4">
+          <p class="mb-2">This collapsible demonstrates the dark mode appearance.</p>
+          <p>Dark mode adapts the component's colors to be suitable for dark backgrounds.</p>
+        </div>
+        ${args.showFooter ? html` <div slot="footer" class="p-2 text-center text-sm">Footer content in dark mode</div> ` : ''}
+      </pid-collapsible>
+    </div>
+  `,
+  parameters: {
+    docs: {
+      source: {
+        code: `
+<pid-collapsible
+  open="true"
+  emphasize="true"
+  showFooter="true"
+  darkMode="dark">
+  <span slot="summary">Dark Mode Collapsible</span>
+  <div>
+    <p>This collapsible demonstrates the dark mode appearance.</p>
+    <p>Dark mode adapts the component's colors to be suitable for dark backgrounds.</p>
+  </div>
+  <div slot="footer">Footer content in dark mode</div>
+</pid-collapsible>
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Demonstrates the light mode appearance
+ */
+export const LightMode: Story = {
+  args: {
+    open: true,
+    emphasize: true,
+    darkMode: 'light',
+    showFooter: true,
+  },
+  render: args => html`
+    <div class="rounded-md bg-white p-4">
+      <pid-collapsible
+        open=${args.open}
+        emphasize=${args.emphasize}
+        expanded=${args.expanded}
+        initialWidth=${args.initialWidth}
+        initialHeight=${args.initialHeight}
+        lineHeight=${args.lineHeight}
+        showFooter=${args.showFooter}
+        resizable=${args.resizable}
+        darkMode=${args.darkMode}
+        @toggle=${e => console.log('Toggle event:', e.detail)}
+        @resize=${e => console.log('Resize event:', e.detail)}
+      >
+        <span slot="summary" class="font-medium">Light Mode Collapsible</span>
+        <div class="p-4">
+          <p class="mb-2">This collapsible demonstrates the light mode appearance.</p>
+          <p>Light mode is the default appearance for most interfaces.</p>
+        </div>
+        ${args.showFooter ? html` <div slot="footer" class="p-2 text-center text-sm">Footer content in light mode</div> ` : ''}
+      </pid-collapsible>
+    </div>
+  `,
+  parameters: {
+    docs: {
+      source: {
+        code: `
+<pid-collapsible
+  open="true"
+  emphasize="true"
+  showFooter="true"
+  darkMode="light">
+  <span slot="summary">Light Mode Collapsible</span>
+  <div>
+    <p>This collapsible demonstrates the light mode appearance.</p>
+    <p>Light mode is the default appearance for most interfaces.</p>
+  </div>
+  <div slot="footer">Footer content in light mode</div>
+</pid-collapsible>
+        `,
+      },
+    },
+  },
+};
+
+/**
  * Showcase of different collapsible states
  */
 export const CollapsibleStates: Story = {
@@ -352,6 +484,7 @@ export const CollapsibleStates: Story = {
         emphasize: false,
         expanded: false,
         showFooter: false,
+        darkMode: 'system',
         description: 'Default state with no emphasis, closed, and no footer.',
         bgColor: 'bg-white',
       },
@@ -361,6 +494,7 @@ export const CollapsibleStates: Story = {
         emphasize: false,
         expanded: false,
         showFooter: false,
+        darkMode: 'system',
         description: 'Open state with no emphasis and no footer.',
         bgColor: 'bg-blue-50',
       },
@@ -370,6 +504,7 @@ export const CollapsibleStates: Story = {
         emphasize: true,
         expanded: false,
         showFooter: false,
+        darkMode: 'system',
         description: 'Closed state with emphasis and no footer.',
         bgColor: 'bg-green-50',
       },
@@ -379,6 +514,7 @@ export const CollapsibleStates: Story = {
         emphasize: true,
         expanded: false,
         showFooter: true,
+        darkMode: 'system',
         description: 'Open state with emphasis and footer.',
         bgColor: 'bg-yellow-50',
       },
@@ -388,37 +524,49 @@ export const CollapsibleStates: Story = {
         emphasize: true,
         expanded: true,
         showFooter: true,
+        darkMode: 'system',
         description: 'Open, emphasized, expanded state with footer.',
         bgColor: 'bg-purple-50',
+      },
+      {
+        title: 'Dark Mode',
+        open: true,
+        emphasize: true,
+        expanded: false,
+        showFooter: true,
+        darkMode: 'dark',
+        description: 'Open state with emphasis, footer, and dark mode.',
+        bgColor: 'bg-gray-800 text-white',
       },
     ];
 
     // Create a template for each state
     const stateTemplates = states.map(
       state => html`
-        <div class="p-4 ${state.bgColor} rounded-lg mb-6">
-          <h3 class="text-lg font-bold mb-2">${state.title}</h3>
-          <p class="text-sm mb-4">${state.description}</p>
+        <div class="${state.bgColor} mb-6 rounded-lg p-4">
+          <h3 class="mb-2 text-lg font-bold">${state.title}</h3>
+          <p class="mb-4 text-sm">${state.description}</p>
 
-          <pid-collapsible open=${state.open} emphasize=${state.emphasize} expanded=${state.expanded} showFooter=${state.showFooter}>
+          <pid-collapsible open=${state.open} emphasize=${state.emphasize} expanded=${state.expanded} showFooter=${state.showFooter} darkMode=${state.darkMode}>
             <span slot="summary" class="font-medium">${state.title} Example</span>
             <div class="p-4">
               <p class="mb-2">This collapsible demonstrates the <strong>${state.title}</strong> state.</p>
-              <ul class="list-disc pl-5 mt-2">
+              <ul class="mt-2 list-disc pl-5">
                 <li>Open: ${state.open}</li>
                 <li>Emphasize: ${state.emphasize}</li>
                 <li>Expanded: ${state.expanded}</li>
                 <li>Show Footer: ${state.showFooter}</li>
+                <li>Dark Mode: ${state.darkMode}</li>
               </ul>
             </div>
-            ${state.showFooter ? html` <div slot="footer" class="p-2 text-center text-sm text-gray-500 border-t border-gray-200">Footer for ${state.title}</div> ` : ''}
+            ${state.showFooter ? html` <div slot="footer" class="border-t border-gray-200 p-2 text-center text-sm text-gray-500">Footer for ${state.title}</div> ` : ''}
           </pid-collapsible>
         </div>
       `,
     );
 
     // Combine all states into a container
-    return html` <div class="bg-gray-100 p-8 space-y-4 rounded-md">${stateTemplates}</div> `;
+    return html` <div class="space-y-4 rounded-md bg-gray-100 p-8">${stateTemplates}</div> `;
   },
   parameters: {
     docs: {
@@ -427,7 +575,7 @@ export const CollapsibleStates: Story = {
 <!-- Example of different collapsible states -->
 
 <!-- Default state -->
-<pid-collapsible>
+<pid-collapsible darkMode="system">
   <span slot="summary">Default Example</span>
   <div>
     <p>This collapsible demonstrates the default state.</p>
@@ -435,7 +583,7 @@ export const CollapsibleStates: Story = {
 </pid-collapsible>
 
 <!-- Open state -->
-<pid-collapsible open="true">
+<pid-collapsible open="true" darkMode="system">
   <span slot="summary">Open Example</span>
   <div>
     <p>This collapsible demonstrates the open state.</p>
@@ -443,7 +591,7 @@ export const CollapsibleStates: Story = {
 </pid-collapsible>
 
 <!-- Emphasized state -->
-<pid-collapsible emphasize="true">
+<pid-collapsible emphasize="true" darkMode="system">
   <span slot="summary">Emphasized Example</span>
   <div>
     <p>This collapsible demonstrates the emphasized state.</p>
@@ -451,7 +599,7 @@ export const CollapsibleStates: Story = {
 </pid-collapsible>
 
 <!-- With Footer state -->
-<pid-collapsible open="true" emphasize="true" showFooter="true">
+<pid-collapsible open="true" emphasize="true" showFooter="true" darkMode="system">
   <span slot="summary">With Footer Example</span>
   <div>
     <p>This collapsible demonstrates the state with footer.</p>
@@ -460,10 +608,19 @@ export const CollapsibleStates: Story = {
 </pid-collapsible>
 
 <!-- Expanded state -->
-<pid-collapsible open="true" emphasize="true" expanded="true" showFooter="true">
+<pid-collapsible open="true" emphasize="true" expanded="true" showFooter="true" darkMode="system">
   <span slot="summary">Expanded Example</span>
   <div>
     <p>This collapsible demonstrates the expanded state.</p>
+  </div>
+  <div slot="footer">Footer content</div>
+</pid-collapsible>
+
+<!-- Dark Mode state -->
+<pid-collapsible open="true" emphasize="true" showFooter="true" darkMode="dark">
+  <span slot="summary">Dark Mode Example</span>
+  <div>
+    <p>This collapsible demonstrates the dark mode state.</p>
   </div>
   <div slot="footer">Footer content</div>
 </pid-collapsible>

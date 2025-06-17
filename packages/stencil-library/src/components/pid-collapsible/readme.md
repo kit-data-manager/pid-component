@@ -59,15 +59,16 @@ with resize capability and cross-browser compatibility
 
 ## Properties
 
-| Property        | Attribute        | Description                                               | Type      | Default     |
-| --------------- | ---------------- | --------------------------------------------------------- | --------- | ----------- |
-| `emphasize`     | `emphasize`      | Whether to emphasize the component with border and shadow | `boolean` | `false`     |
-| `expanded`      | `expanded`       | Whether the component is in expanded mode (full size)     | `boolean` | `false`     |
-| `initialHeight` | `initial-height` | Initial height when expanded                              | `string`  | `undefined` |
-| `initialWidth`  | `initial-width`  | Initial width when expanded                               | `string`  | `undefined` |
-| `lineHeight`    | `line-height`    | Line height for collapsed state                           | `number`  | `24`        |
-| `open`          | `open`           | Whether the collapsible is open by default                | `boolean` | `false`     |
-| `showFooter`    | `show-footer`    | Whether to show the footer section                        | `boolean` | `false`     |
+| Property        | Attribute        | Description                                                                                  | Type                            | Default     |
+|-----------------|------------------|----------------------------------------------------------------------------------------------|---------------------------------|-------------|
+| `darkMode`      | `dark-mode`      | The dark mode setting for the component Options: "light", "dark", "system" Default: "system" | `"dark" \| "light" \| "system"` | `'system'`  |
+| `emphasize`     | `emphasize`      | Whether to emphasize the component with border and shadow                                    | `boolean`                       | `false`     |
+| `expanded`      | `expanded`       | Whether the component is in expanded mode (full size)                                        | `boolean`                       | `false`     |
+| `initialHeight` | `initial-height` | Initial height when expanded                                                                 | `string`                        | `undefined` |
+| `initialWidth`  | `initial-width`  | Initial width when expanded                                                                  | `string`                        | `undefined` |
+| `lineHeight`    | `line-height`    | Line height for collapsed state                                                              | `number`                        | `24`        |
+| `open`          | `open`           | Whether the collapsible is open by default                                                   | `boolean`                       | `false`     |
+| `showFooter`    | `show-footer`    | Whether to show the footer section                                                           | `boolean`                       | `false`     |
 
 
 ## Events

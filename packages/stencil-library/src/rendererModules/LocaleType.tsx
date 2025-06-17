@@ -21,7 +21,9 @@ export class LocaleType extends GenericIdentifierType {
   }
 
   renderPreview(): FunctionalComponent {
-    // mail icon from: https://heroicons.com/ (MIT license)
-    return <locale-visualization locale={this.value} showFlag={true}></locale-visualization>;
+    // Get the dark mode value to pass to the component
+    const darkModeValue = (this.settings?.find(setting => setting.name === 'darkMode')?.value as 'light' | 'dark' | 'system') || 'system';
+
+    return <locale-visualization locale={this.value} showFlag={true} darkMode={darkModeValue}></locale-visualization>;
   }
 }

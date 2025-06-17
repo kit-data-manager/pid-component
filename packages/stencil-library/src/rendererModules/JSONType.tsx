@@ -14,6 +14,25 @@ interface ParsedJsonResult {
 export class JSONType extends GenericIdentifierType {
   private _parsedJsonResult: ParsedJsonResult | undefined = undefined;
 
+  // Dark mode property
+  private isDarkMode: boolean = false;
+
+  // Check for dark mode in settings
+  private checkDarkMode(): boolean {
+    const darkModeSetting = this.settings?.find(setting => setting.name === 'darkMode');
+    if (darkModeSetting) {
+      const darkMode = darkModeSetting.value as 'light' | 'dark' | 'system';
+      if (darkMode === 'dark') {
+        return true;
+      } else if (darkMode === 'light') {
+        return false;
+      } else if (darkMode === 'system' && window.matchMedia) {
+        return window.matchMedia('(prefers-color-scheme: dark)').matches;
+      }
+    }
+    return false;
+  }
+
   private getParsedJson(): ParsedJsonResult {
     if (this._parsedJsonResult === undefined) {
       try {
@@ -73,10 +92,13 @@ export class JSONType extends GenericIdentifierType {
   }
 
   renderPreview() {
+    // Update dark mode state
+    this.isDarkMode = this.checkDarkMode();
+
     const { data: jsonObj, error } = this.getParsedJson();
 
     if (error) {
-      return <span class="text-red-500">Invalid JSON</span>;
+      return <span class={this.isDarkMode ? 'text-red-400' : 'text-red-500'}>Invalid JSON</span>;
     }
 
     // Show a more condensed and user-friendly preview for objects/arrays
@@ -87,13 +109,13 @@ export class JSONType extends GenericIdentifierType {
       const entryCount = Object.keys(jsonObj).length;
       return (
         <div class="w-full">
-          <div class="flex items-center rounded-md bg-gray-100 font-mono text-xs">
-            <span class="mr-1 font-medium">{isArray ? 'Array' : 'Object'}</span>
-            <span class="text-gray-500">{isArray ? '[' : '{'}</span>
-            <span class="text-xs text-gray-500">
+          <div class={`flex items-center rounded-md ${this.isDarkMode ? 'bg-gray-700' : 'bg-gray-100'} font-mono text-xs`}>
+            <span class={`mr-1 font-medium ${this.isDarkMode ? 'text-gray-200' : ''}`}>{isArray ? 'Array' : 'Object'}</span>
+            <span class={this.isDarkMode ? 'text-gray-400' : 'text-gray-500'}>{isArray ? '[' : '{'}</span>
+            <span class={`text-xs ${this.isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
               {entryCount} {entryCount === 1 ? 'item' : 'items'}
             </span>
-            <span class="text-gray-500">{isArray ? ']' : '}'}</span>
+            <span class={this.isDarkMode ? 'text-gray-400' : 'text-gray-500'}>{isArray ? ']' : '}'}</span>
           </div>
         </div>
       );
@@ -102,27 +124,32 @@ export class JSONType extends GenericIdentifierType {
     // For simple JSON values (strings, numbers, booleans, null), show the stringified value
     return (
       <div class="w-full">
-        <pre class="max-w-full overflow-x-auto rounded-md bg-gray-100 font-mono text-xs whitespace-pre-wrap">{JSON.stringify(jsonObj, null, 2)}</pre>
+        <pre class={`max-w-full overflow-x-auto rounded-md ${this.isDarkMode ? 'bg-gray-700 text-gray-200' : 'bg-gray-100'} font-mono text-xs whitespace-pre-wrap`}>
+          {JSON.stringify(jsonObj, null, 2)}
+        </pre>
       </div>
     );
   }
 
   renderBody(): FunctionalComponent<never> {
+    // Update dark mode state
+    this.isDarkMode = this.checkDarkMode();
+
     const { data: parsedData, error } = this.getParsedJson();
 
     if (error) {
       return (
         <div class="w-full overflow-y-auto">
-          <span class="text-red-500">Invalid JSON data: {error.message}</span>
+          <span class={this.isDarkMode ? 'text-red-400' : 'text-red-500'}>Invalid JSON data: {error.message}</span>
         </div>
       );
     }
 
     return (
       <div class="w-full overflow-y-auto">
-        <json-viewer data={parsedData} expand-all={false} show-line-numbers={true} theme="light">
+        <json-viewer data={parsedData} expand-all={false} show-line-numbers={true} theme={this.isDarkMode ? 'dark' : 'light'}>
           {/* This slot content will be shown if json-viewer itself fails or if data is not renderable by it */}
-          <span class="text-red-500">Could not display JSON data.</span>
+          <span class={this.isDarkMode ? 'text-red-400' : 'text-red-500'}>Could not display JSON data.</span>
         </json-viewer>
       </div>
     );

@@ -17,10 +17,20 @@ export class PidActions {
    */
   @Prop() actionsId?: string;
 
+  /**
+   * The dark mode setting for the component
+   * Options: "light", "dark", "system"
+   * Default: "system"
+   */
+  @Prop() darkMode: 'light' | 'dark' | 'system' = 'system';
+
   render() {
     if (this.actions.length === 0) {
       return null;
     }
+
+    // Check if dark mode is active
+    const isDarkMode = this.darkMode === 'dark' || (this.darkMode === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
     // Generate a unique ID for this actions container if not provided
     const containerId = this.actionsId || `actions-${Math.random().toString(36).substring(2, 11)}`;
@@ -28,7 +38,7 @@ export class PidActions {
     return (
       <div
         id={containerId}
-        class="actions-container sticky right-0 bottom-0 left-0 z-20 mt-auto w-full border-t border-gray-200 bg-white p-1"
+        class={`actions-container sticky right-0 bottom-0 left-0 z-20 mt-auto w-full border-t ${isDarkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'} p-1`}
         role="toolbar"
         aria-label="Available actions"
       >
@@ -44,18 +54,34 @@ export class PidActions {
             const focusClasses = 'focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500';
             let styleClasses: string;
 
-            switch (action.style) {
-              case 'primary':
-                styleClasses = 'bg-blue-500 text-white hover:bg-blue-600';
-                break;
-              case 'secondary':
-                styleClasses = 'bg-slate-200 text-blue-500 hover:bg-slate-300';
-                break;
-              case 'danger':
-                styleClasses = 'bg-red-500 text-white hover:bg-red-600';
-                break;
-              default:
-                styleClasses = 'bg-gray-200 text-gray-700 hover:bg-gray-300';
+            if (isDarkMode) {
+              switch (action.style) {
+                case 'primary':
+                  styleClasses = 'bg-blue-700 text-white hover:bg-blue-600 border-blue-600';
+                  break;
+                case 'secondary':
+                  styleClasses = 'bg-slate-700 text-blue-300 hover:bg-slate-600 border-slate-600';
+                  break;
+                case 'danger':
+                  styleClasses = 'bg-red-700 text-white hover:bg-red-600 border-red-600';
+                  break;
+                default:
+                  styleClasses = 'bg-gray-700 text-gray-200 hover:bg-gray-600 border-gray-600';
+              }
+            } else {
+              switch (action.style) {
+                case 'primary':
+                  styleClasses = 'bg-blue-500 text-white hover:bg-blue-600 border-blue-400';
+                  break;
+                case 'secondary':
+                  styleClasses = 'bg-slate-200 text-blue-500 hover:bg-slate-300 border-slate-300';
+                  break;
+                case 'danger':
+                  styleClasses = 'bg-red-500 text-white hover:bg-red-600 border-red-400';
+                  break;
+                default:
+                  styleClasses = 'bg-gray-200 text-gray-700 hover:bg-gray-300 border-gray-300';
+              }
             }
 
             return (

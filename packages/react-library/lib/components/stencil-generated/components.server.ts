@@ -8,16 +8,24 @@
 
 /* eslint-disable */
 
-import { ColorHighlight as ColorHighlightElement } from "@kit-data-manager/pid-component/dist/components/color-highlight.js";
-import { CopyButton as CopyButtonElement } from "@kit-data-manager/pid-component/dist/components/copy-button.js";
-import { JsonViewer as JsonViewerElement } from "@kit-data-manager/pid-component/dist/components/json-viewer.js";
-import { LocaleVisualization as LocaleVisualizationElement } from "@kit-data-manager/pid-component/dist/components/locale-visualization.js";
-import { PidActions as PidActionsElement } from "@kit-data-manager/pid-component/dist/components/pid-actions.js";
-import { PidCollapsible as PidCollapsibleElement } from "@kit-data-manager/pid-component/dist/components/pid-collapsible.js";
-import { PidComponent as PidComponentElement } from "@kit-data-manager/pid-component/dist/components/pid-component.js";
-import { PidDataTable as PidDataTableElement } from "@kit-data-manager/pid-component/dist/components/pid-data-table.js";
-import { PidPagination as PidPaginationElement } from "@kit-data-manager/pid-component/dist/components/pid-pagination.js";
-import { PidTooltip as PidTooltipElement } from "@kit-data-manager/pid-component/dist/components/pid-tooltip.js";
+import {
+  ColorHighlight as ColorHighlightElement,
+} from '@kit-data-manager/pid-component/dist/components/color-highlight.js';
+import { CopyButton as CopyButtonElement } from '@kit-data-manager/pid-component/dist/components/copy-button.js';
+import { JsonViewer as JsonViewerElement } from '@kit-data-manager/pid-component/dist/components/json-viewer.js';
+import {
+  LocaleVisualization as LocaleVisualizationElement,
+} from '@kit-data-manager/pid-component/dist/components/locale-visualization.js';
+import { PidActions as PidActionsElement } from '@kit-data-manager/pid-component/dist/components/pid-actions.js';
+import {
+  PidCollapsible as PidCollapsibleElement,
+} from '@kit-data-manager/pid-component/dist/components/pid-collapsible.js';
+import { PidComponent as PidComponentElement } from '@kit-data-manager/pid-component/dist/components/pid-component.js';
+import { PidDataTable as PidDataTableElement } from '@kit-data-manager/pid-component/dist/components/pid-data-table.js';
+import {
+  PidPagination as PidPaginationElement,
+} from '@kit-data-manager/pid-component/dist/components/pid-pagination.js';
+import { PidTooltip as PidTooltipElement } from '@kit-data-manager/pid-component/dist/components/pid-tooltip.js';
 import type { EventName, StencilReactComponent } from '@stencil/react-output-target/runtime';
 import { createComponent, type SerializeShadowRootOptions } from '@stencil/react-output-target/ssr';
 
@@ -62,14 +70,18 @@ export const JsonViewer: StencilReactComponent<JsonViewerElement, JsonViewerEven
 
 export type LocaleVisualizationEvents = NonNullable<unknown>;
 
-export const LocaleVisualization: StencilReactComponent<LocaleVisualizationElement, LocaleVisualizationEvents> = /*@__PURE__*/ createComponent<LocaleVisualizationElement, LocaleVisualizationEvents>({
-    tagName: 'locale-visualization',
-    properties: {
-        locale: 'locale',
-        showFlag: 'show-flag'
-    },
-    hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
-    serializeShadowRoot
+export const LocaleVisualization: StencilReactComponent<LocaleVisualizationElement, LocaleVisualizationEvents> = /*@__PURE__*/ createComponent<
+  LocaleVisualizationElement,
+  LocaleVisualizationEvents
+>({
+  tagName: 'locale-visualization',
+  properties: {
+    locale: 'locale',
+    showFlag: 'show-flag',
+    darkMode: 'dark-mode',
+  },
+  hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
+  serializeShadowRoot,
 });
 
 export type PidActionsEvents = NonNullable<unknown>;
@@ -78,9 +90,10 @@ export const PidActions: StencilReactComponent<PidActionsElement, PidActionsEven
     tagName: 'pid-actions',
     properties: {
         actions: 'actions',
-        actionsId: 'actions-id'
+      actionsId: 'actions-id',
+      darkMode: 'dark-mode'
     },
-    hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
+   , hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
     serializeShadowRoot
 });
 
@@ -91,6 +104,7 @@ export const PidCollapsible: StencilReactComponent<PidCollapsibleElement, PidCol
     properties: {
         open: 'open',
         emphasize: 'emphasize',
+      darkMode: 'dark-mode',
         expanded: 'expanded',
         initialWidth: 'initial-width',
         initialHeight: 'initial-height',
@@ -117,7 +131,8 @@ export const PidComponent: StencilReactComponent<PidComponentElement, PidCompone
         showTopLevelCopy: 'show-top-level-copy',
         defaultTTL: 'default-t-t-l',
         width: 'width',
-        height: 'height'
+      height: 'height',
+      darkMode: 'dark-mode',
     },
     hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
     serializeShadowRoot
@@ -139,7 +154,8 @@ export const PidDataTable: StencilReactComponent<PidDataTableElement, PidDataTab
         hideSubcomponents: 'hide-subcomponents',
         currentLevelOfSubcomponents: 'current-level-of-subcomponents',
         levelOfSubcomponents: 'level-of-subcomponents',
-        settings: 'settings'
+      settings: 'settings',
+      darkMode: 'dark-mode',
     },
     hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
     serializeShadowRoot
@@ -158,7 +174,8 @@ export const PidPagination: StencilReactComponent<PidPaginationElement, PidPagin
         itemsPerPage: 'items-per-page',
         pageSizes: 'page-sizes',
         adaptivePagination: 'adaptive-pagination',
-        showItemsPerPageControl: 'show-items-per-page-control'
+      showItemsPerPageControl: 'show-items-per-page-control',
+      darkMode: 'dark-mode',
     },
     hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
     serializeShadowRoot
