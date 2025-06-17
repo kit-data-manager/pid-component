@@ -33,51 +33,45 @@ export namespace Components {
         "value": string;
     }
     interface JsonViewer {
-        /**
-          * Collapse all nodes in the tree view
-         */
-        "collapseAllNodes": () => Promise<void>;
-        /**
-          * The JSON data to display. Can be a JSON string or a JavaScript object.
-         */
-        "data": string | object;
-        /**
-          * Set to true to open all nodes in tree view initially.
-          * @default false
-         */
-        "expandAll": boolean;
-        /**
-          * Expand all nodes in the tree view
-         */
-        "expandAllNodes": () => Promise<void>;
-        /**
-          * Maximum height of the viewer in pixels. Set to 0 for no limit.
-          * @default 500
-         */
-        "maxHeight": number;
-        /**
-          * Set to true to enable line numbers in code view.
-          * @default true
-         */
-        "showLineNumbers": boolean;
-        /**
-          * Theme for syntax highlighting. Options: 'light' or 'dark'.
-          * @default 'light'
-         */
-        "theme": 'light' | 'dark';
-        /**
-          * Initial view mode for the JSON data. Can be 'tree' or 'code'.
-          * @default 'tree'
-         */
-        "viewMode": 'tree' | 'code';
-    }
-    interface LocaleVisualization {
       /**
-       * The dark mode setting for the component Options: "light", "dark", "system" Default: "system"
-       * @type {string}
+       * Collapse all nodes in the tree view
+       */
+      collapseAllNodes: () => Promise<void>;
+      /**
+       * The JSON data to display. Can be a JSON string or a JavaScript object.
+       */
+      data: string | object;
+      /**
+       * Set to true to open all nodes in tree view initially.
+       * @default false
+       */
+      expandAll: boolean;
+      /**
+       * Expand all nodes in the tree view
+       */
+      expandAllNodes: () => Promise<void>;
+      /**
+       * Maximum height of the viewer in pixels. Set to 0 for no limit.
+       * @default 500
+       */
+      maxHeight: number;
+      /**
+       * Set to true to enable line numbers in code view.
+       * @default true
+       */
+      showLineNumbers: boolean;
+      /**
+       * Theme for syntax highlighting. Options: 'light', 'dark', or 'system'. System will use the user's system preference.
        * @default 'system'
        */
-      darkMode: 'light' | 'dark' | 'system';
+      theme: 'light' | 'dark' | 'system';
+      /**
+       * Initial view mode for the JSON'theme'Can be 'tree' or 'code'.
+       * @default 'tree'
+       */
+      viewMode: 'tree' | 'code';
+    }
+    interface LocaleVisualization {
       /**
        * The locale to visualize.
        * @type {string}
@@ -106,9 +100,11 @@ export namespace Components {
        * The dark mode setting for the component Options: "light", "dark", "system" Default: "system"
        * @default 'system'
        */
-      "darkMode": 'light' | 'dark' | 'system';
+      "dar'darkMode'ight' | 'dark' | 'system';
     }
-   'darkMode'* Component for creating collapsible/expandable content sections
+
+  /**
+   * Component for creating collapsible/expandable content sections
      * with resize capability and cross-browser compatibility
      */
     interface PidCollapsible {
@@ -117,7 +113,7 @@ export namespace Components {
          * @default 'system'
          */
         'darkMode': 'light' | 'dark' | 'system';
-      /**
+    /**
           * Whether to emphasize the component with border and shadow
           * @default false
          */
@@ -525,10 +521,10 @@ declare namespace LocalJSX {
          */
         "showLineNumbers"?: boolean;
         /**
-          * Theme for syntax highlighting. Options: 'light' or 'dark'.
-          * @default 'light'
+         * Theme for syntax highlighting. Options: 'light', 'dark', or 'system'. System will use the user's system preference.
+         * @default 'system'
          */
-        "theme"?: 'light' | 'dark';
+        'theme'?: 'light' | 'dark' | 'system';
         /**
           * Initial view mode for the JSON data. Can be 'tree' or 'code'.
           * @default 'tree'
@@ -537,12 +533,6 @@ declare namespace LocalJSX {
     }
     interface LocaleVisualization {
         /**
-         * The dark mode setting for the component Options: "light", "dark", "system" Default: "system"
-         * @type {string}
-         * @default 'system'
-         */
-        'darkMode'?: 'light' | 'dark' | 'system';
-      /**
           * The locale to visualize.
           * @type {string}
           * @public
@@ -551,7 +541,7 @@ declare namespace LocalJSX {
         /**
           * Whether to show the flag of the region.
           * @type {boolean}
-          * @public
+         * @public
           * @default true
          */
         "showFlag"?: boolean;

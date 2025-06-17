@@ -103,7 +103,7 @@ export class HandleType extends GenericIdentifierType {
           return (
             <span class={'font-mono font-bold'}>
               <color-highlight text={element.text} />
-              <span class={'mx-0.5 font-mono font-bold text-gray-800'}>{element.nextExists ? '/' : ''}</span>
+              <span class={`mx-0.5 font-mono font-bold`}>{element.nextExists ? '/' : ''}</span>
             </span>
           );
         })}

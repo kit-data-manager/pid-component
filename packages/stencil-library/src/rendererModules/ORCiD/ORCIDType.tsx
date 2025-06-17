@@ -33,25 +33,6 @@ export class ORCIDType extends GenericIdentifierType {
    */
   private showAffiliation: boolean = true;
 
-  // Dark mode property
-  private isDarkMode: boolean = false;
-
-  // Check for dark mode in settings
-  private checkDarkMode(): boolean {
-    const darkModeSetting = this.settings?.find(setting => setting.name === 'darkMode');
-    if (darkModeSetting) {
-      const darkMode = darkModeSetting.value as 'light' | 'dark' | 'system';
-      if (darkMode === 'dark') {
-        return true;
-      } else if (darkMode === 'light') {
-        return false;
-      } else if (darkMode === 'system' && window.matchMedia) {
-        return window.matchMedia('(prefers-color-scheme: dark)').matches;
-      }
-    }
-    return false;
-  }
-
   get data(): string {
     return JSON.stringify(this._orcidInfo.toObject());
   }
@@ -190,9 +171,6 @@ export class ORCIDType extends GenericIdentifierType {
   }
 
   renderPreview(): FunctionalComponent {
-    // Update dark mode state
-    this.isDarkMode = this.checkDarkMode();
-
     return (
       <span class={`inline-flex flex-nowrap items-center align-top font-mono ${this.isDarkMode ? 'text-gray-200' : ''}`}>
         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" class={'mr-1 h-5 flex-none items-center p-0.5'}>

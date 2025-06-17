@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Component, h, Host, Prop, State, Watch } from '@stencil/core';
+import { Component, h, Host, Prop } from '@stencil/core';
 
 @Component({
   tag: 'locale-visualization',
@@ -19,99 +19,6 @@ export class LocaleVisualization {
    * @public
    */
   @Prop() showFlag: boolean = true;
-
-  /**
-   * The dark mode setting for the component
-   * Options: "light", "dark", "system"
-   * Default: "system"
-   * @type {string}
-   */
-  @Prop() darkMode: 'light' | 'dark' | 'system' = 'system';
-
-  /**
-   * Tracks the effective dark mode state (true for dark, false for light)
-   */
-  @State() isDarkMode: boolean = false;
-
-  // Media query for detecting system dark mode preference
-  private darkModeMediaQuery: MediaQueryList;
-
-  /**
-   * Watch for changes in the darkMode property
-   */
-  @Watch('darkMode')
-  watchDarkMode() {
-    this.updateDarkMode();
-  }
-
-  componentWillLoad() {
-    // Initialize dark mode
-    this.initializeDarkMode();
-  }
-
-  disconnectedCallback() {
-    // Clean up dark mode media query listener
-    this.cleanupDarkModeListener();
-  }
-
-  /**
-   * Initializes dark mode based on property and system preference
-   */
-  private initializeDarkMode() {
-    // Check if the browser supports matchMedia
-    if (window.matchMedia) {
-      // Create media query for dark mode
-      this.darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-      // Set initial dark mode state
-      this.updateDarkMode();
-
-      // Add listener for system preference changes
-      if (this.darkModeMediaQuery.addEventListener) {
-        this.darkModeMediaQuery.addEventListener('change', this.handleDarkModeChange);
-      } else if (this.darkModeMediaQuery.addListener) {
-        // For older browsers
-        this.darkModeMediaQuery.addListener(this.handleDarkModeChange);
-      }
-    } else {
-      // Default to light mode if matchMedia is not supported
-      this.isDarkMode = this.darkMode === 'dark';
-    }
-  }
-
-  /**
-   * Handles changes in system dark mode preference
-   */
-  private handleDarkModeChange = () => {
-    this.updateDarkMode();
-  };
-
-  /**
-   * Updates the dark mode state based on property and system preference
-   */
-  private updateDarkMode() {
-    if (this.darkMode === 'dark') {
-      this.isDarkMode = true;
-    } else if (this.darkMode === 'light') {
-      this.isDarkMode = false;
-    } else if (this.darkMode === 'system' && this.darkModeMediaQuery) {
-      this.isDarkMode = this.darkModeMediaQuery.matches;
-    }
-  }
-
-  /**
-   * Cleans up dark mode media query listener
-   */
-  private cleanupDarkModeListener() {
-    if (this.darkModeMediaQuery) {
-      if (this.darkModeMediaQuery.removeEventListener) {
-        this.darkModeMediaQuery.removeEventListener('change', this.handleDarkModeChange);
-      } else if (this.darkModeMediaQuery.removeListener) {
-        // For older browsers
-        this.darkModeMediaQuery.removeListener(this.handleDarkModeChange);
-      }
-    }
-  }
 
   render() {
     const getLocaleDetail = (locale: string): string => {
@@ -139,7 +46,7 @@ export class LocaleVisualization {
 
     return (
       <Host>
-        <span class={this.isDarkMode ? 'text-gray-200' : ''}>{getLocaleDetail(this.locale)}</span>
+        <span>{getLocaleDetail(this.locale)}</span>
       </Host>
     );
   }

@@ -70,30 +70,26 @@ export const JsonViewer: StencilReactComponent<JsonViewerElement, JsonViewerEven
 
 export type LocaleVisualizationEvents = NonNullable<unknown>;
 
-export const LocaleVisualization: StencilReactComponent<LocaleVisualizationElement, LocaleVisualizationEvents> = /*@__PURE__*/ createComponent<
-  LocaleVisualizationElement,
-  LocaleVisualizationEvents
->({
+export const LocaleVisualization: StencilReactComponent<LocaleVisualizationElement, LocaleVisualizationEvents> = /*@__PURE__*/ createComponent<LocaleVisualizationElement, LocaleVisualizationEvents>({
   tagName: 'locale-visualization',
   properties: {
     locale: 'locale',
-    showFlag: 'show-flag',
-    darkMode: 'dark-mode',
+    showFlag: 'show-flag'
   },
-  hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
-  serializeShadowRoot,
+  hydr,ateModule: import('@kit-data-manager/pid-component/hydrate'),
+  serializeShadowRoot
 });
 
-export type PidActionsEvents = NonNullable<unknown>;
+export, type PidActionsEvents = NonNullable<unknown>;
 
 export const PidActions: StencilReactComponent<PidActionsElement, PidActionsEvents> = /*@__PURE__*/ createComponent<PidActionsElement, PidActionsEvents>({
     tagName: 'pid-actions',
     properties: {
         actions: 'actions',
       actionsId: 'actions-id',
-      darkMode: 'dark-mode'
+      darkMode: 'dark-mode',
     },
-   , hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
+  hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
     serializeShadowRoot
 });
 

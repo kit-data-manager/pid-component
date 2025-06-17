@@ -286,7 +286,25 @@ export class PidComponent {
    */
   @Watch('darkMode')
   watchDarkMode() {
+    // Update component's internal dark mode state
     this.updateDarkMode();
+
+    // Update darkMode setting in the identifierObject if it exists
+    if (this.identifierObject) {
+      // Get current settings from the identifierObject
+      const currentSettings = this.identifierObject.settings || [];
+
+      // Update or add darkMode setting
+      const darkModeIndex = currentSettings.findIndex(s => s.name === 'darkMode');
+      if (darkModeIndex >= 0) {
+        currentSettings[darkModeIndex].value = this.darkMode;
+      } else {
+        currentSettings.push({ name: 'darkMode', value: this.darkMode });
+      }
+
+      // Update settings in the identifierObject
+      this.identifierObject.settings = currentSettings;
+    }
   }
 
   /**
@@ -326,11 +344,32 @@ export class PidComponent {
       settings = [];
     }
 
-    settings.forEach(value => {
-      if (!value.values.some(v => v.name === 'ttl')) {
-        value.values.push({ name: 'ttl', value: this.defaultTTL });
-      }
-    });
+    // If settings array is empty, create a default settings entry
+    if (settings.length === 0) {
+      settings.push({
+        type: 'default',
+        values: [
+          { name: 'ttl', value: this.defaultTTL },
+          { name: 'darkMode', value: this.darkMode },
+        ],
+      });
+    } else {
+      // Update existing settings
+      settings.forEach(value => {
+        // Add TTL setting if not present
+        if (!value.values.some(v => v.name === 'ttl')) {
+          value.values.push({ name: 'ttl', value: this.defaultTTL });
+        }
+
+        // Add or update darkMode setting
+        const darkModeIndex = value.values.findIndex(v => v.name === 'darkMode');
+        if (darkModeIndex >= 0) {
+          value.values[darkModeIndex].value = this.darkMode;
+        } else {
+          value.values.push({ name: 'darkMode', value: this.darkMode });
+        }
+      });
+    }
 
     // Get the renderer for the value
     try {

@@ -182,6 +182,7 @@ export class PidDataTable {
                               amountOfItems={this.itemsPerPage}
                               settings={this.settings}
                               openByDefault={false}
+                              darkMode={this.darkMode}
                               class="block w-full min-w-0"
                             />
                           ) : !this.hideSubcomponents && this.currentLevelOfSubcomponents === this.levelOfSubcomponents && value.renderDynamically ? (
@@ -193,6 +194,7 @@ export class PidDataTable {
                               settings={this.settings}
                               hideSubcomponents={true}
                               openByDefault={false}
+                              darkMode={this.darkMode}
                               class="block w-full min-w-0"
                             />
                           ) : (
