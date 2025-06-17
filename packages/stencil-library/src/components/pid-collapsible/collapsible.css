@@ -52,6 +52,8 @@ pid-collapsible.resize-both {
 
     pid-collapsible.resize-both {
       -webkit-resize: both !important;
+      resize: both !important;
+      overflow: auto !important;
     }
   }
 }
@@ -144,6 +146,30 @@ pid-collapsible.resize-both::after {
     clear: both;
     height: 0;
     visibility: hidden;
+  }
+
+  /* Ensure resize works in Safari */
+  pid-collapsible.resize-both {
+    position: relative;
+    -webkit-resize: both !important;
+    resize: both !important;
+    overflow: auto !important;
+    max-width: 100% !important;
+    max-height: 90vh !important;
+    display: block !important;
+  }
+
+  /* Enhanced resize handle visibility for Safari */
+  pid-collapsible.resize-both::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 15px;
+    height: 15px;
+    cursor: nwse-resize;
+    background: linear-gradient(-45deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 50%);
+    z-index: 10;
   }
 }
 
