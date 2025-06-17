@@ -143,7 +143,9 @@ export class PidDataTable {
     }
 
     return (
-      <div class={isDarkMode ? 'm-1 flex h-full flex-col rounded-lg border border-gray-700 bg-gray-800' : 'm-1 flex h-full flex-col rounded-lg border border-gray-200 bg-gray-50'}>
+      <div
+        class={isDarkMode ? 'mx-1 flex h-full flex-col rounded-lg border border-gray-700 bg-gray-800' : 'mx-1 flex h-full flex-col rounded-lg border border-gray-200 bg-gray-50'}
+      >
         {/* Table container with scrollable content */}
         <div class="relative z-10 flex-grow overflow-auto">
           <table

@@ -868,7 +868,7 @@ export class PidCollapsible {
             </div>
           </summary>
 
-          <div class={`${contentClasses} ${this.expanded ? 'mt-2' : ''}`}>
+          <div class={`${contentClasses}`}>
             <slot></slot>
           </div>
 

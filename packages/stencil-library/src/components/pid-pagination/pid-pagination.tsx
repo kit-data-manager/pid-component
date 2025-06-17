@@ -31,11 +31,6 @@ export class PidPagination {
   @Prop() pageSizes: number[] = [5, 10, 25, 50, 100];
 
   /**
-   * Enable adaptive pagination mode
-   */
-  @Prop() adaptivePagination: boolean = false;
-
-  /**
    * Whether to show the items per page control
    */
   @Prop() showItemsPerPageControl: boolean = true;
@@ -182,7 +177,7 @@ export class PidPagination {
         {/* Left side: Page size selector and info - ALWAYS SHOWN */}
         <div class={`flex flex-wrap items-center gap-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
           {/* Horizontal page size selector - Only shown when not in adaptive mode and when control is enabled */}
-          {!this.adaptivePagination && this.showItemsPerPageControl && (
+          {this.showItemsPerPageControl && (
             <div class="flex items-center gap-1" role="group" aria-label="Items per page options">
               <span class={`text-xs whitespace-nowrap ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`} id={`${paginationId}-itemsperpage-label`}>
                 Items per page:
@@ -208,22 +203,6 @@ export class PidPagination {
                   </button>
                 ))}
               </div>
-            </div>
-          )}
-
-          {/* When in adaptive mode, show indicator */}
-          {this.adaptivePagination && (
-            <div class="flex items-center gap-1">
-              <span
-                class={`rounded-full border ${
-                  isDarkMode ? 'border-blue-700 bg-blue-800 text-gray-200' : 'border-blue-100 bg-blue-50 text-gray-600'
-                } px-2 py-0.5 text-xs whitespace-nowrap`}
-                role="status"
-                aria-live="polite"
-              >
-                <span class="sr-only">Currently using </span>
-                Adaptive pagination: {this.itemsPerPage} items
-              </span>
             </div>
           )}
 

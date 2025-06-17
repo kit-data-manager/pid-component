@@ -278,11 +278,6 @@ export namespace Components {
     }
     interface PidPagination {
         /**
-          * Enable adaptive pagination mode
-          * @default false
-         */
-        "adaptivePagination": boolean;
-        /**
           * Current page (0-based index)
           * @default 0
          */
@@ -753,11 +748,6 @@ declare namespace LocalJSX {
         "settings"?: string;
     }
     interface PidPagination {
-        /**
-          * Enable adaptive pagination mode
-          * @default false
-         */
-        "adaptivePagination"?: boolean;
         /**
           * Current page (0-based index)
           * @default 0
