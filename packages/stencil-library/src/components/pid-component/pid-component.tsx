@@ -127,14 +127,30 @@ export class PidComponent {
   @Prop() height?: string;
 
   /**
+   * The dark mode setting for the component
+   * Options: "light", "dark", "system"
+   * Default: "system"
+   * @type {string}
+   */
+  @Prop() darkMode: 'light' | 'dark' | 'system' = 'system';
+
+  /**
    * Stores the parsed identifier object.
    */
   @State() identifierObject: GenericIdentifierType;
 
   /**
+   * Tracks the effective dark mode state (true for dark, false for light)
+   */
+  @State() isDarkMode: boolean = false;
+
+  /**
    * Lists all the items to show in the table.
    */
   @State() items: FoldableItem[] = [];
+
+  // Media query for detecting system dark mode preference
+  private darkModeMediaQuery: MediaQueryList;
 
   /**
    * Lists all the actions to show in the table.
@@ -176,6 +192,14 @@ export class PidComponent {
   componentDidLoad() {
     // Initialize component ID for references
     this.ensureComponentId();
+
+    // Ensure collapsible gets proper initial width after load
+    setTimeout(() => {
+      const collapsible = this.el.querySelector('pid-collapsible');
+      if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
+        (collapsible as any).recalculateContentDimensions();
+      }
+    }, 0);
   }
 
   /**
@@ -196,6 +220,14 @@ export class PidComponent {
     this.displayStatus = 'loading';
     // this.identifierObject = undefined;
     await this.componentWillLoad();
+
+    // After value updates, ensure dimensions are properly recalculated
+    setTimeout(() => {
+      const collapsible = this.el.querySelector('pid-collapsible');
+      if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
+        (collapsible as any).recalculateContentDimensions();
+      }
+    }, 10);
   }
 
   /**
@@ -238,16 +270,21 @@ export class PidComponent {
       // Only toggle loadSubcomponents when expanding, not when collapsing
       if (event.detail && !this.hideSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) {
         this.loadSubcomponents = true;
+
+        // After loading subcomponents, ensure dimensions are recalculated
+        setTimeout(() => {
+          const collapsible = this.el.querySelector('pid-collapsible');
+          if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
+            (collapsible as any).recalculateContentDimensions();
+          }
+        }, 50); // Give it a bit more time for the DOM to update with new content
       }
     }
   };
 
-  // Tooltip functionality has been moved to the pid-tooltip component
-
   /**
    * Parses the value and settings, generates the items and actions and sets the displayStatus to "loaded".
    */
-
   @Watch('items')
   onItemsChange(): void {
     // Reset page if we're beyond the available pages
@@ -266,6 +303,32 @@ export class PidComponent {
   }
 
   /**
+   * Watch for changes in the darkMode property
+   */
+  @Watch('darkMode')
+  watchDarkMode() {
+    // Update component's internal dark mode state
+    this.updateDarkMode();
+
+    // Update darkMode setting in the identifierObject if it exists
+    if (this.identifierObject) {
+      // Get current settings from the identifierObject
+      const currentSettings = this.identifierObject.settings || [];
+
+      // Update or add darkMode setting
+      const darkModeIndex = currentSettings.findIndex(s => s.name === 'darkMode');
+      if (darkModeIndex >= 0) {
+        currentSettings[darkModeIndex].value = this.darkMode;
+      } else {
+        currentSettings.push({ name: 'darkMode', value: this.darkMode });
+      }
+
+      // Update settings in the identifierObject
+      this.identifierObject.settings = currentSettings;
+    }
+  }
+
+  /**
    * Lifecycle method that is called before the component is loaded.
    * It is used to parse the value and settings, generate the items and actions, and set the displayStatus to "loaded".
    */
@@ -275,6 +338,9 @@ export class PidComponent {
 
     // Validate amountOfItems to prevent division by zero
     this.validateAmountOfItems(this.amountOfItems);
+
+    // Initialize dark mode
+    this.initializeDarkMode();
 
     // Clear items and actions before loading new data to prevent double rendering
     this.items = [];
@@ -299,11 +365,32 @@ export class PidComponent {
       settings = [];
     }
 
-    settings.forEach(value => {
-      if (!value.values.some(v => v.name === 'ttl')) {
-        value.values.push({ name: 'ttl', value: this.defaultTTL });
-      }
-    });
+    // If settings array is empty, create a default settings entry
+    if (settings.length === 0) {
+      settings.push({
+        type: 'default',
+        values: [
+          { name: 'ttl', value: this.defaultTTL },
+          { name: 'darkMode', value: this.darkMode },
+        ],
+      });
+    } else {
+      // Update existing settings
+      settings.forEach(value => {
+        // Add TTL setting if not present
+        if (!value.values.some(v => v.name === 'ttl')) {
+          value.values.push({ name: 'ttl', value: this.defaultTTL });
+        }
+
+        // Add or update darkMode setting
+        const darkModeIndex = value.values.findIndex(v => v.name === 'darkMode');
+        if (darkModeIndex >= 0) {
+          value.values[darkModeIndex].value = this.darkMode;
+        } else {
+          value.values.push({ name: 'darkMode', value: this.darkMode });
+        }
+      });
+    }
 
     // Get the renderer for the value
     try {
@@ -374,6 +461,9 @@ export class PidComponent {
       this._abortController.abort();
       this._abortController = undefined;
     }
+
+    // Clean up dark mode media query listener
+    this.cleanupDarkModeListener();
   }
 
   // AbortController for canceling pending operations
@@ -381,6 +471,65 @@ export class PidComponent {
 
   // Store computed line height for collapsed state
   private _lineHeight: number = 24; // Default fallback
+
+  /**
+   * Initializes dark mode based on property and system preference
+   */
+  private initializeDarkMode() {
+    // Check if the browser supports matchMedia
+    if (window.matchMedia) {
+      // Create media query for dark mode
+      this.darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+      // Set initial dark mode state
+      this.updateDarkMode();
+
+      // Add listener for system preference changes
+      if (this.darkModeMediaQuery.addEventListener) {
+        this.darkModeMediaQuery.addEventListener('change', this.handleDarkModeChange);
+      } else if (this.darkModeMediaQuery.addListener) {
+        // For older browsers
+        this.darkModeMediaQuery.addListener(this.handleDarkModeChange);
+      }
+    } else {
+      // Default to light mode if matchMedia is not supported
+      this.isDarkMode = this.darkMode === 'dark';
+    }
+  }
+
+  /**
+   * Handles changes in system dark mode preference
+   */
+  private handleDarkModeChange = () => {
+    this.updateDarkMode();
+  };
+
+  /**
+   * Updates the dark mode state based on property and system preference
+   */
+  private updateDarkMode() {
+    if (this.darkMode === 'dark') {
+      this.isDarkMode = true;
+    } else if (this.darkMode === 'light') {
+      this.isDarkMode = false;
+    } else if (this.darkMode === 'system' && this.darkModeMediaQuery) {
+      this.isDarkMode = this.darkModeMediaQuery.matches;
+    }
+  }
+
+  /**
+   * Cleans up dark mode media query listener
+   */
+  private cleanupDarkModeListener() {
+    if (this.darkModeMediaQuery) {
+      if (this.darkModeMediaQuery.removeEventListener) {
+        this.darkModeMediaQuery.removeEventListener('change', this.handleDarkModeChange);
+      } else if (this.darkModeMediaQuery.removeListener) {
+        // For older browsers
+        this.darkModeMediaQuery.removeListener(this.handleDarkModeChange);
+      }
+    }
+  }
 
   /**
    * Determines if footer should be shown based on whether there are actions or items with pagination
@@ -396,7 +545,7 @@ export class PidComponent {
    */
   render() {
     return (
-      <Host class="relative font-sans">
+      <Host class={`relative font-sans`}>
         {/* Hidden description for accessibility */}
         <span id={`${this.el.id}-description`} class="sr-only">
           This component displays information about the identifier {this.value}. It can be expanded to show more details.
@@ -410,8 +559,14 @@ export class PidComponent {
                 class={
                   this.currentLevelOfSubcomponents === 0
                     ? //(w/o sub components)
-                      'group ' +
-                      (this.emphasizeComponent || this.temporarilyEmphasized ? 'rounded-md border border-gray-300 bg-white px-2 py-0 shadow' : 'bg-white/60') +
+                      'group rounded-md border px-2 py-0 shadow' +
+                      (this.emphasizeComponent || this.temporarilyEmphasized
+                        ? this.isDarkMode
+                          ? 'border-gray-600 bg-gray-800'
+                          : 'border-gray-300 bg-white'
+                        : this.isDarkMode
+                          ? 'bg-gray-800/60'
+                          : 'bg-white/60') +
                       ' inline-flex w-full cursor-pointer list-none flex-nowrap items-center overflow-hidden font-mono font-bold text-clip transition-all duration-200 ease-in-out open:w-full open:align-top' +
                       (!this.isExpanded ? ` h-[${this._lineHeight || 24}px] leading-[${this._lineHeight || 24}px]` : '')
                     : ''
@@ -465,6 +620,7 @@ export class PidComponent {
               initialHeight={this.height}
               lineHeight={this._lineHeight}
               showFooter={this.shouldShowFooter}
+              darkMode={this.darkMode}
               onCollapsibleToggle={e => this.toggleSubcomponents(e)}
               onClick={e => {
                 // Isolate click events to prevent bubbling to parent components
@@ -476,14 +632,19 @@ export class PidComponent {
             >
               <span
                 slot="summary"
-                class={`inline-flex overflow-x-auto font-mono text-sm font-medium select-all ${this.isExpanded ? 'flex-wrap overflow-visible break-words' : 'flex-nowrap whitespace-nowrap'}`}
+                class={`inline-flex items-center overflow-x-auto font-mono text-sm font-medium select-all ${this.isExpanded ? 'flex-wrap overflow-visible break-words' : 'flex-nowrap whitespace-nowrap'}`}
                 aria-label={`Preview of ${this.value}`}
               >
                 {this.identifierObject?.renderPreview()}
               </span>
 
               {this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy && (this.emphasizeComponent || this.temporarilyEmphasized) ? (
-                <copy-button slot="summary-actions" value={this.value} class="relative ml-auto flex-shrink-0" aria-label={`Copy value: ${this.value}`} />
+                <copy-button
+                  slot="summary-actions"
+                  value={this.value}
+                  // class="relative my-auto ml-auto flex-shrink-0"
+                  aria-label={`Copy value: ${this.value}`}
+                />
               ) : null}
 
               {/* Table and content */}
@@ -497,8 +658,9 @@ export class PidComponent {
                   currentLevelOfSubcomponents={this.currentLevelOfSubcomponents}
                   levelOfSubcomponents={this.levelOfSubcomponents}
                   settings={this.settings}
+                  darkMode={this.darkMode}
                   onPageChange={e => (this.tablePage = e.detail)}
-                  class="flex-grow overflow-auto"
+                  class="w-full flex-grow overflow-auto"
                   aria-label={`Data table for ${this.value}`}
                   aria-describedby={`${this.el.id}-table-description`}
                 />
@@ -515,11 +677,12 @@ export class PidComponent {
 
               {/* Pagination in a separate line above actions */}
               {this.items.length > 0 && (
-                <div slot="footer" class="relative z-50 w-full overflow-visible bg-white">
+                <div slot="footer" class={`relative z-50 w-full overflow-visible ${this.isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
                   <pid-pagination
                     currentPage={this.tablePage}
                     totalItems={this.items.length}
                     itemsPerPage={this.amountOfItems}
+                    darkMode={this.darkMode}
                     onPageChange={e => (this.tablePage = e.detail)}
                     onItemsPerPageChange={e => (this.amountOfItems = e.detail)}
                     aria-label={`Pagination controls for ${this.value} data`}
@@ -530,7 +693,7 @@ export class PidComponent {
 
               {/* Footer Actions - in a separate line below pagination */}
               {this.actions.length > 0 && (
-                <pid-actions slot="footer-actions" actions={this.actions} class="mt-0 flex-shrink-0" aria-label={`Available actions for ${this.value}`} />
+                <pid-actions slot="footer-actions" actions={this.actions} darkMode={this.darkMode} class="mt-0 flex-shrink-0" aria-label={`Available actions for ${this.value}`} />
               )}
             </pid-collapsible>
           )

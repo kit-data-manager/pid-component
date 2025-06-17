@@ -36,9 +36,10 @@ export class JsonViewer {
   @Prop() expandAll: boolean = false;
 
   /**
-   * Theme for syntax highlighting. Options: 'light' or 'dark'.
+   * Theme for syntax highlighting. Options: 'light', 'dark', or 'system'.
+   * System will use the user's system preference.
    */
-  @Prop() theme: 'light' | 'dark' = 'light';
+  @Prop() theme: 'light' | 'dark' | 'system' = 'system';
 
   /**
    * Internal state to track the current view mode
@@ -64,6 +65,16 @@ export class JsonViewer {
    * Internal state to indicate successful copy action
    */
   @State() copied: boolean = false;
+
+  /**
+   * Internal state to track the effective dark mode state
+   */
+  @State() isDarkMode: boolean = false;
+
+  /**
+   * Media query for detecting system dark mode preference
+   */
+  private darkModeMediaQuery: MediaQueryList;
 
   /**
    * Watch for changes in the data prop and reparse
@@ -94,6 +105,14 @@ export class JsonViewer {
   }
 
   /**
+   * Watch for changes in the theme prop
+   */
+  @Watch('theme')
+  handleThemeChange() {
+    this.updateDarkMode();
+  }
+
+  /**
    * Component initialization
    */
   componentWillLoad() {
@@ -102,6 +121,7 @@ export class JsonViewer {
     if (this.expandAll) {
       this.expandAllNodes();
     }
+    this.initializeDarkMode();
   }
 
   /**
@@ -224,6 +244,27 @@ export class JsonViewer {
   }
 
   /**
+   * Cleanup when component is removed from the DOM
+   */
+  disconnectedCallback() {
+    this.cleanupDarkModeListener();
+  }
+
+  /**
+   * Cleans up dark mode media query listener
+   */
+  private cleanupDarkModeListener() {
+    if (this.darkModeMediaQuery) {
+      if (this.darkModeMediaQuery.removeEventListener) {
+        this.darkModeMediaQuery.removeEventListener('change', this.handleDarkModeChange);
+      } else if (this.darkModeMediaQuery.removeListener) {
+        // For older browsers
+        this.darkModeMediaQuery.removeListener(this.handleDarkModeChange);
+      }
+    }
+  }
+
+  /**
    * Expand all nodes in the tree view
    */
   @Method()
@@ -253,6 +294,51 @@ export class JsonViewer {
 
       // Create a new Set to trigger state update
       this.expandedNodes = new Set(this.expandedNodes);
+    }
+  }
+
+  /**
+   * Initializes dark mode based on property and system preference
+   */
+  private initializeDarkMode() {
+    // Check if the browser supports matchMedia
+    if (window.matchMedia) {
+      // Create media query for dark mode
+      this.darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+      // Set initial dark mode state
+      this.updateDarkMode();
+
+      // Add listener for system preference changes
+      if (this.darkModeMediaQuery.addEventListener) {
+        this.darkModeMediaQuery.addEventListener('change', this.handleDarkModeChange);
+      } else if (this.darkModeMediaQuery.addListener) {
+        // For older browsers
+        this.darkModeMediaQuery.addListener(this.handleDarkModeChange);
+      }
+    } else {
+      // Default to light mode if matchMedia is not supported
+      this.isDarkMode = this.theme === 'dark';
+    }
+  }
+
+  /**
+   * Handles changes in system dark mode preference
+   */
+  private handleDarkModeChange = () => {
+    this.updateDarkMode();
+  };
+
+  /**
+   * Updates the dark mode state based on property and system preference
+   */
+  private updateDarkMode() {
+    if (this.theme === 'dark') {
+      this.isDarkMode = true;
+    } else if (this.theme === 'light') {
+      this.isDarkMode = false;
+    } else if (this.theme === 'system' && this.darkModeMediaQuery) {
+      this.isDarkMode = this.darkModeMediaQuery.matches;
     }
   }
 
@@ -308,7 +394,7 @@ export class JsonViewer {
           <details class="mb-1" open={expandedState} onToggle={toggleExpand} id={nodeId}>
             <summary
               class={`group relative flex cursor-pointer list-none items-center rounded py-1 pl-5 font-mono ${
-                this.theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
+                this.isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
               } focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-none`}
               onKeyDown={handleKeyDown}
               tabIndex={0}
@@ -318,13 +404,13 @@ export class JsonViewer {
               aria-label={`${key}: ${nodeType} with ${itemText}, ${expandedState ? 'click to collapse' : 'click to expand'}`}
             >
               <div class="flex w-full items-center">
-                <span class={`mr-2 font-medium ${this.theme === 'dark' ? 'text-blue-400' : 'text-blue-600'}`}>{key}: </span>
-                <span class={`flex items-center gap-1 ${this.theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+                <span class={`mr-2 font-medium ${this.isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>{key}: </span>
+                <span class={`flex items-center gap-1 ${this.isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                   <span>{isArray ? '[' : '{'}</span>
                   <span>{itemText}</span>
                   <span>{isArray ? ']' : '}'}</span>
                   <span
-                    class={`ml-2 text-xs opacity-0 transition-opacity duration-200 group-hover:opacity-100 ${this.theme === 'dark' ? 'text-blue-400' : 'text-blue-500'}`}
+                    class={`ml-2 text-xs opacity-0 transition-opacity duration-200 group-hover:opacity-100 ${this.isDarkMode ? 'text-blue-400' : 'text-blue-500'}`}
                     aria-hidden="true"
                   >
                     {expandedState ? 'Click to collapse' : 'Click to expand'}
@@ -334,7 +420,7 @@ export class JsonViewer {
             </summary>
             <div
               id={`${nodeId}-content`}
-              class={`ml-4 border-l-2 pl-3 ${this.theme === 'dark' ? 'border-gray-600' : 'border-gray-200'}`}
+              class={`ml-4 border-l-2 pl-3 ${this.isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}
               role="group"
               aria-label={`Contents of ${key} ${nodeType}`}
             >
@@ -353,25 +439,25 @@ export class JsonViewer {
     let valueType = typeof value;
 
     if (valueType === 'string') {
-      valueClass = this.theme === 'dark' ? 'text-green-400' : 'text-green-600';
+      valueClass = this.isDarkMode ? 'text-green-400' : 'text-green-600';
     } else if (valueType === 'number') {
-      valueClass = this.theme === 'dark' ? 'text-blue-400' : 'text-blue-600';
+      valueClass = this.isDarkMode ? 'text-blue-400' : 'text-blue-600';
     } else if (valueType === 'boolean') {
-      valueClass = this.theme === 'dark' ? 'text-purple-400' : 'text-purple-600';
+      valueClass = this.isDarkMode ? 'text-purple-400' : 'text-purple-600';
     } else if (value === null) {
-      valueClass = this.theme === 'dark' ? 'text-gray-400' : 'text-gray-500';
+      valueClass = this.isDarkMode ? 'text-gray-400' : 'text-gray-500';
       displayValue = 'null';
       valueType = 'undefined';
     }
 
     return (
       <div
-        class={`flex items-center py-1 font-mono text-sm ${this.theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'} rounded`}
+        class={`flex items-center py-1 font-mono text-sm ${this.isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50'} rounded`}
         tabIndex={0}
         role="treeitem"
         aria-label={`${key}: ${displayValue} (${valueType})`}
       >
-        <span class={`font-medium ${this.theme === 'dark' ? 'text-blue-400' : 'text-blue-600'}`}>{key}: </span>
+        <span class={`font-medium ${this.isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>{key}: </span>
         <span class={valueClass}>{displayValue}</span>
       </div>
     );
@@ -381,10 +467,10 @@ export class JsonViewer {
    * Format a line of JSON for the code view with syntax highlighting
    */
   private formatCodeLine = (line: string) => {
-    const stringClass = this.theme === 'dark' ? 'text-green-400' : 'text-green-600';
-    const booleanClass = this.theme === 'dark' ? 'text-purple-400' : 'text-purple-600';
-    const nullClass = this.theme === 'dark' ? 'text-gray-400' : 'text-gray-500';
-    const numberClass = this.theme === 'dark' ? 'text-blue-400' : 'text-blue-600';
+    const stringClass = this.isDarkMode ? 'text-green-400' : 'text-green-600';
+    const booleanClass = this.isDarkMode ? 'text-purple-400' : 'text-purple-600';
+    const nullClass = this.isDarkMode ? 'text-gray-400' : 'text-gray-500';
+    const numberClass = this.isDarkMode ? 'text-blue-400' : 'text-blue-600';
 
     return line
       .replace(/(".+?")(: )?/g, `<span class="${stringClass}">$1</span>$2`) // keys and string values
@@ -424,16 +510,16 @@ export class JsonViewer {
 
     return (
       <div
-        class={`overflow-hidden rounded-lg border shadow ${this.theme === 'dark' ? 'border-gray-600 bg-gray-800 text-gray-50' : 'border-gray-200 bg-white text-gray-800'}`}
+        class={`overflow-hidden rounded-lg border shadow ${this.isDarkMode ? 'border-gray-600 bg-gray-800 text-gray-50' : 'border-gray-200 bg-white text-gray-800'}`}
         role="region"
         aria-labelledby={`${viewerId}-title`}
       >
-        <div class={`flex items-center justify-between border-b p-3 ${this.theme === 'dark' ? 'border-gray-600' : 'border-gray-200'}`}>
+        <div class={`flex items-center justify-between border-b p-3 ${this.isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
           <div class="flex items-center gap-2">
-            <span id={`${viewerId}-title`} class={`text-sm font-medium ${this.theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
+            <span id={`${viewerId}-title`} class={`text-sm font-medium ${this.isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
               JSON Viewer
             </span>
-            <span class={`text-xs ${this.theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`} aria-live="polite">
+            <span class={`text-xs ${this.isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} aria-live="polite">
               ({Object.keys(this.parsedData).length} {Object.keys(this.parsedData).length === 1 ? 'property' : 'properties'})
             </span>
           </div>
@@ -441,7 +527,7 @@ export class JsonViewer {
           <button
             onClick={this.toggleView}
             class={`flex cursor-pointer items-center gap-1 rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-200 ${
-              this.theme === 'dark'
+              this.isDarkMode
                 ? 'border border-gray-600 bg-gray-900 text-gray-50 hover:border-blue-600 hover:bg-gray-700'
                 : 'border border-gray-200 bg-gray-100 text-gray-800 hover:border-blue-400 hover:bg-gray-50'
             } focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-none`}
@@ -455,7 +541,7 @@ export class JsonViewer {
 
         <div
           id={contentId}
-          class={`relative overflow-auto ${this.theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}
+          class={`relative overflow-auto ${this.isDarkMode ? 'bg-gray-800' : 'bg-white'}`}
           style={containerStyle}
           role="group"
           aria-label={`JSON data in ${this.currentViewMode} view`}
@@ -465,10 +551,10 @@ export class JsonViewer {
             onClick={this.copyToClipboard}
             class={`absolute top-2 right-2 z-10 rounded-md p-1 transition-all duration-200 ${
               this.copied
-                ? this.theme === 'dark'
+                ? this.isDarkMode
                   ? 'bg-green-600 text-white'
                   : 'bg-green-100 text-green-800'
-                : this.theme === 'dark'
+                : this.isDarkMode
                   ? 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-800'
             } opacity-75 hover:opacity-100 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-none`}
@@ -516,7 +602,7 @@ export class JsonViewer {
 
           {/* Tree View */}
           {this.currentViewMode === 'tree' && (
-            <div class={`p-4 pr-12 ${this.theme === 'dark' ? '' : 'bg-gray-50'}`}>
+            <div class={`p-4 pr-12 ${this.isDarkMode ? '' : 'bg-gray-50'}`}>
               {Object.entries(this.parsedData).map(([key, value], index) => (
                 <div key={`root-${index}`}>{this.renderTreeNode(key, value, 0, 'root')}</div>
               ))}
@@ -525,11 +611,11 @@ export class JsonViewer {
 
           {/* Code View */}
           {this.currentViewMode === 'code' && (
-            <div class={`pr-12 font-mono text-sm ${this.theme === 'dark' ? '' : 'bg-gray-50'}`}>
+            <div class={`pr-12 font-mono text-sm ${this.isDarkMode ? '' : 'bg-gray-50'}`}>
               {this.showLineNumbers ? (
                 <div class="flex">
                   <div
-                    class={`border-r px-2 py-4 text-right select-none ${this.theme === 'dark' ? 'border-gray-600 bg-gray-900 text-gray-400' : 'border-gray-200 bg-gray-100 text-gray-500'}`}
+                    class={`border-r px-2 py-4 text-right select-none ${this.isDarkMode ? 'border-gray-600 bg-gray-900 text-gray-400' : 'border-gray-200 bg-gray-100 text-gray-500'}`}
                   >
                     {formattedJson.split('\n').map((_, i) => (
                       <div class="min-h-5" key={`line-${i}`}>
@@ -537,7 +623,7 @@ export class JsonViewer {
                       </div>
                     ))}
                   </div>
-                  <pre class={`flex-grow overflow-x-auto p-4 whitespace-pre-wrap ${this.theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
+                  <pre class={`flex-grow overflow-x-auto p-4 whitespace-pre-wrap ${this.isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
                     {formattedJson.split('\n').map((line, i) => (
                       <div class="min-h-5" key={`code-${i}`} innerHTML={this.formatCodeLine(line)} />
                     ))}

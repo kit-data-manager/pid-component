@@ -7,7 +7,7 @@ import { GenericIdentifierType } from '../utils/GenericIdentifierType';
  * @extends GenericIdentifierType
  */
 export class FallbackType extends GenericIdentifierType {
-  hasCorrectFormat(): boolean {
+  async hasCorrectFormat(): Promise<boolean> {
     return true;
   }
 

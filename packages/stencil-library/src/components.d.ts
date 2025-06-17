@@ -60,10 +60,10 @@ export namespace Components {
          */
         "showLineNumbers": boolean;
         /**
-          * Theme for syntax highlighting. Options: 'light' or 'dark'.
-          * @default 'light'
+          * Theme for syntax highlighting. Options: 'light', 'dark', or 'system'. System will use the user's system preference.
+          * @default 'system'
          */
-        "theme": 'light' | 'dark';
+        "theme": 'light' | 'dark' | 'system';
         /**
           * Initial view mode for the JSON data. Can be 'tree' or 'code'.
           * @default 'tree'
@@ -95,12 +95,22 @@ export namespace Components {
           * Optional ID for the actions container for ARIA references
          */
         "actionsId"?: string;
+        /**
+          * The dark mode setting for the component Options: "light", "dark", "system" Default: "system"
+          * @default 'system'
+         */
+        "darkMode": 'light' | 'dark' | 'system';
     }
     /**
      * Component for creating collapsible/expandable content sections
      * with resize capability and cross-browser compatibility
      */
     interface PidCollapsible {
+        /**
+          * The dark mode setting for the component Options: "light", "dark", "system" Default: "system"
+          * @default 'system'
+         */
+        "darkMode": 'light' | 'dark' | 'system';
         /**
           * Whether to emphasize the component with border and shadow
           * @default false
@@ -130,6 +140,10 @@ export namespace Components {
          */
         "open": boolean;
         /**
+          * Public method to recalculate content dimensions Can be called externally, for example when pagination changes Optimized for better performance
+         */
+        "recalculateContentDimensions": () => Promise<any>;
+        /**
           * Whether to show the footer section
           * @default false
          */
@@ -148,6 +162,12 @@ export namespace Components {
           * @default 0
          */
         "currentLevelOfSubcomponents": number;
+        /**
+          * The dark mode setting for the component Options: "light", "dark", "system" Default: "system"
+          * @type {string}
+          * @default 'system'
+         */
+        "darkMode": 'light' | 'dark' | 'system';
         /**
           * Determines the default time to live (TTL) for entries in the IndexedDB. Defaults to 24 hours. Units are in milliseconds. (optional)
           * @type {number}
@@ -216,6 +236,11 @@ export namespace Components {
          */
         "currentPage": number;
         /**
+          * The dark mode setting for the component Options: "light", "dark", "system" Default: "system"
+          * @default 'system'
+         */
+        "darkMode": 'light' | 'dark' | 'system';
+        /**
           * Whether to hide subcomponents
           * @default false
          */
@@ -253,15 +278,15 @@ export namespace Components {
     }
     interface PidPagination {
         /**
-          * Enable adaptive pagination mode
-          * @default false
-         */
-        "adaptivePagination": boolean;
-        /**
           * Current page (0-based index)
           * @default 0
          */
         "currentPage": number;
+        /**
+          * The dark mode setting for the component Options: "light", "dark", "system" Default: "system"
+          * @default 'system'
+         */
+        "darkMode": 'light' | 'dark' | 'system';
         /**
           * Number of items per page
           * @default 10
@@ -359,6 +384,7 @@ declare global {
     };
     interface HTMLPidCollapsibleElementEventMap {
         "collapsibleToggle": boolean;
+        "contentHeightChange": { maxHeight: number };
     }
     /**
      * Component for creating collapsible/expandable content sections
@@ -493,10 +519,10 @@ declare namespace LocalJSX {
          */
         "showLineNumbers"?: boolean;
         /**
-          * Theme for syntax highlighting. Options: 'light' or 'dark'.
-          * @default 'light'
+          * Theme for syntax highlighting. Options: 'light', 'dark', or 'system'. System will use the user's system preference.
+          * @default 'system'
          */
-        "theme"?: 'light' | 'dark';
+        "theme"?: 'light' | 'dark' | 'system';
         /**
           * Initial view mode for the JSON data. Can be 'tree' or 'code'.
           * @default 'tree'
@@ -528,12 +554,22 @@ declare namespace LocalJSX {
           * Optional ID for the actions container for ARIA references
          */
         "actionsId"?: string;
+        /**
+          * The dark mode setting for the component Options: "light", "dark", "system" Default: "system"
+          * @default 'system'
+         */
+        "darkMode"?: 'light' | 'dark' | 'system';
     }
     /**
      * Component for creating collapsible/expandable content sections
      * with resize capability and cross-browser compatibility
      */
     interface PidCollapsible {
+        /**
+          * The dark mode setting for the component Options: "light", "dark", "system" Default: "system"
+          * @default 'system'
+         */
+        "darkMode"?: 'light' | 'dark' | 'system';
         /**
           * Whether to emphasize the component with border and shadow
           * @default false
@@ -562,6 +598,10 @@ declare namespace LocalJSX {
          */
         "onCollapsibleToggle"?: (event: PidCollapsibleCustomEvent<boolean>) => void;
         /**
+          * Event emitted when content dimensions need to be recalculated Useful for pagination to ensure proper height
+         */
+        "onContentHeightChange"?: (event: PidCollapsibleCustomEvent<{ maxHeight: number }>) => void;
+        /**
           * Whether the collapsible is open by default
           * @default false
          */
@@ -585,6 +625,12 @@ declare namespace LocalJSX {
           * @default 0
          */
         "currentLevelOfSubcomponents"?: number;
+        /**
+          * The dark mode setting for the component Options: "light", "dark", "system" Default: "system"
+          * @type {string}
+          * @default 'system'
+         */
+        "darkMode"?: 'light' | 'dark' | 'system';
         /**
           * Determines the default time to live (TTL) for entries in the IndexedDB. Defaults to 24 hours. Units are in milliseconds. (optional)
           * @type {number}
@@ -653,6 +699,11 @@ declare namespace LocalJSX {
          */
         "currentPage"?: number;
         /**
+          * The dark mode setting for the component Options: "light", "dark", "system" Default: "system"
+          * @default 'system'
+         */
+        "darkMode"?: 'light' | 'dark' | 'system';
+        /**
           * Whether to hide subcomponents
           * @default false
          */
@@ -698,15 +749,15 @@ declare namespace LocalJSX {
     }
     interface PidPagination {
         /**
-          * Enable adaptive pagination mode
-          * @default false
-         */
-        "adaptivePagination"?: boolean;
-        /**
           * Current page (0-based index)
           * @default 0
          */
         "currentPage"?: number;
+        /**
+          * The dark mode setting for the component Options: "light", "dark", "system" Default: "system"
+          * @default 'system'
+         */
+        "darkMode"?: 'light' | 'dark' | 'system';
         /**
           * Number of items per page
           * @default 10

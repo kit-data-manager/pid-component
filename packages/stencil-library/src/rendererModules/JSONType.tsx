@@ -50,7 +50,7 @@ export class JSONType extends GenericIdentifierType {
     return 'JSONType';
   }
 
-  hasCorrectFormat(): boolean {
+  async hasCorrectFormat(): Promise<boolean> {
     const { data, error } = this.getParsedJson();
     if (error) {
       console.warn('JSONType has incorrect format:', error.message, 'for value:', this.value);
@@ -76,7 +76,7 @@ export class JSONType extends GenericIdentifierType {
     const { data: jsonObj, error } = this.getParsedJson();
 
     if (error) {
-      return <span class="text-red-500">Invalid JSON</span>;
+      return <span class={'text-red-500'}>Invalid JSON</span>;
     }
 
     // Show a more condensed and user-friendly preview for objects/arrays
@@ -87,13 +87,13 @@ export class JSONType extends GenericIdentifierType {
       const entryCount = Object.keys(jsonObj).length;
       return (
         <div class="w-full">
-          <div class="flex items-center rounded-md bg-gray-100 font-mono text-xs">
-            <span class="mr-1 font-medium">{isArray ? 'Array' : 'Object'}</span>
-            <span class="text-gray-500">{isArray ? '[' : '{'}</span>
-            <span class="text-xs text-gray-500">
+          <div class={`flex items-center rounded-md font-mono text-xs`}>
+            <span class={`mr-1 font-medium`}>{isArray ? 'Array' : 'Object'}</span>
+            <span class={'text-gray-500'}>{isArray ? '[' : '{'}</span>
+            <span class={`text-xs text-gray-500`}>
               {entryCount} {entryCount === 1 ? 'item' : 'items'}
             </span>
-            <span class="text-gray-500">{isArray ? ']' : '}'}</span>
+            <span class={'text-gray-500'}>{isArray ? ']' : '}'}</span>
           </div>
         </div>
       );
@@ -102,27 +102,28 @@ export class JSONType extends GenericIdentifierType {
     // For simple JSON values (strings, numbers, booleans, null), show the stringified value
     return (
       <div class="w-full">
-        <pre class="max-w-full overflow-x-auto rounded-md bg-gray-100 font-mono text-xs whitespace-pre-wrap">{JSON.stringify(jsonObj, null, 2)}</pre>
+        <pre class={`max-w-full overflow-x-auto rounded-md font-mono text-xs whitespace-pre-wrap`}>{JSON.stringify(jsonObj, null, 2)}</pre>
       </div>
     );
   }
 
   renderBody(): FunctionalComponent<never> {
     const { data: parsedData, error } = this.getParsedJson();
+    const darkModeValue = (this.settings?.find(setting => setting.name === 'darkMode')?.value as 'light' | 'dark' | 'system') || 'system';
 
     if (error) {
       return (
         <div class="w-full overflow-y-auto">
-          <span class="text-red-500">Invalid JSON data: {error.message}</span>
+          <span class={'text-red-500'}>Invalid JSON data: {error.message}</span>
         </div>
       );
     }
 
     return (
       <div class="w-full overflow-y-auto">
-        <json-viewer data={parsedData} expand-all={false} show-line-numbers={true} theme="light">
+        <json-viewer data={parsedData} expand-all={false} show-line-numbers={true} theme={darkModeValue}>
           {/* This slot content will be shown if json-viewer itself fails or if data is not renderable by it */}
-          <span class="text-red-500">Could not display JSON data.</span>
+          <span class={'text-red-500'}>Could not display JSON data.</span>
         </json-viewer>
       </div>
     );

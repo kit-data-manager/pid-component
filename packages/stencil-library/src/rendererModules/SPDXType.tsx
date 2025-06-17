@@ -19,6 +19,8 @@ interface SPDXLicense {
   seeAlso?: string[];
 }
 
+const urlRegex = new RegExp('^https?://spdx.org/licenses/[\\w.\\-+]+/?$', 'i');
+
 /**
  * This class specifies a custom renderer for SPDX license identifiers.
  * It fetches license details from the SPDX API and displays them.
@@ -33,41 +35,21 @@ export class SPDXType extends GenericIdentifierType {
   private readonly fileFormat: string = 'json';
   private readonly requestTimeout: number = 10000; // 10 seconds
 
-  // Static list of common SPDX licenses for quick validation
-  private static readonly commonLicenses: string[] = [
-    'MIT',
-    'Apache-2.0',
-    'GPL-3.0-only',
-    'GPL-2.0-only',
-    'BSD-3-Clause',
-    'BSD-2-Clause',
-    'LGPL-3.0-only',
-    'LGPL-2.1-only',
-    'MPL-2.0',
-    'AGPL-3.0-only',
-    'CC-BY-4.0',
-    'CC-BY-SA-4.0',
-    'CC0-1.0',
-    'Unlicense',
-    'ISC',
-  ];
-
   getSettingsKey(): string {
     return 'SPDXType';
   }
 
   /**
    * Checks if the provided value is a valid SPDX license identifier or URL
-   * Also prefetches license data to improve user experience
-   * @returns true if the value is a valid SPDX license identifier
+   * Always validates against SPDX API without optimizations
+   * @returns Promise resolving to true if the value is a valid SPDX license identifier
    */
-  hasCorrectFormat(): boolean {
+  async hasCorrectFormat(): Promise<boolean> {
     // Check if the value is directly a SPDX URL
-    const urlRegex = new RegExp('^https?://spdx.org/licenses/[\\w\\.\\-+]+(?:/)?$', 'i');
     const isValidUrl = urlRegex.test(this.value);
 
     // Check if the value looks like a license ID (e.g., "MIT", "Apache-2.0")
-    const idRegex = /^[\w\.\-+]+$/;
+    const idRegex = /^[\w.\-+]+$/;
     const isValidId = idRegex.test(this.value);
 
     // If neither format is valid, return false immediately
@@ -86,58 +68,64 @@ export class SPDXType extends GenericIdentifierType {
       licenseId = this.value;
     }
 
-    // Pre-fetch license data in the background to validate it exists
-    // and improve loading time when the component is displayed
-    this.validateLicense(licenseId);
+    // Always perform full validation against SPDX API
+    const isValid = await this.validateLicense(licenseId);
 
-    return true;
+    // Log validation results for debugging
+    console.log('SPDX License validation result:', {
+      licenseId,
+      isValid,
+      licenseData: this.licenseData,
+    });
+
+    // Return the validation result directly
+    return isValid;
   }
 
   /**
-   * Validates that a license ID exists in SPDX and pre-fetches data
+   * Validates that a license ID exists in SPDX and fetches complete data
    * @param licenseId The license ID to validate
    * @returns A promise that resolves to true if the license exists
    */
   private async validateLicense(licenseId: string): Promise<boolean> {
     try {
+      console.log(`Validating SPDX license: ${licenseId}`);
       // Store the license ID for later use
       this.licenseId = licenseId;
 
-      // Quick check against common licenses list for faster validation
-      if (SPDXType.commonLicenses.includes(licenseId)) {
-        console.debug(`License ${licenseId} is in common licenses list, skipping fetch validation`);
-        return true;
-      }
-
-      // Construct API URL
+      // Always fetch from SPDX API regardless of common license list
       const url = this.buildLicenseApiUrl(licenseId);
 
       // Attempt to fetch with timeout
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3000); // shorter timeout for validation
+      const timeoutId = setTimeout(() => controller.abort(), this.requestTimeout);
 
       const response = await fetch(url, { signal: controller.signal });
       clearTimeout(timeoutId);
 
       if (!response.ok) {
-        console.debug(`License ${licenseId} validation failed with status ${response.status}`);
+        console.log(`License ${licenseId} validation failed with status ${response.status}`);
         return false;
       }
 
       // Store license data for later use
       const data = await response.json();
+      console.log(`License API response for ${licenseId}:`, data);
+
       if (data && data.licenseId) {
-        // Cache the data to avoid refetching later
+        // Store the complete license data
         this.licenseData = data;
+        console.log(`License data populated for ${licenseId}:`, this.licenseData);
         return true;
       }
 
+      console.log(`Invalid license data received for ${licenseId}`);
       return false;
     } catch (error) {
-      // If validation fails (e.g., timeout or network error), still return true
-      // as we want to attempt to render with this renderer
-      console.debug(`License validation error for ${licenseId}:`, error);
-      return true;
+      console.error(`License validation error for ${licenseId}:`, error);
+      // When validation fails due to network issues, we should return false
+      // since we can't confirm it's a valid SPDX license
+      return false;
     }
   }
 
@@ -159,6 +147,17 @@ export class SPDXType extends GenericIdentifierType {
    */
   get data(): SPDXLicense | null {
     return this.licenseData;
+  }
+
+  /**
+   * Debugging method to log the current license data
+   */
+  logLicenseData(): void {
+    console.log('Current license data:', {
+      licenseId: this.licenseId,
+      licenseData: this.licenseData,
+      hasData: Boolean(this.licenseData && this.licenseData.licenseId && this.licenseData.name),
+    });
   }
   /**
    * Main initialization method that fetches license data and populates the view
@@ -231,10 +230,7 @@ export class SPDXType extends GenericIdentifierType {
       }
     } catch (fetchError) {
       console.warn('Error fetching SPDX license data:', fetchError);
-      this.licenseData = this.getFallbackLicenseData(this.licenseId);
-      if (!this.licenseData) {
-        throw fetchError; // Re-throw if no fallback available
-      }
+      throw fetchError; // Re-throw
     }
   }
 
@@ -242,17 +238,6 @@ export class SPDXType extends GenericIdentifierType {
    * Tries fallback options when the primary fetch fails
    */
   private async tryFallbackOptions(): Promise<void> {
-    console.debug('CORS proxy fetch failed, trying direct request as fallback');
-
-    // Try local fallback data first before making another network request
-    const fallbackData = this.getFallbackLicenseData(this.licenseId);
-    if (fallbackData) {
-      console.debug('Using local fallback data for', this.licenseId);
-      this.licenseData = fallbackData;
-      return;
-    }
-
-    // If no fallback data, try direct request as last resort
     const timeout = new Promise<never>((_, reject) => {
       setTimeout(() => reject(new Error('Request timeout')), this.requestTimeout);
     });
@@ -306,14 +291,6 @@ export class SPDXType extends GenericIdentifierType {
 
     // Add related URLs
     this.addRelatedUrls();
-
-    // // Add license text if available
-    // this.addLicenseText();
-
-    // // Add standard license header if available
-    // if (this.licenseData.standardLicenseHeader) {
-    //   this.items.push(new FoldableItem(50, 'Standard License Header', this.licenseData.standardLicenseHeader, 'The standard header text for this license', null, null, false));
-    // }
   }
 
   /**
@@ -360,17 +337,6 @@ export class SPDXType extends GenericIdentifierType {
       this.items.push(new FoldableItem(30 + i, `Related URL`, url, 'A related URL with more information about this license'));
     }
   }
-
-  // /**
-  //  * Adds license text if available
-  //  */
-  // private addLicenseText(): void {
-  //   if (!this.licenseData || !this.licenseData.licenseText) return;
-  //
-  //   const truncatedText = this.licenseData.licenseText.substring(0, 500) + (this.licenseData.licenseText.length > 500 ? '...' : '');
-  //
-  //   this.items.push(new FoldableItem(40, 'License Text', truncatedText, 'The full text of the license (truncated for display)', null, null, false));
-  // }
 
   /**
    * Adds action buttons for the license
@@ -420,7 +386,7 @@ export class SPDXType extends GenericIdentifierType {
   /**
    * Handles initialization errors
    */
-  private handleInitError(error: any): void {
+  private handleInitError(error: { message: string }): void {
     // Add meaningful error information
     if (error.message && error.message.includes('CORS')) {
       this.items.push(
@@ -475,101 +441,20 @@ export class SPDXType extends GenericIdentifierType {
   }
 
   /**
-   * Gets fallback license data for common licenses
-   */
-  private getFallbackLicenseData(licenseId: string): SPDXLicense | null {
-    // Basic fallback for common licenses
-    const commonLicenses: Record<string, SPDXLicense> = {
-      'MIT': {
-        licenseId: 'MIT',
-        name: 'MIT License',
-        isOsiApproved: true,
-      },
-      'Apache-2.0': {
-        licenseId: 'Apache-2.0',
-        name: 'Apache License 2.0',
-        isOsiApproved: true,
-      },
-      'GPL-3.0-only': {
-        licenseId: 'GPL-3.0-only',
-        name: 'GNU General Public License v3.0 only',
-        isOsiApproved: true,
-      },
-      'GPL-2.0-only': {
-        licenseId: 'GPL-2.0-only',
-        name: 'GNU General Public License v2.0 only',
-        isOsiApproved: true,
-      },
-      'BSD-3-Clause': {
-        licenseId: 'BSD-3-Clause',
-        name: 'BSD 3-Clause License',
-        isOsiApproved: true,
-      },
-      'BSD-2-Clause': {
-        licenseId: 'BSD-2-Clause',
-        name: 'BSD 2-Clause License',
-        isOsiApproved: true,
-      },
-      'LGPL-3.0-only': {
-        licenseId: 'LGPL-3.0-only',
-        name: 'GNU Lesser General Public License v3.0 only',
-        isOsiApproved: true,
-      },
-      'CC-BY-4.0': {
-        licenseId: 'CC-BY-4.0',
-        name: 'Creative Commons Attribution 4.0 International',
-        isOsiApproved: false,
-      },
-      'CC-BY-SA-4.0': {
-        licenseId: 'CC-BY-SA-4.0',
-        name: 'Creative Commons Attribution-ShareAlike 4.0 International',
-        isOsiApproved: false,
-      },
-      'CC0-1.0': {
-        licenseId: 'CC0-1.0',
-        name: 'Creative Commons Zero v1.0 Universal',
-        isOsiApproved: false,
-      },
-      'Unlicense': {
-        licenseId: 'Unlicense',
-        name: 'The Unlicense',
-        isOsiApproved: false,
-      },
-      'ISC': {
-        licenseId: 'ISC',
-        name: 'ISC License (ISCL)',
-        isOsiApproved: true,
-      },
-      'MPL-2.0': {
-        licenseId: 'MPL-2.0',
-        name: 'Mozilla Public License 2.0',
-        isOsiApproved: true,
-      },
-      'AGPL-3.0-only': {
-        licenseId: 'AGPL-3.0-only',
-        name: 'GNU Affero General Public License v3.0 only',
-        isOsiApproved: true,
-      },
-    };
-
-    return commonLicenses[licenseId] || null;
-  }
-
-  /**
    * Renders a preview of the SPDX license
    */
   renderPreview(): FunctionalComponent {
     // If data is not yet loaded, show the SPDX ID
     if (!this.licenseData) {
-      return <span class="font-mono text-sm">SPDX: {this.licenseId || this.value}</span>;
+      return <span class={`font-mono text-sm`}>SPDX: {this.licenseId || this.value}</span>;
     }
 
     // If data is loaded, show license name and ID with badges
     return (
-      <span class={'flex flex-nowrap items-center align-top font-mono'}>
+      <span class={`flex flex-nowrap items-center align-top font-mono`}>
         <span class={'items-center px-1'}>
-          <span class="font-medium">{this.licenseData.name || this.licenseId}</span>
-          {this.licenseData.licenseId && <span class="ml-1 text-gray-500">({this.licenseData.licenseId})</span>}
+          <span class={`font-medium`}>{this.licenseData.name || this.licenseId}</span>
+          {this.licenseData.licenseId && <span class={`ml-1 text-gray-500`}>({this.licenseData.licenseId})</span>}
         </span>
       </span>
     );

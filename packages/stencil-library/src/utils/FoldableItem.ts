@@ -50,7 +50,7 @@ export class FoldableItem {
   /**
    * Whether the value should be rendered or displayed as text.
    * Useful when you want to show a raw value that would normally be rendered by the component.
-   * When this is false, the value is rendered by the component otherwise it is displayed as text.
+   * When this is true, the value is rendered by the component otherwise it is displayed as text.
    * @type {boolean}
    * @private
    */
@@ -81,7 +81,7 @@ export class FoldableItem {
     this._keyTooltip = keyTooltip;
     this._keyLink = keyLink;
     this._valueRegex = valueRegex;
-    this._renderDynamically = renderDynamically;
+    this._renderDynamically = renderDynamically !== undefined ? renderDynamically : true; // Default to true if not provided
     // If the value shouldn't be rendered dynamically, the estimated type priority is the highest value possible (very unimportant information).
     // Set a default value for estimated type priority
     this._estimatedTypePriority = renderDynamically ? 0 : 0; // Using 0 as default value
@@ -137,6 +137,7 @@ export class FoldableItem {
 
   /**
    * Returns whether the value should be rendered or displayed as text.
+   * True means the value is rendered by the component; false means it is displayed as text.
    * @returns {boolean} Whether the value should be rendered or displayed as text.
    */
   get renderDynamically(): boolean {

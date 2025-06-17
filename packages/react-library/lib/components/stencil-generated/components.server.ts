@@ -78,19 +78,24 @@ export const PidActions: StencilReactComponent<PidActionsElement, PidActionsEven
     tagName: 'pid-actions',
     properties: {
         actions: 'actions',
-        actionsId: 'actions-id'
+        actionsId: 'actions-id',
+        darkMode: 'dark-mode'
     },
     hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
     serializeShadowRoot
 });
 
-export type PidCollapsibleEvents = { onCollapsibleToggle: EventName<CustomEvent<boolean>> };
+export type PidCollapsibleEvents = {
+    onCollapsibleToggle: EventName<CustomEvent<boolean>>,
+    onContentHeightChange: EventName<CustomEvent<{ maxHeight: number }>>
+};
 
 export const PidCollapsible: StencilReactComponent<PidCollapsibleElement, PidCollapsibleEvents> = /*@__PURE__*/ createComponent<PidCollapsibleElement, PidCollapsibleEvents>({
     tagName: 'pid-collapsible',
     properties: {
         open: 'open',
         emphasize: 'emphasize',
+        darkMode: 'dark-mode',
         expanded: 'expanded',
         initialWidth: 'initial-width',
         initialHeight: 'initial-height',
@@ -117,7 +122,8 @@ export const PidComponent: StencilReactComponent<PidComponentElement, PidCompone
         showTopLevelCopy: 'show-top-level-copy',
         defaultTTL: 'default-t-t-l',
         width: 'width',
-        height: 'height'
+        height: 'height',
+        darkMode: 'dark-mode'
     },
     hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
     serializeShadowRoot
@@ -139,7 +145,8 @@ export const PidDataTable: StencilReactComponent<PidDataTableElement, PidDataTab
         hideSubcomponents: 'hide-subcomponents',
         currentLevelOfSubcomponents: 'current-level-of-subcomponents',
         levelOfSubcomponents: 'level-of-subcomponents',
-        settings: 'settings'
+        settings: 'settings',
+        darkMode: 'dark-mode'
     },
     hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
     serializeShadowRoot
@@ -157,8 +164,8 @@ export const PidPagination: StencilReactComponent<PidPaginationElement, PidPagin
         totalItems: 'total-items',
         itemsPerPage: 'items-per-page',
         pageSizes: 'page-sizes',
-        adaptivePagination: 'adaptive-pagination',
-        showItemsPerPageControl: 'show-items-per-page-control'
+        showItemsPerPageControl: 'show-items-per-page-control',
+        darkMode: 'dark-mode'
     },
     hydrateModule: import('@kit-data-manager/pid-component/hydrate'),
     serializeShadowRoot

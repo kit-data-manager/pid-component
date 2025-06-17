@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Component, Element, Event, EventEmitter, h, Host, Prop, State, Watch } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, h, Host, Method, Prop, State, Watch } from '@stencil/core';
 
 /**
  * Constants for CSS class management
@@ -59,6 +59,13 @@ export class PidCollapsible {
   @Prop() emphasize: boolean = false;
 
   /**
+   * The dark mode setting for the component
+   * Options: "light", "dark", "system"
+   * Default: "system"
+   */
+  @Prop() darkMode: 'light' | 'dark' | 'system' = 'system';
+
+  /**
    * Whether the component is in expanded mode (full size)
    */
   @Prop({ mutable: true }) expanded: boolean = false;
@@ -89,20 +96,40 @@ export class PidCollapsible {
   @Event() collapsibleToggle: EventEmitter<boolean>;
 
   /**
+   * Event emitted when content dimensions need to be recalculated
+   * Useful for pagination to ensure proper height
+   */
+  @Event() contentHeightChange: EventEmitter<{ maxHeight: number }>;
+
+  /**
    * Internal state to track current dimensions
    */
   @State() currentWidth: string;
   @State() currentHeight: string;
 
-  // Add these new private properties to store the last expanded dimensions
+  /**
+   * Tracks the effective dark mode state (true for dark, false for light)
+   */
+  @State() isDarkMode: boolean = false;
+
+  // Properties to store the last expanded dimensions for restoration when toggling
   private lastExpandedWidth: string;
   private lastExpandedHeight: string;
+
+  // Media query for detecting system dark mode preference
+  private darkModeMediaQuery: MediaQueryList;
 
   // ResizeObserver to track resize events
   private resizeObserver: ResizeObserver;
 
   // Flag to prevent recursive toggle calls
   private isToggling = false;
+
+  // Debounce timer for resize optimization
+  private resizeDebounceTimer: number = null;
+
+  // Last known resize dimensions
+  private lastResizeDimensions = { width: 0, height: 0 };
 
   /**
    * Watch for changes in the open property
@@ -119,19 +146,40 @@ export class PidCollapsible {
   @Watch('expanded')
   watchExpanded() {
     this.updateAppearance();
+
+    // When expanded, ensure content dimensions are properly calculated
+    if (this.expanded) {
+      // Use setTimeout to ensure DOM is updated before recalculating
+      setTimeout(() => {
+        this.recalculateContentDimensions();
+      }, 0);
+    }
+  }
+
+  /**
+   * Watch for changes in the darkMode property
+   */
+  @Watch('darkMode')
+  watchDarkMode() {
+    this.updateDarkMode();
   }
 
   componentWillLoad() {
     // Initialize state from props
     this.expanded = this.open;
-    this.currentWidth = this.initialWidth || CONSTANTS.DEFAULT_WIDTH;
+    // Default to 75% width if no initial width is provided
+    this.currentWidth = this.initialWidth || '75%'; // Changed from DEFAULT_WIDTH to use 75% (w-3/4)
     this.currentHeight = this.initialHeight || CONSTANTS.DEFAULT_HEIGHT;
+
+    // Initialize dark mode
+    this.initializeDarkMode();
   }
 
   componentDidLoad() {
     this.setupResizeObserver();
     this.updateAppearance();
     this.addBrowserCompatibilityListeners();
+    this.addComponentEventListeners();
 
     // Add clearfix for Safari - prevent text flow issues
     if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
@@ -164,6 +212,156 @@ export class PidCollapsible {
         this.el.parentNode.removeChild(clearfix);
       }
     }
+
+    // Clean up dark mode media query listener
+    this.cleanupDarkModeListener();
+  }
+
+  /**
+   * Initializes dark mode based on property and system preference
+   */
+  private initializeDarkMode() {
+    // Check if the browser supports matchMedia
+    if (window.matchMedia) {
+      // Create media query for dark mode
+      this.darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+      // Set initial dark mode state
+      this.updateDarkMode();
+
+      // Add listener for system preference changes
+      if (this.darkModeMediaQuery.addEventListener) {
+        this.darkModeMediaQuery.addEventListener('change', this.handleDarkModeChange);
+      } else if (this.darkModeMediaQuery.addListener) {
+        // For older browsers
+        this.darkModeMediaQuery.addListener(this.handleDarkModeChange);
+      }
+    } else {
+      // Default to light mode if matchMedia is not supported
+      this.isDarkMode = this.darkMode === 'dark';
+    }
+  }
+
+  /**
+   * Handles changes in system dark mode preference
+   */
+  private handleDarkModeChange = () => {
+    this.updateDarkMode();
+  };
+
+  /**
+   * Updates the dark mode state based on property and system preference
+   */
+  private updateDarkMode() {
+    if (this.darkMode === 'dark') {
+      this.isDarkMode = true;
+    } else if (this.darkMode === 'light') {
+      this.isDarkMode = false;
+    } else if (this.darkMode === 'system' && this.darkModeMediaQuery) {
+      this.isDarkMode = this.darkModeMediaQuery.matches;
+    }
+  }
+
+  /**
+   * Cleans up dark mode media query listener
+   */
+  private cleanupDarkModeListener() {
+    if (this.darkModeMediaQuery) {
+      if (this.darkModeMediaQuery.removeEventListener) {
+        this.darkModeMediaQuery.removeEventListener('change', this.handleDarkModeChange);
+      } else if (this.darkModeMediaQuery.removeListener) {
+        // For older browsers
+        this.darkModeMediaQuery.removeListener(this.handleDarkModeChange);
+      }
+    }
+  }
+
+  /**
+   * Listens to page changes from pid-data-table and recalculates dimensions
+   * @param event The page change event
+   */
+  private handlePageChange = (event: CustomEvent<number>) => {
+    // When the page changes, recalculate dimensions after the DOM updates
+    console.debug('Page changed to:', event.detail);
+    this.recalculateContentDimensions();
+  };
+
+  /**
+   * Public method to recalculate content dimensions
+   * Can be called externally, for example when pagination changes
+   * Optimized for better performance
+   */
+  @Method()
+  public async recalculateContentDimensions() {
+    if (this.expanded) {
+      // Add a class to optimize rendering during recalculation
+      this.el.classList.add('resizing');
+
+      // Use a small delay to avoid excessive recalculations
+      // when multiple events happen in quick succession
+      if (this.resizeDebounceTimer !== null) {
+        window.cancelAnimationFrame(this.resizeDebounceTimer);
+      }
+
+      return new Promise<any>(resolve => {
+        this.resizeDebounceTimer = window.requestAnimationFrame(() => {
+          const dimensions = this.calculateContentDimensions();
+
+          // Batch all style changes in a single rendering frame
+          // to avoid forced reflows and optimize performance
+          requestAnimationFrame(() => {
+            // Set max dimensions first - add a buffer to prevent too tight constraints
+            const maxWidth = Math.max(dimensions.maxWidth, dimensions.contentWidth + CONSTANTS.PADDING_WIDTH);
+            const maxHeight = Math.max(dimensions.maxHeight, dimensions.contentHeight + CONSTANTS.PADDING_HEIGHT + (this.showFooter ? CONSTANTS.FOOTER_HEIGHT : 0));
+
+            this.el.style.maxWidth = `${maxWidth}px`;
+            this.el.style.maxHeight = `${maxHeight}px`;
+
+            // Update current dimensions to match content exactly
+            // Ensure width is at least 75% of container if no width is explicitly provided
+            const optimalWidth = dimensions.contentWidth + CONSTANTS.PADDING_WIDTH;
+            const optimalHeight = dimensions.contentHeight + CONSTANTS.PADDING_HEIGHT + (this.showFooter ? CONSTANTS.FOOTER_HEIGHT : 0);
+
+            // If initial width/height is specified, prefer that for first calculation
+            if (!this.currentWidth || this.currentWidth === 'auto') {
+              // Default to 75% width if no initial width is provided
+              this.currentWidth = this.initialWidth || '75%';
+            } else if (!this.initialWidth) {
+              // If no initial width was specified but we have a current width,
+              // preserve the 75% width setting rather than calculating a pixel value
+              this.currentWidth = '75%';
+            } else {
+              // Otherwise use the calculated optimal width with extra space for content
+              this.currentWidth = `${Math.max(optimalWidth, dimensions.contentWidth * 1)}px`;
+            }
+
+            if (!this.currentHeight || this.currentHeight === `${this.lineHeight}px`) {
+              this.currentHeight = this.initialHeight || `${optimalHeight}px`;
+            } else {
+              this.currentHeight = `${optimalHeight}px`;
+            }
+
+            // Apply the content-based dimensions
+            this.el.style.width = this.currentWidth;
+            this.el.style.height = this.currentHeight;
+
+            // Store these as the last expanded dimensions
+            this.lastExpandedWidth = this.currentWidth;
+            this.lastExpandedHeight = this.currentHeight;
+
+            // Emit event with calculated dimensions for external components
+            this.contentHeightChange.emit({ maxHeight });
+
+            // Remove optimization class
+            this.el.classList.remove('resizing');
+            this.resizeDebounceTimer = null;
+
+            resolve(dimensions);
+          });
+        });
+      });
+    }
+    return null;
   }
 
   /**
@@ -181,16 +379,38 @@ export class PidCollapsible {
       this.resizeObserver.disconnect();
     }
 
-    // Create new observer
+    // Create new observer with debouncing for better performance
     this.resizeObserver = new ResizeObserver(entries => {
       // Only track dimensions when expanded
       if (!this.expanded) return;
 
-      for (const entry of entries) {
-        // Update current dimensions based on observed changes
-        this.currentWidth = `${entry.contentRect.width}px`;
-        this.currentHeight = `${entry.contentRect.height}px`;
+      // Get the entry from the first parameter
+      const entry = entries[0];
+      if (!entry) return;
+
+      const width = entry.contentRect.width;
+      const height = entry.contentRect.height;
+
+      // Skip if dimensions haven't changed significantly (avoid needless updates)
+      if (Math.abs(width - this.lastResizeDimensions.width) < 2 && Math.abs(height - this.lastResizeDimensions.height) < 2) {
+        return;
       }
+
+      // Update last known dimensions
+      this.lastResizeDimensions = { width, height };
+
+      // Clear any existing debounce timer
+      if (this.resizeDebounceTimer !== null) {
+        window.cancelAnimationFrame(this.resizeDebounceTimer);
+      }
+
+      // Use requestAnimationFrame for smoother visual updates
+      this.resizeDebounceTimer = window.requestAnimationFrame(() => {
+        // Update current dimensions based on observed changes
+        this.currentWidth = `${width}px`;
+        this.currentHeight = `${height}px`;
+        this.resizeDebounceTimer = null;
+      });
     });
 
     // Start observing if expanded
@@ -243,12 +463,44 @@ export class PidCollapsible {
   /**
    * Cleans up resources when component is destroyed
    */
+  /**
+   * Adds event listeners for specific child components
+   * This ensures proper communication between components
+   */
+  private addComponentEventListeners() {
+    // Listen for pageChange events from any pid-data-table inside this component
+    const dataTables = this.el.querySelectorAll('pid-data-table');
+    dataTables.forEach(dataTable => {
+      dataTable.addEventListener('pageChange', this.handlePageChange as EventListener);
+    });
+  }
+
+  /**
+   * Removes component-specific event listeners
+   */
+  private removeComponentEventListeners() {
+    // Remove pageChange event listeners
+    const dataTables = this.el.querySelectorAll('pid-data-table');
+    dataTables.forEach(dataTable => {
+      dataTable.removeEventListener('pageChange', this.handlePageChange as EventListener);
+    });
+  }
+
   private cleanupResources() {
+    // Cancel any pending resize animation frame
+    if (this.resizeDebounceTimer !== null) {
+      window.cancelAnimationFrame(this.resizeDebounceTimer);
+      this.resizeDebounceTimer = null;
+    }
+
     // Disconnect ResizeObserver
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
       this.resizeObserver = null;
     }
+
+    // Remove component-specific event listeners
+    this.removeComponentEventListeners();
 
     // Remove event listeners
     const details = this.el.querySelector('details');
@@ -314,6 +566,14 @@ export class PidCollapsible {
       // Set dimensions - use stored dimensions if available
       this.updateDimensions(dimensions);
 
+      // Ensure we're not adding extra padding to the summary
+      const summary = this.el.querySelector('summary');
+      if (summary) {
+        summary.style.height = `${this.lineHeight}px`;
+        summary.style.minHeight = `${this.lineHeight}px`;
+        summary.style.maxHeight = `${this.lineHeight}px`;
+      }
+
       // Enable resize and add visual indicator
       this.el.style.resize = 'both';
       this.addResizeIndicator();
@@ -345,51 +605,37 @@ export class PidCollapsible {
 
   /**
    * Updates dimensions based on content and constraints
+   * Optimized for better resize performance
    */
   private updateDimensions(dimensions: { contentWidth: number; contentHeight: number; maxWidth: number; maxHeight: number }) {
+    // Add a rendering optimization class during dimension updates
+    this.el.classList.add('resizing');
+
     const { contentWidth, contentHeight, maxWidth, maxHeight } = dimensions;
 
-    // Width handling - use last expanded width if available, otherwise calculate
-    if (this.lastExpandedWidth && this.lastExpandedWidth !== CONSTANTS.DEFAULT_WIDTH) {
-      this.currentWidth = this.lastExpandedWidth;
-      // Ensure width doesn't exceed max
-      const numericWidth = parseInt(this.currentWidth, 10);
-      if (numericWidth > maxWidth) {
-        this.currentWidth = `${maxWidth}px`;
-      }
-    } else if (!this.currentWidth || this.currentWidth === CONSTANTS.DEFAULT_WIDTH) {
-      // Calculate optimal width
-      this.currentWidth = `${Math.min(Math.max(contentWidth + CONSTANTS.PADDING_WIDTH, CONSTANTS.MIN_WIDTH), maxWidth)}px`;
-    } else {
-      // Ensure width doesn't exceed max
-      const numericWidth = parseInt(this.currentWidth, 10);
-      if (numericWidth > maxWidth) {
-        this.currentWidth = `${maxWidth}px`;
-      }
-    }
+    // Always set exact content dimensions to prevent resizing beyond content
+    // Ensure width is within minimum and maximum bounds
+    const optimalWidth = Math.min(Math.max(contentWidth + CONSTANTS.PADDING_WIDTH, CONSTANTS.MIN_WIDTH), maxWidth);
+    this.currentWidth = `${optimalWidth}px`;
 
-    // Height handling - use last expanded height if available, otherwise calculate
-    if (this.lastExpandedHeight && this.lastExpandedHeight !== CONSTANTS.DEFAULT_HEIGHT) {
-      this.currentHeight = this.lastExpandedHeight;
-      // Ensure height doesn't exceed max
-      const numericHeight = parseInt(this.currentHeight, 10);
-      if (numericHeight > maxHeight) {
-        this.currentHeight = `${maxHeight}px`;
-      }
-    } else if (!this.currentHeight || this.currentHeight === CONSTANTS.DEFAULT_HEIGHT) {
-      // Calculate optimal height
-      this.currentHeight = `${Math.min(Math.max(contentHeight + CONSTANTS.PADDING_HEIGHT, CONSTANTS.MIN_HEIGHT), maxHeight)}px`;
-    } else {
-      // Ensure height doesn't exceed max
-      const numericHeight = parseInt(this.currentHeight, 10);
-      if (numericHeight > maxHeight) {
-        this.currentHeight = `${maxHeight}px`;
-      }
-    }
+    // Calculate optimal height including padding and footer if needed
+    const footerHeight = this.showFooter ? CONSTANTS.FOOTER_HEIGHT : 0;
+    const optimalHeight = Math.min(Math.max(contentHeight + CONSTANTS.PADDING_HEIGHT + footerHeight, CONSTANTS.MIN_HEIGHT), maxHeight);
+    this.currentHeight = `${optimalHeight}px`;
 
-    // Apply dimensions
-    this.el.style.width = this.currentWidth;
-    this.el.style.height = this.currentHeight;
+    // Store these dimensions for future reference
+    this.lastExpandedWidth = this.currentWidth;
+    this.lastExpandedHeight = this.currentHeight;
+
+    // Use direct property setting for better performance
+    // Batch dimension changes in a single rendering frame
+    requestAnimationFrame(() => {
+      this.el.style.width = this.currentWidth;
+      this.el.style.height = this.currentHeight;
+
+      // Remove the optimization class after updates are applied
+      this.el.classList.remove('resizing');
+    });
   }
 
   /**
@@ -406,6 +652,11 @@ export class PidCollapsible {
       this.currentHeight = this.el.style.height;
     }
 
+    // Use the stored dimensions for logging/debugging
+    if (this.lastExpandedWidth || this.lastExpandedHeight) {
+      console.debug('Storing dimensions for later restoration:', { width: this.lastExpandedWidth, height: this.lastExpandedHeight });
+    }
+
     // Clear size constraints
     this.el.style.maxWidth = '';
     this.el.style.maxHeight = '';
@@ -413,12 +664,14 @@ export class PidCollapsible {
     // Auto width for collapsed state
     this.el.style.width = 'auto';
 
-    // Apply Tailwind classes for collapsed state
-    this.el.classList.add('w-auto', 'inline-block', 'align-middle', 'overflow-hidden', 'py-0', 'my-0', 'bg-white');
+    // Apply Tailwind classes for collapsed state (without background)
+    this.el.classList.add('w-auto', 'inline-block', 'align-middle', 'overflow-hidden', 'py-0', 'my-0');
 
-    // Set line height for text - ensure it doesn't affect text flow
+    // Set strict height and line height for text to ensure smooth text flow
     this.el.style.height = `${this.lineHeight}px`;
     this.el.style.lineHeight = `${this.lineHeight}px`;
+    this.el.style.minHeight = `${this.lineHeight}px`;
+    this.el.style.maxHeight = `${this.lineHeight}px`;
 
     // Ensure proper display in Safari
     if (this.isSafari()) {
@@ -522,11 +775,21 @@ export class PidCollapsible {
    * Gets host classes based on current state
    */
   private getHostClasses() {
-    const baseClasses = ['relative', 'mx-2', 'font-sans', 'transition-all', 'duration-200', 'ease-in-out', 'box-border'];
+    // Start with base classes without width since we'll calculate that properly
+    const baseClasses = ['relative', 'mx-2', 'font-sans', 'transition-all', 'duration-200', 'ease-in-out', 'box-border', 'leading-normal'];
+
+    // Add w-3/4 class by default to maintain consistent width
+    baseClasses.push('w-3/4');
+
+    // When expanded, additional classes will be applied through inline styles
 
     // Add emphasis classes
     if (this.emphasize) {
-      baseClasses.push('border', 'border-gray-300', 'rounded-md', 'shadow-sm');
+      if (this.isDarkMode) {
+        baseClasses.push('border', 'border-gray-600', 'rounded-md', 'shadow-sm');
+      } else {
+        baseClasses.push('border', 'border-gray-300', 'rounded-md', 'shadow-sm');
+      }
     }
 
     // Add state-specific classes
@@ -534,6 +797,11 @@ export class PidCollapsible {
       baseClasses.push('mb-2', 'max-w-full', 'text-xs', 'block');
     } else {
       baseClasses.push('my-0', 'text-sm', 'float-left');
+    }
+
+    // Add dark mode text color only (no background)
+    if (this.isDarkMode) {
+      baseClasses.push('text-white');
     }
 
     return baseClasses.join(' ');
@@ -549,6 +817,11 @@ export class PidCollapsible {
       baseClasses.push('h-full', 'overflow-visible');
     } else {
       baseClasses.push('text-clip', 'overflow-hidden');
+    }
+
+    // Add dark mode classes
+    if (this.isDarkMode) {
+      baseClasses.push('bg-gray-800', 'text-white');
     }
 
     return baseClasses.join(' ');
@@ -573,27 +846,21 @@ export class PidCollapsible {
       'marker:hidden',
       '[&::-webkit-details-marker]:hidden',
       'select-none',
+      'box-border',
     ];
 
     if (this.expanded) {
-      baseClasses.push(
-        'sticky',
-        'top-0',
-        'bg-white',
-        `z-${Z_INDICES.STICKY_ELEMENTS}`,
-        'border-b',
-        'border-gray-100',
-        'p-2',
-        'overflow-visible',
-        'backdrop-blur-sm',
-        'min-h-[2.5rem]',
-      );
+      if (this.isDarkMode) {
+        baseClasses.push('sticky', 'top-0', 'bg-gray-800', `z-${Z_INDICES.STICKY_ELEMENTS}`, 'border-b', 'border-gray-700', 'px-2', 'py-0', 'overflow-visible', 'backdrop-blur-sm');
+      } else {
+        baseClasses.push('sticky', 'top-0', 'bg-white', `z-${Z_INDICES.STICKY_ELEMENTS}`, 'border-b', 'border-gray-100', 'px-2', 'py-0', 'overflow-visible', 'backdrop-blur-sm');
+      }
     } else {
       baseClasses.push('px-1', 'py-0', 'whitespace-nowrap', 'overflow-hidden', 'text-ellipsis', 'max-w-full');
-
-      // Use inline style for precise line height control
-      baseClasses.push(`h-[${this.lineHeight}px]`);
     }
+
+    // Apply consistent height for both states
+    baseClasses.push(`h-[${this.lineHeight}px]`);
 
     return baseClasses.join(' ');
   }
@@ -610,6 +877,11 @@ export class PidCollapsible {
       baseClasses.push('overflow-hidden', 'p-0');
     }
 
+    // Add dark mode classes
+    if (this.isDarkMode) {
+      baseClasses.push('bg-gray-800', 'text-white');
+    }
+
     return baseClasses.join(' ');
   }
 
@@ -617,28 +889,32 @@ export class PidCollapsible {
    * Gets classes for the footer container
    */
   private getFooterClasses() {
-    return [
-      'flex',
-      'flex-col',
-      'w-full',
-      'mt-auto',
-      'sticky',
-      'bottom-0',
-      'left-0',
-      'right-0',
-      'bg-white',
-      'border-t',
-      'border-gray-200',
-      `z-${Z_INDICES.FOOTER_CONTENT}`,
-      'backdrop-blur-sm',
-    ].join(' ');
+    const baseClasses = ['flex', 'flex-col', 'w-full', 'mt-auto', 'sticky', 'bottom-0', 'left-0', 'right-0', 'border-t', `z-${Z_INDICES.FOOTER_CONTENT}`, 'backdrop-blur-sm'];
+
+    // Add dark mode classes
+    if (this.isDarkMode) {
+      baseClasses.push('bg-gray-800', 'border-gray-700');
+    } else {
+      baseClasses.push('bg-white', 'border-gray-200');
+    }
+
+    return baseClasses.join(' ');
   }
 
   /**
    * Gets classes for footer actions
    */
   private getFooterActionsClasses() {
-    return ['flex', 'items-center', 'justify-between', 'gap-2', 'p-2', 'min-h-[3rem]', 'flex-shrink-0', 'bg-white'].join(' ');
+    const baseClasses = ['flex', 'items-center', 'justify-between', 'gap-2', 'p-2', 'min-h-[3rem]', 'flex-shrink-0'];
+
+    // Add dark mode classes
+    if (this.isDarkMode) {
+      baseClasses.push('bg-gray-800');
+    } else {
+      baseClasses.push('bg-white');
+    }
+
+    return baseClasses.join(' ');
   }
 
   render() {
@@ -662,17 +938,17 @@ export class PidCollapsible {
         >
           <summary
             class={summaryClasses}
-            style={!this.expanded ? { lineHeight: `${this.lineHeight}px` } : {}}
+            style={{ lineHeight: `${this.lineHeight}px`, height: `${this.lineHeight}px` }}
             onClick={e => {
               e.stopPropagation();
               e.stopImmediatePropagation();
             }}
           >
-            <span class={`inline-flex items-center gap-1 pr-2 ${this.expanded ? 'flex-wrap overflow-visible' : 'min-w-0 flex-nowrap overflow-hidden'}`}>
+            <span class={`inline-flex h-full items-center gap-1 pr-2 ${this.expanded ? 'flex-nowrap whitespace-nowrap' : 'min-w-0 flex-nowrap overflow-hidden'}`}>
               {this.emphasize && (
-                <span class="flex-shrink-0">
+                <span class="flex h-full flex-shrink-0 items-center">
                   <svg
-                    class="text-gray-600 transition-transform duration-200 group-open:rotate-180"
+                    class={`${this.isDarkMode ? 'text-gray-300' : 'text-gray-600'} transition-transform duration-200 group-open:rotate-180`}
                     fill="none"
                     height="12"
                     width="12"
@@ -687,23 +963,23 @@ export class PidCollapsible {
                   </svg>
                 </span>
               )}
-              <span class={this.expanded ? 'overflow-visible' : 'min-w-0 truncate'}>
+              <span class={`${this.expanded ? 'overflow-visible' : 'min-w-0 truncate'} flex h-full items-center`}>
                 <slot name="summary"></slot>
               </span>
             </span>
-            <div class="ml-auto flex-shrink-0">
+            <div class="ml-auto flex h-full flex-shrink-0 items-center">
               <slot name="summary-actions"></slot>
             </div>
           </summary>
 
-          <div class={contentClasses}>
+          <div class={`${contentClasses}`}>
             <slot></slot>
           </div>
 
           {this.showFooter && this.expanded && (
             <div class={footerClasses}>
               {/* Main footer slot for pagination */}
-              <div class="z-50 overflow-visible border-b border-gray-100 bg-white">
+              <div class={`z-50 overflow-visible border-b ${this.isDarkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-100 bg-white'}`}>
                 <slot name="footer"></slot>
               </div>
 

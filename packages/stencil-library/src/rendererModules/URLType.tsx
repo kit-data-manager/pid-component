@@ -11,7 +11,7 @@ export class URLType extends GenericIdentifierType {
     return 'URLType';
   }
 
-  hasCorrectFormat(): boolean {
+  async hasCorrectFormat(): Promise<boolean> {
     const regex = new RegExp('^http(s)?:(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?$');
     return regex.test(this.value);
   }
@@ -22,7 +22,7 @@ export class URLType extends GenericIdentifierType {
 
   renderPreview(): FunctionalComponent {
     return (
-      <a href={this.value} target="_blank" rel={'noopener noreferrer'} class={'font-mono text-sm text-blue-400'}>
+      <a href={this.value} target="_blank" rel={'noopener noreferrer'} class={`font-mono text-sm text-blue-400`}>
         {this.value}
       </a>
     );

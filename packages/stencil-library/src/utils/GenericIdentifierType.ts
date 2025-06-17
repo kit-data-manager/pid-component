@@ -16,6 +16,13 @@ export abstract class GenericIdentifierType {
   private readonly _value: string;
 
   /**
+   * Tracks the effective dark mode state (true for dark, false for light)
+   * @private
+   * @type {boolean}
+   */
+  private _isDarkMode: boolean = false;
+
+  /**
    * Creates a new GenericIdentifierType object
    * @param value The value that should be parsed and rendered
    * @constructor
@@ -31,6 +38,7 @@ export abstract class GenericIdentifierType {
   constructor(value: string, settings?: { name: string; value: unknown }[]) {
     this._value = value;
     this._settings = settings;
+    this.updateDarkMode();
   }
 
   /**
@@ -57,6 +65,8 @@ export abstract class GenericIdentifierType {
    */
   set settings(value: { name: string; value: unknown }[]) {
     this._settings = value;
+    // Update dark mode when settings change
+    this.updateDarkMode();
   }
 
   /**
@@ -123,7 +133,7 @@ export abstract class GenericIdentifierType {
    * @returns {boolean} Whether the value has the correct format or not.
    * @abstract
    */
-  abstract hasCorrectFormat(): boolean;
+  abstract hasCorrectFormat(): Promise<boolean>;
 
   /**
    * This method returns the key that is used to identify the settings for this component.
@@ -152,5 +162,38 @@ export abstract class GenericIdentifierType {
    */
   renderBody(): FunctionalComponent<unknown> | undefined {
     return undefined;
+  }
+
+  /**
+   * Returns whether the component is in dark mode or not
+   * @returns {boolean} Whether the component is in dark mode or not
+   */
+  get isDarkMode(): boolean {
+    return this._isDarkMode;
+  }
+
+  /**
+   * Updates the dark mode state based on settings
+   * This method is called automatically when settings are updated
+   */
+  protected updateDarkMode(): void {
+    // Look for darkMode setting
+    const darkModeSetting = this._settings?.find(setting => setting.name === 'darkMode');
+
+    if (darkModeSetting) {
+      const darkMode = darkModeSetting.value as 'light' | 'dark' | 'system';
+
+      if (darkMode === 'dark') {
+        this._isDarkMode = true;
+      } else if (darkMode === 'light') {
+        this._isDarkMode = false;
+      } else if (darkMode === 'system' && typeof window !== 'undefined' && window.matchMedia) {
+        // Check system preference
+        this._isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      }
+    } else {
+      // Default to light mode if no setting is found
+      this._isDarkMode = false;
+    }
   }
 }

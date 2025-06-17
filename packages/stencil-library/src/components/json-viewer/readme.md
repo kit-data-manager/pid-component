@@ -5,14 +5,14 @@
 
 ## Properties
 
-| Property          | Attribute           | Description                                                            | Type                | Default     |
-| ----------------- | ------------------- | ---------------------------------------------------------------------- | ------------------- | ----------- |
-| `data`            | `data`              | The JSON data to display. Can be a JSON string or a JavaScript object. | `object \| string`  | `undefined` |
-| `expandAll`       | `expand-all`        | Set to true to open all nodes in tree view initially.                  | `boolean`           | `false`     |
-| `maxHeight`       | `max-height`        | Maximum height of the viewer in pixels. Set to 0 for no limit.         | `number`            | `500`       |
-| `showLineNumbers` | `show-line-numbers` | Set to true to enable line numbers in code view.                       | `boolean`           | `true`      |
-| `theme`           | `theme`             | Theme for syntax highlighting. Options: 'light' or 'dark'.             | `"dark" \| "light"` | `'light'`   |
-| `viewMode`        | `view-mode`         | Initial view mode for the JSON data. Can be 'tree' or 'code'.          | `"code" \| "tree"`  | `'tree'`    |
+| Property          | Attribute           | Description                                                                                                         | Type                            | Default     |
+| ----------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------- | ------------------------------- | ----------- |
+| `data`            | `data`              | The JSON data to display. Can be a JSON string or a JavaScript object.                                              | `object \| string`              | `undefined` |
+| `expandAll`       | `expand-all`        | Set to true to open all nodes in tree view initially.                                                               | `boolean`                       | `false`     |
+| `maxHeight`       | `max-height`        | Maximum height of the viewer in pixels. Set to 0 for no limit.                                                      | `number`                        | `500`       |
+| `showLineNumbers` | `show-line-numbers` | Set to true to enable line numbers in code view.                                                                    | `boolean`                       | `true`      |
+| `theme`           | `theme`             | Theme for syntax highlighting. Options: 'light', 'dark', or 'system'. System will use the user's system preference. | `"dark" \| "light" \| "system"` | `'system'`  |
+| `viewMode`        | `view-mode`         | Initial view mode for the JSON data. Can be 'tree' or 'code'.                                                       | `"code" \| "tree"`              | `'tree'`    |
 
 
 ## Methods

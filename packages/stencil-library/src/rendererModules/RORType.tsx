@@ -62,7 +62,7 @@ export class RORType extends GenericIdentifierType {
    * ROR IDs typically have the format: https://ror.org/XXXXXXXXX where X is an alphanumeric character
    * @returns {boolean} Whether the value has the correct ROR ID format
    */
-  hasCorrectFormat(): boolean {
+  async hasCorrectFormat(): Promise<boolean> {
     const regex = new RegExp('^https?://ror.org/[0-9a-z]{9}$', 'i');
     return regex.test(this.value);
   }
@@ -199,21 +199,16 @@ export class RORType extends GenericIdentifierType {
   renderPreview(): FunctionalComponent {
     // If data is not yet loaded, show the ROR ID
     if (!this.rorData) {
-      return <span class="font-mono text-sm">Loading ROR: {this.value}...</span>;
+      return <span class={`font-mono text-sm`}>Loading ROR: {this.value}...</span>;
     }
 
     // If data is loaded, show organization name and ID
     return (
-      <span class={'inline-flex flex-nowrap items-center align-top font-mono'}>
+      <span class={`inline-flex flex-nowrap items-center align-top font-mono`}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          // xmlns:xlink="http://www.w3.org/1999/xlink"
-          // xmlns:serif="http://www.serif.com/"
-          // width="100%"
-          // height="100%"
           viewBox="0 0 164 118"
           version="1.1"
-          // xml:space="preserve"
           class={'mr-1 h-5 flex-none items-center p-0.5'}
           style={{ fillRule: 'evenodd', clipRule: 'evenodd', strokeLinejoin: 'round', strokeMiterlimit: '2' }}
         >
@@ -231,7 +226,7 @@ export class RORType extends GenericIdentifierType {
             />
           </g>
         </svg>
-        <span class={'flex-none items-center px-1'}>
+        <span class={`flex-none items-center px-1`}>
           {this.label}
           {this.acronym ? ' (' + this.acronym + ')' : ''}
         </span>

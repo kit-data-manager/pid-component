@@ -76,14 +76,20 @@ export const PidActions: StencilReactComponent<PidActionsElement, PidActionsEven
     defineCustomElement: definePidActions
 });
 
-export type PidCollapsibleEvents = { onCollapsibleToggle: EventName<CustomEvent<boolean>> };
+export type PidCollapsibleEvents = {
+    onCollapsibleToggle: EventName<CustomEvent<boolean>>,
+    onContentHeightChange: EventName<CustomEvent<{ maxHeight: number }>>
+};
 
 export const PidCollapsible: StencilReactComponent<PidCollapsibleElement, PidCollapsibleEvents> = /*@__PURE__*/ createComponent<PidCollapsibleElement, PidCollapsibleEvents>({
     tagName: 'pid-collapsible',
     elementClass: PidCollapsibleElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
     react: React,
-    events: { onCollapsibleToggle: 'collapsibleToggle' } as PidCollapsibleEvents,
+    events: {
+        onCollapsibleToggle: 'collapsibleToggle',
+        onContentHeightChange: 'contentHeightChange'
+    } as PidCollapsibleEvents,
     defineCustomElement: definePidCollapsible
 });
 

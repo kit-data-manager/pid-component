@@ -1,11 +1,12 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Component, h, Host, Prop, State } from '@stencil/core';
+import { Component, Element, h, Host, Prop, State } from '@stencil/core';
 
 @Component({
   tag: 'copy-button',
   shadow: false,
 })
 export class CopyButton {
+  @Element() el: HTMLElement;
   /**
    * Internal state to track if copy was successful
    */
@@ -125,6 +126,10 @@ export class CopyButton {
     // Get appropriate aria-label
     const ariaLabel = this.getAriaLabel();
 
+    // Check if dark mode is active by looking at the closest pid-component
+    const parentComponent = this.el.closest('pid-component');
+    const isDarkMode = parentComponent?.classList.contains('bg-gray-800');
+
     return (
       <Host class={'inline-block align-baseline text-xs'}>
         {/* Hidden live region for screen readers */}
@@ -135,7 +140,11 @@ export class CopyButton {
         )}
 
         <button
-          class={`${this.copied ? 'bg-green-200' : 'bg-white hover:bg-blue-200'} relative z-30 max-h-min flex-none items-center rounded-md border border-slate-500 px-2 py-0.5 font-mono font-medium text-slate-800 transition-colors duration-200 hover:text-slate-900 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-none`}
+          class={`${
+            this.copied ? (isDarkMode ? 'bg-green-700' : 'bg-green-200') : isDarkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-white hover:bg-blue-200'
+          } relative z-30 max-h-min flex-none items-center rounded-md border ${
+            isDarkMode ? 'border-gray-600 text-gray-200 hover:text-white' : 'border-slate-500 text-slate-800 hover:text-slate-900'
+          } px-2 py-0.5 font-mono font-medium transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-none`}
           onClick={e => this.copyValue(e)}
           aria-label={ariaLabel}
           title={ariaLabel}

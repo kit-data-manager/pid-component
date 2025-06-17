@@ -89,6 +89,15 @@ const meta: Meta = {
         type: { summary: 'boolean' },
       },
     },
+    darkMode: {
+      description: 'The dark mode setting for the component',
+      control: 'select',
+      options: ['light', 'dark', 'system'],
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: 'system' },
+      },
+    },
   },
   args: {
     value: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
@@ -100,6 +109,7 @@ const meta: Meta = {
     hideSubcomponents: false,
     emphasizeComponent: true,
     showTopLevelCopy: true,
+    darkMode: 'system',
   },
 };
 
@@ -417,4 +427,66 @@ export const TypedPIDMakerExampleText: Story = {
       </p>
     `,
   ],
+};
+
+/**
+ * Demonstrates the component in dark mode
+ */
+export const DarkMode: Story = {
+  args: {
+    value: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
+    darkMode: 'dark',
+    openByDefault: true,
+  },
+  parameters: {
+    backgrounds: { default: 'dark' },
+    docs: {
+      source: {
+        code: `
+<pid-component value="21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343" dark-mode="dark" open-by-default="true"></pid-component>
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Demonstrates the component in light mode
+ */
+export const LightMode: Story = {
+  args: {
+    value: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
+    darkMode: 'light',
+    openByDefault: true,
+  },
+  parameters: {
+    backgrounds: { default: 'light' },
+    docs: {
+      source: {
+        code: `
+<pid-component value="21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343" dark-mode="light" open-by-default="true"></pid-component>
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Demonstrates the component with system preference for dark mode
+ */
+export const SystemMode: Story = {
+  args: {
+    value: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
+    darkMode: 'system',
+    openByDefault: true,
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `
+<pid-component value="21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343" dark-mode="system" open-by-default="true"></pid-component>
+        `,
+      },
+    },
+  },
 };

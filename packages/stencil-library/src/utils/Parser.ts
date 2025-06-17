@@ -10,11 +10,11 @@ export class Parser {
    * @param value String value to parse and evaluate
    * @returns {number} The priority of the best fitting component object for a given value (lower is better)
    */
-  static getEstimatedPriority(value: string): number {
+  static async getEstimatedPriority(value: string): Promise<number> {
     let priority = 0;
     for (let i = 0; i < renderers.length; i++) {
       const obj = new renderers[i].constructor(value);
-      if (obj.hasCorrectFormat()) {
+      if (await obj.hasCorrectFormat()) {
         priority = i;
         break;
       }
@@ -44,7 +44,7 @@ export class Parser {
     // find best fit in _dataTypes array with the highest priority (lowest index has highest priority) and correct format
     for (let i = renderers.length - 1; i >= 0; i--) {
       const obj = new renderers[i].constructor(value);
-      if (obj.hasCorrectFormat()) bestFit = obj;
+      if (await obj.hasCorrectFormat()) bestFit = obj;
     }
 
     // if settings for this type exist, add them to the object
