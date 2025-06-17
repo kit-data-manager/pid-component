@@ -615,7 +615,12 @@ export class PidComponent {
               </span>
 
               {this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy && (this.emphasizeComponent || this.temporarilyEmphasized) ? (
-                <copy-button slot="summary-actions" value={this.value} class="relative my-auto ml-auto flex-shrink-0" aria-label={`Copy value: ${this.value}`} />
+                <copy-button
+                  slot="summary-actions"
+                  value={this.value}
+                  // class="relative my-auto ml-auto flex-shrink-0"
+                  aria-label={`Copy value: ${this.value}`}
+                />
               ) : null}
 
               {/* Table and content */}
@@ -631,7 +636,7 @@ export class PidComponent {
                   settings={this.settings}
                   darkMode={this.darkMode}
                   onPageChange={e => (this.tablePage = e.detail)}
-                  class="flex-grow overflow-auto"
+                  // class="flex-grow overflow-auto"
                   aria-label={`Data table for ${this.value}`}
                   aria-describedby={`${this.el.id}-table-description`}
                 />

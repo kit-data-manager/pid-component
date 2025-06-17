@@ -154,10 +154,10 @@ export class PidDataTable {
           >
             <thead class="sticky top-0 z-20 rounded-t-lg bg-slate-600 text-slate-200">
               <tr class="font-semibold" role="row">
-                <th class="w-[30%] min-w-[150px] rounded-tl-lg px-2 py-2" scope="col" role="columnheader">
+                <th class="w-[30%] min-w-[150px] rounded-tl-lg p-2" scope="col" role="columnheader">
                   Key
                 </th>
-                <th class="w-[70%] rounded-tr-lg px-2 py-2" scope="col" role="columnheader">
+                <th class="w-[70%] rounded-tr-lg p-2" scope="col" role="columnheader">
                   Value
                 </th>
               </tr>

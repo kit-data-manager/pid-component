@@ -677,7 +677,7 @@ export class PidCollapsible {
    * Gets host classes based on current state
    */
   private getHostClasses() {
-    const baseClasses = ['relative', 'mx-2', 'font-sans', 'transition-all', 'duration-200', 'ease-in-out', 'box-border', 'leading-normal'];
+    const baseClasses = ['relative', 'mx-2', 'font-sans', 'transition-all', 'duration-200', 'ease-in-out', 'box-border', 'leading-normal', 'w-3/4'];
 
     // Add emphasis classes
     if (this.emphasize) {
@@ -868,7 +868,7 @@ export class PidCollapsible {
             </div>
           </summary>
 
-          <div class={`${contentClasses} ${this.expanded ? 'mt-[8px]' : ''}`}>
+          <div class={`${contentClasses} ${this.expanded ? 'mt-2' : ''}`}>
             <slot></slot>
           </div>
 
