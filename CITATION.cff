@@ -3,7 +3,7 @@ message: If you use this software, please cite it using these metadata.
 type: software
 title: pid-component-monorepo
 abstract: Monorepo for the PID Component and related packages
-version: 0.1.6
+version: 0.2.0
 authors:
   - orcid: https://orcid.org/0009-0005-2800-4833
     given-names: Maximilian
