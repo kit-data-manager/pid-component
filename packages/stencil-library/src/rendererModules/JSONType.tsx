@@ -50,7 +50,7 @@ export class JSONType extends GenericIdentifierType {
     return 'JSONType';
   }
 
-  hasCorrectFormat(): boolean {
+  async hasCorrectFormat(): Promise<boolean> {
     const { data, error } = this.getParsedJson();
     if (error) {
       console.warn('JSONType has incorrect format:', error.message, 'for value:', this.value);

@@ -44,7 +44,6 @@ export interface PIDComponentDB extends DBSchema {
 export class Database {
   /**
    * Opens the indexedDB database for the PID component and creates the object stores and indexes if they do not exist.
-   * @type {Promise<IDBPDatabase<PIDComponentDB>>}
    * @const
    */
   dbPromise = openDB<PIDComponentDB>(dbName, dbVersion, {

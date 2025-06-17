@@ -62,7 +62,7 @@ export class RORType extends GenericIdentifierType {
    * ROR IDs typically have the format: https://ror.org/XXXXXXXXX where X is an alphanumeric character
    * @returns {boolean} Whether the value has the correct ROR ID format
    */
-  hasCorrectFormat(): boolean {
+  async hasCorrectFormat(): Promise<boolean> {
     const regex = new RegExp('^https?://ror.org/[0-9a-z]{9}$', 'i');
     return regex.test(this.value);
   }

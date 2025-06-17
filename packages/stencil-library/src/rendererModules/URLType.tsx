@@ -11,7 +11,7 @@ export class URLType extends GenericIdentifierType {
     return 'URLType';
   }
 
-  hasCorrectFormat(): boolean {
+  async hasCorrectFormat(): Promise<boolean> {
     const regex = new RegExp('^http(s)?:(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?$');
     return regex.test(this.value);
   }

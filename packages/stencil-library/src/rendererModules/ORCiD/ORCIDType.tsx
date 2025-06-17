@@ -37,7 +37,7 @@ export class ORCIDType extends GenericIdentifierType {
     return JSON.stringify(this._orcidInfo.toObject());
   }
 
-  hasCorrectFormat(): boolean {
+  async hasCorrectFormat(): Promise<boolean> {
     return ORCIDInfo.isORCiD(this.value);
   }
 
@@ -73,7 +73,7 @@ export class ORCIDType extends GenericIdentifierType {
         'ORCiD is a free service for researchers to distinguish themselves by creating a unique personal identifier.',
         'https://orcid.org',
         undefined,
-        true,
+        false,
       ),
     );
 

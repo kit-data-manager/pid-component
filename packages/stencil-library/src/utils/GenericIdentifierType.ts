@@ -123,7 +123,7 @@ export abstract class GenericIdentifierType {
    * @returns {boolean} Whether the value has the correct format or not.
    * @abstract
    */
-  abstract hasCorrectFormat(): boolean;
+  abstract hasCorrectFormat(): Promise<boolean>;
 
   /**
    * This method returns the key that is used to identify the settings for this component.
