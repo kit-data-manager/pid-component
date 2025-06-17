@@ -32,6 +32,13 @@ export default {
         // runOnly: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'best-practice', 'wcag2aaa'],
       },
     },
+    backgrounds: {
+      options: {
+        // 👇 Default options
+        dark: { name: 'Dark', value: '#222' },
+        light: { name: 'Light', value: '#F7F9F2' },
+      },
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,

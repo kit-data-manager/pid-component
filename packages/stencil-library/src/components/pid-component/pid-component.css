@@ -26,4 +26,11 @@ pid-component {
     clear: both;
     height: 0;
   }
+
+  /* Ensure resize functionality in Safari */
+  pid-component pid-collapsible.resize-both {
+    -webkit-resize: both !important;
+    resize: both !important;
+    overflow: auto !important;
+  }
 }
