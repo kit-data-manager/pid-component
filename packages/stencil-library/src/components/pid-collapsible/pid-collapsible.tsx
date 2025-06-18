@@ -338,6 +338,7 @@ export class PidCollapsible {
             if (!this.currentHeight || this.currentHeight === `${this.lineHeight}px`) {
               this.currentHeight = this.initialHeight || `${optimalHeight}px`;
             } else {
+              // Set the height to exactly match the content height plus padding
               this.currentHeight = `${optimalHeight}px`;
             }
 

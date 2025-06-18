@@ -32,6 +32,8 @@ pid-collapsible.resize-both {
   max-width: 100% !important; /* Prevent exceeding parent container */
   will-change: width, height; /* Hint to the browser to optimize for resizing */
   transition: none !important; /* Disable transitions during resize for better performance */
+  min-height: fit-content; /* Ensure the component expands to fit its content */
+  min-width: fit-content; /* Ensure the component expands to fit its content */
 }
 
 /*

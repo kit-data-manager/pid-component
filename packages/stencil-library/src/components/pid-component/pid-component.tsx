@@ -193,11 +193,20 @@ export class PidComponent {
     // Initialize component ID for references
     this.ensureComponentId();
 
-    // Ensure collapsible gets proper initial width after load
+    // Ensure collapsible gets proper initial width and open state after load
     setTimeout(() => {
       const collapsible = this.el.querySelector('pid-collapsible');
-      if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
-        (collapsible as any).recalculateContentDimensions();
+      if (collapsible) {
+        // Set open state explicitly based on openByDefault property
+        if (this.openByDefault) {
+          (collapsible as any).open = true;
+          (collapsible as any).expanded = true;
+        }
+
+        // Recalculate dimensions after setting open state
+        if (typeof (collapsible as any).recalculateContentDimensions === 'function') {
+          (collapsible as any).recalculateContentDimensions();
+        }
       }
     }, 0);
   }
