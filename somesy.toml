@@ -1,6 +1,6 @@
 [project]
-name = "pid-component-monorepo"
-version = "0.2.0"
+name = "pid-component"
+version = "0.2.1"
 description = "Monorepo for the PID Component and related packages"
 license = "Apache-2.0"
 repository = "https://github.com/kit-data-manager/pid-component"

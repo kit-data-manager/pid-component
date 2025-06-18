@@ -1,7 +1,7 @@
 {
-  "name": "pid-component-monorepo",
+  "name": "pid-component",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.2.1",
   "workspaces": [
     "packages/*"
   ],

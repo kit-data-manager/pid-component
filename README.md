@@ -1,6 +1,7 @@
 # PID Component
 
 [![CodeQL](https://github.com/kit-data-manager/pid-component/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/kit-data-manager/pid-component/actions/workflows/github-code-scanning/codeql)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13629109.svg)](https://doi.org/10.5281/zenodo.13629109)
 
 The `pid-component` is an easily extensible web component that can be used to display PIDs, ORCiDs, and possibly other
 identifiers in a user-friendly way.
