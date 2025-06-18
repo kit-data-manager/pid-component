@@ -186,7 +186,6 @@ export class PidComponent {
 
   constructor() {
     this.temporarilyEmphasized = this.emphasizeComponent;
-    this.isExpanded = this.openByDefault || false;
   }
 
   componentDidLoad() {
@@ -198,26 +197,11 @@ export class PidComponent {
     setTimeout(() => {
       const collapsible = this.el.querySelector('pid-collapsible');
       if (collapsible) {
-        // Set open state explicitly based on openByDefault property
-        if (this.openByDefault) {
-          (collapsible as any).open = true;
-          (collapsible as any).expanded = true;
-
-          // When openByDefault is true, make sure the display correctly fills the space
-          // by giving the DOM time to render before recalculating dimensions
-          setTimeout(() => {
-            if (typeof (collapsible as any).recalculateContentDimensions === 'function') {
-              (collapsible as any).recalculateContentDimensions();
-            }
-          }, 100);
-        } else {
-          // For collapsed state, still recalculate dimensions
-          if (typeof (collapsible as any).recalculateContentDimensions === 'function') {
-            (collapsible as any).recalculateContentDimensions();
-          }
+        if (typeof (collapsible as any).recalculateContentDimensions === 'function') {
+          (collapsible as any).recalculateContentDimensions();
         }
       }
-    }, 50); // Increase initial timeout to ensure proper rendering
+    }, 50);
   }
 
   /**
@@ -275,17 +259,17 @@ export class PidComponent {
 
   /**
    * Toggles the loadSubcomponents property if the current level of subcomponents is not the total level of subcomponents.
-   * The expanded state is now handled by the pid-collapsible component.
+   * The open state is handled by the pid-collapsible component.
    */
   private toggleSubcomponents = (event?: CustomEvent<boolean>) => {
-    // Update expanded state based on collapsible event
+    // Update open state based on collapsible event
     if (event) {
       // Stop propagation to prevent parent pid-components from collapsing
       event.stopPropagation();
 
       this.isExpanded = event.detail;
 
-      // Only toggle loadSubcomponents when expanding, not when collapsing
+      // Only toggle loadSubcomponents when opening, not when collapsing
       if (event.detail && !this.hideSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) {
         this.loadSubcomponents = true;
 
@@ -562,6 +546,25 @@ export class PidComponent {
    * Renders the component.
    */
   render() {
+    // Set initial expanded state based on openByDefault
+    if (this.openByDefault) {
+      if (!this.hideSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) {
+        this.isExpanded = this.openByDefault;
+        this.loadSubcomponents = true;
+
+        // After loading subcomponents, ensure dimensions are recalculated
+        setTimeout(() => {
+          const collapsible = this.el.querySelector('pid-collapsible');
+          if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
+            (collapsible as any).recalculateContentDimensions();
+          }
+          console.log(
+            `Loaded subcomponents and recalculated dimensions. expanded: ${this.isExpanded}, loadSubcomponents: ${this.loadSubcomponents}, currentLevel: ${this.currentLevelOfSubcomponents}, totalLevels: ${this.levelOfSubcomponents}`,
+          );
+        }, 50); // Give it a bit more time for the DOM to update with new content
+      }
+    }
+
     return (
       <Host class={`relative font-sans`}>
         {/* Hidden description for accessibility */}
@@ -631,9 +634,8 @@ export class PidComponent {
             )
           ) : (
             <pid-collapsible
-              open={this.openByDefault}
+              open={this.isExpanded}
               emphasize={this.emphasizeComponent || this.temporarilyEmphasized}
-              expanded={this.isExpanded}
               initialWidth={this.width}
               initialHeight={this.height}
               lineHeight={this._lineHeight}

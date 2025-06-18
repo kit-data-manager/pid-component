@@ -135,6 +135,7 @@ pid-collapsible.resize-both::after {
     display: inline-block;
     vertical-align: top;
     margin-bottom: 1px; /* This tiny margin helps with layout stability */
+    width: auto !important; /* Ensure width is set correctly for Safari */
   }
 
   /* Optimization class for resize operations */
@@ -174,6 +175,15 @@ pid-collapsible.resize-both::after {
     cursor: nwse-resize;
     background: linear-gradient(-45deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 50%);
     z-index: 10;
+  }
+
+  /* Special handling for open-by-default components in Safari */
+  pid-collapsible[open=true], pid-collapsible[openbydefault=true] {
+    height: fit-content !important;
+    width: auto !important;
+    min-width: 300px !important;
+    resize: both !important;
+    overflow: auto !important;
   }
 }
 

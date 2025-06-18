@@ -96,7 +96,6 @@ export const PidCollapsible: StencilReactComponent<PidCollapsibleElement, PidCol
         open: 'open',
         emphasize: 'emphasize',
         darkMode: 'dark-mode',
-        expanded: 'expanded',
         initialWidth: 'initial-width',
         initialHeight: 'initial-height',
         lineHeight: 'line-height',

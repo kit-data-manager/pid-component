@@ -117,11 +117,6 @@ export namespace Components {
          */
         "emphasize": boolean;
         /**
-          * Whether the component is in expanded mode (full size)
-          * @default false
-         */
-        "expanded": boolean;
-        /**
           * Initial height when expanded
          */
         "initialHeight"?: string;
@@ -135,7 +130,8 @@ export namespace Components {
          */
         "lineHeight": number;
         /**
-          * Whether the collapsible is open by default
+          * Whether the collapsible is open
+          * @description Controls whether the component is expanded (opened) or collapsed
           * @default false
          */
         "open": boolean;
@@ -576,11 +572,6 @@ declare namespace LocalJSX {
          */
         "emphasize"?: boolean;
         /**
-          * Whether the component is in expanded mode (full size)
-          * @default false
-         */
-        "expanded"?: boolean;
-        /**
           * Initial height when expanded
          */
         "initialHeight"?: string;
@@ -602,7 +593,8 @@ declare namespace LocalJSX {
          */
         "onContentHeightChange"?: (event: PidCollapsibleCustomEvent<{ maxHeight: number }>) => void;
         /**
-          * Whether the collapsible is open by default
+          * Whether the collapsible is open
+          * @description Controls whether the component is expanded (opened) or collapsed
           * @default false
          */
         "open"?: boolean;

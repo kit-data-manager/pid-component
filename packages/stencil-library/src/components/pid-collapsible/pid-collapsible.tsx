@@ -49,9 +49,10 @@ export class PidCollapsible {
   @Element() el: HTMLElement;
 
   /**
-   * Whether the collapsible is open by default
+   * Whether the collapsible is open
+   * @description Controls whether the component is expanded (opened) or collapsed
    */
-  @Prop() open: boolean = false;
+  @Prop({ mutable: true }) open: boolean = false;
 
   /**
    * Whether to emphasize the component with border and shadow
@@ -64,11 +65,6 @@ export class PidCollapsible {
    * Default: "system"
    */
   @Prop() darkMode: 'light' | 'dark' | 'system' = 'system';
-
-  /**
-   * Whether the component is in expanded mode (full size)
-   */
-  @Prop({ mutable: true }) expanded: boolean = false;
 
   /**
    * Initial width when expanded
@@ -136,19 +132,10 @@ export class PidCollapsible {
    */
   @Watch('open')
   watchOpen() {
-    this.expanded = this.open;
-    this.updateAppearance();
-  }
-
-  /**
-   * Watch for changes in the expanded property
-   */
-  @Watch('expanded')
-  watchExpanded() {
     this.updateAppearance();
 
-    // When expanded, ensure content dimensions are properly calculated
-    if (this.expanded) {
+    // When open, ensure content dimensions are properly calculated
+    if (this.open) {
       // Use setTimeout to ensure DOM is updated before recalculating
       setTimeout(() => {
         this.recalculateContentDimensions();
@@ -165,9 +152,6 @@ export class PidCollapsible {
   }
 
   componentWillLoad() {
-    // Initialize state from props
-    this.expanded = this.open;
-
     // Initialize dimensions but delay actual calculation until content is rendered
     if (this.initialWidth) {
       this.currentWidth = this.initialWidth;
@@ -195,11 +179,14 @@ export class PidCollapsible {
 
     // When component is initially open, ensure dimensions are properly calculated after rendering
     if (this.open) {
+      // // Make sure expanded state is set correctly for open components
+      // this.open = true;
+
       // Use a small delay to ensure the DOM is fully rendered
       setTimeout(() => {
         // Force recalculation of dimensions for open components
         this.recalculateContentDimensions();
-      }, 50);
+      }, 100);
     }
 
     // Add clearfix for Safari - prevent text flow issues
@@ -314,7 +301,7 @@ export class PidCollapsible {
    */
   @Method()
   public async recalculateContentDimensions() {
-    if (this.expanded) {
+    if (this.open) {
       // Add a class to optimize rendering during recalculation
       this.el.classList.add('resizing');
 
@@ -404,7 +391,7 @@ export class PidCollapsible {
     // Create new observer with debouncing for better performance
     this.resizeObserver = new ResizeObserver(entries => {
       // Only track dimensions when expanded
-      if (!this.expanded) return;
+      if (!this.open) return;
 
       // Get the entry from the first parameter
       const entry = entries[0];
@@ -436,7 +423,7 @@ export class PidCollapsible {
     });
 
     // Start observing if expanded
-    if (this.expanded) {
+    if (this.open) {
       this.resizeObserver.observe(this.el);
     }
   }
@@ -541,7 +528,7 @@ export class PidCollapsible {
     // Reset all classes and styles before applying new ones
     this.resetStyles();
 
-    if (this.expanded) {
+    if (this.open) {
       this.applyExpandedStyles();
     } else {
       this.applyCollapsedStyles();
@@ -802,19 +789,26 @@ export class PidCollapsible {
     }
 
     // Toggle expanded state
-    this.expanded = !this.expanded;
-    details.open = this.expanded;
+    this.open = !this.open;
+    details.open = this.open;
 
     // Emit event
-    this.collapsibleToggle.emit(this.expanded);
+    this.collapsibleToggle.emit(this.open);
 
     // Update appearance
     this.updateAppearance();
 
+    // For Safari compatibility - ensure content recalculation when expanding
+    if (this.open && this.isSafari()) {
+      setTimeout(() => {
+        this.recalculateContentDimensions();
+      }, 50);
+    }
+
     // Ensure consistent state and reset flag
     setTimeout(() => {
-      if (details.open !== this.expanded) {
-        details.open = this.expanded;
+      if (details.open !== this.open) {
+        details.open = this.open;
       }
       setTimeout(() => {
         this.isToggling = false;
@@ -844,7 +838,7 @@ export class PidCollapsible {
     }
 
     // Add state-specific classes
-    if (this.expanded) {
+    if (this.open) {
       baseClasses.push('mb-2', 'max-w-full', 'text-xs', 'block');
     } else {
       baseClasses.push('my-0', 'text-sm', 'float-left');
@@ -864,7 +858,7 @@ export class PidCollapsible {
   private getDetailsClasses() {
     const baseClasses = ['group', 'w-full', 'font-sans', 'transition-all', 'duration-200', 'ease-in-out', 'flex', 'flex-col'];
 
-    if (this.expanded) {
+    if (this.open) {
       baseClasses.push('h-full', 'overflow-visible');
     } else {
       baseClasses.push('text-clip', 'overflow-hidden');
@@ -900,7 +894,7 @@ export class PidCollapsible {
       'box-border',
     ];
 
-    if (this.expanded) {
+    if (this.open) {
       if (this.isDarkMode) {
         baseClasses.push('sticky', 'top-0', 'bg-gray-800', `z-${Z_INDICES.STICKY_ELEMENTS}`, 'border-b', 'border-gray-700', 'px-2', 'py-0', 'overflow-visible', 'backdrop-blur-sm');
       } else {
@@ -922,7 +916,7 @@ export class PidCollapsible {
   private getContentClasses() {
     const baseClasses = ['flex-grow', 'flex', 'flex-col', 'min-h-0'];
 
-    if (this.expanded) {
+    if (this.open) {
       baseClasses.push('overflow-auto', 'p-2');
     } else {
       baseClasses.push('overflow-hidden', 'p-0');
@@ -995,7 +989,7 @@ export class PidCollapsible {
               e.stopImmediatePropagation();
             }}
           >
-            <span class={`inline-flex h-full items-center gap-1 pr-2 ${this.expanded ? 'flex-nowrap whitespace-nowrap' : 'min-w-0 flex-nowrap overflow-hidden'}`}>
+            <span class={`inline-flex h-full items-center gap-1 pr-2 ${this.open ? 'flex-nowrap whitespace-nowrap' : 'min-w-0 flex-nowrap overflow-hidden'}`}>
               {this.emphasize && (
                 <span class="flex h-full flex-shrink-0 items-center">
                   <svg
@@ -1014,7 +1008,7 @@ export class PidCollapsible {
                   </svg>
                 </span>
               )}
-              <span class={`${this.expanded ? 'overflow-visible' : 'min-w-0 truncate'} flex h-full items-center`}>
+              <span class={`${this.open ? 'overflow-visible' : 'min-w-0 truncate'} flex h-full items-center`}>
                 <slot name="summary"></slot>
               </span>
             </span>
@@ -1027,7 +1021,7 @@ export class PidCollapsible {
             <slot></slot>
           </div>
 
-          {this.showFooter && this.expanded && (
+          {this.showFooter && this.open && (
             <div class={footerClasses}>
               {/* Main footer slot for pagination */}
               <div class={`z-50 overflow-visible border-b ${this.isDarkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-100 bg-white'}`}>
