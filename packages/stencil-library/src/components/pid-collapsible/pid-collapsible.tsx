@@ -167,9 +167,21 @@ export class PidCollapsible {
   componentWillLoad() {
     // Initialize state from props
     this.expanded = this.open;
-    // Default to 75% width if no initial width is provided
-    this.currentWidth = this.initialWidth || '75%'; // Changed from DEFAULT_WIDTH to use 75% (w-3/4)
-    this.currentHeight = this.initialHeight || CONSTANTS.DEFAULT_HEIGHT;
+
+    // Initialize dimensions but delay actual calculation until content is rendered
+    if (this.initialWidth) {
+      this.currentWidth = this.initialWidth;
+    } else {
+      // Default to 75% width if no initial width is provided
+      this.currentWidth = '75%';
+    }
+
+    if (this.initialHeight) {
+      this.currentHeight = this.initialHeight;
+    } else {
+      // Use default height initially, will be recalculated after content renders
+      this.currentHeight = CONSTANTS.DEFAULT_HEIGHT;
+    }
 
     // Initialize dark mode
     this.initializeDarkMode();
@@ -180,6 +192,15 @@ export class PidCollapsible {
     this.updateAppearance();
     this.addBrowserCompatibilityListeners();
     this.addComponentEventListeners();
+
+    // When component is initially open, ensure dimensions are properly calculated after rendering
+    if (this.open) {
+      // Use a small delay to ensure the DOM is fully rendered
+      setTimeout(() => {
+        // Force recalculation of dimensions for open components
+        this.recalculateContentDimensions();
+      }, 50);
+    }
 
     // Add clearfix for Safari - prevent text flow issues
     if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
@@ -593,12 +614,14 @@ export class PidCollapsible {
    */
   private calculateContentDimensions() {
     const contentElement = this.el.querySelector('.flex-grow');
-    const contentWidth = contentElement?.scrollWidth || CONSTANTS.MIN_WIDTH;
-    const contentHeight = contentElement?.scrollHeight || CONSTANTS.MIN_HEIGHT;
+    // Get the actual visible content width/height (not just scroll dimensions)
+    const contentWidth = contentElement ? Math.max((contentElement as HTMLElement).offsetWidth, contentElement?.scrollWidth || 0) : CONSTANTS.MIN_WIDTH;
+    const contentHeight = contentElement ? Math.max((contentElement as HTMLElement).offsetHeight, contentElement?.scrollHeight || 0) : CONSTANTS.MIN_HEIGHT;
 
     // Add padding for better appearance, plus footer height if footer is shown
     const footerHeight = this.showFooter ? CONSTANTS.FOOTER_HEIGHT : 0;
     const maxWidth = contentWidth + CONSTANTS.PADDING_WIDTH;
+    // Use actual content height rather than adding arbitrary padding
     const maxHeight = contentHeight + CONSTANTS.PADDING_HEIGHT + footerHeight;
 
     return { contentWidth, contentHeight, maxWidth, maxHeight };
@@ -614,15 +637,34 @@ export class PidCollapsible {
 
     const { contentWidth, contentHeight, maxWidth, maxHeight } = dimensions;
 
-    // Always set exact content dimensions to prevent resizing beyond content
-    // Ensure width is within minimum and maximum bounds
-    const optimalWidth = Math.min(Math.max(contentWidth + CONSTANTS.PADDING_WIDTH, CONSTANTS.MIN_WIDTH), maxWidth);
-    this.currentWidth = `${optimalWidth}px`;
+    // Calculate initial width based on content but prefer initialWidth if provided
+    let optimalWidth;
+    if (this.initialWidth) {
+      // Use initialWidth directly if provided
+      this.currentWidth = this.initialWidth;
+    } else {
+      // Calculate a content-based width with minimal padding
+      optimalWidth = Math.min(Math.max(contentWidth + CONSTANTS.PADDING_WIDTH, CONSTANTS.MIN_WIDTH), maxWidth);
+      // Default to 75% if we don't have specific content dimensions
+      this.currentWidth = contentWidth > 0 ? `${optimalWidth}px` : '75%';
+    }
 
-    // Calculate optimal height including padding and footer if needed
+    // Calculate optimal height based on actual content
     const footerHeight = this.showFooter ? CONSTANTS.FOOTER_HEIGHT : 0;
-    const optimalHeight = Math.min(Math.max(contentHeight + CONSTANTS.PADDING_HEIGHT + footerHeight, CONSTANTS.MIN_HEIGHT), maxHeight);
-    this.currentHeight = `${optimalHeight}px`;
+
+    // Use more precise content height calculation to prevent extra space
+    // Add minimal padding to prevent content being cut off
+    const minPadding = 20; // Minimal padding to prevent content being cut off
+    const calculatedHeight = contentHeight + minPadding + footerHeight;
+
+    // Use initialHeight if provided, otherwise use calculated height
+    if (this.initialHeight) {
+      this.currentHeight = this.initialHeight;
+    } else {
+      // Ensure height is between min height and max height constraints
+      const optimalHeight = Math.min(Math.max(calculatedHeight, CONSTANTS.MIN_HEIGHT), maxHeight);
+      this.currentHeight = `${optimalHeight}px`;
+    }
 
     // Store these dimensions for future reference
     this.lastExpandedWidth = this.currentWidth;
@@ -633,6 +675,14 @@ export class PidCollapsible {
     requestAnimationFrame(() => {
       this.el.style.width = this.currentWidth;
       this.el.style.height = this.currentHeight;
+
+      // Set min-height/min-width to prevent resizing smaller than content
+      this.el.style.minHeight = `${Math.max(calculatedHeight, CONSTANTS.MIN_HEIGHT)}px`;
+      this.el.style.minWidth = `${CONSTANTS.MIN_WIDTH}px`;
+
+      // Also set max-height/max-width to prevent excessive resizing
+      this.el.style.maxHeight = `${maxHeight}px`;
+      this.el.style.maxWidth = `${maxWidth}px`;
 
       // Remove the optimization class after updates are applied
       this.el.classList.remove('resizing');

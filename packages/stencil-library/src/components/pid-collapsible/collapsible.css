@@ -30,10 +30,12 @@ pid-collapsible.resize-both {
   resize: both !important;
   overflow: auto !important;
   max-width: 100% !important; /* Prevent exceeding parent container */
+  max-height: 90vh !important; /* Prevent excessive vertical sizing */
   will-change: width, height; /* Hint to the browser to optimize for resizing */
   transition: none !important; /* Disable transitions during resize for better performance */
-  min-height: fit-content; /* Ensure the component expands to fit its content */
-  min-width: fit-content; /* Ensure the component expands to fit its content */
+  min-height: min-content !important; /* Ensure the component doesn't shrink below content */
+  min-width: min-content !important; /* Ensure the component doesn't shrink below content */
+  height: fit-content !important; /* Set initial height to fit content exactly */
 }
 
 /*

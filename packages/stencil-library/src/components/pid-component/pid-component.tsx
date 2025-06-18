@@ -194,6 +194,7 @@ export class PidComponent {
     this.ensureComponentId();
 
     // Ensure collapsible gets proper initial width and open state after load
+    // Use a longer delay to ensure DOM is fully rendered before recalculating
     setTimeout(() => {
       const collapsible = this.el.querySelector('pid-collapsible');
       if (collapsible) {
@@ -201,14 +202,22 @@ export class PidComponent {
         if (this.openByDefault) {
           (collapsible as any).open = true;
           (collapsible as any).expanded = true;
-        }
 
-        // Recalculate dimensions after setting open state
-        if (typeof (collapsible as any).recalculateContentDimensions === 'function') {
-          (collapsible as any).recalculateContentDimensions();
+          // When openByDefault is true, make sure the display correctly fills the space
+          // by giving the DOM time to render before recalculating dimensions
+          setTimeout(() => {
+            if (typeof (collapsible as any).recalculateContentDimensions === 'function') {
+              (collapsible as any).recalculateContentDimensions();
+            }
+          }, 100);
+        } else {
+          // For collapsed state, still recalculate dimensions
+          if (typeof (collapsible as any).recalculateContentDimensions === 'function') {
+            (collapsible as any).recalculateContentDimensions();
+          }
         }
       }
-    }, 0);
+    }, 50); // Increase initial timeout to ensure proper rendering
   }
 
   /**
