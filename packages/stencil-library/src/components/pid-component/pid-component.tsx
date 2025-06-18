@@ -196,10 +196,8 @@ export class PidComponent {
     // Use a longer delay to ensure DOM is fully rendered before recalculating
     setTimeout(() => {
       const collapsible = this.el.querySelector('pid-collapsible');
-      if (collapsible) {
-        if (typeof (collapsible as any).recalculateContentDimensions === 'function') {
-          (collapsible as any).recalculateContentDimensions();
-        }
+      if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
+        (collapsible as any).recalculateContentDimensions();
       }
     }, 50);
   }

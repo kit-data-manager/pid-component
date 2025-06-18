@@ -32,15 +32,5 @@ pid-component {
     -webkit-resize: both !important;
     resize: both !important;
     overflow: auto !important;
-    max-height: fit-content !important; /* Fix Safari excessive height issue */
-    height: fit-content !important; /* Ensure height matches content in Safari */
-  }
-
-  /* Fix for high/narrow preview when openByDefault is set */
-  pid-component[openbydefault] pid-collapsible {
-    height: fit-content !important;
-    min-height: fit-content !important;
-    width: auto !important;
-    min-width: 75% !important;
   }
 }
