@@ -522,7 +522,6 @@ export const CollapsibleStates: Story = {
         title: 'Expanded',
         open: true,
         emphasize: true,
-        expanded: true,
         showFooter: true,
         darkMode: 'system',
         description: 'Open, emphasized, expanded state with footer.',

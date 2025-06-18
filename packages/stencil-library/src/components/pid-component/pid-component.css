@@ -32,5 +32,22 @@ pid-component {
     -webkit-resize: both !important;
     resize: both !important;
     overflow: auto !important;
+    position: relative !important;
+  }
+
+  /* Add visible resize handle for Safari */
+  pid-component pid-collapsible.resize-both::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 15px;
+    height: 15px;
+    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M22 2L2 22' stroke='currentColor' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M22 8L8 22' stroke='currentColor' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M22 14L14 22' stroke='currentColor' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: bottom right;
+    cursor: nwse-resize;
+    z-index: 10;
+    pointer-events: none;
   }
 }

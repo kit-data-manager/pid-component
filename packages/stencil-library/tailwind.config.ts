@@ -7,9 +7,9 @@ export default {
     extend: {
       resize: {
         both: 'both',
-        none: 'none',
-        x: 'horizontal',
-        y: 'vertical',
+        // none: 'none',
+        // x: 'horizontal',
+        // y: 'vertical',
       },
     },
   },
