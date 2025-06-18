@@ -146,20 +146,6 @@ const meta: Meta = {
         },
       },
     },
-    adaptivePagination: {
-      description: 'Enable adaptive pagination mode',
-      control: {
-        type: 'boolean',
-      },
-      table: {
-        defaultValue: {
-          summary: 'false',
-        },
-        type: {
-          summary: 'boolean',
-        },
-      },
-    },
     darkMode: {
       description: 'The dark mode setting for the component',
       control: 'select',
@@ -180,8 +166,7 @@ const meta: Meta = {
     currentLevelOfSubcomponents: 0,
     levelOfSubcomponents: 1,
     settings: '[]',
-    adaptivePagination: false,
-    darkMode: 'system',
+    darkMode: 'light',
   },
   parameters: {
     actions: {

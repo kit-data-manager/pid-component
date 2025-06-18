@@ -26,14 +26,6 @@ const meta: Meta = {
         type: { summary: 'boolean' },
       },
     },
-    expanded: {
-      description: 'Whether the component is in expanded mode (full size)',
-      control: { type: 'boolean' },
-      table: {
-        defaultValue: { summary: 'false' },
-        type: { summary: 'boolean' },
-      },
-    },
     initialWidth: {
       description: 'Initial width when expanded',
       control: { type: 'text' },
@@ -64,14 +56,6 @@ const meta: Meta = {
         type: { summary: 'boolean' },
       },
     },
-    resizable: {
-      description: 'Whether the component can be resized',
-      control: { type: 'boolean' },
-      table: {
-        defaultValue: { summary: 'false' },
-        type: { summary: 'boolean' },
-      },
-    },
     darkMode: {
       description: 'The dark mode setting for the component',
       control: 'select',
@@ -85,11 +69,9 @@ const meta: Meta = {
   args: {
     open: false,
     emphasize: true,
-    expanded: false,
     lineHeight: 24,
     showFooter: false,
-    resizable: false,
-    darkMode: 'system',
+    darkMode: 'light',
   },
 };
 
@@ -110,12 +92,10 @@ export const Default: Story = {
       <pid-collapsible
         open=${args.open}
         emphasize=${args.emphasize}
-        expanded=${args.expanded}
         initialWidth=${args.initialWidth}
         initialHeight=${args.initialHeight}
         lineHeight=${args.lineHeight}
         showFooter=${args.showFooter}
-        resizable=${args.resizable}
         darkMode=${args.darkMode}
         @toggle=${e => console.log('Toggle event:', e.detail)}
         @resize=${e => console.log('Resize event:', e.detail)}
@@ -160,12 +140,10 @@ export const OpenByDefault: Story = {
       <pid-collapsible
         open=${args.open}
         emphasize=${args.emphasize}
-        expanded=${args.expanded}
         initialWidth=${args.initialWidth}
         initialHeight=${args.initialHeight}
         lineHeight=${args.lineHeight}
         showFooter=${args.showFooter}
-        resizable=${args.resizable}
         darkMode=${args.darkMode}
         @toggle=${e => console.log('Toggle event:', e.detail)}
         @resize=${e => console.log('Resize event:', e.detail)}
@@ -214,12 +192,10 @@ export const WithFooterAndResize: Story = {
       <pid-collapsible
         open=${args.open}
         emphasize=${args.emphasize}
-        expanded=${args.expanded}
         initialWidth=${args.initialWidth}
         initialHeight=${args.initialHeight}
         lineHeight=${args.lineHeight}
         showFooter=${args.showFooter}
-        resizable=${args.resizable}
         darkMode=${args.darkMode}
         @toggle=${e => console.log('Toggle event:', e.detail)}
         @resize=${e => console.log('Resize event:', e.detail)}
@@ -270,96 +246,6 @@ export const WithFooterAndResize: Story = {
 };
 
 /**
- * Adaptive collapsible component that responds to resize events
- */
-export const AdaptiveWithResizeEvents: Story = {
-  args: {
-    open: true,
-    emphasize: true,
-    resizable: true,
-    showFooter: true,
-    initialWidth: '500px',
-    initialHeight: '300px',
-    darkMode: 'system',
-  },
-  render: args => {
-    // Create a unique ID for this instance
-    const resizeInfoId = `resize-info-${Math.random().toString(36).substring(2, 9)}`;
-
-    // Setup the resize event handler
-    const handleResize = e => {
-      const resizeInfo = document.getElementById(resizeInfoId);
-      if (resizeInfo) {
-        resizeInfo.textContent = `Width: ${Math.round(e.detail.width)}px × Height: ${Math.round(e.detail.height)}px`;
-      }
-    };
-
-    return html`
-      <div class="rounded-md bg-gray-50 p-4">
-        <div class="mb-4 rounded border border-blue-200 bg-blue-50 p-3 text-sm">Resize the component to see resize events in the footer.</div>
-
-        <pid-collapsible
-          open=${args.open}
-          emphasize=${args.emphasize}
-          expanded=${args.expanded}
-          initialWidth=${args.initialWidth}
-          initialHeight=${args.initialHeight}
-          lineHeight=${args.lineHeight}
-          showFooter=${args.showFooter}
-          resizable=${args.resizable}
-          darkMode=${args.darkMode}
-          @toggle=${e => console.log('Toggle event:', e.detail)}
-          @collapsibleResize=${handleResize}
-        >
-          <span slot="summary" class="font-medium">Adaptive Collapsible</span>
-          <div class="flex-grow p-4">
-            <p class="mb-2">This collapsible demonstrates the adaptive resizing feature.</p>
-            <p>Resize events will be shown in the footer.</p>
-          </div>
-          <div slot="footer" class="bg-blue-50 p-2 text-center text-sm" id=${resizeInfoId}>Resize the component to see dimensions</div>
-        </pid-collapsible>
-      </div>
-    `;
-  },
-  parameters: {
-    docs: {
-      source: {
-        code: `
-<pid-collapsible
-  open="true"
-  emphasize="true"
-  showFooter="true"
-  resizable="true"
-  initialWidth="500px"
-  initialHeight="300px"
-  darkMode="system"
-  @collapsibleResize="handleResizeEvent">
-  <span slot="summary">Adaptive Collapsible</span>
-  <div>
-    <p>This collapsible demonstrates the adaptive resizing feature.</p>
-    <p>Resize events will be shown in the footer.</p>
-  </div>
-  <div slot="footer" id="resize-info">
-    Resize the component to see dimensions
-  </div>
-</pid-collapsible>
-
-<script>
-  // Handle resize events
-  document.querySelector('pid-collapsible').addEventListener('collapsibleResize', e => {
-    const resizeInfo = document.getElementById('resize-info');
-    if (resizeInfo) {
-      resizeInfo.textContent = \`Width: \${Math.round(e.detail.width)}px × Height: \${Math.round(e.detail.height)}px\`;
-    }
-  });
-</script>
-        `,
-      },
-    },
-  },
-};
-
-/**
  * Demonstrates the dark mode appearance
  */
 export const DarkMode: Story = {
@@ -374,12 +260,10 @@ export const DarkMode: Story = {
       <pid-collapsible
         open=${args.open}
         emphasize=${args.emphasize}
-        expanded=${args.expanded}
         initialWidth=${args.initialWidth}
         initialHeight=${args.initialHeight}
         lineHeight=${args.lineHeight}
         showFooter=${args.showFooter}
-        resizable=${args.resizable}
         darkMode=${args.darkMode}
         @toggle=${e => console.log('Toggle event:', e.detail)}
         @resize=${e => console.log('Resize event:', e.detail)}
@@ -430,12 +314,10 @@ export const LightMode: Story = {
       <pid-collapsible
         open=${args.open}
         emphasize=${args.emphasize}
-        expanded=${args.expanded}
         initialWidth=${args.initialWidth}
         initialHeight=${args.initialHeight}
         lineHeight=${args.lineHeight}
         showFooter=${args.showFooter}
-        resizable=${args.resizable}
         darkMode=${args.darkMode}
         @toggle=${e => console.log('Toggle event:', e.detail)}
         @resize=${e => console.log('Resize event:', e.detail)}
@@ -517,15 +399,6 @@ export const CollapsibleStates: Story = {
         darkMode: 'system',
         description: 'Open state with emphasis and footer.',
         bgColor: 'bg-yellow-50',
-      },
-      {
-        title: 'Expanded',
-        open: true,
-        emphasize: true,
-        showFooter: true,
-        darkMode: 'system',
-        description: 'Open, emphasized, expanded state with footer.',
-        bgColor: 'bg-purple-50',
       },
       {
         title: 'Dark Mode',
