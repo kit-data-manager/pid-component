@@ -109,7 +109,7 @@ const meta: Meta = {
     hideSubcomponents: false,
     emphasizeComponent: true,
     showTopLevelCopy: true,
-    darkMode: 'system',
+    darkMode: 'light',
   },
 };
 

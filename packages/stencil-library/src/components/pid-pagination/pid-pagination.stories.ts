@@ -34,14 +34,6 @@ const meta: Meta = {
         type: { summary: 'number' },
       },
     },
-    adaptivePagination: {
-      description: 'Enable adaptive pagination mode',
-      control: { type: 'boolean' },
-      table: {
-        defaultValue: { summary: 'false' },
-        type: { summary: 'boolean' },
-      },
-    },
     pageSizes: {
       description: 'Available page sizes',
       control: { type: 'object' },
@@ -74,7 +66,7 @@ const meta: Meta = {
     itemsPerPage: 10,
     adaptivePagination: false,
     showItemsPerPageControl: true,
-    darkMode: 'system',
+    darkMode: 'light',
   },
 };
 
@@ -96,7 +88,6 @@ const PaginationContainer = (args, width = '500px', styles = {}) => {
         currentPage=${args.currentPage}
         totalItems=${args.totalItems}
         itemsPerPage=${args.itemsPerPage}
-        adaptivePagination=${args.adaptivePagination}
         showItemsPerPageControl=${args.showItemsPerPageControl}
         @pageChange=${e => console.log('Page changed to', e.detail)}
         @itemsPerPageChange=${e => console.log('Items per page changed to', e.detail)}
@@ -200,118 +191,6 @@ export const WithFewItems: Story = {
   totalItems="5"
   itemsPerPage="10"
 ></pid-pagination>
-        `,
-      },
-    },
-  },
-};
-
-/**
- * Pagination with adaptive mode enabled, which adjusts the number of items
- * per page based on available space.
- */
-export const WithAdaptivePagination: Story = {
-  args: {
-    currentPage: 0,
-    totalItems: 100,
-    itemsPerPage: 10,
-    adaptivePagination: true,
-  },
-  render: args => PaginationContainer(args),
-  parameters: {
-    docs: {
-      source: {
-        code: `
-<pid-pagination
-  currentPage="0"
-  totalItems="100"
-  itemsPerPage="10"
-  adaptivePagination="true"
-></pid-pagination>
-        `,
-      },
-    },
-  },
-};
-
-/**
- * Adaptive pagination in a small container, demonstrating how the component
- * adjusts to limited space.
- */
-export const SmallContainer: Story = {
-  args: {
-    currentPage: 0,
-    totalItems: 50,
-    itemsPerPage: 10,
-    adaptivePagination: true,
-  },
-  render: args => html`
-    <div style="width: 500px; height: 150px; border: 1px solid #cc0000; padding: 10px; background-color: #ffeeee;" class="rounded-md">
-      <h3 class="mt-0 mb-2 text-sm font-medium">Small Container (Limited Height)</h3>
-      <pid-pagination
-        currentPage="0"
-        totalItems=${args.totalItems}
-        itemsPerPage="10"
-        adaptivePagination=${args.adaptivePagination}
-        @pageChange=${e => console.log('Page changed to', e.detail)}
-      ></pid-pagination>
-    </div>
-  `,
-  parameters: {
-    docs: {
-      source: {
-        code: `
-<div style="width: 500px; height: 150px; border: 1px solid #cc0000; padding: 10px; background-color: #ffeeee;" class="rounded-md">
-  <h3 class="mt-0 mb-2 text-sm font-medium">Small Container (Limited Height)</h3>
-  <pid-pagination
-    currentPage="0"
-    totalItems="50"
-    itemsPerPage="10"
-    adaptivePagination="true"
-  ></pid-pagination>
-</div>
-        `,
-      },
-    },
-  },
-};
-
-/**
- * Adaptive pagination in a large container, showing how the component
- * can display more items per page when space allows.
- */
-export const LargeContainer: Story = {
-  args: {
-    currentPage: 0,
-    totalItems: 150,
-    itemsPerPage: 10,
-    adaptivePagination: true,
-  },
-  render: args => html`
-    <div style="width: 800px; height: 300px; border: 1px solid #00cc00; padding: 10px; background-color: #eeffee;" class="rounded-md">
-      <h3 class="mt-0 mb-2 text-sm font-medium">Large Container</h3>
-      <pid-pagination
-        currentPage="0"
-        totalItems=${args.totalItems}
-        itemsPerPage="10"
-        adaptivePagination=${args.adaptivePagination}
-        @pageChange=${e => console.log('Page changed to', e.detail)}
-      ></pid-pagination>
-    </div>
-  `,
-  parameters: {
-    docs: {
-      source: {
-        code: `
-<div style="width: 800px; height: 300px; border: 1px solid #00cc00; padding: 10px; background-color: #eeffee;" class="rounded-md">
-  <h3 class="mt-0 mb-2 text-sm font-medium">Large Container</h3>
-  <pid-pagination
-    currentPage="0"
-    totalItems="150"
-    itemsPerPage="10"
-    adaptivePagination="true"
-  ></pid-pagination>
-</div>
         `,
       },
     },
