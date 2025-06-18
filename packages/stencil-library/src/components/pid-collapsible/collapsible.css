@@ -54,6 +54,23 @@ pid-collapsible.resize-both {
       -webkit-resize: both !important;
       resize: both !important;
       overflow: auto !important;
+      position: relative !important;
+    }
+
+    /* Enhanced resize handle for Safari */
+    pid-collapsible.resize-both::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 15px;
+      height: 15px;
+      background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M22 2L2 22' stroke='currentColor' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M22 8L8 22' stroke='currentColor' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M22 14L14 22' stroke='currentColor' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: bottom right;
+      cursor: nwse-resize;
+      z-index: 10;
+      pointer-events: none;
     }
   }
 }
@@ -68,11 +85,14 @@ pid-collapsible.resize-both::after {
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 10px;
-  height: 10px;
+  width: 15px;
+  height: 15px;
   cursor: nwse-resize;
-  background: linear-gradient(-45deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.1) 50%, transparent 50%);
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M22 2L2 22' stroke='currentColor' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M22 8L8 22' stroke='currentColor' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M22 14L14 22' stroke='currentColor' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: bottom right;
   z-index: 10; /* Ensure resize handle is above other elements */
+  pointer-events: none;
 }
 
 /*
@@ -148,36 +168,34 @@ pid-collapsible.resize-both::after {
     visibility: hidden;
   }
 
-  /*!* Ensure resize works in Safari *!*/
-  /*pid-collapsible.resize-both {*/
-  /*  position: relative;*/
-  /*  -webkit-resize: both !important;*/
-  /*  resize: both !important;*/
-  /*  overflow: auto !important;*/
-  /*  max-width: 100% !important;*/
-  /*  max-height: 90vh !important;*/
-  /*  display: block !important;*/
-  /*}*/
-  /*!* Enhanced resize handle visibility for Safari *!*/
-  /*pid-collapsible.resize-both::after {*/
-  /*  content: '';*/
-  /*  position: absolute;*/
-  /*  bottom: 0;*/
-  /*  right: 0;*/
-  /*  width: 15px;*/
-  /*  height: 15px;*/
-  /*  cursor: nwse-resize;*/
-  /*  background: linear-gradient(-45deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 50%);*/
-  /*  z-index: 10;*/
-  /*}*/
-  /*!* Special handling for open-by-default components in Safari *!*/
-  /*pid-collapsible[open=true], pid-collapsible[openbydefault=true] {*/
-  /*  height: fit-content !important;*/
-  /*  width: auto !important;*/
-  /*  min-width: 300px !important;*/
-  /*  resize: both !important;*/
-  /*  overflow: auto !important;*/
-  /*}*/
+  /* Ensure resize works in Safari */
+  pid-collapsible.resize-both {
+    /*position: relative;*/
+    -webkit-resize: both !important;
+    /*resize: both !important;*/
+    /*overflow: auto !important;*/
+    /*max-width: 100% !important;*/
+    /*max-height: 90vh !important;*/
+    /*display: block !important;*/
+  }
+
+  /* Enhanced resize handle visibility for Safari */
+  pid-collapsible.resize-both::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 15px;
+    height: 15px;
+    cursor: nwse-resize;
+    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M22 2L2 22' stroke='currentColor' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M22 8L8 22' stroke='currentColor' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M22 14L14 22' stroke='currentColor' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: bottom right;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+
 }
 
 /*
@@ -235,8 +253,8 @@ pid-collapsible.resize-both::after {
   }
 
   pid-collapsible.resize-both::after {
-    background: currentColor;
-    opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M22 2L2 22' stroke='currentColor' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M22 8L8 22' stroke='currentColor' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M22 14L14 22' stroke='currentColor' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
+    opacity: 0.9;
   }
 }
 
