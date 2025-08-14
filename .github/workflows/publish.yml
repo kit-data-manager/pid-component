@@ -54,6 +54,8 @@ jobs:
       - name: Temporarily sync README
         run: |
           cp README.md packages/stencil-library
+          git config --global user.email "webmaster@datamanager.kit.edu"
+          git config --global user.name "GitHub Action"
           git commit -am "Synced README"
       - name: Configure GitHub Packages scope
         run: echo "@$(echo '${{ github.repository }}' | cut -d '/' -f 1):registry=https://npm.pkg.github.com" >> .npmrc
@@ -82,6 +84,8 @@ jobs:
       - name: Temporarily sync README
         run: |
           cp README.md packages/stencil-library
+          git config --global user.email "webmaster@datamanager.kit.edu"
+          git config --global user.name "GitHub Action"
           git commit -am "Synced README"
       - run: npx lerna publish from-package --yes
         env:
