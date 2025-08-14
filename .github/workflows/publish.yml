@@ -9,7 +9,7 @@ on:
   workflow_dispatch:  # Added manual trigger option
 
 permissions:
-  contents: read
+  contents: write
   packages: write
 
 jobs:
@@ -36,7 +36,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
     steps:
       - uses: actions/checkout@v4
@@ -51,7 +51,10 @@ jobs:
           name: build-output
           path: packages/
       - run: npm ci
-      - run: cp README.md packages/stencil-library
+      - name: Temporarily sync README
+        run: |
+          cp README.md packages/stencil-library
+          git commit -am "Synced README"
       - name: Configure GitHub Packages scope
         run: echo "@$(echo '${{ github.repository }}' | cut -d '/' -f 1):registry=https://npm.pkg.github.com" >> .npmrc
       - run: npx lerna publish from-package --yes
@@ -62,7 +65,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -76,7 +79,10 @@ jobs:
           name: build-output
           path: packages/
       - run: npm ci
-      - run: cp README.md packages/stencil-library
+      - name: Temporarily sync README
+        run: |
+          cp README.md packages/stencil-library
+          git commit -am "Synced README"
       - run: npx lerna publish from-package --yes
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
