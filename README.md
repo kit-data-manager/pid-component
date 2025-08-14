@@ -1,9 +1,14 @@
 # PID Component
 
+[![Build](https://github.com/kit-data-manager/pid-component/actions/workflows/npm-ci.yml/badge.svg?branch=main)](https://github.com/kit-data-manager/pid-component/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/kit-data-manager/pid-component/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/kit-data-manager/pid-component/actions/workflows/github-code-scanning/codeql)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13629109.svg)](https://doi.org/10.5281/zenodo.13629109)
+[![npm version](https://img.shields.io/npm/v/@kit-data-manager/pid-component.svg)](https://www.npmjs.com/package/@kit-data-manager/pid-component)
+[![npm downloads](https://img.shields.io/npm/dm/@kit-data-manager/pid-component.svg)](https://www.npmjs.com/package/@kit-data-manager/pid-component)
+[![License](https://img.shields.io/github/license/kit-data-manager/pid-component.svg)](https://spdx.org/licenses/Apache-2.0)
+[![Storybook](https://raw.githubusercontent.com/storybooks/brand/master/badge/badge-storybook.svg)](https://kit-data-manager.github.io/pid-component)
 
-The `pid-component` is an easily extensible web component that can be used to display PIDs, ORCiDs, and possibly other
+The `pid-component` is an easily extensible web component that can be used to display PIDs, ORCiDs, and other
 identifiers in a user-friendly way.
 It is easily extensible to support other identifier types.
 

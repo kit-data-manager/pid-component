@@ -1,4 +1,4 @@
-name: NPM Clean Install
+name: NPM CI
 
 permissions:
   contents: read
@@ -15,9 +15,9 @@ jobs:
     strategy:
       matrix:
         # Use both LTS releases and latest one for tests
-        node: [ 16, 18, 20 ]
+        node: [ 18, 20, 22, 24 ]
     steps:
-      - uses: actions/checkout@v4.1.7
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
