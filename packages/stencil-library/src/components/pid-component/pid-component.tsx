@@ -711,7 +711,7 @@ export class PidComponent {
 
               {/* Footer Actions - in a separate line below pagination */}
               {this.actions.length > 0 && (
-                <pid-actions slot="footer-actions" actions={this.actions} darkMode={this.darkMode} class="mt-0 flex-shrink-0" aria-label={`Available actions for ${this.value}`} />
+                <pid-actions slot="footer-actions" actions={this.actions} darkMode={this.darkMode} class="my-0 flex-shrink-0" aria-label={`Available actions for ${this.value}`} />
               )}
             </pid-collapsible>
           )

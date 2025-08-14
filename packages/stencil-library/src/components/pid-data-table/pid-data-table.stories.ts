@@ -226,12 +226,6 @@ export const WithSubcomponents: Story = createDataTableStory({
   loadSubcomponents: true,
 });
 
-export const AdaptivePagination: Story = createDataTableStory({
-  items: createMockItems(50),
-  itemsPerPage: 10,
-  adaptivePagination: true,
-});
-
 export const DarkMode: Story = createDataTableStory({
   items: createMockItems(25),
   itemsPerPage: 10,
