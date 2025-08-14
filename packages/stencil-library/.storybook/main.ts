@@ -1,6 +1,7 @@
 import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 
+// @ts-ignore
 const require = createRequire(import.meta.url);
 export default {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],

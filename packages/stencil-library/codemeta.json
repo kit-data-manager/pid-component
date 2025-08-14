@@ -47,7 +47,7 @@
   ],
   "name": "@kit-data-manager/pid-component",
   "description": "The PID-Component is a web component that can be used to evaluate and display FAIR Digital Objects, PIDs, ORCiDs, and possibly other identifiers in a user-friendly way. It is easily extensible to support other identifier types.",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "keywords": [
     "stencil",
     "webcomponent",

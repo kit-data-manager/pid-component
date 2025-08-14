@@ -38,7 +38,7 @@ export class PidActions {
     return (
       <div
         id={containerId}
-        class={`actions-container sticky right-0 bottom-0 left-0 z-20 mt-auto w-full border-t ${isDarkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'} p-1`}
+        class={`actions-container sticky right-0 bottom-0 left-0 z-20 w-full ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}
         role="toolbar"
         aria-label="Available actions"
       >

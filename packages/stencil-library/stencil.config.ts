@@ -12,6 +12,7 @@ export const config: Config = {
     reactOutputTarget({
       outDir: '../react-library/lib/components/stencil-generated/',
       hydrateModule: '@kit-data-manager/pid-component/hydrate',
+      clientModule: '@kit-data-manager/pid-component',
     }),
     {
       type: 'dist',
