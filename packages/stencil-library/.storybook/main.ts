@@ -1,3 +1,4 @@
+// This file has been automatically migrated to valid ESM format by Storybook.
 import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 
@@ -13,7 +14,6 @@ export default {
   ],
   staticDirs: [
     { from: '../dist', to: '/assets' },
-    { from: '../loader', to: '/assets' },
   ],
   framework: getAbsolutePath('@storybook/web-components-vite'),
   docs: {

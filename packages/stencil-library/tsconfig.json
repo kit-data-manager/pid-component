@@ -4,11 +4,8 @@
     "allowUnreachableCode": false,
     "declaration": false,
     "experimentalDecorators": true,
-    "lib": [
-      "dom",
-      "es2017"
-    ],
-    "moduleResolution": "node",
+    "lib": ["dom", "es2017"],
+    "moduleResolution": "bundler",
     "module": "esnext",
     "target": "es2017",
     "noUnusedLocals": true,
@@ -16,11 +13,7 @@
     "jsx": "react",
     "jsxFactory": "h"
   },
-  "include": [
-    "src"
-  ],
-  "exclude": [
-    "../../node_modules"
-  ],
+  "include": ["src"],
+  "exclude": ["../../node_modules"],
   "extends": "../../tsconfig.json"
 }

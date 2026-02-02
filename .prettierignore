@@ -8,4 +8,4 @@
 /**/.storybook/
 /**/.stencil/
 /**/storybook-static/
-
+/.nx/workspace-data

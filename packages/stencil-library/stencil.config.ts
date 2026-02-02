@@ -1,10 +1,14 @@
 import { Config } from '@stencil/core';
-import tailwind, { tailwindHMR } from 'stencil-tailwind-plugin';
 import { reactOutputTarget } from '@stencil/react-output-target';
+import { tailwindGlobal, tailwindHMR } from 'stencil-tailwind-plugin';
 
 export const config: Config = {
   namespace: 'pid-component',
+  buildEs5: true,
   outputTargets: [
+    {
+      type: 'dist'
+    },
     {
       type: 'dist-hydrate-script',
       dir: './hydrate',
@@ -12,12 +16,8 @@ export const config: Config = {
     reactOutputTarget({
       outDir: '../react-library/lib/components/stencil-generated/',
       hydrateModule: '@kit-data-manager/pid-component/hydrate',
-      clientModule: '@kit-data-manager/pid-component',
+      clientModule: '@kit-data-manager/react-pid-component',
     }),
-    {
-      type: 'dist',
-      esmLoaderPath: '../loader',
-    },
     {
       type: 'dist-custom-elements',
       externalRuntime: false,
@@ -32,13 +32,15 @@ export const config: Config = {
   testing: {
     browserHeadless: true,
   },
-  plugins: [tailwind(), tailwindHMR()],
+  plugins: [tailwindGlobal(), tailwindHMR()],
+  sourceMap: true,
   extras: {
     enableImportInjection: true,
+    experimentalSlotFixes: true
   },
   preamble:
     '\n' +
-    'Copyright 2024 Karlsruhe Institute of Technology.\n' +
+    'Copyright 2024-2026 Karlsruhe Institute of Technology.\n' +
     '\n' +
     'Licensed under the Apache License, Version 2.0 (the "License");\n' +
     'you may not use this file except in compliance with the License.\n' +

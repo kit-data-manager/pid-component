@@ -7,16 +7,52 @@
 
 /* eslint-disable */
 
-import { ColorHighlight as ColorHighlightElement, defineCustomElement as defineColorHighlight } from "@kit-data-manager/pid-component/dist/components/color-highlight.js";
-import { CopyButton as CopyButtonElement, defineCustomElement as defineCopyButton } from "@kit-data-manager/pid-component/dist/components/copy-button.js";
-import { JsonViewer as JsonViewerElement, defineCustomElement as defineJsonViewer } from "@kit-data-manager/pid-component/dist/components/json-viewer.js";
-import { LocaleVisualization as LocaleVisualizationElement, defineCustomElement as defineLocaleVisualization } from "@kit-data-manager/pid-component/dist/components/locale-visualization.js";
-import { PidActions as PidActionsElement, defineCustomElement as definePidActions } from "@kit-data-manager/pid-component/dist/components/pid-actions.js";
-import { PidCollapsible as PidCollapsibleElement, defineCustomElement as definePidCollapsible } from "@kit-data-manager/pid-component/dist/components/pid-collapsible.js";
-import { PidComponent as PidComponentElement, defineCustomElement as definePidComponent } from "@kit-data-manager/pid-component/dist/components/pid-component.js";
-import { PidDataTable as PidDataTableElement, defineCustomElement as definePidDataTable } from "@kit-data-manager/pid-component/dist/components/pid-data-table.js";
-import { PidPagination as PidPaginationElement, defineCustomElement as definePidPagination } from "@kit-data-manager/pid-component/dist/components/pid-pagination.js";
-import { PidTooltip as PidTooltipElement, defineCustomElement as definePidTooltip } from "@kit-data-manager/pid-component/dist/components/pid-tooltip.js";
+import {
+  type PidCollapsibleCustomEvent,
+  type PidDataTableCustomEvent,
+  type PidPaginationCustomEvent,
+  type PidTooltipCustomEvent
+} from '@kit-data-manager/pid-component';
+import {
+  ColorHighlight as ColorHighlightElement,
+  defineCustomElement as defineColorHighlight
+} from '@kit-data-manager/pid-component/dist/components/color-highlight.js';
+import {
+  CopyButton as CopyButtonElement,
+  defineCustomElement as defineCopyButton
+} from '@kit-data-manager/pid-component/dist/components/copy-button.js';
+import {
+  defineCustomElement as defineJsonViewer,
+  JsonViewer as JsonViewerElement
+} from '@kit-data-manager/pid-component/dist/components/json-viewer.js';
+import {
+  defineCustomElement as defineLocaleVisualization,
+  LocaleVisualization as LocaleVisualizationElement
+} from '@kit-data-manager/pid-component/dist/components/locale-visualization.js';
+import {
+  defineCustomElement as definePidActions,
+  PidActions as PidActionsElement
+} from '@kit-data-manager/pid-component/dist/components/pid-actions.js';
+import {
+  defineCustomElement as definePidCollapsible,
+  PidCollapsible as PidCollapsibleElement
+} from '@kit-data-manager/pid-component/dist/components/pid-collapsible.js';
+import {
+  defineCustomElement as definePidComponent,
+  PidComponent as PidComponentElement
+} from '@kit-data-manager/pid-component/dist/components/pid-component.js';
+import {
+  defineCustomElement as definePidDataTable,
+  PidDataTable as PidDataTableElement
+} from '@kit-data-manager/pid-component/dist/components/pid-data-table.js';
+import {
+  defineCustomElement as definePidPagination,
+  PidPagination as PidPaginationElement
+} from '@kit-data-manager/pid-component/dist/components/pid-pagination.js';
+import {
+  defineCustomElement as definePidTooltip,
+  PidTooltip as PidTooltipElement
+} from '@kit-data-manager/pid-component/dist/components/pid-tooltip.js';
 import type { EventName, StencilReactComponent } from '@stencil/react-output-target/runtime';
 import { createComponent } from '@stencil/react-output-target/runtime';
 import React from 'react';
@@ -77,8 +113,8 @@ export const PidActions: StencilReactComponent<PidActionsElement, PidActionsEven
 });
 
 export type PidCollapsibleEvents = {
-    onCollapsibleToggle: EventName<CustomEvent<boolean>>,
-    onContentHeightChange: EventName<CustomEvent<{ maxHeight: number }>>
+    onCollapsibleToggle: EventName<PidCollapsibleCustomEvent<boolean>>,
+    onContentHeightChange: EventName<PidCollapsibleCustomEvent<{ maxHeight: number }>>
 };
 
 export const PidCollapsible: StencilReactComponent<PidCollapsibleElement, PidCollapsibleEvents> = /*@__PURE__*/ createComponent<PidCollapsibleElement, PidCollapsibleEvents>({
@@ -105,8 +141,8 @@ export const PidComponent: StencilReactComponent<PidComponentElement, PidCompone
 });
 
 export type PidDataTableEvents = {
-    onPageChange: EventName<CustomEvent<number>>,
-    onItemsPerPageChange: EventName<CustomEvent<number>>
+    onPageChange: EventName<PidDataTableCustomEvent<number>>,
+    onItemsPerPageChange: EventName<PidDataTableCustomEvent<number>>
 };
 
 export const PidDataTable: StencilReactComponent<PidDataTableElement, PidDataTableEvents> = /*@__PURE__*/ createComponent<PidDataTableElement, PidDataTableEvents>({
@@ -122,8 +158,8 @@ export const PidDataTable: StencilReactComponent<PidDataTableElement, PidDataTab
 });
 
 export type PidPaginationEvents = {
-    onPageChange: EventName<CustomEvent<number>>,
-    onItemsPerPageChange: EventName<CustomEvent<number>>
+    onPageChange: EventName<PidPaginationCustomEvent<number>>,
+    onItemsPerPageChange: EventName<PidPaginationCustomEvent<number>>
 };
 
 export const PidPagination: StencilReactComponent<PidPaginationElement, PidPaginationEvents> = /*@__PURE__*/ createComponent<PidPaginationElement, PidPaginationEvents>({
@@ -138,7 +174,7 @@ export const PidPagination: StencilReactComponent<PidPaginationElement, PidPagin
     defineCustomElement: definePidPagination
 });
 
-export type PidTooltipEvents = { onTooltipExpansionChange: EventName<CustomEvent<{ expand: boolean; requiredHeight: number }>> };
+export type PidTooltipEvents = { onTooltipExpansionChange: EventName<PidTooltipCustomEvent<{ expand: boolean; requiredHeight: number }>> };
 
 export const PidTooltip: StencilReactComponent<PidTooltipElement, PidTooltipEvents> = /*@__PURE__*/ createComponent<PidTooltipElement, PidTooltipEvents>({
     tagName: 'pid-tooltip',

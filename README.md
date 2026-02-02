@@ -23,11 +23,16 @@ You can prohibit unfolding of the component by setting the `current-level-of-sub
 the `level-of-subcomponents` property.
 
 To use the component, import the [npm-package](https://www.npmjs.com/package/@kit-data-manager/pid-component)
-via [unpkg](https://unpkg.com/):
+via [unpkg](https://unpkg.com/).
+Note that two scripts are provided: one for modern browsers (type="module") and a fallback for older browsers (
+nomodule).
+Include **both** scripts to ensure support for modern browsers (ESM) and legacy browsers:
 
 ```html
 <head>
-  <script type="module" src="https://unpkg.com/@kit-data-manager/pid-component"></script>
+  <script type="module"
+          src="https://unpkg.com/@kit-data-manager/pid-component/dist/pid-component/pid-component.esm.js"></script>
+  <script nomodule src="https://unpkg.com/@kit-data-manager/pid-component/dist/pid-component/pid-component.js"></script>
 </head>
 ```
 
@@ -40,13 +45,20 @@ npm install @kit-data-manager/pid-component
 Then, you can use this component like this:
 
 ```html
-
 <pid-component value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"></pid-component>
 ```
 
+<div>
+<aside>
+<script type="module" src="https://unpkg.com/@kit-data-manager/pid-component/dist/pid-component/pid-component.esm.js"></script>
+<script nomodule src="https://unpkg.com/@kit-data-manager/pid-component/dist/pid-component/pid-component.js"></script>
+<pid-component value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"></pid-component>
+</aside>
+</div>
+
 You can try this web component in the [demo](https://kit-data-manager.github.io/pid-component).
 
-**Only use the `pid-component` component! All the others are just for prototyping...**
+**Only use the `pid-component` component! All the others are only for internal use and may change at any moment...**
 
 There are detailed docs for the `pid-component` component
 available [in the Storybook](https://kit-data-manager.github.io/pid-component) and in

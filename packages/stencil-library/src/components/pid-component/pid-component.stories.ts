@@ -1,5 +1,5 @@
-import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
+import { Meta, StoryObj } from '@storybook/web-components-vite';
 
 /**
  * The pid-component is a versatile component for displaying and interacting with

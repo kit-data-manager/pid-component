@@ -65,7 +65,7 @@ export class PID {
   }
 
   /**
-   * Checks if a string has the format of a PID.
+   * Checks if a string has the format of a Handle PID.
    * @param text The string to check.
    * @returns {boolean} True if the string could be a PID, false if not.
    */
