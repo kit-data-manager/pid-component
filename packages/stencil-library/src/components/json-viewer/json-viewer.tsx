@@ -7,6 +7,7 @@ import { Component, h, Method, Prop, State, Watch } from '@stencil/core';
 @Component({
   tag: 'json-viewer',
   styleUrl: 'json-viewer.css',
+  scoped: true,
   shadow: false,
 })
 export class JsonViewer {
