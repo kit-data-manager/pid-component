@@ -7,7 +7,7 @@ import { Component, h, Method, Prop, State, Watch } from '@stencil/core';
 @Component({
   tag: 'json-viewer',
   styleUrl: 'json-viewer.css',
-  shadow: true,
+  shadow: false,
 })
 export class JsonViewer {
   /**
@@ -39,7 +39,7 @@ export class JsonViewer {
    * Theme for syntax highlighting. Options: 'light', 'dark', or 'system'.
    * System will use the user's system preference.
    */
-  @Prop() theme: 'light' | 'dark' | 'system' = 'system';
+  @Prop({ reflect: true }) theme: 'light' | 'dark' | 'system' = 'system';
 
   /**
    * Internal state to track the current view mode
