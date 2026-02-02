@@ -74,7 +74,7 @@ const meta: Meta = {
       },
     },
     emphasizeComponent: {
-      description: 'Determines whether components should be emphasized towards their surrounding by border and shadow',
+      description: 'Determines whether components should be emphasized towards their surrounding by border and shadow-sm',
       control: { type: 'boolean' },
       table: {
         defaultValue: { summary: 'true' },

@@ -1,9 +1,20 @@
 import { Config } from '@stencil/core';
 import { reactOutputTarget } from '@stencil/react-output-target';
-import { tailwindGlobal, tailwindHMR } from 'stencil-tailwind-plugin';
+import { webTypesOutputTarget } from '@stencil-community/web-types-output-target';
+import { postcss } from '@stencil/postcss';
+import tailwindcss from '@tailwindcss/postcss';
+import cssnanoPlugin from 'cssnano';
+
+const postcssOptions = {
+  plugins: [
+    tailwindcss(),
+    cssnanoPlugin()
+  ]
+}
 
 export const config: Config = {
   namespace: 'pid-component',
+  // globalStyle: 'src/tailwind.css',
   buildEs5: true,
   outputTargets: [
     {
@@ -28,11 +39,14 @@ export const config: Config = {
     {
       type: 'www',
     },
+    webTypesOutputTarget(),
   ],
   testing: {
     browserHeadless: true,
   },
-  plugins: [tailwindGlobal(), tailwindHMR()],
+  plugins:[
+    postcss(postcssOptions),
+  ],
   sourceMap: true,
   extras: {
     enableImportInjection: true,

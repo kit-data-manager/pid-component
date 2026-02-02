@@ -306,7 +306,7 @@ export class PidTooltip {
               type="button"
               class={`flex items-center rounded-full p-0.5 transition-colors duration-200 ${
                 isDarkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100'
-              } focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-none`}
+              } focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-hidden`}
               aria-label={buttonLabel}
               aria-expanded={this.isVisible ? 'true' : 'false'}
               aria-controls={this.tooltipId}
@@ -321,7 +321,7 @@ export class PidTooltip {
               <svg
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
-                class="icon icon-tabler icon-tabler-info-circle min-h-[1rem] min-w-[1rem] flex-shrink-0"
+                class="icon icon-tabler icon-tabler-info-circle min-h-4 min-w-4 shrink-0"
                 width="20"
                 height="20"
                 viewBox="0 0 24 24"

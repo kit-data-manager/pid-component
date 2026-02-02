@@ -583,7 +583,7 @@ export class PidCollapsible {
    * Calculates content dimensions for optimal sizing
    */
   private calculateContentDimensions() {
-    const contentElement = this.el.querySelector('.flex-grow');
+    const contentElement = this.el.querySelector('.grow');
     const contentWidth = contentElement?.scrollWidth || CONSTANTS.MIN_WIDTH;
     const contentHeight = contentElement?.scrollHeight || CONSTANTS.MIN_HEIGHT;
 
@@ -783,9 +783,9 @@ export class PidCollapsible {
     // Add emphasis classes
     if (this.emphasize) {
       if (this.isDarkMode) {
-        baseClasses.push('border', 'border-gray-600', 'rounded-md', 'shadow-sm');
+        baseClasses.push('border', 'border-gray-600', 'rounded-md', 'shadow-xs');
       } else {
-        baseClasses.push('border', 'border-gray-300', 'rounded-md', 'shadow-sm');
+        baseClasses.push('border', 'border-gray-300', 'rounded-md', 'shadow-xs');
       }
     }
 
@@ -835,7 +835,7 @@ export class PidCollapsible {
       'list-none',
       'flex',
       'items-center',
-      'focus:outline-none',
+      'focus:outline-hidden',
       'focus-visible:ring-2',
       'focus-visible:ring-blue-400',
       'focus-visible:ring-offset-1',
@@ -848,9 +848,9 @@ export class PidCollapsible {
 
     if (this.open) {
       if (this.isDarkMode) {
-        baseClasses.push('sticky', 'top-0', 'bg-gray-800', `z-${Z_INDICES.STICKY_ELEMENTS}`, 'border-b', 'border-gray-700', 'px-2', 'py-0', 'overflow-visible', 'backdrop-blur-sm');
+        baseClasses.push('sticky', 'top-0', 'bg-gray-800', `z-${Z_INDICES.STICKY_ELEMENTS}`, 'border-b', 'border-gray-700', 'px-2', 'py-0', 'overflow-visible', 'backdrop-blur-xs');
       } else {
-        baseClasses.push('sticky', 'top-0', 'bg-white', `z-${Z_INDICES.STICKY_ELEMENTS}`, 'border-b', 'border-gray-100', 'px-2', 'py-0', 'overflow-visible', 'backdrop-blur-sm');
+        baseClasses.push('sticky', 'top-0', 'bg-white', `z-${Z_INDICES.STICKY_ELEMENTS}`, 'border-b', 'border-gray-100', 'px-2', 'py-0', 'overflow-visible', 'backdrop-blur-xs');
       }
     } else {
       baseClasses.push('px-1', 'py-0', 'whitespace-nowrap', 'overflow-hidden', 'text-ellipsis', 'max-w-full');
@@ -866,7 +866,7 @@ export class PidCollapsible {
    * Gets classes for the content area
    */
   private getContentClasses() {
-    const baseClasses = ['flex-grow', 'flex', 'flex-col', 'min-h-0'];
+    const baseClasses = ['grow', 'flex', 'flex-col', 'min-h-0'];
 
     if (this.open) {
       baseClasses.push('overflow-auto', 'p-2');
@@ -886,7 +886,7 @@ export class PidCollapsible {
    * Gets classes for the footer container
    */
   private getFooterClasses() {
-    const baseClasses = ['flex', 'flex-col', 'w-full', 'mt-auto', 'sticky', 'bottom-0', 'left-0', 'right-0', 'border-t', `z-${Z_INDICES.FOOTER_CONTENT}`, 'backdrop-blur-sm'];
+    const baseClasses = ['flex', 'flex-col', 'w-full', 'mt-auto', 'sticky', 'bottom-0', 'left-0', 'right-0', 'border-t', `z-${Z_INDICES.FOOTER_CONTENT}`, 'backdrop-blur-xs'];
 
     // Add dark mode classes
     if (this.isDarkMode) {
@@ -902,7 +902,7 @@ export class PidCollapsible {
    * Gets classes for footer actions
    */
   private getFooterActionsClasses() {
-    const baseClasses = ['flex', 'items-center', 'justify-between', 'gap-2', 'p-2', 'min-h-[3rem]', 'flex-shrink-0'];
+    const baseClasses = ['flex', 'items-center', 'justify-between', 'gap-2', 'p-2', 'min-h-12', 'shrink-0'];
 
     // Add dark mode classes
     if (this.isDarkMode) {
@@ -943,7 +943,7 @@ export class PidCollapsible {
           >
             <span class={`inline-flex h-full items-center gap-1 pr-2 ${this.open ? 'flex-nowrap whitespace-nowrap' : 'min-w-0 flex-nowrap overflow-hidden'}`}>
               {this.emphasize && (
-                <span class="flex h-full flex-shrink-0 items-center">
+                <span class="flex h-full shrink-0 items-center">
                   <svg
                     class={`${this.isDarkMode ? 'text-gray-300' : 'text-gray-600'} transition-transform duration-200 group-open:rotate-180`}
                     fill="none"
@@ -964,7 +964,7 @@ export class PidCollapsible {
                 <slot name="summary"></slot>
               </span>
             </span>
-            <div class="ml-auto flex h-full flex-shrink-0 items-center">
+            <div class="ml-auto flex h-full shrink-0 items-center">
               <slot name="summary-actions"></slot>
             </div>
           </summary>
@@ -982,10 +982,10 @@ export class PidCollapsible {
 
               {/* Actions row */}
               <div class={footerActionsClasses}>
-                <div class="flex-grow overflow-visible">
+                <div class="grow overflow-visible">
                   <slot name="footer-left"></slot>
                 </div>
-                <div class="flex flex-shrink-0 items-center gap-2 overflow-visible">
+                <div class="flex shrink-0 items-center gap-2 overflow-visible">
                   <slot name="footer-actions"></slot>
                 </div>
               </div>

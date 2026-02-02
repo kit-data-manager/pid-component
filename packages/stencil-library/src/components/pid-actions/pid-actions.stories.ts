@@ -55,7 +55,7 @@ const createStory = (actions: FoldableAction[], darkMode: 'light' | 'dark' | 'sy
     render: () => {
       // Use a div with Tailwind classes for container
       const container = document.createElement('div');
-      container.className = 'p-4 border rounded bg-white'; // Using Tailwind classes
+      container.className = 'p-4 border rounded-sm bg-white'; // Using Tailwind classes
 
       // Create pid-actions element
       const pidActions = document.createElement('pid-actions');
@@ -207,7 +207,7 @@ export const ManyActions: Story = {
   render: () => {
     // Use a div with Tailwind classes for container
     const container = document.createElement('div');
-    container.className = 'p-4 border rounded bg-white max-w-md'; // Using Tailwind classes with width constraint
+    container.className = 'p-4 border rounded-sm bg-white max-w-md'; // Using Tailwind classes with width constraint
 
     // Create pid-actions element
     const pidActions = document.createElement('pid-actions');

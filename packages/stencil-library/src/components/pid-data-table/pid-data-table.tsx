@@ -164,7 +164,7 @@ export class PidDataTable {
         }
       >
         {/* Table container with scrollable content */}
-        <div class="relative z-10 w-full flex-grow overflow-auto">
+        <div class="relative z-10 w-full grow overflow-auto">
           <table
             id={this.tableId}
             class={`w-full table-fixed border-collapse text-left font-sans text-sm select-text ${isDarkMode ? 'text-gray-200' : ''}`}
@@ -200,7 +200,7 @@ export class PidDataTable {
                           href={value.keyLink}
                           target={'_blank'}
                           rel={'noopener noreferrer'}
-                          class="mr-2 truncate rounded text-blue-600 underline hover:text-blue-800 focus:text-blue-900 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-none"
+                          class="mr-2 truncate rounded-sm text-blue-600 underline hover:text-blue-800 focus:text-blue-900 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-hidden"
                           onClick={e => e.stopPropagation()}
                           aria-label={`Open ${value.keyTitle} in new tab`}
                         >
@@ -211,7 +211,7 @@ export class PidDataTable {
                   </td>
                   <td class={'relative w-full p-2 align-top text-sm select-text'} role="cell">
                     <div class="grid w-full grid-cols-[minmax(0,1fr)_auto] items-start gap-2">
-                      <div class="min-w-0 overflow-x-auto break-words whitespace-normal">
+                      <div class="min-w-0 overflow-x-auto wrap-break-word whitespace-normal">
                         {
                           // Load a foldable subcomponent if subcomponents are not disabled (hideSubcomponents), and the current level of subcomponents is not the total level of subcomponents. If the subcomponent is on the bottom level of the hierarchy, render just a preview. If the value should not be resolved (isFoldable), just render the value as text.
                           this.loadSubcomponents && !this.hideSubcomponents && value.renderDynamically ? (
@@ -238,14 +238,14 @@ export class PidDataTable {
                               class="block w-full min-w-0"
                             />
                           ) : (
-                            <span class={'inline-block w-full max-w-full overflow-x-auto font-mono text-sm break-words whitespace-normal'}>{value.value}</span>
+                            <span class={'inline-block w-full max-w-full overflow-x-auto font-mono text-sm wrap-break-word whitespace-normal'}>{value.value}</span>
                           )
                         }
                       </div>
-                      <div class="flex-shrink-0">
+                      <div class="shrink-0">
                         <copy-button
                           value={value.value}
-                          class={`visible z-50 cursor-pointer rounded-sm ${isDarkMode ? 'bg-gray-700/90 hover:bg-gray-600' : 'bg-white/90 hover:bg-white'} opacity-100 shadow-sm transition-all duration-200 hover:shadow-md`}
+                          class={`visible z-50 cursor-pointer rounded-xs ${isDarkMode ? 'bg-gray-700/90 hover:bg-gray-600' : 'bg-white/90 hover:bg-white'} opacity-100 shadow-xs transition-all duration-200 hover:shadow-md`}
                           aria-label={`Copy ${value.keyTitle} value to clipboard`}
                           title={`Copy ${value.keyTitle} value to clipboard`}
                         />

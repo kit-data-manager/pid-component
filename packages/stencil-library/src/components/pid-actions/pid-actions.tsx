@@ -50,8 +50,8 @@ export class PidActions {
         <div class="flex flex-wrap justify-between gap-1" aria-describedby={`${containerId}-desc`}>
           {this.actions.map((action, index) => {
             // Use Tailwind classes directly instead of concatenating strings
-            const baseClasses = 'p-1 font-semibold text-sm rounded border transition-colors duration-200';
-            const focusClasses = 'focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500';
+            const baseClasses = 'p-1 font-semibold text-sm rounded-sm border transition-colors duration-200';
+            const focusClasses = 'focus:outline-hidden focus:ring-2 focus:ring-offset-1 focus:ring-blue-500';
             let styleClasses: string;
 
             if (isDarkMode) {

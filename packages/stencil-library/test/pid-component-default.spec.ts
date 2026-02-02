@@ -10,7 +10,7 @@ test('test', async ({ page }) => {
     `);
   await expect(page.locator('body')).toBeVisible();
   await page.locator('summary svg').click();
-  await expect(page.locator('.flex-grow').first()).toBeVisible();
+  await expect(page.locator('.grow').first()).toBeVisible();
   await page.locator('.flex.items-center.justify-between.gap-2.p-2').click();
   await page.getByRole('navigation', { name: 'Pagination controls and' }).click();
   await expect(page.getByLabel('Pagination controls for 21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343 data').getByLabel('Pagination controls and')).toMatchAriaSnapshot(`

@@ -578,7 +578,7 @@ export class PidComponent {
                 class={
                   this.currentLevelOfSubcomponents === 0
                     ? //(w/o sub components)
-                      'group rounded-md border px-2 py-0 shadow' +
+                      'group rounded-md border px-2 py-0 shadow-sm' +
                       (this.emphasizeComponent || this.temporarilyEmphasized
                         ? this.isDarkMode
                           ? 'border-gray-600 bg-gray-800'
@@ -604,7 +604,7 @@ export class PidComponent {
                 {
                   // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
                   this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy ? (
-                    <copy-button value={this.identifierObject.value} class="ml-2 flex-shrink-0" aria-label={`Copy value: ${this.identifierObject.value}`} />
+                    <copy-button value={this.identifierObject.value} class="ml-2 shrink-0" aria-label={`Copy value: ${this.identifierObject.value}`} />
                   ) : (
                     ''
                   )
@@ -650,7 +650,7 @@ export class PidComponent {
             >
               <span
                 slot="summary"
-                class={`inline-flex items-center overflow-x-auto font-mono text-sm font-medium select-all ${this.isExpanded ? 'flex-wrap overflow-visible break-words' : 'flex-nowrap whitespace-nowrap'}`}
+                class={`inline-flex items-center overflow-x-auto font-mono text-sm font-medium select-all ${this.isExpanded ? 'flex-wrap overflow-visible wrap-break-word' : 'flex-nowrap whitespace-nowrap'}`}
                 aria-label={`Preview of ${this.value}`}
               >
                 {this.identifierObject?.renderPreview()}
@@ -660,7 +660,7 @@ export class PidComponent {
                 <copy-button
                   slot="summary-actions"
                   value={this.value}
-                  // class="relative my-auto ml-auto flex-shrink-0"
+                  // class="relative my-auto ml-auto shrink-0"
                   aria-label={`Copy value: ${this.value}`}
                 />
               ) : null}
@@ -678,7 +678,7 @@ export class PidComponent {
                   settings={this.settings}
                   darkMode={this.darkMode}
                   onPageChange={e => (this.tablePage = e.detail)}
-                  class="w-full flex-grow overflow-auto"
+                  class="w-full grow overflow-auto"
                   aria-label={`Data table for ${this.value}`}
                   aria-describedby={`${this.el.id}-table-description`}
                 />
@@ -711,7 +711,7 @@ export class PidComponent {
 
               {/* Footer Actions - in a separate line below pagination */}
               {this.actions.length > 0 && (
-                <pid-actions slot="footer-actions" actions={this.actions} darkMode={this.darkMode} class="my-0 flex-shrink-0" aria-label={`Available actions for ${this.value}`} />
+                <pid-actions slot="footer-actions" actions={this.actions} darkMode={this.darkMode} class="my-0 shrink-0" aria-label={`Available actions for ${this.value}`} />
               )}
             </pid-collapsible>
           )

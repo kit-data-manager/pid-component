@@ -395,7 +395,7 @@ export class JsonViewer {
             <summary
               class={`group relative flex cursor-pointer list-none items-center rounded py-1 pl-5 font-mono ${
                 this.isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
-              } focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-none`}
+              } focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-hidden`}
               onKeyDown={handleKeyDown}
               tabIndex={0}
               role="button"
@@ -452,7 +452,7 @@ export class JsonViewer {
 
     return (
       <div
-        class={`flex items-center py-1 font-mono text-sm ${this.isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50'} rounded`}
+        class={`flex items-center py-1 font-mono text-sm ${this.isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50'} rounded-sm`}
         tabIndex={0}
         role="treeitem"
         aria-label={`${key}: ${displayValue} (${valueType})`}
@@ -510,7 +510,7 @@ export class JsonViewer {
 
     return (
       <div
-        class={`overflow-hidden rounded-lg border shadow ${this.isDarkMode ? 'border-gray-600 bg-gray-800 text-gray-50' : 'border-gray-200 bg-white text-gray-800'}`}
+        class={`overflow-hidden rounded-lg border shadow-sm ${this.isDarkMode ? 'border-gray-600 bg-gray-800 text-gray-50' : 'border-gray-200 bg-white text-gray-800'}`}
         role="region"
         aria-labelledby={`${viewerId}-title`}
       >
@@ -530,7 +530,7 @@ export class JsonViewer {
               this.isDarkMode
                 ? 'border border-gray-600 bg-gray-900 text-gray-50 hover:border-blue-600 hover:bg-gray-700'
                 : 'border border-gray-200 bg-gray-100 text-gray-800 hover:border-blue-400 hover:bg-gray-50'
-            } focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-none`}
+            } focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-hidden`}
             aria-controls={contentId}
             aria-label={`Switch to ${this.currentViewMode === 'tree' ? 'code' : 'tree'} view`}
             type="button"
@@ -557,7 +557,7 @@ export class JsonViewer {
                 : this.isDarkMode
                   ? 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-800'
-            } opacity-75 hover:opacity-100 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-none`}
+            } opacity-75 hover:opacity-100 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-hidden`}
             title={this.copied ? 'Copied!' : 'Copy JSON to clipboard'}
             aria-label={this.copied ? 'JSON copied to clipboard' : 'Copy JSON to clipboard'}
             type="button"
@@ -623,14 +623,14 @@ export class JsonViewer {
                       </div>
                     ))}
                   </div>
-                  <pre class={`flex-grow overflow-x-auto p-4 whitespace-pre-wrap ${this.isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+                  <pre class={`grow overflow-x-auto p-4 whitespace-pre-wrap ${this.isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
                     {formattedJson.split('\n').map((line, i) => (
                       <div class="min-h-5" key={`code-${i}`} innerHTML={this.formatCodeLine(line)} />
                     ))}
                   </pre>
                 </div>
               ) : (
-                <pre class="flex-grow overflow-x-auto p-4 whitespace-pre-wrap">
+                <pre class="grow overflow-x-auto p-4 whitespace-pre-wrap">
                   {formattedJson.split('\n').map((line, i) => (
                     <div class="min-h-5" key={`code-${i}`} innerHTML={this.formatCodeLine(line)} />
                   ))}

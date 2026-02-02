@@ -189,7 +189,7 @@ export class PidPagination {
                 Items per page:
               </span>
               <div
-                class={`flex items-center gap-0.5 rounded border ${isDarkMode ? 'border-gray-600 bg-gray-700' : 'border-gray-200 bg-white'} p-0.5`}
+                class={`flex items-center gap-0.5 rounded-sm border ${isDarkMode ? 'border-gray-600 bg-gray-700' : 'border-gray-200 bg-white'} p-0.5`}
                 role="toolbar"
                 aria-labelledby={`${paginationId}-itemsperpage-label`}
               >
@@ -221,14 +221,14 @@ export class PidPagination {
         {/* Right side: Pagination controls - ONLY SHOWN WHEN NEEDED */}
         {needsPagination && (
           <div class="flex items-center">
-            <nav class="isolate inline-flex resize-none -space-x-px rounded-md shadow-sm" aria-label="Pagination" role="navigation">
+            <nav class="isolate inline-flex resize-none -space-x-px rounded-md shadow-xs" aria-label="Pagination" role="navigation">
               {/* Previous button */}
               <button
                 onClick={() => this.handlePageChange(this.currentPage - 1)}
                 disabled={this.currentPage === 0}
                 class={`relative inline-flex resize-none items-center rounded-l-md px-2 py-1.5 ${
                   isDarkMode ? 'text-gray-300 ring-1 ring-gray-600 ring-inset hover:bg-gray-700' : 'text-gray-500 ring-1 ring-gray-300 ring-inset hover:bg-gray-50'
-                } focus:z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50`}
+                } focus:z-20 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50`}
                 aria-label="Previous page"
                 title="Go to previous page"
                 type="button"
@@ -275,10 +275,10 @@ export class PidPagination {
                     onClick={() => this.handlePageChange(pageNum)}
                     class={
                       isCurrentPage
-                        ? 'relative z-10 inline-flex resize-none items-center bg-blue-600 px-2 py-1.5 text-xs font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
+                        ? 'relative z-10 inline-flex resize-none items-center bg-blue-600 px-2 py-1.5 text-xs font-semibold text-white focus:z-20 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
                         : `relative inline-flex resize-none items-center px-2 py-1.5 text-xs ${
                             isDarkMode ? 'text-gray-200 ring-1 ring-gray-600 ring-inset hover:bg-gray-700' : 'text-gray-900 ring-1 ring-gray-300 ring-inset hover:bg-gray-50'
-                          } focus:z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500`
+                          } focus:z-20 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500`
                     }
                     aria-label={`Page ${humanPageNum}`}
                     aria-current={isCurrentPage ? 'page' : undefined}
@@ -296,7 +296,7 @@ export class PidPagination {
                 disabled={this.currentPage >= this.totalPages - 1}
                 class={`relative inline-flex resize-none items-center rounded-r-md px-2 py-1.5 ${
                   isDarkMode ? 'text-gray-300 ring-1 ring-gray-600 ring-inset hover:bg-gray-700' : 'text-gray-500 ring-1 ring-gray-300 ring-inset hover:bg-gray-50'
-                } focus:z-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50`}
+                } focus:z-20 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50`}
                 aria-label="Next page"
                 title="Go to next page"
                 type="button"

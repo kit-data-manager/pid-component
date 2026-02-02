@@ -19,7 +19,7 @@ const meta: Meta = {
       },
     },
     emphasize: {
-      description: 'Whether to emphasize the component with border and shadow',
+      description: 'Whether to emphasize the component with border and shadow-sm',
       control: { type: 'boolean' },
       table: {
         defaultValue: { summary: 'false' },
@@ -209,8 +209,8 @@ export const WithFooterAndResize: Story = {
         <div slot="footer" class="flex items-center justify-between border-t border-gray-200 p-2">
           <span class="text-sm text-gray-500">Footer content</span>
           <div class="flex gap-2">
-            <button class="rounded bg-blue-500 px-3 py-1 text-sm text-white">Action 1</button>
-            <button class="rounded bg-gray-200 px-3 py-1 text-sm text-gray-700">Action 2</button>
+            <button class="rounded-sm bg-blue-500 px-3 py-1 text-sm text-white">Action 1</button>
+            <button class="rounded-sm bg-gray-200 px-3 py-1 text-sm text-gray-700">Action 2</button>
           </div>
         </div>
       </pid-collapsible>
