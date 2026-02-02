@@ -29,6 +29,7 @@ nomodule).
 Include **both** scripts to ensure support for modern browsers (ESM) and legacy browsers:
 
 ```html
+
 <head>
   <script type="module"
           src="https://unpkg.com/@kit-data-manager/pid-component/dist/pid-component/pid-component.esm.js"></script>

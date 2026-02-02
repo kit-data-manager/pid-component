@@ -123,13 +123,11 @@
     "@stencil/core": "^4.42",
     "@tailwindcss/postcss": "^4.1.18",
     "@tempfix/idb": "^8.0.3",
-    "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^5.0.0",
     "@eslint/js": "^9.39.2",
-    "@playwright/test": "^1.58.1",
     "@stencil-community/web-types-output-target": "^1.0.5",
     "@stencil/postcss": "^2.1.0",
     "@stencil/react-output-target": "^1.4.0",
@@ -154,7 +152,6 @@
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "puppeteer": "^24.36.1",
-    "stencil-tailwind-plugin": "^2.0.5",
     "storybook": "^10.2.4",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.54.0",
