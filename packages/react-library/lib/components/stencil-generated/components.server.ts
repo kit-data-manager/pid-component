@@ -6,8 +6,12 @@
 /* eslint-disable */
 
 // @ts-ignore - ignore potential type issues as the project is importing itself
-import * as clientComponents from '@kit-data-manager/pid-component';
-
+import {
+  type PidCollapsibleCustomEvent,
+  type PidDataTableCustomEvent,
+  type PidPaginationCustomEvent,
+  type PidTooltipCustomEvent
+} from '@kit-data-manager/pid-component';
 import {
   ColorHighlight as ColorHighlightElement
 } from '@kit-data-manager/pid-component/dist/components/color-highlight.js';
@@ -26,6 +30,7 @@ import {
   PidPagination as PidPaginationElement
 } from '@kit-data-manager/pid-component/dist/components/pid-pagination.js';
 import { PidTooltip as PidTooltipElement } from '@kit-data-manager/pid-component/dist/components/pid-tooltip.js';
+import * as clientComponents from '@kit-data-manager/react-pid-component';
 import type { EventName, StencilReactComponent } from '@stencil/react-output-target/runtime';
 import {
   createComponent,
@@ -39,174 +44,167 @@ export const serializeShadowRoot: SerializeShadowRootOptions = { default: "decla
 export type ColorHighlightEvents = NonNullable<unknown>;
 
 export const ColorHighlight: StencilReactComponent<ColorHighlightElement, ColorHighlightEvents> = /*@__PURE__*/ createComponent<ColorHighlightElement, ColorHighlightEvents>({
-  tagName: 'color-highlight',
-  properties: { text: 'text' },
-  hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
-  clientModule: clientComponents.ColorHighlight as ReactWebComponent<ColorHighlightElement, ColorHighlightEvents>,
-  serializeShadowRoot,
+    tagName: 'color-highlight',
+    properties: { text: 'text' },
+    hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
+    clientModule: clientComponents.ColorHighlight as ReactWebComponent<ColorHighlightElement, ColorHighlightEvents>,
+    serializeShadowRoot
 });
 
 export type CopyButtonEvents = NonNullable<unknown>;
 
 export const CopyButton: StencilReactComponent<CopyButtonElement, CopyButtonEvents> = /*@__PURE__*/ createComponent<CopyButtonElement, CopyButtonEvents>({
-  tagName: 'copy-button',
-  properties: {
-    value: 'value',
-    label: 'label',
-  },
-  hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
-  clientModule: clientComponents.CopyButton as ReactWebComponent<CopyButtonElement, CopyButtonEvents>,
-  serializeShadowRoot,
+    tagName: 'copy-button',
+    properties: {
+        value: 'value',
+        label: 'label'
+    },
+    hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
+    clientModule: clientComponents.CopyButton as ReactWebComponent<CopyButtonElement, CopyButtonEvents>,
+    serializeShadowRoot
 });
 
 export type JsonViewerEvents = NonNullable<unknown>;
 
 export const JsonViewer: StencilReactComponent<JsonViewerElement, JsonViewerEvents> = /*@__PURE__*/ createComponent<JsonViewerElement, JsonViewerEvents>({
-  tagName: 'json-viewer',
-  properties: {
-    data: 'data',
-    viewMode: 'view-mode',
-    maxHeight: 'max-height',
-    showLineNumbers: 'show-line-numbers',
-    expandAll: 'expand-all',
-    theme: 'theme',
-  },
-  hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
-  clientModule: clientComponents.JsonViewer as ReactWebComponent<JsonViewerElement, JsonViewerEvents>,
-  serializeShadowRoot,
+    tagName: 'json-viewer',
+    properties: {
+        data: 'data',
+        viewMode: 'view-mode',
+        maxHeight: 'max-height',
+        showLineNumbers: 'show-line-numbers',
+        expandAll: 'expand-all',
+        theme: 'theme'
+    },
+    hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
+    clientModule: clientComponents.JsonViewer as ReactWebComponent<JsonViewerElement, JsonViewerEvents>,
+    serializeShadowRoot
 });
 
 export type LocaleVisualizationEvents = NonNullable<unknown>;
 
-export const LocaleVisualization: StencilReactComponent<LocaleVisualizationElement, LocaleVisualizationEvents> = /*@__PURE__*/ createComponent<
-  LocaleVisualizationElement,
-  LocaleVisualizationEvents
->({
-  tagName: 'locale-visualization',
-  properties: {
-    locale: 'locale',
-    showFlag: 'show-flag',
-  },
-  hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
-  clientModule: clientComponents.LocaleVisualization as ReactWebComponent<LocaleVisualizationElement, LocaleVisualizationEvents>,
-  serializeShadowRoot,
+export const LocaleVisualization: StencilReactComponent<LocaleVisualizationElement, LocaleVisualizationEvents> = /*@__PURE__*/ createComponent<LocaleVisualizationElement, LocaleVisualizationEvents>({
+    tagName: 'locale-visualization',
+    properties: {
+        locale: 'locale',
+        showFlag: 'show-flag'
+    },
+    hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
+    clientModule: clientComponents.LocaleVisualization as ReactWebComponent<LocaleVisualizationElement, LocaleVisualizationEvents>,
+    serializeShadowRoot
 });
 
 export type PidActionsEvents = NonNullable<unknown>;
 
 export const PidActions: StencilReactComponent<PidActionsElement, PidActionsEvents> = /*@__PURE__*/ createComponent<PidActionsElement, PidActionsEvents>({
-  tagName: 'pid-actions',
-  properties: {
-    actions: 'actions',
-    actionsId: 'actions-id',
-    darkMode: 'dark-mode',
-  },
-  hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
-  clientModule: clientComponents.PidActions as ReactWebComponent<PidActionsElement, PidActionsEvents>,
-  serializeShadowRoot,
+    tagName: 'pid-actions',
+    properties: {
+        actionsId: 'actions-id',
+        darkMode: 'dark-mode'
+    },
+    hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
+    clientModule: clientComponents.PidActions as ReactWebComponent<PidActionsElement, PidActionsEvents>,
+    serializeShadowRoot
 });
 
 export type PidCollapsibleEvents = {
-    onCollapsibleToggle: EventName<CustomEvent<boolean>>,
-    onContentHeightChange: EventName<CustomEvent<{ maxHeight: number }>>
+    onCollapsibleToggle: EventName<PidCollapsibleCustomEvent<boolean>>,
+    onContentHeightChange: EventName<PidCollapsibleCustomEvent<{ maxHeight: number }>>
 };
 
 export const PidCollapsible: StencilReactComponent<PidCollapsibleElement, PidCollapsibleEvents> = /*@__PURE__*/ createComponent<PidCollapsibleElement, PidCollapsibleEvents>({
-  tagName: 'pid-collapsible',
-  properties: {
-    open: 'open',
-    emphasize: 'emphasize',
-    darkMode: 'dark-mode',
-    initialWidth: 'initial-width',
-    initialHeight: 'initial-height',
-    lineHeight: 'line-height',
-    showFooter: 'show-footer',
-  },
-  hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
-  clientModule: clientComponents.PidCollapsible as ReactWebComponent<PidCollapsibleElement, PidCollapsibleEvents>,
-  serializeShadowRoot,
+    tagName: 'pid-collapsible',
+    properties: {
+        open: 'open',
+        emphasize: 'emphasize',
+        darkMode: 'dark-mode',
+        initialWidth: 'initial-width',
+        initialHeight: 'initial-height',
+        lineHeight: 'line-height',
+        showFooter: 'show-footer'
+    },
+    hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
+    clientModule: clientComponents.PidCollapsible as ReactWebComponent<PidCollapsibleElement, PidCollapsibleEvents>,
+    serializeShadowRoot
 });
 
 export type PidComponentEvents = NonNullable<unknown>;
 
 export const PidComponent: StencilReactComponent<PidComponentElement, PidComponentEvents> = /*@__PURE__*/ createComponent<PidComponentElement, PidComponentEvents>({
-  tagName: 'pid-component',
-  properties: {
-    value: 'value',
-    settings: 'settings',
-    openByDefault: 'open-by-default',
-    amountOfItems: 'amount-of-items',
-    levelOfSubcomponents: 'level-of-subcomponents',
-    currentLevelOfSubcomponents: 'current-level-of-subcomponents',
-    hideSubcomponents: 'hide-subcomponents',
-    emphasizeComponent: 'emphasize-component',
-    showTopLevelCopy: 'show-top-level-copy',
-    defaultTTL: 'default-t-t-l',
-    width: 'width',
-    height: 'height',
-    darkMode: 'dark-mode',
-  },
-  hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
-  clientModule: clientComponents.PidComponent as ReactWebComponent<PidComponentElement, PidComponentEvents>,
-  serializeShadowRoot,
+    tagName: 'pid-component',
+    properties: {
+        value: 'value',
+        settings: 'settings',
+        openByDefault: 'open-by-default',
+        amountOfItems: 'amount-of-items',
+        levelOfSubcomponents: 'level-of-subcomponents',
+        currentLevelOfSubcomponents: 'current-level-of-subcomponents',
+        hideSubcomponents: 'hide-subcomponents',
+        emphasizeComponent: 'emphasize-component',
+        showTopLevelCopy: 'show-top-level-copy',
+        defaultTTL: 'default-t-t-l',
+        width: 'width',
+        height: 'height',
+        darkMode: 'dark-mode'
+    },
+    hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
+    clientModule: clientComponents.PidComponent as ReactWebComponent<PidComponentElement, PidComponentEvents>,
+    serializeShadowRoot
 });
 
 export type PidDataTableEvents = {
-    onPageChange: EventName<CustomEvent<number>>,
-    onItemsPerPageChange: EventName<CustomEvent<number>>
+    onPageChange: EventName<PidDataTableCustomEvent<number>>,
+    onItemsPerPageChange: EventName<PidDataTableCustomEvent<number>>
 };
 
 export const PidDataTable: StencilReactComponent<PidDataTableElement, PidDataTableEvents> = /*@__PURE__*/ createComponent<PidDataTableElement, PidDataTableEvents>({
-  tagName: 'pid-data-table',
-  properties: {
-    items: 'items',
-    itemsPerPage: 'items-per-page',
-    currentPage: 'current-page',
-    pageSizes: 'page-sizes',
-    loadSubcomponents: 'load-subcomponents',
-    hideSubcomponents: 'hide-subcomponents',
-    currentLevelOfSubcomponents: 'current-level-of-subcomponents',
-    levelOfSubcomponents: 'level-of-subcomponents',
-    settings: 'settings',
-    darkMode: 'dark-mode',
-  },
-  hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
-  clientModule: clientComponents.PidDataTable as ReactWebComponent<PidDataTableElement, PidDataTableEvents>,
-  serializeShadowRoot,
+    tagName: 'pid-data-table',
+    properties: {
+        itemsPerPage: 'items-per-page',
+        currentPage: 'current-page',
+        loadSubcomponents: 'load-subcomponents',
+        hideSubcomponents: 'hide-subcomponents',
+        currentLevelOfSubcomponents: 'current-level-of-subcomponents',
+        levelOfSubcomponents: 'level-of-subcomponents',
+        settings: 'settings',
+        darkMode: 'dark-mode'
+    },
+    hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
+    clientModule: clientComponents.PidDataTable as ReactWebComponent<PidDataTableElement, PidDataTableEvents>,
+    serializeShadowRoot
 });
 
 export type PidPaginationEvents = {
-    onPageChange: EventName<CustomEvent<number>>,
-    onItemsPerPageChange: EventName<CustomEvent<number>>
+    onPageChange: EventName<PidPaginationCustomEvent<number>>,
+    onItemsPerPageChange: EventName<PidPaginationCustomEvent<number>>
 };
 
 export const PidPagination: StencilReactComponent<PidPaginationElement, PidPaginationEvents> = /*@__PURE__*/ createComponent<PidPaginationElement, PidPaginationEvents>({
-  tagName: 'pid-pagination',
-  properties: {
-    currentPage: 'current-page',
-    totalItems: 'total-items',
-    itemsPerPage: 'items-per-page',
-    pageSizes: 'page-sizes',
-    showItemsPerPageControl: 'show-items-per-page-control',
-    darkMode: 'dark-mode',
-  },
-  hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
-  clientModule: clientComponents.PidPagination as ReactWebComponent<PidPaginationElement, PidPaginationEvents>,
-  serializeShadowRoot,
+    tagName: 'pid-pagination',
+    properties: {
+        currentPage: 'current-page',
+        totalItems: 'total-items',
+        itemsPerPage: 'items-per-page',
+        showItemsPerPageControl: 'show-items-per-page-control',
+        darkMode: 'dark-mode'
+    },
+    hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
+    clientModule: clientComponents.PidPagination as ReactWebComponent<PidPaginationElement, PidPaginationEvents>,
+    serializeShadowRoot
 });
 
-export type PidTooltipEvents = { onTooltipExpansionChange: EventName<CustomEvent<{ expand: boolean; requiredHeight: number }>> };
+export type PidTooltipEvents = { onTooltipExpansionChange: EventName<PidTooltipCustomEvent<{ expand: boolean; requiredHeight: number }>> };
 
 export const PidTooltip: StencilReactComponent<PidTooltipElement, PidTooltipEvents> = /*@__PURE__*/ createComponent<PidTooltipElement, PidTooltipEvents>({
-  tagName: 'pid-tooltip',
-  properties: {
-    text: 'text',
-    position: 'position',
-    maxWidth: 'max-width',
-    maxHeight: 'max-height',
-    fitContent: 'fit-content',
-  },
-  hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
-  clientModule: clientComponents.PidTooltip as ReactWebComponent<PidTooltipElement, PidTooltipEvents>,
-  serializeShadowRoot,
+    tagName: 'pid-tooltip',
+    properties: {
+        text: 'text',
+        position: 'position',
+        maxWidth: 'max-width',
+        maxHeight: 'max-height',
+        fitContent: 'fit-content'
+    },
+    hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
+    clientModule: clientComponents.PidTooltip as ReactWebComponent<PidTooltipElement, PidTooltipEvents>,
+    serializeShadowRoot
 });

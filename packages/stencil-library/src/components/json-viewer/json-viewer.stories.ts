@@ -163,7 +163,7 @@ export const Default: Story = {
 
     // Create container
     const container = document.createElement('div');
-    container.className = 'p-4 border rounded';
+    container.className = 'p-4 border rounded-sm';
     container.appendChild(jsonViewer);
 
     return container;

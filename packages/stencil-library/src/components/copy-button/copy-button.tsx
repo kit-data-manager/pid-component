@@ -144,7 +144,7 @@ export class CopyButton {
             this.copied ? (isDarkMode ? 'bg-green-700' : 'bg-green-200') : isDarkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-white hover:bg-blue-200'
           } relative z-30 max-h-min flex-none items-center rounded-md border ${
             isDarkMode ? 'border-gray-600 text-gray-200 hover:text-white' : 'border-slate-500 text-slate-800 hover:text-slate-900'
-          } px-2 py-0.5 font-mono font-medium transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-none`}
+          } px-2 py-0.5 font-mono font-medium transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-hidden`}
           onClick={e => this.copyValue(e)}
           aria-label={ariaLabel}
           title={ariaLabel}

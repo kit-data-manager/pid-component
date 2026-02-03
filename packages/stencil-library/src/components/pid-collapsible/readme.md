@@ -17,7 +17,7 @@ A collapsible component that can be toggled between expanded and collapsed state
 ```html
 <pid-collapsible open="false" emphasize="true">
   <span slot="summary">Collapsible Title</span>
-  <button slot="summary-actions" class="bg-blue-500 text-white px-2 py-1 rounded">Action</button>
+  <button slot="summary-actions" class="bg-blue-500 text-white px-2 py-1 rounded-sm">Action</button>
   <div>
     <p>This is the content of the collapsible component.</p>
     <p>It can contain any HTML content.</p>

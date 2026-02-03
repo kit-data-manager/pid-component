@@ -1,5 +1,5 @@
-import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
+import { Meta, StoryObj } from '@storybook/web-components-vite';
 
 /**
  * The pid-component is a versatile component for displaying and interacting with
@@ -74,7 +74,7 @@ const meta: Meta = {
       },
     },
     emphasizeComponent: {
-      description: 'Determines whether components should be emphasized towards their surrounding by border and shadow',
+      description: 'Determines whether components should be emphasized towards their surrounding by border and shadow-sm',
       control: { type: 'boolean' },
       table: {
         defaultValue: { summary: 'true' },

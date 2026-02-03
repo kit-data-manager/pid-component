@@ -1,5 +1,5 @@
 import '../src/tailwind.css';
-import { defineCustomElements } from '../loader';
+import { defineCustomElements } from '../dist/loader';
 
 defineCustomElements();
 

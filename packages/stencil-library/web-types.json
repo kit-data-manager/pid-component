@@ -1,0 +1,828 @@
+{
+  "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
+  "description-markup": "markdown",
+  "name": "@kit-data-manager/pid-component",
+  "version": "0.2.3",
+  "contributions": {
+    "html": {
+      "elements": [
+        {
+          "name": "color-highlight",
+          "deprecated": false,
+          "description": "",
+          "source": {
+            "module": "src/components/color-highlight/color-highlight.tsx",
+            "symbol": "ColorHighlight"
+          },
+          "attributes": [
+            {
+              "name": "text",
+              "deprecated": false,
+              "description": "The text to highlight.",
+              "required": true,
+              "default": "",
+              "priority": "high"
+            }
+          ],
+          "slots": [],
+          "css": {}
+        },
+        {
+          "name": "copy-button",
+          "deprecated": false,
+          "description": "",
+          "source": {
+            "module": "src/components/copy-button/copy-button.tsx",
+            "symbol": "CopyButton"
+          },
+          "attributes": [
+            {
+              "name": "value",
+              "deprecated": false,
+              "description": "The value to copy to the clipboard.",
+              "required": true,
+              "default": "",
+              "priority": "high"
+            },
+            {
+              "name": "label",
+              "deprecated": false,
+              "description": "Optional custom label for the button.\nIf not provided, a default label will be used.",
+              "required": false,
+              "default": "",
+              "priority": "high"
+            }
+          ],
+          "slots": [],
+          "css": {}
+        },
+        {
+          "name": "json-viewer",
+          "deprecated": false,
+          "description": "",
+          "source": {
+            "module": "src/components/json-viewer/json-viewer.tsx",
+            "symbol": "JsonViewer"
+          },
+          "attributes": [
+            {
+              "name": "data",
+              "deprecated": false,
+              "description": "The JSON data to display. Can be a JSON string or a JavaScript object.",
+              "required": false,
+              "default": "",
+              "priority": "high"
+            },
+            {
+              "name": "view-mode",
+              "deprecated": false,
+              "description": "Initial view mode for the JSON data. Can be 'tree' or 'code'.",
+              "required": false,
+              "default": "'tree'",
+              "priority": "high"
+            },
+            {
+              "name": "max-height",
+              "deprecated": false,
+              "description": "Maximum height of the viewer in pixels. Set to 0 for no limit.",
+              "required": false,
+              "default": "500",
+              "priority": "high"
+            },
+            {
+              "name": "show-line-numbers",
+              "deprecated": false,
+              "description": "Set to true to enable line numbers in code view.",
+              "required": false,
+              "default": "true",
+              "priority": "high"
+            },
+            {
+              "name": "expand-all",
+              "deprecated": false,
+              "description": "Set to true to open all nodes in tree view initially.",
+              "required": false,
+              "default": "false",
+              "priority": "high"
+            },
+            {
+              "name": "theme",
+              "deprecated": false,
+              "description": "Theme for syntax highlighting. Options: 'light', 'dark', or 'system'.\nSystem will use the user's system preference.",
+              "required": false,
+              "default": "'system'",
+              "priority": "high"
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Content is placed inside the component as a fallback if input data is invalid"
+            }
+          ],
+          "css": {}
+        },
+        {
+          "name": "locale-visualization",
+          "deprecated": false,
+          "description": "",
+          "source": {
+            "module": "src/components/locale-vizualization/locale-visualization.tsx",
+            "symbol": "LocaleVisualization"
+          },
+          "attributes": [
+            {
+              "name": "locale",
+              "deprecated": false,
+              "description": "The locale to visualize.",
+              "required": true,
+              "default": "",
+              "priority": "high"
+            },
+            {
+              "name": "show-flag",
+              "deprecated": false,
+              "description": "Whether to show the flag of the region.",
+              "required": false,
+              "default": "true",
+              "priority": "high"
+            }
+          ],
+          "slots": [],
+          "css": {}
+        },
+        {
+          "name": "pid-actions",
+          "deprecated": false,
+          "description": "",
+          "source": {
+            "module": "src/components/pid-actions/pid-actions.tsx",
+            "symbol": "PidActions"
+          },
+          "attributes": [
+            {
+              "name": "actions-id",
+              "deprecated": false,
+              "description": "Optional ID for the actions container for ARIA references",
+              "required": false,
+              "default": "",
+              "priority": "high"
+            },
+            {
+              "name": "dark-mode",
+              "deprecated": false,
+              "description": "The dark mode setting for the component\nOptions: \"light\", \"dark\", \"system\"\nDefault: \"system\"",
+              "required": false,
+              "default": "'system'",
+              "priority": "high"
+            }
+          ],
+          "slots": [],
+          "css": {}
+        },
+        {
+          "name": "pid-collapsible",
+          "deprecated": false,
+          "description": "Component for creating collapsible/expandable content sections\nwith resize capability and cross-browser compatibility",
+          "source": {
+            "module": "src/components/pid-collapsible/pid-collapsible.tsx",
+            "symbol": "PidCollapsible"
+          },
+          "attributes": [
+            {
+              "name": "open",
+              "deprecated": false,
+              "description": "Whether the collapsible is open",
+              "required": false,
+              "default": "false",
+              "priority": "high"
+            },
+            {
+              "name": "emphasize",
+              "deprecated": false,
+              "description": "Whether to emphasize the component with border and shadow",
+              "required": false,
+              "default": "false",
+              "priority": "high"
+            },
+            {
+              "name": "dark-mode",
+              "deprecated": false,
+              "description": "The dark mode setting for the component\nOptions: \"light\", \"dark\", \"system\"\nDefault: \"system\"",
+              "required": false,
+              "default": "'system'",
+              "priority": "high"
+            },
+            {
+              "name": "initial-width",
+              "deprecated": false,
+              "description": "Initial width when expanded",
+              "required": false,
+              "default": "",
+              "priority": "high"
+            },
+            {
+              "name": "initial-height",
+              "deprecated": false,
+              "description": "Initial height when expanded",
+              "required": false,
+              "default": "",
+              "priority": "high"
+            },
+            {
+              "name": "line-height",
+              "deprecated": false,
+              "description": "Line height for collapsed state",
+              "required": false,
+              "default": "24",
+              "priority": "high"
+            },
+            {
+              "name": "show-footer",
+              "deprecated": false,
+              "description": "Whether to show the footer section",
+              "required": false,
+              "default": "false",
+              "priority": "high"
+            }
+          ],
+          "slots": [],
+          "css": {}
+        },
+        {
+          "name": "pid-component",
+          "deprecated": false,
+          "description": "",
+          "source": {
+            "module": "src/components/pid-component/pid-component.tsx",
+            "symbol": "PidComponent"
+          },
+          "attributes": [
+            {
+              "name": "value",
+              "deprecated": false,
+              "description": "The value to parse, evaluate and render.",
+              "required": false,
+              "default": "",
+              "priority": "high"
+            },
+            {
+              "name": "settings",
+              "deprecated": false,
+              "description": "A stringified JSON object containing settings for this component.\nThe resulting object is passed to every subcomponent, so that every component has the same settings.\nValues and the according type are defined by the components themselves.\n(optional)\n\nSchema:\n```typescript\n{\n type: string,\n values: {\n  name: string,\n  value: any\n }[]\n}[]\n```",
+              "required": false,
+              "default": "'[]'",
+              "priority": "high"
+            },
+            {
+              "name": "open-by-default",
+              "deprecated": false,
+              "description": "Determines whether the component is open or not by default.\n(optional)",
+              "required": false,
+              "default": "",
+              "priority": "high"
+            },
+            {
+              "name": "amount-of-items",
+              "deprecated": false,
+              "description": "The number of items to show in the table per page.\nDefaults to 10.\n(optional)",
+              "required": false,
+              "default": "10",
+              "priority": "high"
+            },
+            {
+              "name": "level-of-subcomponents",
+              "deprecated": false,
+              "description": "The total number of levels of subcomponents to show.\nDefaults to 1.\n(optional)",
+              "required": false,
+              "default": "1",
+              "priority": "high"
+            },
+            {
+              "name": "current-level-of-subcomponents",
+              "deprecated": false,
+              "description": "The current level of subcomponents.\nDefaults to 0.\n(optional)",
+              "required": false,
+              "default": "0",
+              "priority": "high"
+            },
+            {
+              "name": "hide-subcomponents",
+              "deprecated": false,
+              "description": "Determines whether subcomponents should generally be shown or not.\nIf set to true, the component won't show any subcomponents.\nIf not set, the component will show subcomponents\nif the current level of subcomponents is not the total level of subcomponents or greater.\n(optional)",
+              "required": false,
+              "default": "",
+              "priority": "high"
+            },
+            {
+              "name": "emphasize-component",
+              "deprecated": false,
+              "description": "Determines whether components should be emphasized towards their surrounding by border and shadow.\nIf set to true, border and shadows will be shown around the component.\nIt not set, the component won't be surrounded by border and shadow.\n(optional)",
+              "required": false,
+              "default": "true",
+              "priority": "high"
+            },
+            {
+              "name": "show-top-level-copy",
+              "deprecated": false,
+              "description": "Determines whether on the top level the copy button is shown.\nIf set to true, the copy button is shown also on the top level.\nIt not set, the copy button is only shown for sub-components.\n(optional)",
+              "required": false,
+              "default": "true",
+              "priority": "high"
+            },
+            {
+              "name": "default-t-t-l",
+              "deprecated": false,
+              "description": "Determines the default time to live (TTL) for entries in the IndexedDB.\nDefaults to 24 hours.\nUnits are in milliseconds.\n(optional)",
+              "required": false,
+              "default": "24 * 60 * 60 * 1000",
+              "priority": "high"
+            },
+            {
+              "name": "width",
+              "deprecated": false,
+              "description": "Initial width of the component (e.g. '500px', '50%').\nIf not set, defaults to 500px on large screens, 400px on medium screens, and 300px on small screens.",
+              "required": false,
+              "default": "",
+              "priority": "high"
+            },
+            {
+              "name": "height",
+              "deprecated": false,
+              "description": "Initial height of the component (e.g. '300px', '50vh').\nIf not set, defaults to 300px.",
+              "required": false,
+              "default": "",
+              "priority": "high"
+            },
+            {
+              "name": "dark-mode",
+              "deprecated": false,
+              "description": "The dark mode setting for the component\nOptions: \"light\", \"dark\", \"system\"\nDefault: \"system\"",
+              "required": false,
+              "default": "'system'",
+              "priority": "high"
+            }
+          ],
+          "slots": [],
+          "css": {}
+        },
+        {
+          "name": "pid-data-table",
+          "deprecated": false,
+          "description": "",
+          "source": {
+            "module": "src/components/pid-data-table/pid-data-table.tsx",
+            "symbol": "PidDataTable"
+          },
+          "attributes": [
+            {
+              "name": "items-per-page",
+              "deprecated": false,
+              "description": "Number of items to show per page",
+              "required": false,
+              "default": "10",
+              "priority": "high"
+            },
+            {
+              "name": "current-page",
+              "deprecated": false,
+              "description": "Current page (0-based index)",
+              "required": false,
+              "default": "0",
+              "priority": "high"
+            },
+            {
+              "name": "load-subcomponents",
+              "deprecated": false,
+              "description": "Whether to load subcomponents",
+              "required": false,
+              "default": "false",
+              "priority": "high"
+            },
+            {
+              "name": "hide-subcomponents",
+              "deprecated": false,
+              "description": "Whether to hide subcomponents",
+              "required": false,
+              "default": "false",
+              "priority": "high"
+            },
+            {
+              "name": "current-level-of-subcomponents",
+              "deprecated": false,
+              "description": "Current level of subcomponents",
+              "required": false,
+              "default": "0",
+              "priority": "high"
+            },
+            {
+              "name": "level-of-subcomponents",
+              "deprecated": false,
+              "description": "Total level of subcomponents",
+              "required": false,
+              "default": "1",
+              "priority": "high"
+            },
+            {
+              "name": "settings",
+              "deprecated": false,
+              "description": "Settings to pass to subcomponents",
+              "required": false,
+              "default": "'[]'",
+              "priority": "high"
+            },
+            {
+              "name": "dark-mode",
+              "deprecated": false,
+              "description": "The dark mode setting for the component\nOptions: \"light\", \"dark\", \"system\"\nDefault: \"system\"",
+              "required": false,
+              "default": "'system'",
+              "priority": "high"
+            }
+          ],
+          "slots": [],
+          "css": {}
+        },
+        {
+          "name": "pid-pagination",
+          "deprecated": false,
+          "description": "",
+          "source": {
+            "module": "src/components/pid-pagination/pid-pagination.tsx",
+            "symbol": "PidPagination"
+          },
+          "attributes": [
+            {
+              "name": "current-page",
+              "deprecated": false,
+              "description": "Current page (0-based index)",
+              "required": false,
+              "default": "0",
+              "priority": "high"
+            },
+            {
+              "name": "total-items",
+              "deprecated": false,
+              "description": "Total number of items",
+              "required": false,
+              "default": "0",
+              "priority": "high"
+            },
+            {
+              "name": "items-per-page",
+              "deprecated": false,
+              "description": "Number of items per page",
+              "required": false,
+              "default": "10",
+              "priority": "high"
+            },
+            {
+              "name": "show-items-per-page-control",
+              "deprecated": false,
+              "description": "Whether to show the items per page control",
+              "required": false,
+              "default": "true",
+              "priority": "high"
+            },
+            {
+              "name": "dark-mode",
+              "deprecated": false,
+              "description": "The dark mode setting for the component\nOptions: \"light\", \"dark\", \"system\"\nDefault: \"system\"",
+              "required": false,
+              "default": "'system'",
+              "priority": "high"
+            }
+          ],
+          "slots": [],
+          "css": {}
+        },
+        {
+          "name": "pid-tooltip",
+          "deprecated": false,
+          "description": "",
+          "source": {
+            "module": "src/components/pid-tooltip/pid-tooltip.tsx",
+            "symbol": "PidTooltip"
+          },
+          "attributes": [
+            {
+              "name": "text",
+              "deprecated": false,
+              "description": "The text to display in the tooltip",
+              "required": true,
+              "default": "",
+              "priority": "high"
+            },
+            {
+              "name": "position",
+              "deprecated": false,
+              "description": "The preferred position of the tooltip (top or bottom)",
+              "required": false,
+              "default": "'top'",
+              "priority": "high"
+            },
+            {
+              "name": "max-width",
+              "deprecated": false,
+              "description": "The maximum width of the tooltip",
+              "required": false,
+              "default": "'250px'",
+              "priority": "high"
+            },
+            {
+              "name": "max-height",
+              "deprecated": false,
+              "description": "The maximum height of the tooltip",
+              "required": false,
+              "default": "'150px'",
+              "priority": "high"
+            },
+            {
+              "name": "fit-content",
+              "deprecated": false,
+              "description": "Whether the tooltip should fit its content height exactly",
+              "required": false,
+              "default": "true",
+              "priority": "high"
+            }
+          ],
+          "slots": [],
+          "css": {}
+        }
+      ]
+    },
+    "js": {
+      "events": [
+        {
+          "events": []
+        },
+        {
+          "events": []
+        },
+        {
+          "events": []
+        },
+        {
+          "events": []
+        },
+        {
+          "events": []
+        },
+        {
+          "events": [
+            {
+              "name": "collapsibleToggle",
+              "description": "Event emitted when the collapsible is toggled"
+            },
+            {
+              "name": "contentHeightChange",
+              "description": "Event emitted when content dimensions need to be recalculated\nUseful for pagination to ensure proper height"
+            }
+          ]
+        },
+        {
+          "events": []
+        },
+        {
+          "events": [
+            {
+              "name": "pageChange",
+              "description": "Event emitted when page changes"
+            },
+            {
+              "name": "itemsPerPageChange",
+              "description": "Event emitted when items per page changes"
+            }
+          ]
+        },
+        {
+          "events": [
+            {
+              "name": "pageChange",
+              "description": "Event emitted when page changes"
+            },
+            {
+              "name": "itemsPerPageChange",
+              "description": "Event emitted when items per page changes"
+            }
+          ]
+        },
+        {
+          "events": [
+            {
+              "name": "tooltipExpansionChange",
+              "description": "Event emitted when tooltip requires row expansion"
+            }
+          ]
+        }
+      ],
+      "properties": [
+        {
+          "properties": [
+            {
+              "name": "text"
+            }
+          ]
+        },
+        {
+          "properties": [
+            {
+              "name": "value"
+            },
+            {
+              "name": "label"
+            }
+          ]
+        },
+        {
+          "properties": [
+            {
+              "name": "data"
+            },
+            {
+              "name": "viewMode"
+            },
+            {
+              "name": "maxHeight"
+            },
+            {
+              "name": "showLineNumbers"
+            },
+            {
+              "name": "expandAll"
+            },
+            {
+              "name": "theme"
+            }
+          ]
+        },
+        {
+          "properties": [
+            {
+              "name": "locale"
+            },
+            {
+              "name": "showFlag"
+            }
+          ]
+        },
+        {
+          "properties": [
+            {
+              "name": "actions"
+            },
+            {
+              "name": "actionsId"
+            },
+            {
+              "name": "darkMode"
+            }
+          ]
+        },
+        {
+          "properties": [
+            {
+              "name": "open"
+            },
+            {
+              "name": "emphasize"
+            },
+            {
+              "name": "darkMode"
+            },
+            {
+              "name": "initialWidth"
+            },
+            {
+              "name": "initialHeight"
+            },
+            {
+              "name": "lineHeight"
+            },
+            {
+              "name": "showFooter"
+            }
+          ]
+        },
+        {
+          "properties": [
+            {
+              "name": "value"
+            },
+            {
+              "name": "settings"
+            },
+            {
+              "name": "openByDefault"
+            },
+            {
+              "name": "amountOfItems"
+            },
+            {
+              "name": "levelOfSubcomponents"
+            },
+            {
+              "name": "currentLevelOfSubcomponents"
+            },
+            {
+              "name": "hideSubcomponents"
+            },
+            {
+              "name": "emphasizeComponent"
+            },
+            {
+              "name": "showTopLevelCopy"
+            },
+            {
+              "name": "defaultTTL"
+            },
+            {
+              "name": "width"
+            },
+            {
+              "name": "height"
+            },
+            {
+              "name": "darkMode"
+            }
+          ]
+        },
+        {
+          "properties": [
+            {
+              "name": "items"
+            },
+            {
+              "name": "itemsPerPage"
+            },
+            {
+              "name": "currentPage"
+            },
+            {
+              "name": "pageSizes"
+            },
+            {
+              "name": "loadSubcomponents"
+            },
+            {
+              "name": "hideSubcomponents"
+            },
+            {
+              "name": "currentLevelOfSubcomponents"
+            },
+            {
+              "name": "levelOfSubcomponents"
+            },
+            {
+              "name": "settings"
+            },
+            {
+              "name": "darkMode"
+            }
+          ]
+        },
+        {
+          "properties": [
+            {
+              "name": "currentPage"
+            },
+            {
+              "name": "totalItems"
+            },
+            {
+              "name": "itemsPerPage"
+            },
+            {
+              "name": "pageSizes"
+            },
+            {
+              "name": "showItemsPerPageControl"
+            },
+            {
+              "name": "darkMode"
+            }
+          ]
+        },
+        {
+          "properties": [
+            {
+              "name": "text"
+            },
+            {
+              "name": "position"
+            },
+            {
+              "name": "maxWidth"
+            },
+            {
+              "name": "maxHeight"
+            },
+            {
+              "name": "fitContent"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

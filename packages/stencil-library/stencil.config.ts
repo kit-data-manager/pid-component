@@ -1,10 +1,25 @@
 import { Config } from '@stencil/core';
-import tailwind, { tailwindHMR } from 'stencil-tailwind-plugin';
 import { reactOutputTarget } from '@stencil/react-output-target';
+import { webTypesOutputTarget } from '@stencil-community/web-types-output-target';
+import { postcss } from '@stencil/postcss';
+import tailwindcss from '@tailwindcss/postcss';
+import cssnanoPlugin from 'cssnano';
+
+const postcssOptions = {
+  plugins: [
+    tailwindcss(),
+    cssnanoPlugin()
+  ]
+}
 
 export const config: Config = {
   namespace: 'pid-component',
+  // globalStyle: 'src/tailwind.css',
+  buildEs5: true,
   outputTargets: [
+    {
+      type: 'dist'
+    },
     {
       type: 'dist-hydrate-script',
       dir: './hydrate',
@@ -12,12 +27,8 @@ export const config: Config = {
     reactOutputTarget({
       outDir: '../react-library/lib/components/stencil-generated/',
       hydrateModule: '@kit-data-manager/pid-component/hydrate',
-      clientModule: '@kit-data-manager/pid-component',
+      clientModule: '@kit-data-manager/react-pid-component',
     }),
-    {
-      type: 'dist',
-      esmLoaderPath: '../loader',
-    },
     {
       type: 'dist-custom-elements',
       externalRuntime: false,
@@ -28,17 +39,22 @@ export const config: Config = {
     {
       type: 'www',
     },
+    webTypesOutputTarget(),
   ],
   testing: {
     browserHeadless: true,
   },
-  plugins: [tailwind(), tailwindHMR()],
+  plugins:[
+    postcss(postcssOptions),
+  ],
+  sourceMap: true,
   extras: {
     enableImportInjection: true,
+    experimentalSlotFixes: true
   },
   preamble:
     '\n' +
-    'Copyright 2024 Karlsruhe Institute of Technology.\n' +
+    'Copyright 2024-2026 Karlsruhe Institute of Technology.\n' +
     '\n' +
     'Licensed under the Apache License, Version 2.0 (the "License");\n' +
     'you may not use this file except in compliance with the License.\n' +

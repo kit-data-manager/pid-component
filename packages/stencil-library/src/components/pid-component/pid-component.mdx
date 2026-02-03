@@ -14,13 +14,20 @@ By default, it is set to 1, which means that it will only render the first level
 You can prohibit unfolding of the component by setting the `current-level-of-subcomponents` to the same value as the `level-of-subcomponents` property.
 
 You can find the source code of the component [on GitHub](https://github.com/kit-data-manager/pid-component).
-To import the component into your HTML page, use the following snippet:
+To use the component, import the [npm-package](https://www.npmjs.com/package/@kit-data-manager/pid-component)
+via [unpkg](https://unpkg.com/).
+Note that two scripts are provided: one for modern browsers (type="module") and a fallback for older browsers (
+nomodule).
+Include **both** scripts to ensure support for modern browsers (ESM) and legacy browsers:
 
 ```html
 <head>
-  <script type="module" src="https://unpkg.com/@kit-data-manager/pid-component"></script>
+  <script type="module"
+          src="https://unpkg.com/@kit-data-manager/pid-component/dist/pid-component/pid-component.esm.js"></script>
+  <script nomodule src="https://unpkg.com/@kit-data-manager/pid-component/dist/pid-component/pid-component.js"></script>
 </head>
 ```
+
 
 **Please notice that you must use the hyphenated version of an attribute when using the component directly in HTML (e.g. `currentLevelOfSubcomponents` -> `current-level-of-subcomponents`).
 When using inside Stencil or with JSX/TSX syntax, you must use the camelCase version.**

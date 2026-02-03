@@ -1,17 +1,17 @@
 {
   "name": "pid-component",
   "private": true,
-  "version": "0.2.2",
+  "version": "0.2.3",
   "workspaces": [
     "packages/*"
   ],
   "devDependencies": {
-    "@types/node": "^24.2.1",
-    "lerna": "^8.2.3",
-    "typescript": "^5.9.2"
+    "@types/node": "^25.0.10",
+    "lerna": "^9.0.3",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
-    "vite": "7.1.11"
+    "vite": "7.3.1"
   },
   "scripts": {
     "build": "lerna run build"
@@ -77,5 +77,6 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/kit-data-manager/pid-component"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

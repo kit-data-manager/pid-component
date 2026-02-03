@@ -315,7 +315,9 @@ export class PidCollapsible {
             const optimalHeight = dimensions.contentHeight + CONSTANTS.PADDING_HEIGHT + (this.showFooter ? CONSTANTS.FOOTER_HEIGHT : 0);
 
             // If initial width/height is specified, prefer that for first calculation
-            if (!this.currentWidth || this.currentWidth === 'auto') {
+            if (this.lastExpandedWidth) {
+              this.currentWidth = this.lastExpandedWidth;
+            } else if (!this.currentWidth || this.currentWidth === 'auto') {
               // Default to 75% width if no initial width is provided
               this.currentWidth = this.initialWidth || '75%';
             } else if (!this.initialWidth) {
@@ -583,7 +585,7 @@ export class PidCollapsible {
    * Calculates content dimensions for optimal sizing
    */
   private calculateContentDimensions() {
-    const contentElement = this.el.querySelector('.flex-grow');
+    const contentElement = this.el.querySelector('.grow');
     const contentWidth = contentElement?.scrollWidth || CONSTANTS.MIN_WIDTH;
     const contentHeight = contentElement?.scrollHeight || CONSTANTS.MIN_HEIGHT;
 
@@ -603,17 +605,38 @@ export class PidCollapsible {
     // Add a rendering optimization class during dimension updates
     this.el.classList.add('resizing');
 
-    const { contentWidth, contentHeight, maxWidth, maxHeight } = dimensions;
+    const {contentHeight, maxHeight} = dimensions;
 
-    // Always set exact content dimensions to prevent resizing beyond content
-    // Ensure width is within minimum and maximum bounds
-    const optimalWidth = Math.min(Math.max(contentWidth + CONSTANTS.PADDING_WIDTH, CONSTANTS.MIN_WIDTH), maxWidth);
-    this.currentWidth = `${optimalWidth}px`;
+    // Calculate optimal width based on content
+    // const optimalWidth = Math.min(Math.max(contentWidth + CONSTANTS.PADDING_WIDTH, CONSTANTS.MIN_WIDTH), maxWidth);
+
+    // Determine width to apply
+    if (this.lastExpandedWidth) {
+      // Restore user's last resized width
+      this.currentWidth = this.lastExpandedWidth;
+    } else if (this.initialWidth) {
+      // Use configured initial width
+      this.currentWidth = this.initialWidth;
+    } else {
+      // Default behavior: use optimal width but don't exceed typical screen bounds
+      // If no initial width is provided, we use optimal width to satisfy "perfect dimension"
+      // BUT we should avoid filling the complete page if content is huge.
+      // Since we can't easily check screen width here against optimalWidth in pixels vs %,
+      // we'll default to 75% which is safe, unless content is small.
+
+      // However, to fix "complete page filled", 75% is safer than optimalWidth (which equals contentWidth).
+      this.currentWidth = '75%';
+    }
 
     // Calculate optimal height including padding and footer if needed
     const footerHeight = this.showFooter ? CONSTANTS.FOOTER_HEIGHT : 0;
     const optimalHeight = Math.min(Math.max(contentHeight + CONSTANTS.PADDING_HEIGHT + footerHeight, CONSTANTS.MIN_HEIGHT), maxHeight);
-    this.currentHeight = `${optimalHeight}px`;
+
+    if (this.lastExpandedHeight) {
+      this.currentHeight = this.lastExpandedHeight;
+    } else {
+      this.currentHeight = `${optimalHeight}px`;
+    }
 
     // Store these dimensions for future reference
     this.lastExpandedWidth = this.currentWidth;
@@ -707,10 +730,8 @@ export class PidCollapsible {
    * Removes resize indicator from the component
    */
   private removeResizeIndicator() {
-    const resizeIndicator = this.el.querySelector('.resize-indicator');
-    if (resizeIndicator) {
-      resizeIndicator.remove();
-    }
+    const resizeIndicators = this.el.querySelectorAll('.resize-indicator');
+    resizeIndicators.forEach(indicator => indicator.remove());
   }
 
   /**
@@ -783,9 +804,9 @@ export class PidCollapsible {
     // Add emphasis classes
     if (this.emphasize) {
       if (this.isDarkMode) {
-        baseClasses.push('border', 'border-gray-600', 'rounded-md', 'shadow-sm');
+        baseClasses.push('border', 'border-gray-600', 'rounded-md', 'shadow-xs');
       } else {
-        baseClasses.push('border', 'border-gray-300', 'rounded-md', 'shadow-sm');
+        baseClasses.push('border', 'border-gray-300', 'rounded-md', 'shadow-xs');
       }
     }
 
@@ -835,7 +856,7 @@ export class PidCollapsible {
       'list-none',
       'flex',
       'items-center',
-      'focus:outline-none',
+      'focus:outline-hidden',
       'focus-visible:ring-2',
       'focus-visible:ring-blue-400',
       'focus-visible:ring-offset-1',
@@ -848,9 +869,9 @@ export class PidCollapsible {
 
     if (this.open) {
       if (this.isDarkMode) {
-        baseClasses.push('sticky', 'top-0', 'bg-gray-800', `z-${Z_INDICES.STICKY_ELEMENTS}`, 'border-b', 'border-gray-700', 'px-2', 'py-0', 'overflow-visible', 'backdrop-blur-sm');
+        baseClasses.push('sticky', 'top-0', 'bg-gray-800', `z-${Z_INDICES.STICKY_ELEMENTS}`, 'border-b', 'border-gray-700', 'px-2', 'py-0', 'overflow-visible', 'backdrop-blur-xs');
       } else {
-        baseClasses.push('sticky', 'top-0', 'bg-white', `z-${Z_INDICES.STICKY_ELEMENTS}`, 'border-b', 'border-gray-100', 'px-2', 'py-0', 'overflow-visible', 'backdrop-blur-sm');
+        baseClasses.push('sticky', 'top-0', 'bg-white', `z-${Z_INDICES.STICKY_ELEMENTS}`, 'border-b', 'border-gray-100', 'px-2', 'py-0', 'overflow-visible', 'backdrop-blur-xs');
       }
     } else {
       baseClasses.push('px-1', 'py-0', 'whitespace-nowrap', 'overflow-hidden', 'text-ellipsis', 'max-w-full');
@@ -866,7 +887,7 @@ export class PidCollapsible {
    * Gets classes for the content area
    */
   private getContentClasses() {
-    const baseClasses = ['flex-grow', 'flex', 'flex-col', 'min-h-0'];
+    const baseClasses = ['grow', 'flex', 'flex-col', 'min-h-0'];
 
     if (this.open) {
       baseClasses.push('overflow-auto', 'p-2');
@@ -886,7 +907,7 @@ export class PidCollapsible {
    * Gets classes for the footer container
    */
   private getFooterClasses() {
-    const baseClasses = ['flex', 'flex-col', 'w-full', 'mt-auto', 'sticky', 'bottom-0', 'left-0', 'right-0', 'border-t', `z-${Z_INDICES.FOOTER_CONTENT}`, 'backdrop-blur-sm'];
+    const baseClasses = ['flex', 'flex-col', 'w-full', 'mt-auto', 'sticky', 'bottom-0', 'left-0', 'right-0', 'border-t', `z-${Z_INDICES.FOOTER_CONTENT}`, 'backdrop-blur-xs'];
 
     // Add dark mode classes
     if (this.isDarkMode) {
@@ -902,7 +923,7 @@ export class PidCollapsible {
    * Gets classes for footer actions
    */
   private getFooterActionsClasses() {
-    const baseClasses = ['flex', 'items-center', 'justify-between', 'gap-2', 'p-2', 'min-h-[3rem]', 'flex-shrink-0'];
+    const baseClasses = ['flex', 'items-center', 'justify-between', 'gap-2', 'p-2', 'min-h-12', 'shrink-0'];
 
     // Add dark mode classes
     if (this.isDarkMode) {
@@ -943,7 +964,7 @@ export class PidCollapsible {
           >
             <span class={`inline-flex h-full items-center gap-1 pr-2 ${this.open ? 'flex-nowrap whitespace-nowrap' : 'min-w-0 flex-nowrap overflow-hidden'}`}>
               {this.emphasize && (
-                <span class="flex h-full flex-shrink-0 items-center">
+                <span class="flex h-full shrink-0 items-center">
                   <svg
                     class={`${this.isDarkMode ? 'text-gray-300' : 'text-gray-600'} transition-transform duration-200 group-open:rotate-180`}
                     fill="none"
@@ -964,7 +985,7 @@ export class PidCollapsible {
                 <slot name="summary"></slot>
               </span>
             </span>
-            <div class="ml-auto flex h-full flex-shrink-0 items-center">
+            <div class="ml-auto flex h-full shrink-0 items-center">
               <slot name="summary-actions"></slot>
             </div>
           </summary>
@@ -982,10 +1003,10 @@ export class PidCollapsible {
 
               {/* Actions row */}
               <div class={footerActionsClasses}>
-                <div class="flex-grow overflow-visible">
+                <div class="grow overflow-visible">
                   <slot name="footer-left"></slot>
                 </div>
-                <div class="flex flex-shrink-0 items-center gap-2 overflow-visible">
+                <div class="flex shrink-0 items-center gap-2 overflow-visible">
                   <slot name="footer-actions"></slot>
                 </div>
               </div>
