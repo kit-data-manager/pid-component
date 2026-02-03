@@ -1,6 +1,6 @@
 {
   "name": "@kit-data-manager/react-pid-component",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "React wrapper for the package @kit-data-manager/pid-component",
   "author": {
     "name": "Christopher Raquet",
@@ -44,8 +44,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@stencil/react-output-target": "^1.4.0",
-    "@kit-data-manager/pid-component": "*"
+    "@kit-data-manager/pid-component": "^0.2.3",
+    "@stencil/react-output-target": "^1.4.0"
   },
   "devDependencies": {
     "typescript": "^5.9.3"
