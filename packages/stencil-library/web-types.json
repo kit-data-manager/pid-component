@@ -357,9 +357,9 @@
             {
               "name": "dark-mode",
               "deprecated": false,
-              "description": "The dark mode setting for the component\nOptions: \"light\", \"dark\", \"system\"\nDefault: \"system\"",
+              "description": "The dark mode setting for the component\nOptions: \"light\", \"dark\", \"system\"\nDefault: \"light\" for better compatibility",
               "required": false,
-              "default": "'system'",
+              "default": "'light'",
               "priority": "high"
             }
           ],

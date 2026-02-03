@@ -5,16 +5,9 @@ import { postcss } from '@stencil/postcss';
 import tailwindcss from '@tailwindcss/postcss';
 import cssnanoPlugin from 'cssnano';
 
-const postcssOptions = {
-  plugins: [
-    tailwindcss(),
-    cssnanoPlugin()
-  ]
-}
-
 export const config: Config = {
   namespace: 'pid-component',
-  // globalStyle: 'src/tailwind.css',
+  globalStyle: 'src/tailwind.css',
   buildEs5: true,
   outputTargets: [
     {
@@ -38,6 +31,7 @@ export const config: Config = {
     },
     {
       type: 'www',
+      serviceWorker: null, // disable service workers
     },
     webTypesOutputTarget(),
   ],
@@ -45,7 +39,12 @@ export const config: Config = {
     browserHeadless: true,
   },
   plugins:[
-    postcss(postcssOptions),
+    postcss({
+      plugins:[
+        tailwindcss(),
+        cssnanoPlugin()
+      ],
+    }),
   ],
   sourceMap: true,
   extras: {

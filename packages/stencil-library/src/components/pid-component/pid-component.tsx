@@ -9,7 +9,7 @@ import { clearCache } from '../../utils/DataCache';
 @Component({
   tag: 'pid-component',
   styleUrl: 'pid-component.css',
-  shadow: false,
+  shadow: true
 })
 export class PidComponent {
   /**
@@ -129,10 +129,10 @@ export class PidComponent {
   /**
    * The dark mode setting for the component
    * Options: "light", "dark", "system"
-   * Default: "system"
+   * Default: "light" for better compatibility
    * @type {string}
    */
-  @Prop() darkMode: 'light' | 'dark' | 'system' = 'system';
+  @Prop() darkMode: 'light' | 'dark' | 'system' = 'light';
 
   /**
    * Stores the parsed identifier object.
