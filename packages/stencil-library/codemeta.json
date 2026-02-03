@@ -77,9 +77,7 @@
       "affiliation": "Karlsruhe Institute of Technology (KIT)"
     }
   ],
-  "license": [
-    "https://spdx.org/licenses/Apache-2.0"
-  ],
+  "license": ["https://spdx.org/licenses/Apache-2.0"],
   "softwareHelp": "https://kit-data-manager.github.io/pid-component",
   "codeRepository": "https://github.com/kit-data-manager/pid-component",
   "buildInstructions": "https://kit-data-manager.github.io/pid-component",
