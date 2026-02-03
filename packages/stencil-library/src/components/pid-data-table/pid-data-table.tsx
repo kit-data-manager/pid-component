@@ -211,7 +211,7 @@ export class PidDataTable {
                   </td>
                   <td class={'relative w-full p-2 align-top text-sm select-text'} role="cell">
                     <div class="grid w-full grid-cols-[minmax(0,1fr)_auto] items-start gap-2">
-                      <div class="min-w-0 overflow-x-auto wrap-break-word whitespace-normal">
+                      <div class="min-w-0 overflow-x-auto break-words whitespace-normal">
                         {
                           // Load a foldable subcomponent if subcomponents are not disabled (hideSubcomponents), and the current level of subcomponents is not the total level of subcomponents. If the subcomponent is on the bottom level of the hierarchy, render just a preview. If the value should not be resolved (isFoldable), just render the value as text.
                           this.loadSubcomponents && !this.hideSubcomponents && value.renderDynamically ? (
@@ -238,7 +238,7 @@ export class PidDataTable {
                               class="block w-full min-w-0"
                             />
                           ) : (
-                            <span class={'inline-block w-full max-w-full overflow-x-auto font-mono text-sm wrap-break-word whitespace-normal'}>{value.value}</span>
+                            <span class={'inline-block w-full max-w-full overflow-x-auto font-mono text-sm break-words whitespace-normal'}>{value.value}</span>
                           )
                         }
                       </div>

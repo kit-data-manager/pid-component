@@ -56,7 +56,7 @@ export class CopyButton {
       textArea.setAttribute('aria-hidden', 'true');
       textArea.setAttribute('tabindex', '-1');
       textArea.setAttribute('readonly', 'readonly');
-      textArea.className = 'fixed top-0 left-0 opacity-0 pointer-events-none z-9999 w-[10em] h-[10em]';
+      textArea.className = 'fixed top-0 left-0 opacity-0 pointer-events-none z-[9999] w-[10em] h-[10em]';
 
       document.body.appendChild(textArea);
 
