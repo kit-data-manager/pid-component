@@ -47,7 +47,7 @@
   ],
   "name": "@kit-data-manager/react-pid-component",
   "description": "React wrapper for the package @kit-data-manager/pid-component",
-  "version": "0.2.3",
+  "version": "0.2.2",
   "keywords": [
     "react",
     "pid",
