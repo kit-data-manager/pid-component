@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PID-Component Demonstrator</title>
+  <script type="module"
+          src="./build/pid-component.esm.js"></script>
+  <script nomodule src="./build/pid-component.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 2em;
+      line-height: 1.6;
+      background-color: #ffffff;
+      color: #2c3e50;
+      transition: background-color .2s ease, color .2s ease;
+    }
+
+    /* Darkmode according to system setting */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #0f1720;
+        color: #e6eef6;
+      }
+
+      h1, h2 {
+        color: #e6eef6;
+      }
+
+      a {
+        color: #63a4ff;
+      }
+    }
+
+    h1, h2 {
+      color: #2c3e50;
+    }
+
+    a {
+      color: #2980b9;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<h1>PID-Component Demonstrator</h1>
+<p>
+  This is a simple demonstrator for the PID-Component.
+  If you want to see the Storybook, please visit <a href="https://kit-data-manager.github.io/pid-component/"
+                                                    target="_blank" rel="noopener noreferrer">https://kit-data-manager.github.io/pid-component</a>.
+  The source code of this demonstrator can be found <a href="https://github.com/kit-data-manager/pid-component"
+                                                       target="_blank" rel="noopener noreferrer">https://github.com/kit-data-manager/pid-component</a>.
+</p>
+
+<h2>Example</h2>
+<pid-component value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6" dark-mode="system"></pid-component>
+
+</body>
+</html>

@@ -171,7 +171,7 @@ export class PidPagination {
 
     return (
       <div
-        class={`flex w-full resize-none flex-wrap items-center justify-between gap-2 ${isDarkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-800'} px-3 py-1 text-sm`}
+        class={`flex w-full resize-none flex-wrap items-center justify-between gap-2 ${isDarkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-800'} px-3 text-sm`}
         role="navigation"
         aria-labelledby={`${paginationId}-label`}
       >
@@ -197,8 +197,8 @@ export class PidPagination {
                   <button
                     key={`size-${size}`}
                     onClick={() => this.handleItemsPerPageChange(size)}
-                    class={`resize-none rounded px-2 py-0.5 text-xs transition-colors ${
-                      this.itemsPerPage === size ? 'bg-blue-600 font-medium text-white' : isDarkMode ? 'text-gray-200 hover:bg-gray-600' : 'text-gray-700 hover:bg-gray-100'
+                    class={`resize-none rounded px-2 text-xs transition-colors ${
+                      this.itemsPerPage === size ? 'bg-blue-600 font-medium text-white py-0.5' : isDarkMode ? 'text-gray-200 hover:bg-gray-600 py-0' : 'text-gray-700 hover:bg-gray-100 py-0'
                     }`}
                     aria-label={`Show ${size} items per page`}
                     aria-pressed={this.itemsPerPage === size ? 'true' : 'false'}
@@ -226,7 +226,7 @@ export class PidPagination {
               <button
                 onClick={() => this.handlePageChange(this.currentPage - 1)}
                 disabled={this.currentPage === 0}
-                class={`relative inline-flex resize-none items-center rounded-l-md px-2 py-1.5 ${
+                class={`relative inline-flex resize-none items-center rounded-l-md px-2 py-0 ${
                   isDarkMode ? 'text-gray-300 ring-1 ring-gray-600 ring-inset hover:bg-gray-700' : 'text-gray-500 ring-1 ring-gray-300 ring-inset hover:bg-gray-50'
                 } focus:z-20 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50`}
                 aria-label="Previous page"
@@ -251,7 +251,7 @@ export class PidPagination {
                   return (
                     <span
                       key={`ellipsis-${i}`}
-                      class={`relative inline-flex resize-none items-center px-2 py-1.5 text-sm ${
+                      class={`relative inline-flex resize-none items-center px-2 py-0 text-sm rounded ${
                         isDarkMode ? 'text-gray-300 ring-1 ring-gray-600 ring-inset' : 'text-gray-700 ring-1 ring-gray-300 ring-inset'
                       }`}
                       role="separator"
@@ -275,8 +275,8 @@ export class PidPagination {
                     onClick={() => this.handlePageChange(pageNum)}
                     class={
                       isCurrentPage
-                        ? 'relative z-10 inline-flex resize-none items-center bg-blue-600 px-2 py-1.5 text-xs font-semibold text-white focus:z-20 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
-                        : `relative inline-flex resize-none items-center px-2 py-1.5 text-xs ${
+                        ? 'relative z-10 inline-flex resize-none items-center rounded bg-blue-600 px-2 py-0.5 text-xs font-semibold text-white focus:z-20 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
+                        : `relative inline-flex resize-none items-center rounded px-2 py-0 text-xs ${
                             isDarkMode ? 'text-gray-200 ring-1 ring-gray-600 ring-inset hover:bg-gray-700' : 'text-gray-900 ring-1 ring-gray-300 ring-inset hover:bg-gray-50'
                           } focus:z-20 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500`
                     }
@@ -294,7 +294,7 @@ export class PidPagination {
               <button
                 onClick={() => this.handlePageChange(this.currentPage + 1)}
                 disabled={this.currentPage >= this.totalPages - 1}
-                class={`relative inline-flex resize-none items-center rounded-r-md px-2 py-1.5 ${
+                class={`relative inline-flex resize-none items-center rounded-r-md px-2 py-0 rounded ${
                   isDarkMode ? 'text-gray-300 ring-1 ring-gray-600 ring-inset hover:bg-gray-700' : 'text-gray-500 ring-1 ring-gray-300 ring-inset hover:bg-gray-50'
                 } focus:z-20 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50`}
                 aria-label="Next page"

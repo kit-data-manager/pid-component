@@ -6,38 +6,20 @@
 /* eslint-disable */
 
 // @ts-ignore - ignore potential type issues as the project is importing itself
-import {
-  type PidCollapsibleCustomEvent,
-  type PidDataTableCustomEvent,
-  type PidPaginationCustomEvent,
-  type PidTooltipCustomEvent
-} from '@kit-data-manager/pid-component';
-import {
-  ColorHighlight as ColorHighlightElement
-} from '@kit-data-manager/pid-component/dist/components/color-highlight.js';
-import { CopyButton as CopyButtonElement } from '@kit-data-manager/pid-component/dist/components/copy-button.js';
-import { JsonViewer as JsonViewerElement } from '@kit-data-manager/pid-component/dist/components/json-viewer.js';
-import {
-  LocaleVisualization as LocaleVisualizationElement
-} from '@kit-data-manager/pid-component/dist/components/locale-visualization.js';
-import { PidActions as PidActionsElement } from '@kit-data-manager/pid-component/dist/components/pid-actions.js';
-import {
-  PidCollapsible as PidCollapsibleElement
-} from '@kit-data-manager/pid-component/dist/components/pid-collapsible.js';
-import { PidComponent as PidComponentElement } from '@kit-data-manager/pid-component/dist/components/pid-component.js';
-import { PidDataTable as PidDataTableElement } from '@kit-data-manager/pid-component/dist/components/pid-data-table.js';
-import {
-  PidPagination as PidPaginationElement
-} from '@kit-data-manager/pid-component/dist/components/pid-pagination.js';
-import { PidTooltip as PidTooltipElement } from '@kit-data-manager/pid-component/dist/components/pid-tooltip.js';
+import { type PidCollapsibleCustomEvent, type PidDataTableCustomEvent, type PidPaginationCustomEvent, type PidTooltipCustomEvent } from "@kit-data-manager/pid-component";
+import { ColorHighlight as ColorHighlightElement } from "@kit-data-manager/pid-component/dist/components/color-highlight.js";
+import { CopyButton as CopyButtonElement } from "@kit-data-manager/pid-component/dist/components/copy-button.js";
+import { JsonViewer as JsonViewerElement } from "@kit-data-manager/pid-component/dist/components/json-viewer.js";
+import { LocaleVisualization as LocaleVisualizationElement } from "@kit-data-manager/pid-component/dist/components/locale-visualization.js";
+import { PidActions as PidActionsElement } from "@kit-data-manager/pid-component/dist/components/pid-actions.js";
+import { PidCollapsible as PidCollapsibleElement } from "@kit-data-manager/pid-component/dist/components/pid-collapsible.js";
+import { PidComponent as PidComponentElement } from "@kit-data-manager/pid-component/dist/components/pid-component.js";
+import { PidDataTable as PidDataTableElement } from "@kit-data-manager/pid-component/dist/components/pid-data-table.js";
+import { PidPagination as PidPaginationElement } from "@kit-data-manager/pid-component/dist/components/pid-pagination.js";
+import { PidTooltip as PidTooltipElement } from "@kit-data-manager/pid-component/dist/components/pid-tooltip.js";
 import * as clientComponents from '@kit-data-manager/react-pid-component';
 import type { EventName, StencilReactComponent } from '@stencil/react-output-target/runtime';
-import {
-  createComponent,
-  type HydrateModule,
-  type ReactWebComponent,
-  type SerializeShadowRootOptions
-} from '@stencil/react-output-target/ssr';
+import { createComponent, type HydrateModule, type ReactWebComponent, type SerializeShadowRootOptions } from '@stencil/react-output-target/ssr';
 
 export const serializeShadowRoot: SerializeShadowRootOptions = { default: "declarative-shadow-dom" };
 
