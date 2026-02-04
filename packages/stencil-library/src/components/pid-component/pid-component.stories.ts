@@ -669,8 +669,8 @@ export const DOI_CitationStyles: Story = {
       },
       source: {
         code: `
-<pid-component 
-  value="10.5445/IR/1000185135" 
+<pid-component
+  value="10.5445/IR/1000185135"
   settings='[{"type":"DOIType","values":[{"name":"citationStyle","value":"APA"}]}]'
 ></pid-component>
         `,
@@ -678,3 +678,47 @@ export const DOI_CitationStyles: Story = {
     },
   },
 };
+
+/**
+ * Demonstrates rendering of a JSON object
+ */
+export const JSON_Object: Story = {
+  args: {
+    value: '{"name": "pid-component", "version": "1.0.0", "features": ["PIDs", "ORCiDs", "DOIs"]}',
+    openByDefault: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Renders a JSON object with syntax highlighting and tree view.',
+      },
+      source: {
+        code: `
+<pid-component value='{"name": "pid-component", "version": "1.0.0", "features": ["PIDs", "ORCiDs", "DOIs"]}'></pid-component>
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Demonstrates rendering of a Locale
+ */
+export const Locale: Story = {
+  args: {
+    value: 'de-DE',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Renders a locale code with its flag and name.',
+      },
+      source: {
+        code: `
+<pid-component value='de-DE'></pid-component>
+        `,
+      },
+    },
+  },
+};
+
