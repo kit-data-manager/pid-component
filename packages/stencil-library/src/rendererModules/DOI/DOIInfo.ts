@@ -10,6 +10,57 @@ export enum DOISource {
   UNKNOWN = 'Unknown',
 }
 
+/** DataCite API response shape */
+interface DataCiteResponse {
+  data: {
+    attributes: {
+      titles?: Array<{ title?: string } | string>;
+      creators?: Array<{
+        name?: string;
+        givenName?: string;
+        familyName?: string;
+      } | string>;
+      publisher?: string;
+      publicationYear?: number;
+      types?: {
+        resourceTypeGeneral?: string;
+      };
+      resourceTypeGeneral?: string;
+      descriptions?: Array<{ description?: string } | string>;
+      url?: string;
+      subjects?: Array<{ subject?: string } | string>;
+    };
+  };
+}
+
+/** CrossRef API response shape */
+interface CrossRefResponse {
+  message: {
+    title?: string[];
+    author?: Array<{
+      given?: string;
+      family?: string;
+      name?: string;
+    }>;
+    publisher?: string;
+    published?: {
+      'date-parts'?: number[][];
+    };
+    created?: {
+      'date-parts'?: number[][];
+    };
+    type?: string;
+    abstract?: string;
+    URL?: string;
+    resource?: {
+      primary?: {
+        URL?: string;
+      };
+    };
+    subject?: string[];
+  };
+}
+
 /**
  * This class stores information about a DOI and its metadata.
  */
@@ -267,11 +318,11 @@ export class DOIInfo {
     const apiUrl = `https://api.datacite.org/dois/${encodeURIComponent(doi.toString())}`;
     
     try {
-      const response: any = await cachedFetch(apiUrl, {
+      const response = (await cachedFetch(apiUrl, {
         headers: {
           Accept: 'application/vnd.api+json',
         },
-      });
+      })) as DataCiteResponse;
 
       if (!response || !response.data) return null;
 
@@ -279,10 +330,13 @@ export class DOIInfo {
       const attributes = data.attributes || {};
 
       // Extract titles
-      const titles = (attributes.titles || []).map((t: any) => t.title || t).filter(Boolean);
+      const titles = (attributes.titles || []).map((t) => {
+        if (typeof t === 'string') return t;
+        return t.title || '';
+      }).filter(Boolean);
 
       // Extract creators
-      const creators = (attributes.creators || []).map((creator: any) => {
+      const creators = (attributes.creators || []).map((creator) => {
         if (typeof creator === 'string') return creator;
         if (creator.name) return creator.name;
         if (creator.givenName && creator.familyName) {
@@ -298,13 +352,18 @@ export class DOIInfo {
       
       // Extract description
       const descriptions = attributes.descriptions || [];
-      const description = descriptions.length > 0 ? descriptions[0].description || descriptions[0] : undefined;
+      const description = descriptions.length > 0 
+        ? (typeof descriptions[0] === 'string' ? descriptions[0] : descriptions[0].description) 
+        : undefined;
 
       // Extract URL
       const url = attributes.url || doi.toURL();
 
       // Extract subjects
-      const subjects = (attributes.subjects || []).map((s: any) => s.subject || s).filter(Boolean);
+      const subjects = (attributes.subjects || []).map((s) => {
+        if (typeof s === 'string') return s;
+        return s.subject || '';
+      }).filter(Boolean);
 
       return new DOIInfo(
         doi,
@@ -335,11 +394,11 @@ export class DOIInfo {
     const apiUrl = `https://api.crossref.org/works/${encodeURIComponent(doi.toString())}`;
     
     try {
-      const response: any = await cachedFetch(apiUrl, {
+      const response = (await cachedFetch(apiUrl, {
         headers: {
           Accept: 'application/json',
         },
-      });
+      })) as CrossRefResponse;
 
       if (!response || !response.message) return null;
 
@@ -349,7 +408,7 @@ export class DOIInfo {
       const titles = message.title || [];
 
       // Extract creators/authors
-      const creators = (message.author || []).map((author: any) => {
+      const creators = (message.author || []).map((author) => {
         if (author.given && author.family) {
           return `${author.given} ${author.family}`;
         }
