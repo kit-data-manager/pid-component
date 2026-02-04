@@ -2,6 +2,7 @@ import { cachedFetch } from '../../utils/DataCache';
 import { DOI } from './DOI';
 import { FoldableItem } from '../../utils/FoldableItem';
 import { Creator } from './DataCiteInfo';
+import { beautifyResourceType } from './ResourceTypeIcons';
 
 /** CrossRef API response shape */
 interface CrossRefResponse {
@@ -128,7 +129,7 @@ export class CrossRefInfo {
   get correspondingAuthor(): Creator | undefined {
     const authors = this._message.author || [];
     const firstAuthor = authors.find((a) => a.sequence === 'first') || authors[0];
-    
+
     if (!firstAuthor) return undefined;
 
     const result: Creator = {
@@ -172,7 +173,7 @@ export class CrossRefInfo {
   get publicationDate(): string | undefined {
     // Try different date fields in order of preference
     const dateObj = this._message.issued || this._message.published || this._message.created;
-    
+
     if (!dateObj?.['date-parts']?.[0]) return undefined;
 
     const parts = dateObj['date-parts'][0];
@@ -233,7 +234,7 @@ export class CrossRefInfo {
    */
   static async fetch(doi: DOI): Promise<CrossRefInfo | null> {
     const apiUrl = `https://api.crossref.org/works/${encodeURIComponent(doi.toString())}`;
-    
+
     try {
       const response = (await cachedFetch(apiUrl, {
         headers: {
@@ -279,11 +280,8 @@ export class CrossRefInfo {
         new FoldableItem(
           index++,
           'Corresponding Author',
-          correspondingAuthor.orcid || correspondingAuthor.name,
-          `First/corresponding author: ${correspondingAuthor.name}${correspondingAuthor.affiliation ? ` (${correspondingAuthor.affiliation})` : ''}`,
-          correspondingAuthor.orcid ? `https://orcid.org/${correspondingAuthor.orcid}` : undefined,
-          undefined,
-          false,
+          correspondingAuthor.orcid || `${correspondingAuthor.name}${correspondingAuthor.affiliation ? ` (${correspondingAuthor.affiliation})` : ''}`,
+          `This field indicates the first author of the resource, who is often the corresponding author.`,
         ),
       );
     }
@@ -297,12 +295,10 @@ export class CrossRefInfo {
       items.push(
         new FoldableItem(
           index++,
-          `Author ${idx + 1}`,
-          creator.orcid || creator.name,
-          `${creator.name}${creator.affiliation ? ` (${creator.affiliation})` : ''}`,
+          `Author`,
+          creator.orcid || `${creator.name}${creator.affiliation ? ` (${creator.affiliation})` : ''}`,
+          'A creator/author of the resource.',
           creator.orcid ? `https://orcid.org/${creator.orcid}` : undefined,
-          undefined,
-          false,
         ),
       );
     });
@@ -337,7 +333,7 @@ export class CrossRefInfo {
         new FoldableItem(
           index++,
           'Resource Type',
-          this.resourceType,
+          beautifyResourceType(this.resourceType),
           'The type of the resource.',
         ),
       );
@@ -366,9 +362,6 @@ export class CrossRefInfo {
           'Subject',
           subject,
           'A subject area or keyword associated with the resource.',
-          undefined,
-          undefined,
-          false,
         ),
       );
     });

@@ -9,121 +9,107 @@ export interface ResourceTypeInfo {
   displayName: string;
 }
 
-/**
- * Gets the resource type information including icon
- */
-export function getResourceTypeInfo(resourceType?: string): ResourceTypeInfo {
-  if (!resourceType) {
-    return {
-      icon: () => <span></span>,
-      displayName: 'Resource',
-    };
-  }
+const userFriendlyResourceType: { [key: string]: string } = {
+  'article': "📰 Article",
+  'book': "📚 Book",
+  'chapter': "📖 Chapter",
+  'software': "💻 Software",
+  'dataset': "📊 Dataset",
+  'image': "🖼️ Image",
+  'video': "🎥 Video",
+  'audio': "🎵 Audio",
+  'presentation': "🧑‍🏫 Presentation",
+  'preprint': "📝 Preprint",
+  'thesis': "🎓 Thesis",
+  'report': "📋 Report",
+  'standard': "📜 Standard",
+  'workflow': "🔄 Workflow",
+  'model': "🧮 Model",
+  'paper': "📄 Paper",
+  'journal': "📰 Journal",
+  'code': "💻 Code",
+  'institution': "🏛️ Institution",
+  'conferencepaper': "🎤 Conference Paper",
+  'database': "🗄️ Database",
+  'other': "❓ Other",
+  'journalarticle': "📄 Journal Article",
+  'proceedingsarticle': "🎤 Proceedings Article",
+  'reportseries': "📋 Report Series",
+  'bookchapter': "📖 Book Chapter",
+  'monograph': "📚 Monograph",
+  'editedbook': "📚 Edited Book",
+  'reportpaper': "📋 Report Paper",
+};
 
-  const type = resourceType.toLowerCase();
-
-  // Map types to icons (using simple text icons for now, can be replaced with SVGs)
-  if (type.includes('article') || type.includes('journal') || type.includes('paper')) {
-    return {
-      icon: () => <span class="text-lg">📄</span>,
-      displayName: resourceType,
-    };
-  } else if (type.includes('book')) {
-    return {
-      icon: () => <span class="text-lg">📚</span>,
-      displayName: resourceType,
-    };
-  } else if (type.includes('software') || type.includes('code')) {
-    return {
-      icon: () => <span class="text-lg">💻</span>,
-      displayName: resourceType,
-    };
-  } else if (type.includes('dataset') || type.includes('data')) {
-    return {
-      icon: () => <span class="text-lg">📊</span>,
-      displayName: resourceType,
-    };
-  } else if (type.includes('image') || type.includes('figure')) {
-    return {
-      icon: () => <span class="text-lg">🖼️</span>,
-      displayName: resourceType,
-    };
-  } else if (type.includes('video') || type.includes('audiovisual')) {
-    return {
-      icon: () => <span class="text-lg">🎥</span>,
-      displayName: resourceType,
-    };
-  } else if (type.includes('sound') || type.includes('audio')) {
-    return {
-      icon: () => <span class="text-lg">🔊</span>,
-      displayName: resourceType,
-    };
-  } else if (type.includes('presentation') || type.includes('slides')) {
-    return {
-      icon: () => <span class="text-lg">📽️</span>,
-      displayName: resourceType,
-    };
-  } else if (type.includes('preprint')) {
-    return {
-      icon: () => <span class="text-lg">📝</span>,
-      displayName: resourceType,
-    };
-  } else if (type.includes('thesis') || type.includes('dissertation')) {
-    return {
-      icon: () => <span class="text-lg">🎓</span>,
-      displayName: resourceType,
-    };
-  } else if (type.includes('report')) {
-    return {
-      icon: () => <span class="text-lg">📋</span>,
-      displayName: resourceType,
-    };
-  } else if (type.includes('standard')) {
-    return {
-      icon: () => <span class="text-lg">📜</span>,
-      displayName: resourceType,
-    };
-  } else if (type.includes('workflow')) {
-    return {
-      icon: () => <span class="text-lg">🔄</span>,
-      displayName: resourceType,
-    };
-  } else if (type.includes('model')) {
-    return {
-      icon: () => <span class="text-lg">🧮</span>,
-      displayName: resourceType,
-    };
-  }
-
-  // Default
-  return {
-    icon: () => <span class="text-lg">📦</span>,
-    displayName: resourceType,
-  };
+export function beautifyResourceType(resourceType: string): string {
+  const normalized = resourceType
+    .toLowerCase()
+    .replace("_", "").replace("-", "");
+  return userFriendlyResourceType[normalized] || resourceType;
 }
 
 /**
  * DataCite logo SVG component
+ * Downloaded from https://datacite.org/datacite-schwoop/ on 2026-02-04
  */
-export const DataCiteLogo: FunctionalComponent = () => (
-  <svg class="h-5 w-auto" viewBox="0 0 500 140" xmlns="http://www.w3.org/2000/svg">
+export const DataCiteLogo = () => (
+  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 103.8" class={'h-5'}>
     <defs>
-      <linearGradient id="datacite-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="#40B4E5" stop-opacity="1" />
-        <stop offset="100%" stop-color="#005580" stop-opacity="1" />
-      </linearGradient>
+      <style>
+        {`.cls-1{fill:#00b1e2;}`}
+        {`.cls-2{fill:#243b54;}`}
+      </style>
     </defs>
-    <circle cx="70" cy="70" r="60" fill="url(#datacite-gradient)" />
-    <text x="150" y="85" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#333">DataCite</text>
+    <path class="cls-1" d="M5,73.38c.86.16,1.63.32,2.65.47,43.5,8.64,108.26-2.8,116.59-23.89,6.54-17.05-30-29.11-72.62-27.63a13.94,13.94,0,0,0-2.49.15c22.73,2.26,43.2,11.29,35,25.38C75.2,63.27,37.3,73.54,5,73.38"></path>
+    <path class="cls-2" d="M100.27,75.53C92.72,121.3,53.18,94,43.84,62.15,30.3,29.07,42.36-13.43,76.22,11.48c-28-12.85-31,24.36-19,50.82,10,22.11,31.59,36.35,42,13.54.47-.15.86-.15,1-.31"></path>
   </svg>
 );
 
 /**
- * CrossRef logo SVG component  
+ * CrossRef logo SVG component
+ * Downloaded from https://assets.crossref.org on 2026-02-04 (Text removed for enhanced brevity)
  */
-export const CrossRefLogo: FunctionalComponent = () => (
-  <svg class="h-5 w-auto" viewBox="0 0 500 140" xmlns="http://www.w3.org/2000/svg">
-    <rect x="10" y="30" width="80" height="80" rx="10" fill="#F68212" />
-    <text x="110" y="85" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#333">Crossref</text>
+export const CrossRefLogo = () => (
+  <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
+       x="0px" y="0px"
+       class={'h-5'}
+       viewBox="0 0 65.400002 95.199999"
+  >
+    <style type="text/css">
+      {`.st0{fill:#3EB1C8;}`}
+      {`.st1{fill:#D8D2C4;}`}
+      {`.st2{fill:#4F5858;}`}
+      {`.st3{fill:#FFC72C;}`}
+      {`.st4{fill:#EF3340;}`}
+    </style>
+    <g
+      id="g16"
+      transform="translate(-69.570409,-17.62496)">
+      <polygon
+        class="st0"
+        points="111.8,66.8 135.4,59 177.2,73.3 111.8,95.5 "
+        id="polygon1"
+        transform="translate(-42.229591,17.32496)" />
+      <polygon
+        class="st1"
+        points="111.8,51.2 135.4,59 177.2,44.6 153.6,36.8 "
+        id="polygon2"
+        transform="translate(-42.229591,17.32496)" />
+      <polygon
+        class="st2"
+        points="135.4,59 177.2,44.6 177.2,73.3 "
+        id="polygon3"
+        transform="translate(-42.229591,17.32496)" />
+      <polygon
+        class="st3"
+        points="177.2,29 153.6,36.8 111.8,22.5 177.2,0.3 "
+        id="polygon4"
+        transform="translate(-42.229591,17.32496)" />
+      <polygon
+        class="st4"
+        points="153.6,36.8 111.8,51.2 111.8,22.5 "
+        id="polygon5"
+        transform="translate(-42.229591,17.32496)" />
+    </g>
   </svg>
 );

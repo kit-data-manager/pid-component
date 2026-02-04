@@ -6,7 +6,7 @@ import { DOIInfo, DOISource } from './DOIInfo';
 import { Creator } from './DataCiteInfo';
 import { FoldableItem } from '../../utils/FoldableItem';
 import { FoldableAction } from '../../utils/FoldableAction';
-import { getResourceTypeInfo, DataCiteLogo, CrossRefLogo } from './ResourceTypeIcons';
+import { CrossRefLogo, DataCiteLogo } from './ResourceTypeIcons';
 import { formatCitationPreview, getCitationStyleFromSettings } from './CitationStyles';
 
 /**
@@ -55,7 +55,7 @@ export class DOIType extends GenericIdentifierType {
         0,
         'DOI',
         this._doi.toString(),
-        'Digital Object Identifier - A persistent identifier for academic and research resources.',
+        'The DOI used for this resource. Digital Object Identifier is a persistent identifier for academic and research resources.',
         'https://www.doi.org/',
         undefined,
         false,
@@ -69,26 +69,8 @@ export class DOIType extends GenericIdentifierType {
         this._doiInfo.source,
         `Metadata provided by ${this._doiInfo.source}`,
         this._doiInfo.source === DOISource.DATACITE ? 'https://datacite.org' : 'https://www.crossref.org',
-        undefined,
-        false,
       ),
     );
-
-    // Add resource type with icon if available
-    if (this._doiInfo.resourceType) {
-      const typeInfo = getResourceTypeInfo(this._doiInfo.resourceType);
-      this.items.push(
-        new FoldableItem(
-          5,
-          'Resource Type',
-          typeInfo.displayName,
-          'The type of the resource.',
-          undefined,
-          undefined,
-          false,
-        ),
-      );
-    }
 
     // Generate items from the source-specific metadata
     const metadataItems = this._doiInfo.generateItems();
@@ -158,7 +140,7 @@ export class DOIType extends GenericIdentifierType {
     }
 
     // Format citation preview
-    const citation = formatCitationPreview(
+    const {citation, tooltip} = formatCitationPreview(
       this._doiInfo.title,
       creators,
       year,
@@ -166,14 +148,13 @@ export class DOIType extends GenericIdentifierType {
     );
 
     // Render logo based on source
-    const LogoComponent = this._doiInfo.source === DOISource.DATACITE ? DataCiteLogo : CrossRefLogo;
+    // Use direct call to avoid Stencil runtime treating the function as a tag name
+    const logoNode = this._doiInfo.source === DOISource.DATACITE ? DataCiteLogo() : CrossRefLogo();
 
     return (
       <span class={`inline-flex flex-nowrap items-center align-top font-mono ${this.isDarkMode ? 'text-gray-200' : ''}`}>
-        <span class="mr-2 flex-none">
-          <LogoComponent />
-        </span>
-        <span class={'flex-none items-center px-1 truncate'} title={citation}>
+        <span class={'flex-none items-center p-0.5 mr-1'}>{logoNode}</span>
+        <span class={'flex-none items-center pr-1 truncate'} title={tooltip}>
           {citation}
         </span>
       </span>

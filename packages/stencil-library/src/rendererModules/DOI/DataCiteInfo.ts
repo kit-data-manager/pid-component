@@ -1,6 +1,7 @@
 import { cachedFetch } from '../../utils/DataCache';
 import { DOI } from './DOI';
 import { FoldableItem } from '../../utils/FoldableItem';
+import { beautifyResourceType } from './ResourceTypeIcons';
 
 /** DataCite API response shape */
 interface DataCiteResponse {
@@ -91,7 +92,7 @@ export class DataCiteInfo {
       if (typeof t === 'string') return true;
       return !t.titleType || t.titleType === 'Title';
     });
-    
+
     if (typeof mainTitle === 'string') return mainTitle;
     return mainTitle?.title || '';
   }
@@ -134,7 +135,7 @@ export class DataCiteInfo {
       if (creator.affiliation && creator.affiliation.length > 0) {
         const primaryAffiliation = creator.affiliation[0];
         result.affiliation = primaryAffiliation.name;
-        
+
         const rorIdentifier = primaryAffiliation.affiliationIdentifier;
         if (rorIdentifier && primaryAffiliation.affiliationIdentifierScheme?.toLowerCase() === 'ror') {
           result.ror = rorIdentifier.replace(/^https?:\/\/ror\.org\//i, '');
@@ -153,7 +154,7 @@ export class DataCiteInfo {
     const corresponding = contributors.find(
       (c) => c.contributorType?.toLowerCase() === 'contactperson'
     );
-    
+
     if (!corresponding) return undefined;
 
     const result: Creator = {
@@ -181,7 +182,7 @@ export class DataCiteInfo {
     if (corresponding.affiliation && corresponding.affiliation.length > 0) {
       const primaryAffiliation = corresponding.affiliation[0];
       result.affiliation = primaryAffiliation.name;
-      
+
       const rorIdentifier = primaryAffiliation.affiliationIdentifier;
       if (rorIdentifier && primaryAffiliation.affiliationIdentifierScheme?.toLowerCase() === 'ror') {
         result.ror = rorIdentifier.replace(/^https?:\/\/ror\.org\//i, '');
@@ -238,7 +239,7 @@ export class DataCiteInfo {
       if (typeof d === 'string') return true;
       return d.descriptionType?.toLowerCase() === 'abstract' || !d.descriptionType;
     });
-    
+
     if (typeof abstract === 'string') return abstract;
     return abstract?.description;
   }
@@ -273,7 +274,7 @@ export class DataCiteInfo {
    */
   static async fetch(doi: DOI): Promise<DataCiteInfo | null> {
     const apiUrl = `https://api.datacite.org/dois/${encodeURIComponent(doi.toString())}`;
-    
+
     try {
       const response = (await cachedFetch(apiUrl, {
         headers: {
@@ -312,34 +313,32 @@ export class DataCiteInfo {
       );
     }
 
-    // Corresponding author first
+    // Corresponding author (first author)
     const correspondingAuthor = this.correspondingAuthor;
     if (correspondingAuthor) {
       items.push(
         new FoldableItem(
           index++,
           'Corresponding Author',
-          correspondingAuthor.orcid || correspondingAuthor.name,
-          `Corresponding author: ${correspondingAuthor.name}${correspondingAuthor.affiliation ? ` (${correspondingAuthor.affiliation})` : ''}`,
-          correspondingAuthor.orcid ? `https://orcid.org/${correspondingAuthor.orcid}` : undefined,
-          undefined,
-          false,
+          correspondingAuthor.orcid || `${correspondingAuthor.name}${correspondingAuthor.affiliation ? ` (${correspondingAuthor.affiliation})` : ''}`,
+          `This field indicates the first author of the resource, who is often the corresponding author.`,
         ),
       );
     }
 
-    // Individual creators
+    // Individual authors
     const creators = this.creators;
     creators.forEach((creator, idx) => {
+      // Skip the first author if already shown as corresponding
+      if (idx === 0 && correspondingAuthor) return;
+
       items.push(
         new FoldableItem(
           index++,
-          `Creator ${idx + 1}`,
-          creator.orcid || creator.name,
-          `${creator.name}${creator.affiliation ? ` (${creator.affiliation})` : ''}`,
+          `Author`,
+          creator.orcid || `${creator.name}${creator.affiliation ? ` (${creator.affiliation})` : ''}`,
+          'A creator/author of the resource.',
           creator.orcid ? `https://orcid.org/${creator.orcid}` : undefined,
-          undefined,
-          false,
         ),
       );
     });
@@ -375,7 +374,7 @@ export class DataCiteInfo {
         new FoldableItem(
           index++,
           'Resource Type',
-          displayType,
+          beautifyResourceType(displayType),
           'The type of the resource.',
         ),
       );
@@ -404,9 +403,6 @@ export class DataCiteInfo {
           'Subject',
           subject,
           'A subject area or keyword associated with the resource.',
-          undefined,
-          undefined,
-          false,
         ),
       );
     });
