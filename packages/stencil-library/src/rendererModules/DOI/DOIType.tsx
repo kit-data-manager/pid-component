@@ -3,8 +3,11 @@ import { FunctionalComponent, h } from '@stencil/core';
 import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
 import { DOI } from './DOI';
 import { DOIInfo, DOISource } from './DOIInfo';
+import { Creator } from './DataCiteInfo';
 import { FoldableItem } from '../../utils/FoldableItem';
 import { FoldableAction } from '../../utils/FoldableAction';
+import { getResourceTypeInfo, DataCiteLogo, CrossRefLogo } from './ResourceTypeIcons';
+import { formatCitationPreview, getCitationStyleFromSettings } from './CitationStyles';
 
 /**
  * This class specifies a custom renderer for DOIs (Digital Object Identifiers).
@@ -71,74 +74,15 @@ export class DOIType extends GenericIdentifierType {
       ),
     );
 
-    if (this._doiInfo.title) {
-      this.items.push(
-        new FoldableItem(
-          10,
-          'Title',
-          this._doiInfo.title,
-          'The title of the resource.',
-          undefined,
-          undefined,
-          false,
-        ),
-      );
-    }
-
-    if (this._doiInfo.creators && this._doiInfo.creators.length > 0) {
-      this.items.push(
-        new FoldableItem(
-          20,
-          'Creators',
-          this._doiInfo.creators.join(', '),
-          'The creators or authors of the resource.',
-          undefined,
-          undefined,
-          false,
-        ),
-      );
-    }
-
-    if (this._doiInfo.publisher) {
-      this.items.push(
-        new FoldableItem(
-          30,
-          'Publisher',
-          this._doiInfo.publisher,
-          'The publisher of the resource.',
-        ),
-      );
-    }
-
-    if (this._doiInfo.publicationYear) {
-      this.items.push(
-        new FoldableItem(
-          40,
-          'Publication Year',
-          this._doiInfo.publicationYear.toString(),
-          'The year the resource was published.',
-        ),
-      );
-    }
-
+    // Add resource type with icon if available
     if (this._doiInfo.resourceType) {
+      const typeInfo = getResourceTypeInfo(this._doiInfo.resourceType);
       this.items.push(
         new FoldableItem(
-          50,
+          5,
           'Resource Type',
-          this._doiInfo.resourceType,
+          typeInfo.displayName,
           'The type of the resource.',
-        ),
-      );
-    }
-
-    if (this._doiInfo.description) {
-      this.items.push(
-        new FoldableItem(
-          60,
-          'Description',
-          this._doiInfo.description,
-          'The description or abstract of the resource.',
           undefined,
           undefined,
           false,
@@ -146,19 +90,9 @@ export class DOIType extends GenericIdentifierType {
       );
     }
 
-    if (this._doiInfo.subjects && this._doiInfo.subjects.length > 0) {
-      this.items.push(
-        new FoldableItem(
-          70,
-          'Subjects',
-          this._doiInfo.subjects.join(', '),
-          'Subject areas or keywords associated with the resource.',
-          undefined,
-          undefined,
-          false,
-        ),
-      );
-    }
+    // Generate items from the source-specific metadata
+    const metadataItems = this._doiInfo.generateItems();
+    this.items.push(...metadataItems);
 
     // Add actions
     if (this._doiInfo.url) {
@@ -204,25 +138,43 @@ export class DOIType extends GenericIdentifierType {
   }
 
   isResolvable(): boolean {
-    return this._doiInfo !== undefined && this._doiInfo !== null && (this._doiInfo.title !== undefined || this._doiInfo.creators.length > 0);
+    return this._doiInfo !== undefined && this._doiInfo !== null && this._doiInfo.title !== '';
   }
 
   renderPreview(): FunctionalComponent {
-    const sourceIcon = this._doiInfo.source === DOISource.DATACITE ? 'DC' : 'CR';
-    const sourceColor = this._doiInfo.source === DOISource.DATACITE ? 'bg-blue-500' : 'bg-green-500';
+    // Get citation style from settings
+    const citationStyle = getCitationStyleFromSettings(this.settings);
+
+    // Get creators from the appropriate source
+    let creators: Creator[] = [];
+    let year: string | undefined;
+
+    if (this._doiInfo.dataCiteInfo) {
+      creators = this._doiInfo.dataCiteInfo.creators;
+      year = this._doiInfo.dataCiteInfo.publicationDate;
+    } else if (this._doiInfo.crossRefInfo) {
+      creators = this._doiInfo.crossRefInfo.creators;
+      year = this._doiInfo.crossRefInfo.publicationDate;
+    }
+
+    // Format citation preview
+    const citation = formatCitationPreview(
+      this._doiInfo.title,
+      creators,
+      year,
+      citationStyle,
+    );
+
+    // Render logo based on source
+    const LogoComponent = this._doiInfo.source === DOISource.DATACITE ? DataCiteLogo : CrossRefLogo;
 
     return (
       <span class={`inline-flex flex-nowrap items-center align-top font-mono ${this.isDarkMode ? 'text-gray-200' : ''}`}>
-        <span class={`mr-2 rounded px-1.5 py-0.5 text-xs font-bold text-white ${sourceColor}`}>{sourceIcon}</span>
-        <span class={'flex-none items-center px-1'}>
-          {this._doiInfo.title ? (
-            <span>
-              <span class={'font-bold'}>{this._doiInfo.title}</span>
-              {this._doiInfo.creators.length > 0 && <span class={'ml-2 text-sm opacity-75'}>({this._doiInfo.creators[0]}{this._doiInfo.creators.length > 1 ? ' et al.' : ''})</span>}
-            </span>
-          ) : (
-            <span class={'font-bold'}>{this._doi.toString()}</span>
-          )}
+        <span class="mr-2 flex-none">
+          <LogoComponent />
+        </span>
+        <span class={'flex-none items-center px-1 truncate'} title={citation}>
+          {citation}
         </span>
       </span>
     );
