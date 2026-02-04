@@ -204,7 +204,7 @@ export class DOIType extends GenericIdentifierType {
   }
 
   isResolvable(): boolean {
-    return this._doiInfo !== undefined && (this._doiInfo.title !== undefined || this._doiInfo.creators.length > 0);
+    return this._doiInfo !== undefined && this._doiInfo !== null && (this._doiInfo.title !== undefined || this._doiInfo.creators.length > 0);
   }
 
   renderPreview(): FunctionalComponent {

@@ -417,8 +417,7 @@ export class DOIInfo {
 
       // Extract other metadata
       const publisher = message.publisher;
-      const publicationYear = message.published?.['date-parts']?.[0]?.[0] || 
-                             message.created?.['date-parts']?.[0]?.[0];
+      const publicationYear = this.extractPublicationYear(message);
       const resourceType = message.type;
 
       // Extract description (abstract)
@@ -447,6 +446,22 @@ export class DOIInfo {
       console.debug('CrossRef API error:', error);
       return null;
     }
+  }
+
+  /**
+   * Extracts publication year from CrossRef message.
+   * @param message The CrossRef message object.
+   * @returns {number | undefined} The publication year or undefined if not found.
+   * @private
+   */
+  private static extractPublicationYear(message: CrossRefResponse['message']): number | undefined {
+    // Try to get year from published date
+    const publishedYear = message.published?.['date-parts']?.[0]?.[0];
+    if (publishedYear) return publishedYear;
+    
+    // Fall back to created date
+    const createdYear = message.created?.['date-parts']?.[0]?.[0];
+    return createdYear;
   }
 
   /**
