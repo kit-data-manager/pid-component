@@ -5,6 +5,7 @@ import { GenericIdentifierType } from './GenericIdentifierType';
 import { DateType } from '../rendererModules/DateType';
 import { ORCIDType } from '../rendererModules/ORCiD/ORCIDType';
 import { HandleType } from '../rendererModules/Handle/HandleType';
+import { DOIType } from '../rendererModules/DOI/DOIType';
 import { EmailType } from '../rendererModules/EmailType';
 import { URLType } from '../rendererModules/URLType';
 import { FallbackType } from '../rendererModules/FallbackType';
@@ -34,36 +35,41 @@ export const renderers: {
   },
   {
     priority: 2,
+    key: 'DOIType',
+    constructor: DOIType,
+  },
+  {
+    priority: 3,
     key: 'HandleType',
     constructor: HandleType,
   },
   {
-    priority: 3,
+    priority: 4,
     key: 'RORType',
     constructor: RORType,
   },
   {
-    priority: 4,
+    priority: 5,
     key: 'SPDXType',
     constructor: SPDXType,
   },
   {
-    priority: 5,
+    priority: 6,
     key: 'EmailType',
     constructor: EmailType,
   },
   {
-    priority: 6,
+    priority: 7,
     key: 'URLType',
     constructor: URLType,
   },
   {
-    priority: 7,
+    priority: 8,
     key: 'LocaleType',
     constructor: LocaleType,
   },
   {
-    priority: 8,
+    priority: 9,
     key: 'JSONType',
     constructor: JSONType,
   },

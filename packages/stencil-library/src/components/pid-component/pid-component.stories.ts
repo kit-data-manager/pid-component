@@ -491,3 +491,234 @@ export const SystemMode: Story = {
     },
   },
 };
+
+/**
+ * Demonstrates DOI rendering with DataCite metadata - Journal Paper
+ */
+export const DOI_DataCite_JournalPaper: Story = {
+  args: {
+    value: '10.5445/IR/1000185135',
+    openByDefault: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Displays a journal paper DOI with metadata from DataCite.',
+      },
+      source: {
+        code: `
+<pid-component value="10.5445/IR/1000185135" open-by-default="true"></pid-component>
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Demonstrates DOI rendering with CrossRef metadata - Journal Paper
+ */
+export const DOI_CrossRef_JournalPaper: Story = {
+  args: {
+    value: '10.1109/eScience65000.2025.00022',
+    openByDefault: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Displays a journal paper DOI with metadata from CrossRef.',
+      },
+      source: {
+        code: `
+<pid-component value="10.1109/eScience65000.2025.00022" open-by-default="true"></pid-component>
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Demonstrates DOI rendering with DataCite metadata - Software on Zenodo
+ */
+export const DOI_DataCite_Software: Story = {
+  args: {
+    value: 'https://doi.org/10.5281/zenodo.13629109',
+    openByDefault: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Displays software DOI from Zenodo with DataCite metadata.',
+      },
+      source: {
+        code: `
+<pid-component value="https://doi.org/10.5281/zenodo.13629109" open-by-default="true"></pid-component>
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Demonstrates DOI rendering with DataCite metadata - RFC Document
+ */
+export const DOI_DataCite_RFC: Story = {
+  args: {
+    value: 'doi:10.17487/rfc3650',
+    openByDefault: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Displays an RFC document DOI with DataCite metadata.',
+      },
+      source: {
+        code: `
+<pid-component value="doi:10.17487/rfc3650" open-by-default="true"></pid-component>
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Demonstrates DOI rendering with CrossRef metadata - Book
+ */
+export const DOI_CrossRef_Book: Story = {
+  args: {
+    value: '10.1007/978-1-4419-8598-9',
+    openByDefault: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Displays a book DOI with metadata from CrossRef.',
+      },
+      source: {
+        code: `
+<pid-component value="10.1007/978-1-4419-8598-9" open-by-default="true"></pid-component>
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Demonstrates DOI rendering with DataCite metadata - Slides/Presentation
+ */
+export const DOI_DataCite_Slides: Story = {
+  args: {
+    value: '10.5445/IR/1000178054',
+    openByDefault: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Displays a presentation/slides DOI with DataCite metadata.',
+      },
+      source: {
+        code: `
+<pid-component value="10.5445/IR/1000178054" open-by-default="true"></pid-component>
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Demonstrates DOI rendering with DataCite metadata - arXiv Preprint
+ */
+export const DOI_DataCite_Preprint: Story = {
+  args: {
+    value: '10.48550/ARXIV.2505.16550',
+    openByDefault: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Displays an arXiv preprint DOI with DataCite metadata.',
+      },
+      source: {
+        code: `
+<pid-component value="10.48550/ARXIV.2505.16550" open-by-default="true"></pid-component>
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Demonstrates DOI rendering with different citation styles
+ */
+export const DOI_CitationStyles: Story = {
+  args: {
+    value: '10.5445/IR/1000185135',
+    openByDefault: false,
+    settings: JSON.stringify([
+      {
+        type: 'DOIType',
+        values: [
+          { name: 'citationStyle', value: 'APA' }
+        ]
+      }
+    ]),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstrates how to configure citation style (APA, Chicago, IEEE, Harvard, Anglia Ruskin) via settings.',
+      },
+      source: {
+        code: `
+<pid-component
+  value="10.5445/IR/1000185135"
+  settings='[{"type":"DOIType","values":[{"name":"citationStyle","value":"APA"}]}]'
+></pid-component>
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Demonstrates rendering of a JSON object
+ */
+export const JSON_Object: Story = {
+  args: {
+    value: '{"name": "pid-component", "version": "1.0.0", "features": ["PIDs", "ORCiDs", "DOIs"]}',
+    openByDefault: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Renders a JSON object with syntax highlighting and tree view.',
+      },
+      source: {
+        code: `
+<pid-component value='{"name": "pid-component", "version": "1.0.0", "features": ["PIDs", "ORCiDs", "DOIs"]}'></pid-component>
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Demonstrates rendering of a Locale
+ */
+export const Locale: Story = {
+  args: {
+    value: 'de-DE',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Renders a locale code with its flag and name.',
+      },
+      source: {
+        code: `
+<pid-component value='de-DE'></pid-component>
+        `,
+      },
+    },
+  },
+};
+

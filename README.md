@@ -69,6 +69,62 @@ the [source code](packages/stencil-library/src/components/pid-component/readme.m
 e.g. `currentLevelOfSubcomponents` -> `current-level-of-subcomponents`).
 When using inside Stencil or with JSX/TSX syntax, you must use the camelCase version.**
 
+## Supported Types
+
+The component automatically detects and renders the following types:
+
+- **PIDs**: Resolvable via [handle.net](https://handle.net).
+- **DOIs**: With DataCite or CrossRef metadata; resolvable via [doi.org](https://doi.org). Supports various citation
+  styles.
+- **ORCiDs**: Resolvable via [orcid.org](https://orcid.org). Displays profile information, affiliations, works, etc.
+- **RORs**: Resolvable via [ror.org](https://ror.org). Displays organization details, hierarchies, and location.
+- **SPDX**: License identifiers and URLs.
+- **URLs**: Starting with http:// or https://.
+- **Email-addresses**: Individual or comma-separated lists.
+- **Dates**: Formatted date strings.
+- **JSON objects**: Rendered with syntax highlighting and tree view using `json-viewer`.
+- **Locales**: e.g., en-US, de-DE. Visualized with flags (if region is present).
+- **Fallback**: Everything else is rendered as a simple string.
+
+## Configuration & Settings
+
+You can customize the behavior of specific renderers by passing a JSON configuration string to the `settings` property.
+
+### Available Settings
+
+**Global Settings**
+
+- `ttl` (number): Time-to-live in milliseconds for cached data (default: varies by type).
+
+**DOIType**
+
+- `citationStyle` (string): The citation style to use for the preview.
+  - Options: `APA`, `Chicago`, `IEEE`, `Harvard`, `Anglia Ruskin`.
+  - Default: `APA`.
+
+**ORCIDType**
+
+- `showAffiliation` (boolean): Whether to show the affiliation in the summary.
+  - Default: `true`.
+- `affiliationAt` (string/date as ms): The date for which the affiliation should be shown.
+  - Default: Current date.
+
+**JSONType**
+
+- `darkMode` (string): The theme for the JSON viewer.
+  - Options: `light`, `dark`, `system`.
+  - Default: `system`.
+
+### Example Configuration
+
+```html
+
+<pid-component
+  value="https://orcid.org/0000-0000-0000-0000"
+  settings='[{"type":"ORCIDType","values":[{"name":"showAffiliation","value":false}]}]'
+></pid-component>
+```
+
 ## Monorepo
 
 This is a monorepo containing the following packages:

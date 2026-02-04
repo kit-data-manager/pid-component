@@ -4,10 +4,12 @@ import * as PIDComponentStories from './pid-component.stories';
 
 <Meta of={PIDComponentStories} />
 
-# pid-component
+# PID Component
 
 The `pid-component` dynamically renders a component based on the value of the `value` property.
+It automatically detects the format of the input `value` and renders the appropriate sub-component.
 Depending on the value, it decides which component to render, what priority to give it, and what props to pass to it.
+
 It also renders itself recursively for all its children when unfolded.
 You can set the maximum depth of recursion with the `level-of-subcomponents` property.
 By default, it is set to 1, which means that it will only render the first level of children, but not their children.
@@ -32,160 +34,243 @@ Include **both** scripts to ensure support for modern browsers (ESM) and legacy 
 **Please notice that you must use the hyphenated version of an attribute when using the component directly in HTML (e.g. `currentLevelOfSubcomponents` -> `current-level-of-subcomponents`).
 When using inside Stencil or with JSX/TSX syntax, you must use the camelCase version.**
 
+## Table of Contents
+
+- [Default](#default)
+- [Controls](#controls)
+- [Supported Types](#supported-types)
+- [1. Persistent Identifiers (Handles)](#1-persistent-identifiers-handles)
+- [2. Digital Object Identifiers (DOIs)](#2-digital-object-identifiers-dois)
+- [3. ORCiD](#3-orcid-open-researcher-and-contributor-id)
+- [4. ROR](#4-research-organization-registry-ror)
+- [5. SPDX Licenses](#5-spdx-licenses)
+- [6. JSON Data](#6-json-data)
+- [7. Locales & Flags](#7-locales--flags)
+- [8. Dates](#8-dates)
+- [9. URLs & E-Mails](#9-urls--e-mails)
+- [10. Fallback](#10-fallback)
+- [Advanced Configuration](#advanced-configuration)
+- [Using Settings](#using-settings)
+- [Recursive Rendering](#recursive-rendering)
+
 ## Default
 
 <Canvas of={PIDComponentStories.Default} />
 
 ## Controls
 
-Here you can play around with the component and see how it behaves.
-
 <Controls />
 
-## ORCiD in record
+---
 
-You can even use this component to render different kinds of components inside a single component.
-Notice here that the ORCiDs are rendered with as a usual ORCiD component, the dates and urls are also nicely formatted and styled.
+# Supported Types
 
-<Canvas of={PIDComponentStories.ORCIDInRecord} />
+The following chapters describe each supported type, the task it solves, available settings, and examples.
 
-## Settings
+## 1. Persistent Identifiers (Handles)
 
-Different components need different settings.
-You can pass these settings to the component via the 'settings' property.
-E.g., The ORCiD component enables you to decide whether you want to show the affilliation in the summary or not.
-It also enables you to show the affilliation at a certain point of time.
+**Task:**
+Resolves Handle-based PIDs (e.g., `21.T11981/...`) using the `handle.net` infrastructure. It retrieves the PID record and displays its data entries (like URL, HS_ADMIN, etc.) in a structured table. It supports recursive resolution if a value inside the record is another recognized identifier.
 
-For better performance, the pid-component stores fetched data in the IndexedDB.
-To ensure that the data and representation are up-to-date, you can set a time-to-live (TTL) for each type.
-The TTL is the time in milliseconds after which the data is considered outdated and will be fetched again.
-In the example below, the TTL for the HandleType is set to 1 hour (3600000 ms) and for the ORCIDType to 1 day (86400000 ms).
-This results in the following settings JSON that you have to provide in a stringified form:
+**Settings (HandleType):**
+- `ttl` (number): Time-to-live in milliseconds for caching the resolved record.
 
-```json
-[
-  {
-    "type": "HandleType",
-    "values": [
-      {
-        "name": "ttl",
-        "value": 3600000
-      }
-    ]
-  },
-  {
-    "type": "ORCIDType",
-    "values": [
-      {
-        "name": "ttl",
-        "value": 86400000
-      },
-      {
-        "name": "affiliationAt",
-        "value": 949363200000
-      },
-      {
-        "name": "showAffiliation",
-        "value": true
-      }
-    ]
-  }
-]
-```
+### Examples
 
-This is an example where the settings above are passed to the component:
-
-<Canvas of={PIDComponentStories.ORCIDInRecordWithSettings} />
-
-## No subcomponents
-
-You can also prohibit the unfolding of the component by setting the `current-level-of-subcomponents` to the same value as the `level-of-subcomponents` property.
-Alternatively, simply set the attribute `hide-subcomponents`.
-
-<Canvas of={PIDComponentStories.HandleWithoutSubcomponent} />
-
-## Available types (for now)
-
-The component can render the following types of components:
-
-- PIDs (resolvable via [handle.net](handle.net))
-- ORCiDs (resolvable via [orcid.org](orcid.org))
-- URLs (starting with http:// or https://)
-- Emails (separated by comma)
-- Dates
-- Everything else is rendered as a simple string (aka. fallback).
-
-You can easily add a new type by simply implementing the abstract class `GenericIdentifierType` and adding it to the `Parser`.
-
-### PID
-
+**Standard PID:**
+Resolves the handle and displays its values.
 <Canvas of={PIDComponentStories.Handle} />
 
-### ORCiD
+**Without Subcomponents:**
+Displays only the top-level PID parts without unfolding the resolved record.
+<Canvas of={PIDComponentStories.HandleWithoutSubcomponent} />
 
+**Inline in Text:**
+The component can be used inline within text.
+<Canvas of={PIDComponentStories.HandleInText} />
+
+---
+
+## 2. Digital Object Identifiers (DOIs)
+
+**Task:**
+Resolves DOIs (e.g., `10.1000/xyz`) to fetch metadata from providers like DataCite or CrossRef. It renders a formatted citation preview and allows expanding to view detailed metadata (authors, publication dates, licenses, etc.).
+
+**Settings (DOIType):**
+- `citationStyle` (string): The citation style for the preview.
+- Options: `APA`, `Chicago`, `IEEE`, `Harvard`, `Anglia Ruskin`.
+- Default: `APA`.
+- `ttl` (number): Time-to-live for cached metadata.
+
+### Examples
+
+**DOI with DataCite Metadata:**
+<Canvas of={PIDComponentStories.DOI_DataCite_JournalPaper} />
+
+**DOI with CrossRef Metadata:**
+<Canvas of={PIDComponentStories.DOI_CrossRef_JournalPaper} />
+
+**Configurable Citation Style:**
+This example sets the citation style to `APA`.
+<Canvas of={PIDComponentStories.DOI_CitationStyles} />
+
+---
+
+## 3. ORCiD (Open Researcher and Contributor ID)
+
+**Task:**
+Identifies researchers and contributors. It validates the ORCiD format and fetches the public profile from the ORCiD API. It displays the person's name, biography, affiliations, and other public information.
+
+**Settings (ORCIDType):**
+- `showAffiliation` (boolean): Whether to display the person's current affiliation in the summary.
+- Default: `true`.
+- `affiliationAt` (string/date): A date string or timestamp. If set, it displays the affiliation valid at that specific date.
+- `ttl` (number): Time-to-live for cached profile data.
+
+### Examples
+
+**Standard ORCiD:**
 <Canvas of={PIDComponentStories.ORCID} />
 
-### URL
+**ORCiD with Settings:**
+Configured to show specific affiliation details.
+<Canvas of={PIDComponentStories.ORCIDInRecordWithSettings} />
 
-<Canvas of={PIDComponentStories.URL} />
+**Inline in Text:**
+<Canvas of={PIDComponentStories.ORCIDInText} />
 
-### E-Mail addresses
+---
 
-<Canvas of={PIDComponentStories.Email} />
+## 4. Research Organization Registry (ROR)
 
-You can also render multiple e-mail addresses separated by a comma.
+**Task:**
+Resolves ROR IDs to identify research organizations. It fetches organization details such as name, acronyms, location, and relationships (parent/child organizations) from the ROR API.
 
-<Canvas of={PIDComponentStories.CommaSeperatedMails} />
+**Settings (RORType):**
+- `ttl` (number): Time-to-live for cached organization data.
 
-### Date
+### Example
+
+<Canvas of={PIDComponentStories.ROR} />
+
+---
+
+## 5. SPDX Licenses
+
+**Task:**
+Recognizes SPDX license identifiers (e.g., `Apache-2.0`) or URLs. It validates the license against the SPDX database/API and provides links to the full license text and details.
+
+**Settings (SPDXType):**
+- `ttl` (number): Time-to-live for cached license data.
+
+### Examples
+
+**SPDX Short Identifier:**
+<Canvas of={PIDComponentStories.SPDXShort} />
+
+**SPDX License URL:**
+<Canvas of={PIDComponentStories.SPDXLong} />
+
+---
+
+## 6. JSON Data
+
+**Task:**
+Parses and renders JSON strings or objects. It provides a collapsible tree view with syntax highlighting, making complex data structures readable.
+
+**Settings (JSONType):**
+- `darkMode` (string): Sets the theme for the JSON viewer.
+- Options: `light`, `dark`, `system`.
+
+### Example
+
+<Canvas of={PIDComponentStories.JSON_Object} />
+
+---
+
+## 7. Locales & Flags
+
+**Task:**
+Recognizes locale codes (e.g., `de-DE`, `en-US`). It renders the language name and, if a region is specified, the corresponding country flag.
+
+**Settings (LocaleType):**
+- None specific.
+
+### Example
+
+<Canvas of={PIDComponentStories.Locale} />
+
+---
+
+## 8. Dates
+
+**Task:**
+Detects ISO 8601 date strings. It renders them in a user-friendly, locale-aware format.
+
+**Settings (DateType):**
+- Uses browser locale defaults.
+
+### Example
 
 <Canvas of={PIDComponentStories.Date} />
 
-### Fallback (string)
+---
+
+## 9. URLs & E-Mails
+
+**Task:**
+- **URL**: Renders clickable external links.
+- **E-Mail**: Renders clickable `mailto` links. Supports single addresses or comma-separated lists.
+
+**Settings:**
+- None specific.
+
+### Examples
+
+**URL:**
+<Canvas of={PIDComponentStories.URL} />
+
+**Single E-Mail:**
+<Canvas of={PIDComponentStories.Email} />
+
+**Multiple E-Mails:**
+<Canvas of={PIDComponentStories.CommaSeperatedMails} />
+
+---
+
+## 10. Fallback
+
+**Task:**
+If no other specific type matches the input value, the component renders the value as a simple text string.
+
+### Example
 
 <Canvas of={PIDComponentStories.Fallback} />
 
-## Adaptive Pagination
+---
 
-The component supports adaptive pagination, which automatically adjusts the number of items shown per page based on the available space. This ensures the data table is always fully visible without internal scrolling.
+# Advanced Configuration
 
-When you enable adaptive pagination:
-- The component will calculate how many items can fit in the available space
-- The pagination will automatically adjust when the container is resized
-- The `amount-of-items` property becomes the initial value that can be unrestricted changed by the user
-- The component will estimate row heights using the `estimated-row-height` property
-- When a subcomponent is expanded, other items remain on the same page if space allows
-- If space is limited, items will automatically reflow to the next page as needed
-- The parent component size remains fixed, ensuring a consistent layout
+## Using Settings
 
-Users can manually adjust the number of items per page using the pagination controls, even in adaptive mode. This gives users full control over the display while still benefiting from the automatic space optimization.
-
-To enable adaptive pagination, set the `adaptive-pagination` attribute to `true`:
+You can pass a JSON array to the `settings` property to configure specific types.
 
 ```html
 <pid-component
-  value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"
-  adaptive-pagination="true"
-  amount-of-items="10"
-  estimated-row-height="40">
-</pid-component>
+  value="..."
+  settings='[
+    {"type": "ORCIDType", "values": [{"name": "showAffiliation", "value": false}]},
+    {"type": "DOIType", "values": [{"name": "citationStyle", "value": "IEEE"}]}
+  ]'
+></pid-component>
 ```
 
-## Inside a text
+## Recursive Rendering
 
-You can also use the component in text.
-It will be rendered in line while folded and will take up the whole width of the container when unfolded.
+The component supports recursive rendering for complex data structures (like a PID record containing ORCiDs).
 
-<Canvas of={PIDComponentStories.HandleInText} />
+- `level-of-subcomponents`: Controls how deep the recursion goes (default: 1).
+- `current-level-of-subcomponents`: Used internally to track depth. Set it equal to `level-of-subcomponents` to prevent initial unfolding.
+- `hide-subcomponents`: Boolean attribute to completely disable sub-component rendering.
 
-You can make the component even smaller by setting the `emphasize-component` attribute to `false`.
-
-<Canvas of={PIDComponentStories.HandleInTextNotEmphasized} />
-
-This is an example where the subcomponents are hidden and the component is not emphasized.
-
-<Canvas of={PIDComponentStories.HandleWithoutSubcomponentInText} />
-
-This is an example where an ORCiD is rendered in text.
-
-<Canvas of={PIDComponentStories.ORCIDInText} />
+<Canvas of={PIDComponentStories.ORCIDInRecord} />
