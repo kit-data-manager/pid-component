@@ -11,6 +11,25 @@
       font-family: sans-serif;
       margin: 2em;
       line-height: 1.6;
+      background-color: #ffffff;
+      color: #2c3e50;
+      transition: background-color .2s ease, color .2s ease;
+    }
+
+    /* Darkmode according to system setting */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #0f1720;
+        color: #e6eef6;
+      }
+
+      h1, h2 {
+        color: #e6eef6;
+      }
+
+      a {
+        color: #63a4ff;
+      }
     }
 
     h1, h2 {
@@ -39,7 +58,7 @@
 </p>
 
 <h2>Example</h2>
-<pid-component value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"></pid-component>
+<pid-component value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6" dark-mode="system"></pid-component>
 
 </body>
 </html>

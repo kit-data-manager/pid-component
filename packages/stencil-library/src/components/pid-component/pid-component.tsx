@@ -531,6 +531,12 @@ export class PidComponent {
     }
   }
 
+  private blockEventPropagation = (e: Event) => {
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+    e.preventDefault()
+  }
+
   /**
    * Determines if footer should be shown based on whether there are actions or items with pagination
    */
@@ -604,7 +610,7 @@ export class PidComponent {
                 {
                   // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
                   this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy ? (
-                    <copy-button value={this.identifierObject.value} class="ml-2 shrink-0" aria-label={`Copy value: ${this.identifierObject.value}`} />
+                    <copy-button value={this.identifierObject.value} class="ml-2 shrink-0" aria-label={`Copy value: ${this.identifierObject.value}`} onClick={this.blockEventPropagation}/>
                   ) : (
                     ''
                   )
@@ -640,11 +646,7 @@ export class PidComponent {
               showFooter={this.shouldShowFooter}
               darkMode={this.darkMode}
               onCollapsibleToggle={e => this.toggleSubcomponents(e)}
-              onClick={e => {
-                // Isolate click events to prevent bubbling to parent components
-                e.stopPropagation();
-                e.stopImmediatePropagation();
-              }}
+              onClick={this.blockEventPropagation}
               aria-label={`Collapsible section for ${this.value}`}
               aria-describedby={`${this.el.id}-description`}
             >
@@ -662,6 +664,7 @@ export class PidComponent {
                   value={this.value}
                   // class="relative my-auto ml-auto shrink-0"
                   aria-label={`Copy value: ${this.value}`}
+                  onClick={this.blockEventPropagation}
                 />
               ) : null}
 
