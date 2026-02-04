@@ -109,10 +109,15 @@ Alternatively, simply set the attribute `hide-subcomponents`.
 The component can render the following types of components:
 
 - PIDs (resolvable via [handle.net](handle.net))
+- DOIs (with DataCite or CrossRef metadata; resolvable via [doi.org](doi.org))
 - ORCiDs (resolvable via [orcid.org](orcid.org))
+- RORs (resolvable via [ror.org](ror.org))
+- SPDX license identifiers/URLs
 - URLs (starting with http:// or https://)
-- Emails (separated by comma)
+- Email-addresses (separated by comma)
 - Dates
+- JSON objects
+- Locales (e.g. en-US, de-DE)
 - Everything else is rendered as a simple string (aka. fallback).
 
 You can easily add a new type by simply implementing the abstract class `GenericIdentifierType` and adding it to the `Parser`.
@@ -144,32 +149,6 @@ You can also render multiple e-mail addresses separated by a comma.
 ### Fallback (string)
 
 <Canvas of={PIDComponentStories.Fallback} />
-
-## Adaptive Pagination
-
-The component supports adaptive pagination, which automatically adjusts the number of items shown per page based on the available space. This ensures the data table is always fully visible without internal scrolling.
-
-When you enable adaptive pagination:
-- The component will calculate how many items can fit in the available space
-- The pagination will automatically adjust when the container is resized
-- The `amount-of-items` property becomes the initial value that can be unrestricted changed by the user
-- The component will estimate row heights using the `estimated-row-height` property
-- When a subcomponent is expanded, other items remain on the same page if space allows
-- If space is limited, items will automatically reflow to the next page as needed
-- The parent component size remains fixed, ensuring a consistent layout
-
-Users can manually adjust the number of items per page using the pagination controls, even in adaptive mode. This gives users full control over the display while still benefiting from the automatic space optimization.
-
-To enable adaptive pagination, set the `adaptive-pagination` attribute to `true`:
-
-```html
-<pid-component
-  value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"
-  adaptive-pagination="true"
-  amount-of-items="10"
-  estimated-row-height="40">
-</pid-component>
-```
 
 ## Inside a text
 
