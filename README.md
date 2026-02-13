@@ -125,6 +125,21 @@ You can customize the behavior of specific renderers by passing a JSON configura
 ></pid-component>
 ```
 
+## PID Resolver
+
+The `pid-component` package exports a useful helper class for resolving PIDs. These are `PID`, `PIDDataType` and `PIDRecord` and can be
+imported like this:
+
+```typescript
+import { PID, PIDDataType, PIDRecord } from "@kit-data-manager/pid-component"
+
+const pid = new PID("21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6")
+const pidRecord = await pid.resolve()
+const pidDataType = await PIDDataType.resolveDataType(pid)
+```
+
+Further documentation is available in the [source code](packages/stencil-library/src/rendererModules/Handle/PID.ts).
+
 ## Monorepo
 
 This is a monorepo containing the following packages:
