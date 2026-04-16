@@ -7,7 +7,12 @@
 
 /* eslint-disable */
 
+import type { EventName, StencilReactComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from '@stencil/react-output-target/runtime';
+import React from 'react';
+
 import { type PidCollapsibleCustomEvent, type PidDataTableCustomEvent, type PidPaginationCustomEvent, type PidTooltipCustomEvent } from "@kit-data-manager/pid-component";
+import type { Components } from "@kit-data-manager/pid-component/dist/components";
 import { ColorHighlight as ColorHighlightElement, defineCustomElement as defineColorHighlight } from "@kit-data-manager/pid-component/dist/components/color-highlight.js";
 import { CopyButton as CopyButtonElement, defineCustomElement as defineCopyButton } from "@kit-data-manager/pid-component/dist/components/copy-button.js";
 import { JsonViewer as JsonViewerElement, defineCustomElement as defineJsonViewer } from "@kit-data-manager/pid-component/dist/components/json-viewer.js";
@@ -18,13 +23,10 @@ import { PidComponent as PidComponentElement, defineCustomElement as definePidCo
 import { PidDataTable as PidDataTableElement, defineCustomElement as definePidDataTable } from "@kit-data-manager/pid-component/dist/components/pid-data-table.js";
 import { PidPagination as PidPaginationElement, defineCustomElement as definePidPagination } from "@kit-data-manager/pid-component/dist/components/pid-pagination.js";
 import { PidTooltip as PidTooltipElement, defineCustomElement as definePidTooltip } from "@kit-data-manager/pid-component/dist/components/pid-tooltip.js";
-import type { EventName, StencilReactComponent } from '@stencil/react-output-target/runtime';
-import { createComponent } from '@stencil/react-output-target/runtime';
-import React from 'react';
 
 export type ColorHighlightEvents = NonNullable<unknown>;
 
-export const ColorHighlight: StencilReactComponent<ColorHighlightElement, ColorHighlightEvents> = /*@__PURE__*/ createComponent<ColorHighlightElement, ColorHighlightEvents>({
+export const ColorHighlight: StencilReactComponent<ColorHighlightElement, ColorHighlightEvents, Components.ColorHighlight> = /*@__PURE__*/ createComponent<ColorHighlightElement, ColorHighlightEvents, Components.ColorHighlight>({
     tagName: 'color-highlight',
     elementClass: ColorHighlightElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
@@ -35,7 +37,7 @@ export const ColorHighlight: StencilReactComponent<ColorHighlightElement, ColorH
 
 export type CopyButtonEvents = NonNullable<unknown>;
 
-export const CopyButton: StencilReactComponent<CopyButtonElement, CopyButtonEvents> = /*@__PURE__*/ createComponent<CopyButtonElement, CopyButtonEvents>({
+export const CopyButton: StencilReactComponent<CopyButtonElement, CopyButtonEvents, Components.CopyButton> = /*@__PURE__*/ createComponent<CopyButtonElement, CopyButtonEvents, Components.CopyButton>({
     tagName: 'copy-button',
     elementClass: CopyButtonElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
@@ -46,7 +48,7 @@ export const CopyButton: StencilReactComponent<CopyButtonElement, CopyButtonEven
 
 export type JsonViewerEvents = NonNullable<unknown>;
 
-export const JsonViewer: StencilReactComponent<JsonViewerElement, JsonViewerEvents> = /*@__PURE__*/ createComponent<JsonViewerElement, JsonViewerEvents>({
+export const JsonViewer: StencilReactComponent<JsonViewerElement, JsonViewerEvents, Components.JsonViewer> = /*@__PURE__*/ createComponent<JsonViewerElement, JsonViewerEvents, Components.JsonViewer>({
     tagName: 'json-viewer',
     elementClass: JsonViewerElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
@@ -57,7 +59,7 @@ export const JsonViewer: StencilReactComponent<JsonViewerElement, JsonViewerEven
 
 export type LocaleVisualizationEvents = NonNullable<unknown>;
 
-export const LocaleVisualization: StencilReactComponent<LocaleVisualizationElement, LocaleVisualizationEvents> = /*@__PURE__*/ createComponent<LocaleVisualizationElement, LocaleVisualizationEvents>({
+export const LocaleVisualization: StencilReactComponent<LocaleVisualizationElement, LocaleVisualizationEvents, Components.LocaleVisualization> = /*@__PURE__*/ createComponent<LocaleVisualizationElement, LocaleVisualizationEvents, Components.LocaleVisualization>({
     tagName: 'locale-visualization',
     elementClass: LocaleVisualizationElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
@@ -68,7 +70,7 @@ export const LocaleVisualization: StencilReactComponent<LocaleVisualizationEleme
 
 export type PidActionsEvents = NonNullable<unknown>;
 
-export const PidActions: StencilReactComponent<PidActionsElement, PidActionsEvents> = /*@__PURE__*/ createComponent<PidActionsElement, PidActionsEvents>({
+export const PidActions: StencilReactComponent<PidActionsElement, PidActionsEvents, Components.PidActions> = /*@__PURE__*/ createComponent<PidActionsElement, PidActionsEvents, Components.PidActions>({
     tagName: 'pid-actions',
     elementClass: PidActionsElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
@@ -82,7 +84,7 @@ export type PidCollapsibleEvents = {
     onContentHeightChange: EventName<PidCollapsibleCustomEvent<{ maxHeight: number }>>
 };
 
-export const PidCollapsible: StencilReactComponent<PidCollapsibleElement, PidCollapsibleEvents> = /*@__PURE__*/ createComponent<PidCollapsibleElement, PidCollapsibleEvents>({
+export const PidCollapsible: StencilReactComponent<PidCollapsibleElement, PidCollapsibleEvents, Components.PidCollapsible> = /*@__PURE__*/ createComponent<PidCollapsibleElement, PidCollapsibleEvents, Components.PidCollapsible>({
     tagName: 'pid-collapsible',
     elementClass: PidCollapsibleElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
@@ -96,7 +98,7 @@ export const PidCollapsible: StencilReactComponent<PidCollapsibleElement, PidCol
 
 export type PidComponentEvents = NonNullable<unknown>;
 
-export const PidComponent: StencilReactComponent<PidComponentElement, PidComponentEvents> = /*@__PURE__*/ createComponent<PidComponentElement, PidComponentEvents>({
+export const PidComponent: StencilReactComponent<PidComponentElement, PidComponentEvents, Components.PidComponent> = /*@__PURE__*/ createComponent<PidComponentElement, PidComponentEvents, Components.PidComponent>({
     tagName: 'pid-component',
     elementClass: PidComponentElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
@@ -110,7 +112,7 @@ export type PidDataTableEvents = {
     onItemsPerPageChange: EventName<PidDataTableCustomEvent<number>>
 };
 
-export const PidDataTable: StencilReactComponent<PidDataTableElement, PidDataTableEvents> = /*@__PURE__*/ createComponent<PidDataTableElement, PidDataTableEvents>({
+export const PidDataTable: StencilReactComponent<PidDataTableElement, PidDataTableEvents, Components.PidDataTable> = /*@__PURE__*/ createComponent<PidDataTableElement, PidDataTableEvents, Components.PidDataTable>({
     tagName: 'pid-data-table',
     elementClass: PidDataTableElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
@@ -127,7 +129,7 @@ export type PidPaginationEvents = {
     onItemsPerPageChange: EventName<PidPaginationCustomEvent<number>>
 };
 
-export const PidPagination: StencilReactComponent<PidPaginationElement, PidPaginationEvents> = /*@__PURE__*/ createComponent<PidPaginationElement, PidPaginationEvents>({
+export const PidPagination: StencilReactComponent<PidPaginationElement, PidPaginationEvents, Components.PidPagination> = /*@__PURE__*/ createComponent<PidPaginationElement, PidPaginationEvents, Components.PidPagination>({
     tagName: 'pid-pagination',
     elementClass: PidPaginationElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
@@ -141,7 +143,7 @@ export const PidPagination: StencilReactComponent<PidPaginationElement, PidPagin
 
 export type PidTooltipEvents = { onTooltipExpansionChange: EventName<PidTooltipCustomEvent<{ expand: boolean; requiredHeight: number }>> };
 
-export const PidTooltip: StencilReactComponent<PidTooltipElement, PidTooltipEvents> = /*@__PURE__*/ createComponent<PidTooltipElement, PidTooltipEvents>({
+export const PidTooltip: StencilReactComponent<PidTooltipElement, PidTooltipEvents, Components.PidTooltip> = /*@__PURE__*/ createComponent<PidTooltipElement, PidTooltipEvents, Components.PidTooltip>({
     tagName: 'pid-tooltip',
     elementClass: PidTooltipElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.

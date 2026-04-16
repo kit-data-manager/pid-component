@@ -45,10 +45,10 @@
   },
   "dependencies": {
     "@kit-data-manager/pid-component": "^0.3.0",
-    "@stencil/react-output-target": "^1.4.0"
+    "@stencil/react-output-target": "^1.5.0"
   },
   "devDependencies": {
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.2"
   },
   "keywords": [
     "react",
