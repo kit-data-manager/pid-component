@@ -684,7 +684,7 @@ export class PidComponent {
                 <copy-button
                   slot="summary-actions"
                   value={this.value}
-                  class="items-end shrink-0"
+                  class="self-end shrink-0"
                   aria-label={`Copy value: ${this.value}`}
                   onClick={this.blockEventPropagation}
                 />

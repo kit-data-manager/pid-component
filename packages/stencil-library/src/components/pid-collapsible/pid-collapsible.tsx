@@ -777,7 +777,7 @@ export class PidCollapsible {
 
     // Add emphasis classes (border, shadow, and horizontal margin for spacing)
     if (this.emphasize) {
-      baseClasses.push('mx-2');
+      // baseClasses.push('mx-2');
       if (this.isDarkMode) {
         baseClasses.push('border', 'border-gray-600', 'rounded-md', 'shadow-xs');
       } else {
@@ -842,22 +842,25 @@ export class PidCollapsible {
       '[&::-webkit-details-marker]:hidden',
       'select-none',
       'box-border',
+      'pl-1',
+      'py-0',
     ];
 
     if (this.open) {
+      baseClasses.push('sticky', 'top-0', `z-${Z_INDICES.STICKY_ELEMENTS}`, 'overflow-visible', 'backdrop-blur-xs');
       if (this.isDarkMode) {
-        baseClasses.push('sticky', 'top-0', 'bg-gray-800', `z-${Z_INDICES.STICKY_ELEMENTS}`, 'px-2', 'py-0', 'overflow-visible', 'backdrop-blur-xs');
+        baseClasses.push('bg-gray-800');
         if (this.emphasize) {
           baseClasses.push('border-b', 'border-gray-700');
         }
       } else {
-        baseClasses.push('sticky', 'top-0', 'bg-white', `z-${Z_INDICES.STICKY_ELEMENTS}`, 'px-2', 'py-0', 'overflow-visible', 'backdrop-blur-xs');
+        baseClasses.push('bg-white');
         if (this.emphasize) {
           baseClasses.push('border-b', 'border-gray-100');
         }
       }
     } else {
-      baseClasses.push('px-1', 'py-0', 'whitespace-nowrap', 'overflow-hidden', 'text-ellipsis', 'max-w-full');
+      baseClasses.push('whitespace-nowrap', 'overflow-hidden', 'text-ellipsis', 'max-w-full');
     }
 
     // Apply consistent height for both states
@@ -945,7 +948,8 @@ export class PidCollapsible {
               e.stopImmediatePropagation();
             }}
           >
-            <span class={`inline-flex h-full items-center gap-1 pr-2 ${this.open ? 'flex-nowrap whitespace-nowrap' : 'min-w-0 flex-nowrap overflow-hidden'}`}>
+            <span
+              class={`inline-flex h-full items-center ${this.open ? 'flex-nowrap whitespace-nowrap' : 'min-w-0 flex-nowrap overflow-hidden'}`}>
               {this.emphasize && (
                 <span class="flex h-full shrink-0 items-center">
                   <svg
@@ -964,7 +968,7 @@ export class PidCollapsible {
                   </svg>
                 </span>
               )}
-              <span class={`${this.open ? 'overflow-visible' : 'min-w-0 truncate'} flex h-full items-center`}>
+              <span class={`${this.open ? 'overflow-visible' : 'min-w-0 truncate'} flex h-full items-center pl-2`}>
                 <slot name="summary"></slot>
               </span>
             </span>
