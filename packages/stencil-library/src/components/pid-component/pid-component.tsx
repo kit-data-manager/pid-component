@@ -256,6 +256,20 @@ export class PidComponent {
   }
 
   /**
+   * Watches the isExpanded state to set/remove the 'expanded' attribute on the host element.
+   * This attribute is used by :host([expanded]) in CSS to float the component
+   * so surrounding text reflows around it.
+   */
+  @Watch('isExpanded')
+  watchIsExpanded() {
+    if (this.isExpanded) {
+      this.el.setAttribute('expanded', '');
+    } else {
+      this.el.removeAttribute('expanded');
+    }
+  }
+
+  /**
    * Toggles the loadSubcomponents property if the current level of subcomponents is not the total level of subcomponents.
    * The open state is handled by the pid-collapsible component.
    */
@@ -267,17 +281,22 @@ export class PidComponent {
 
       this.isExpanded = event.detail;
 
-      // Only toggle loadSubcomponents when opening, not when collapsing
-      if (event.detail && !this.hideSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) {
-        this.loadSubcomponents = true;
+      if (event.detail) {
+        // Opening: load subcomponents if allowed
+        if (!this.hideSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) {
+          this.loadSubcomponents = true;
 
-        // After loading subcomponents, ensure dimensions are recalculated
-        setTimeout(() => {
-          const collapsible = this.el.querySelector('pid-collapsible');
-          if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
-            (collapsible as any).recalculateContentDimensions();
-          }
-        }, 50); // Give it a bit more time for the DOM to update with new content
+          // After loading subcomponents, ensure dimensions are recalculated
+          setTimeout(() => {
+            const collapsible = this.el.querySelector('pid-collapsible');
+            if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
+              (collapsible as any).recalculateContentDimensions();
+            }
+          }, 50);
+        }
+      } else {
+        // Collapsing: reset loadSubcomponents so temporarilyEmphasized reverts
+        this.loadSubcomponents = false;
       }
     }
   };

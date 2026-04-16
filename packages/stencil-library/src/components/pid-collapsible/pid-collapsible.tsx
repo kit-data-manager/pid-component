@@ -525,7 +525,10 @@ export class PidCollapsible {
   private applyExpandedStyles() {
     try {
       // Apply Tailwind classes for expanded state
-      this.el.classList.add('resize-both', 'overflow-auto', 'bg-white', 'relative', 'block');
+      this.el.classList.add('resize-both', 'overflow-auto', 'relative', 'block');
+      if (this.emphasize) {
+        this.el.classList.add('bg-white');
+      }
 
       // Calculate optimal dimensions based on content
       const dimensions = this.calculateContentDimensions();
@@ -770,10 +773,11 @@ export class PidCollapsible {
    * Gets host classes based on current state
    */
   private getHostClasses() {
-    const baseClasses = ['relative', 'mx-2', 'font-sans', 'box-border', 'leading-normal'];
+    const baseClasses = ['relative', 'font-sans', 'box-border', 'leading-normal'];
 
-    // Add emphasis classes
+    // Add emphasis classes (border, shadow, and horizontal margin for spacing)
     if (this.emphasize) {
+      baseClasses.push('mx-2');
       if (this.isDarkMode) {
         baseClasses.push('border', 'border-gray-600', 'rounded-md', 'shadow-xs');
       } else {
