@@ -11,7 +11,12 @@
     "jsx": "react",
     "allowSyntheticDefaultImports": true,
     "declarationDir": "./dist/types",
-    "rootDir": "./lib"
+    "rootDir": "./lib",
+    "paths": {
+      "@kit-data-manager/pid-component/dist/*": [
+        "../stencil-library/dist/*"
+      ]
+    }
   },
   "include": ["lib"],
   "exclude": ["node_modules"]

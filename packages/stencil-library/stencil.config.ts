@@ -1,7 +1,7 @@
 import { Config } from '@stencil/core';
 import { reactOutputTarget } from '@stencil/react-output-target';
 import { webTypesOutputTarget } from '@stencil-community/web-types-output-target';
-import { postcss } from '@stencil/postcss';
+import { postcss } from '@stencil-community/postcss';
 import tailwindcss from '@tailwindcss/postcss';
 import cssnanoPlugin from 'cssnano';
 

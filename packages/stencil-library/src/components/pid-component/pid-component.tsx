@@ -256,6 +256,20 @@ export class PidComponent {
   }
 
   /**
+   * Watches the isExpanded state to set/remove the 'expanded' attribute on the host element.
+   * This attribute is used by :host([expanded]) in CSS to float the component
+   * so surrounding text reflows around it.
+   */
+  @Watch('isExpanded')
+  watchIsExpanded() {
+    if (this.isExpanded) {
+      this.el.setAttribute('expanded', '');
+    } else {
+      this.el.removeAttribute('expanded');
+    }
+  }
+
+  /**
    * Toggles the loadSubcomponents property if the current level of subcomponents is not the total level of subcomponents.
    * The open state is handled by the pid-collapsible component.
    */
@@ -267,17 +281,22 @@ export class PidComponent {
 
       this.isExpanded = event.detail;
 
-      // Only toggle loadSubcomponents when opening, not when collapsing
-      if (event.detail && !this.hideSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) {
-        this.loadSubcomponents = true;
+      if (event.detail) {
+        // Opening: load subcomponents if allowed
+        if (!this.hideSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) {
+          this.loadSubcomponents = true;
 
-        // After loading subcomponents, ensure dimensions are recalculated
-        setTimeout(() => {
-          const collapsible = this.el.querySelector('pid-collapsible');
-          if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
-            (collapsible as any).recalculateContentDimensions();
-          }
-        }, 50); // Give it a bit more time for the DOM to update with new content
+          // After loading subcomponents, ensure dimensions are recalculated
+          setTimeout(() => {
+            const collapsible = this.el.querySelector('pid-collapsible');
+            if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
+              (collapsible as any).recalculateContentDimensions();
+            }
+          }, 50);
+        }
+      } else {
+        // Collapsing: reset loadSubcomponents so temporarilyEmphasized reverts
+        this.loadSubcomponents = false;
       }
     }
   };
@@ -592,7 +611,7 @@ export class PidComponent {
                         : this.isDarkMode
                           ? 'bg-gray-800/60'
                           : 'bg-white/60') +
-                      ' inline-flex w-full cursor-pointer list-none flex-nowrap items-center overflow-hidden font-mono font-bold text-clip transition-all duration-200 ease-in-out open:w-full open:align-top' +
+                    ' inline-flex cursor-pointer list-none flex-nowrap items-center overflow-hidden font-mono font-bold text-clip' +
                       (!this.isExpanded ? ` h-[${this._lineHeight || 24}px] leading-[${this._lineHeight || 24}px]` : '')
                     : ''
                 }
@@ -604,13 +623,16 @@ export class PidComponent {
                 <span
                   class={`inline-flex max-w-full flex-nowrap overflow-x-auto font-mono font-medium text-ellipsis whitespace-nowrap select-all ${this.isExpanded ? 'text-xs' : 'text-sm'}`}
                 >
-                  {// Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
-                  this.identifierObject?.renderPreview()}
+                  { // Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
+                    this.identifierObject?.renderPreview()
+                  }
                 </span>
                 {
                   // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
                   this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy ? (
-                    <copy-button value={this.identifierObject.value} class="ml-2 shrink-0" aria-label={`Copy value: ${this.identifierObject.value}`} onClick={this.blockEventPropagation}/>
+                    <copy-button value={this.identifierObject.value} class="shrink-0"
+                                 aria-label={`Copy value: ${this.identifierObject.value}`}
+                                 onClick={this.blockEventPropagation} />
                   ) : (
                     ''
                   )
@@ -652,7 +674,7 @@ export class PidComponent {
             >
               <span
                 slot="summary"
-                class={`inline-flex items-center overflow-x-auto font-mono text-sm font-medium select-all ${this.isExpanded ? 'flex-wrap overflow-visible break-words' : 'flex-nowrap whitespace-nowrap'}`}
+                class={`inline-flex items-center overflow-x-auto font-mono text-sm font-medium select-all ${this.isExpanded ? 'flex-wrap overflow-visible wrap-break-word' : 'flex-nowrap whitespace-nowrap'}`}
                 aria-label={`Preview of ${this.value}`}
               >
                 {this.identifierObject?.renderPreview()}
@@ -662,7 +684,7 @@ export class PidComponent {
                 <copy-button
                   slot="summary-actions"
                   value={this.value}
-                  // class="relative my-auto ml-auto shrink-0"
+                  class="self-end shrink-0"
                   aria-label={`Copy value: ${this.value}`}
                   onClick={this.blockEventPropagation}
                 />

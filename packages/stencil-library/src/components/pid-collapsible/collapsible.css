@@ -12,14 +12,11 @@ details summary::-webkit-details-marker {
 }
 
 /*
- * Fix Safari text flow issues
- * REASON: Safari requires explicit display and clear-after to prevent text from flowing under components.
- * This can't be reliably done with Tailwind alone as it requires precise browser behavior control.
+ * Default display for pid-collapsible.
+ * REASON: Do NOT force display:block here — the component manages its own display
+ * via JS classes (inline-block when collapsed, block when expanded).
+ * An unconditional block+clear would break inline text flow around collapsed components.
  */
-pid-collapsible {
-  display: block;
-  clear: both;
-}
 
 /*
  * Enable resize functionality
@@ -141,16 +138,13 @@ pid-collapsible.resize-both::after {
 /*
  * Force style recalculation in Safari
  * REASON: This rendering trick forces Safari to recalculate styles
- * and can't be done with Tailwind classes
+ * and can't be done with Tailwind classes.
+ * NOTE: Do NOT set display here — it is managed via JS classes on the element.
  */
 @media all and (-webkit-min-device-pixel-ratio: 0) and (min-resolution: .001dpcm) {
   pid-collapsible {
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
-    /* Safari-specific clearfix to prevent text flow issues */
-    display: inline-block;
-    vertical-align: top;
-    margin-bottom: 1px; /* This tiny margin helps with layout stability */
   }
 
   /* Optimization class for resize operations */
@@ -159,24 +153,9 @@ pid-collapsible.resize-both::after {
     contain: layout size; /* CSS containment for better performance */
   }
 
-  /* Ensure collapsed state in Safari doesn't affect text flow */
-  pid-collapsible:not(.resize-both)::after {
-    content: '';
-    display: block;
-    clear: both;
-    height: 0;
-    visibility: hidden;
-  }
-
   /* Ensure resize works in Safari */
   pid-collapsible.resize-both {
-    /*position: relative;*/
     -webkit-resize: both !important;
-    /*resize: both !important;*/
-    /*overflow: auto !important;*/
-    /*max-width: 100% !important;*/
-    /*max-height: 90vh !important;*/
-    /*display: block !important;*/
   }
 
   /* Enhanced resize handle visibility for Safari */
@@ -194,8 +173,6 @@ pid-collapsible.resize-both::after {
     z-index: 10;
     pointer-events: none;
   }
-
-
 }
 
 /*
