@@ -604,8 +604,9 @@ export class PidComponent {
                 <span
                   class={`inline-flex max-w-full flex-nowrap overflow-x-auto font-mono font-medium text-ellipsis whitespace-nowrap select-all ${this.isExpanded ? 'text-xs' : 'text-sm'}`}
                 >
-                  {// Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
-                  this.identifierObject?.renderPreview()}
+                  { // Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
+                    this.identifierObject?.renderPreview()
+                  }
                 </span>
                 {
                   // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
@@ -662,7 +663,7 @@ export class PidComponent {
                 <copy-button
                   slot="summary-actions"
                   value={this.value}
-                  // class="relative my-auto ml-auto shrink-0"
+                  class="items-end shrink-0"
                   aria-label={`Copy value: ${this.value}`}
                   onClick={this.blockEventPropagation}
                 />
