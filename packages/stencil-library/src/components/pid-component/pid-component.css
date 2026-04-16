@@ -4,50 +4,16 @@ details summary::-webkit-details-marker {
 }
 
 /*
- * Safari compatibility fix
- * REASON: Ensures proper text flow in Safari which cannot be handled with Tailwind classes alone
+ * Host element display
+ * REASON: Custom elements default to display:inline which doesn't establish a proper box.
+ * Using :host (not the tag name) because this stylesheet is inside the shadow DOM,
+ * where tag-name selectors cannot target the host element.
+ *
+ * display:inline-block lets the component sit inline with text while still being a
+ * proper box (supporting width/height/resize when expanded). vertical-align:top
+ * aligns the top of the component with the surrounding text line.
  */
-pid-component {
+:host {
   display: inline-block;
   vertical-align: top;
-}
-
-/* Ensure content flow in Safari */
-@media all and (-webkit-min-device-pixel-ratio: 0) and (min-resolution: .001dpcm) {
-  pid-component {
-    /* This transform trick forces Safari to establish a new containing block */
-    transform: translateZ(0);
-  }
-
-  /* Clear after the component to prevent text flowing underneath */
-  pid-component::after {
-    content: '';
-    display: block;
-    clear: both;
-    height: 0;
-  }
-
-  /* Ensure resize functionality in Safari */
-  pid-component pid-collapsible.resize-both {
-    -webkit-resize: both !important;
-    resize: both !important;
-    overflow: auto !important;
-    position: relative !important;
-  }
-
-  /* Add visible resize handle for Safari */
-  pid-component pid-collapsible.resize-both::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 15px;
-    height: 15px;
-    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M22 2L2 22' stroke='currentColor' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M22 8L8 22' stroke='currentColor' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M22 14L14 22' stroke='currentColor' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: bottom right;
-    cursor: nwse-resize;
-    z-index: 10;
-    pointer-events: none;
-  }
 }

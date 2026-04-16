@@ -173,37 +173,14 @@ export class PidCollapsible {
     //   }, 100);
     // }
 
-    // Add clearfix for Safari - prevent text flow issues
+    // Safari inline-block fix (no clearfix div — it would break text flow)
     if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
-      this.el.style.display = 'inline-block';
       this.el.style.verticalAlign = 'top';
-
-      // Create a clearfix element after the component
-      const clearfix = document.createElement('div');
-      clearfix.style.clear = 'both';
-      clearfix.style.display = 'block';
-      clearfix.style.height = '0';
-      clearfix.style.visibility = 'hidden';
-      clearfix.classList.add('pid-collapsible-clearfix');
-
-      // Insert after the component
-      if (this.el.parentNode) {
-        this.el.parentNode.insertBefore(clearfix, this.el.nextSibling);
-      }
     }
   }
 
   disconnectedCallback() {
     this.cleanupResources();
-
-    // Remove any clearfix elements we created
-    if (this.el.parentNode) {
-      const clearfix = this.el.nextSibling;
-      // Fix: Check if it's an HTMLElement and has our class
-      if (clearfix instanceof HTMLElement && clearfix.classList.contains('pid-collapsible-clearfix')) {
-        this.el.parentNode.removeChild(clearfix);
-      }
-    }
 
     // Clean up dark mode media query listener
     this.cleanupDarkModeListener();
@@ -525,7 +502,7 @@ export class PidCollapsible {
    */
   private resetStyles() {
     // Remove all dynamic classes that might change between states
-    const classesToRemove = ['resize-both', 'overflow-auto', 'w-auto', 'inline-block', 'align-middle', 'overflow-hidden', 'py-0', 'my-0', 'float-left', 'bg-white'];
+    const classesToRemove = ['resize-both', 'overflow-auto', 'w-auto', 'inline-block', 'align-middle', 'align-top', 'overflow-hidden', 'py-0', 'my-0', 'float-left', 'bg-white', 'block'];
 
     classesToRemove.forEach(cls => {
       if (this.el.classList.contains(cls)) {
@@ -679,8 +656,8 @@ export class PidCollapsible {
     // Auto width for collapsed state
     this.el.style.width = 'auto';
 
-    // Apply Tailwind classes for collapsed state (without background)
-    this.el.classList.add('w-auto', 'inline-block', 'align-middle', 'overflow-hidden', 'py-0', 'my-0');
+    // Apply Tailwind classes for collapsed state (inline with text, no float)
+    this.el.classList.add('w-auto', 'inline-block', 'align-top', 'overflow-hidden', 'py-0', 'my-0');
 
     // Set strict height and line height for text to ensure smooth text flow
     this.el.style.height = `${this.lineHeight}px`;
@@ -793,13 +770,7 @@ export class PidCollapsible {
    * Gets host classes based on current state
    */
   private getHostClasses() {
-    // Start with base classes without width since we'll calculate that properly
-    const baseClasses = ['relative', 'mx-2', 'font-sans', 'transition-all', 'duration-200', 'ease-in-out', 'box-border', 'leading-normal'];
-
-    // Add w-3/4 class by default to maintain consistent width
-    baseClasses.push('w-3/4');
-
-    // When expanded, additional classes will be applied through inline styles
+    const baseClasses = ['relative', 'mx-2', 'font-sans', 'box-border', 'leading-normal'];
 
     // Add emphasis classes
     if (this.emphasize) {
@@ -812,9 +783,11 @@ export class PidCollapsible {
 
     // Add state-specific classes
     if (this.open) {
-      baseClasses.push('mb-2', 'max-w-full', 'text-xs', 'block');
+      // Expanded: block-level, resizable, with width
+      baseClasses.push('mb-2', 'max-w-full', 'text-xs', 'block', 'w-3/4');
     } else {
-      baseClasses.push('my-0', 'text-sm', 'float-left');
+      // Collapsed: inline with text, no float (float causes clear/line-break issues)
+      baseClasses.push('my-0', 'text-sm', 'inline-block', 'align-top');
     }
 
     // Add dark mode text color only (no background)
@@ -869,9 +842,15 @@ export class PidCollapsible {
 
     if (this.open) {
       if (this.isDarkMode) {
-        baseClasses.push('sticky', 'top-0', 'bg-gray-800', `z-${Z_INDICES.STICKY_ELEMENTS}`, 'border-b', 'border-gray-700', 'px-2', 'py-0', 'overflow-visible', 'backdrop-blur-xs');
+        baseClasses.push('sticky', 'top-0', 'bg-gray-800', `z-${Z_INDICES.STICKY_ELEMENTS}`, 'px-2', 'py-0', 'overflow-visible', 'backdrop-blur-xs');
+        if (this.emphasize) {
+          baseClasses.push('border-b', 'border-gray-700');
+        }
       } else {
-        baseClasses.push('sticky', 'top-0', 'bg-white', `z-${Z_INDICES.STICKY_ELEMENTS}`, 'border-b', 'border-gray-100', 'px-2', 'py-0', 'overflow-visible', 'backdrop-blur-xs');
+        baseClasses.push('sticky', 'top-0', 'bg-white', `z-${Z_INDICES.STICKY_ELEMENTS}`, 'px-2', 'py-0', 'overflow-visible', 'backdrop-blur-xs');
+        if (this.emphasize) {
+          baseClasses.push('border-b', 'border-gray-100');
+        }
       }
     } else {
       baseClasses.push('px-1', 'py-0', 'whitespace-nowrap', 'overflow-hidden', 'text-ellipsis', 'max-w-full');

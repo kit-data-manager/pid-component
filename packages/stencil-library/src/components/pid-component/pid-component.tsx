@@ -592,7 +592,7 @@ export class PidComponent {
                         : this.isDarkMode
                           ? 'bg-gray-800/60'
                           : 'bg-white/60') +
-                      ' inline-flex w-full cursor-pointer list-none flex-nowrap items-center overflow-hidden font-mono font-bold text-clip transition-all duration-200 ease-in-out open:w-full open:align-top' +
+                    ' inline-flex cursor-pointer list-none flex-nowrap items-center overflow-hidden font-mono font-bold text-clip' +
                       (!this.isExpanded ? ` h-[${this._lineHeight || 24}px] leading-[${this._lineHeight || 24}px]` : '')
                     : ''
                 }
@@ -611,7 +611,9 @@ export class PidComponent {
                 {
                   // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
                   this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy ? (
-                    <copy-button value={this.identifierObject.value} class="ml-2 shrink-0" aria-label={`Copy value: ${this.identifierObject.value}`} onClick={this.blockEventPropagation}/>
+                    <copy-button value={this.identifierObject.value} class="shrink-0"
+                                 aria-label={`Copy value: ${this.identifierObject.value}`}
+                                 onClick={this.blockEventPropagation} />
                   ) : (
                     ''
                   )
@@ -653,7 +655,7 @@ export class PidComponent {
             >
               <span
                 slot="summary"
-                class={`inline-flex items-center overflow-x-auto font-mono text-sm font-medium select-all ${this.isExpanded ? 'flex-wrap overflow-visible break-words' : 'flex-nowrap whitespace-nowrap'}`}
+                class={`inline-flex items-center overflow-x-auto font-mono text-sm font-medium select-all ${this.isExpanded ? 'flex-wrap overflow-visible wrap-break-word' : 'flex-nowrap whitespace-nowrap'}`}
                 aria-label={`Preview of ${this.value}`}
               >
                 {this.identifierObject?.renderPreview()}
