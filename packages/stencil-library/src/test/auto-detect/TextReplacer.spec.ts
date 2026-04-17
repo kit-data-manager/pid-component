@@ -287,4 +287,79 @@ describe('TextReplacer', () => {
       expect(parent.textContent).toContain('DOI');
     });
   });
+
+  describe('config prop forwarding', () => {
+    it('applies emphasizeComponent config to pid-component', () => {
+      const { textNode } = createTextNodeInParent('10.5281/zenodo.1234567');
+      const matches: DetectionMatch[] = [
+        { start: 0, end: 22, value: '10.5281/zenodo.1234567', rendererKey: 'DOIType' },
+      ];
+      const config: PidDetectionConfig = { emphasizeComponent: false };
+
+      const records = replaceMatches(textNode, matches, config);
+
+      expect(records[0].pidComponent.getAttribute('emphasize-component')).toBe('false');
+    });
+
+    it('applies showTopLevelCopy config to pid-component', () => {
+      const { textNode } = createTextNodeInParent('10.5281/zenodo.1234567');
+      const matches: DetectionMatch[] = [
+        { start: 0, end: 22, value: '10.5281/zenodo.1234567', rendererKey: 'DOIType' },
+      ];
+      const config: PidDetectionConfig = { showTopLevelCopy: false };
+
+      const records = replaceMatches(textNode, matches, config);
+
+      expect(records[0].pidComponent.getAttribute('show-top-level-copy')).toBe('false');
+    });
+
+    it('applies defaultTTL config to pid-component', () => {
+      const { textNode } = createTextNodeInParent('10.5281/zenodo.1234567');
+      const matches: DetectionMatch[] = [
+        { start: 0, end: 22, value: '10.5281/zenodo.1234567', rendererKey: 'DOIType' },
+      ];
+      const config: PidDetectionConfig = { defaultTTL: 3600000 };
+
+      const records = replaceMatches(textNode, matches, config);
+
+      expect(records[0].pidComponent.getAttribute('default-t-t-l')).toBe('3600000');
+    });
+
+    it('applies amountOfItems config to pid-component', () => {
+      const { textNode } = createTextNodeInParent('10.5281/zenodo.1234567');
+      const matches: DetectionMatch[] = [
+        { start: 0, end: 22, value: '10.5281/zenodo.1234567', rendererKey: 'DOIType' },
+      ];
+      const config: PidDetectionConfig = { amountOfItems: 25 };
+
+      const records = replaceMatches(textNode, matches, config);
+
+      expect(records[0].pidComponent.getAttribute('amount-of-items')).toBe('25');
+    });
+  });
+
+  describe('replaceMatches with fallbackToAll: false', () => {
+    it('sets fallback-to-all attribute to false', () => {
+      const { textNode } = createTextNodeInParent('10.5281/zenodo.1234567');
+      const matches: DetectionMatch[] = [
+        { start: 0, end: 22, value: '10.5281/zenodo.1234567', rendererKey: 'DOIType' },
+      ];
+      const config: PidDetectionConfig = { fallbackToAll: false };
+
+      const records = replaceMatches(textNode, matches, config);
+
+      expect(records[0].pidComponent.getAttribute('fallback-to-all')).toBe('false');
+    });
+
+    it('sets fallback-to-all attribute to true by default', () => {
+      const { textNode } = createTextNodeInParent('10.5281/zenodo.1234567');
+      const matches: DetectionMatch[] = [
+        { start: 0, end: 22, value: '10.5281/zenodo.1234567', rendererKey: 'DOIType' },
+      ];
+
+      const records = replaceMatches(textNode, matches, baseConfig);
+
+      expect(records[0].pidComponent.getAttribute('fallback-to-all')).toBe('true');
+    });
+  });
 });

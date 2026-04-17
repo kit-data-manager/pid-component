@@ -174,4 +174,93 @@ describe('DOIType', () => {
       expect(dt.isResolvable()).toBe(false);
     });
   });
+
+  describe('renderPreview()', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('returns a truthy functional component', async () => {
+      cachedFetchSpy.mockResolvedValue({
+        data: {
+          attributes: {
+            titles: [{ title: 'Test DOI Resource' }],
+            creators: [{ name: 'Test Author', givenName: 'Test', familyName: 'Author', nameIdentifiers: [] }],
+            publisher: 'Test Publisher',
+            publicationYear: 2024,
+            types: { resourceTypeGeneral: 'Dataset', resourceType: 'Dataset' },
+            descriptions: [{ description: 'A test.', descriptionType: 'Abstract' }],
+            url: 'https://example.com',
+            subjects: [],
+            dates: [{ date: '2024-01-01', dateType: 'Issued' }],
+          },
+        },
+      });
+
+      const dt = new DOIType('10.5281/zenodo.1234567');
+      await dt.init();
+
+      const preview = dt.renderPreview();
+      expect(preview).toBeTruthy();
+    });
+  });
+
+  describe('data getter', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('returns serialized DOIInfo as JSON string', async () => {
+      cachedFetchSpy.mockResolvedValue({
+        data: {
+          attributes: {
+            titles: [{ title: 'Serialization Test' }],
+            creators: [{ name: 'Author' }],
+            url: 'https://example.com',
+          },
+        },
+      });
+
+      const dt = new DOIType('10.5281/zenodo.1234567');
+      await dt.init();
+
+      const data = dt.data;
+      expect(typeof data).toBe('string');
+      const parsed = JSON.parse(data);
+      expect(parsed).toBeDefined();
+    });
+  });
+
+  describe('init() with cached data', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('loads from cached data via second arg without fetching', async () => {
+      // First, get valid data by initializing from API
+      cachedFetchSpy.mockResolvedValue({
+        data: {
+          attributes: {
+            titles: [{ title: 'Cached Title' }],
+            creators: [{ name: 'Cached Author' }],
+            url: 'https://example.com/cached',
+          },
+        },
+      });
+
+      const dt1 = new DOIType('10.5281/zenodo.9999999');
+      await dt1.init();
+      const cachedData = dt1.data;
+
+      // Now create a new instance and init with cached data
+      jest.clearAllMocks();
+      const dt2 = new DOIType('10.5281/zenodo.9999999');
+      await dt2.init(cachedData);
+
+      // Should NOT have called cachedFetch since we passed cached data
+      expect(cachedFetchSpy).not.toHaveBeenCalled();
+      expect(dt2.isResolvable()).toBe(true);
+      expect(dt2.items.length).toBeGreaterThanOrEqual(2);
+    });
+  });
 });

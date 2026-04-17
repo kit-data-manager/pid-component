@@ -133,4 +133,53 @@ describe('HandleType', () => {
       expect(ht.isResolvable()).toBe(false);
     });
   });
+
+  describe('renderPreview()', () => {
+    it('returns a truthy value (functional component)', async () => {
+      const serializedRecord = JSON.stringify({
+        pid: JSON.stringify({ prefix: '21.T11981', suffix: 'abc123' }),
+        values: [
+          JSON.stringify({
+            index: 1,
+            type: JSON.stringify({ string: 'URL' }),
+            data: JSON.stringify({ format: 'string', value: 'https://example.com' }),
+            ttl: 86400,
+            timestamp: 1704067200000,
+          }),
+        ],
+      });
+
+      const ht = new HandleType('21.T11981/abc123');
+      await ht.init(serializedRecord);
+
+      const preview = ht.renderPreview();
+      expect(preview).toBeTruthy();
+    });
+  });
+
+  describe('data getter', () => {
+    it('returns serialized PIDRecord as JSON string', async () => {
+      const serializedRecord = JSON.stringify({
+        pid: JSON.stringify({ prefix: '21.T11981', suffix: 'abc123' }),
+        values: [
+          JSON.stringify({
+            index: 1,
+            type: JSON.stringify({ string: 'URL' }),
+            data: JSON.stringify({ format: 'string', value: 'https://example.com' }),
+            ttl: 86400,
+            timestamp: 1704067200000,
+          }),
+        ],
+      });
+
+      const ht = new HandleType('21.T11981/abc123');
+      await ht.init(serializedRecord);
+
+      const data = ht.data;
+      expect(typeof data).toBe('string');
+      const parsed = JSON.parse(data);
+      expect(parsed.pid).toBeDefined();
+      expect(parsed.values).toBeDefined();
+    });
+  });
 });

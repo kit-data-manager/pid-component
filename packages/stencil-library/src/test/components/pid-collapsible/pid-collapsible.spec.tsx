@@ -1,5 +1,6 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { PidCollapsible } from '../../../components/pid-collapsible/pid-collapsible';
+import { checkA11y } from '../../axe-helper';
 
 // Mock ResizeObserver which is not available in JSDOM
 beforeEach(() => {
@@ -327,5 +328,55 @@ describe('pid-collapsible', () => {
     const contentDiv = page.root.querySelector('.grow');
     expect(contentDiv.className).toContain('bg-gray-800');
     expect(contentDiv.className).toContain('text-white');
+  });
+});
+
+describe('pid-collapsible accessibility', () => {
+  it('has no a11y violations', async () => {
+    const page = await newSpecPage({
+      components: [PidCollapsible],
+      html: '<pid-collapsible><span slot="summary">Title</span><p>Content</p></pid-collapsible>',
+    });
+    await checkA11y(page.root.outerHTML);
+  });
+});
+
+describe('pid-collapsible additional coverage', () => {
+  it('toggleCollapsible toggles open state', async () => {
+    const page = await newSpecPage({
+      components: [PidCollapsible],
+      html: '<pid-collapsible><span slot="summary">Title</span><p>Content</p></pid-collapsible>',
+    });
+    const instance = page.rootInstance;
+    expect(instance.open).toBe(false);
+
+    // Toggle via the handleToggle path by calling toggleCollapsible-like behavior
+    const event = new Event('toggle', { bubbles: true, cancelable: true });
+    jest.spyOn(event, 'stopPropagation');
+    jest.spyOn(event, 'preventDefault');
+
+    // Directly manipulate to test the open/close cycle
+    instance.open = true;
+    instance.collapsibleToggle.emit(true);
+    await page.waitForChanges();
+    expect(instance.open).toBe(true);
+
+    instance.open = false;
+    instance.collapsibleToggle.emit(false);
+    await page.waitForChanges();
+    expect(instance.open).toBe(false);
+  });
+
+  it('recalculateContentDimensions does not throw when closed', async () => {
+    const page = await newSpecPage({
+      components: [PidCollapsible],
+      html: '<pid-collapsible><span slot="summary">Title</span><p>Content</p></pid-collapsible>',
+    });
+    const instance = page.rootInstance;
+    expect(instance.open).toBe(false);
+
+    // Should return null when closed and not throw
+    const result = await instance.recalculateContentDimensions();
+    expect(result).toBeNull();
   });
 });

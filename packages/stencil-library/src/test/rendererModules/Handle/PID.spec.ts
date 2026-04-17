@@ -1,3 +1,6 @@
+// Polyfill `self` before any module imports (DataCache uses `self.caches`)
+(globalThis as any).self = (globalThis as any).self || globalThis;
+
 import { PID } from '../../../rendererModules/Handle/PID';
 
 // Mock the modules that PID.ts imports at the top level
@@ -97,6 +100,53 @@ describe('PID', () => {
       const restored = PID.fromJSON(serialized);
       expect(restored.prefix).toBe(original.prefix);
       expect(restored.suffix).toBe(original.suffix);
+    });
+
+    it('reconstructs from serialized data with complex suffix', () => {
+      const original = new PID('20.500', 'be908bd1-e049-4d35');
+      const serialized = JSON.stringify(original.toObject());
+      const restored = PID.fromJSON(serialized);
+      expect(restored.prefix).toBe('20.500');
+      expect(restored.suffix).toBe('be908bd1-e049-4d35');
+      expect(restored.toString()).toBe('20.500/be908bd1-e049-4d35');
+    });
+  });
+
+  describe('resolve() prerequisites', () => {
+    it('isResolvable returns true for a normal prefix', () => {
+      const pid = new PID('21.T11981', 'be908bd1');
+      expect(pid.isResolvable()).toBe(true);
+    });
+
+    it('returns false for unresolvable PID (prefix "0")', () => {
+      const pid = new PID('0', 'abc');
+      expect(pid.isResolvable()).toBe(false);
+    });
+
+    it('returns false for HS_ADMIN prefix', () => {
+      const pid = new PID('HS_ADMIN', 'test');
+      expect(pid.isResolvable()).toBe(false);
+    });
+
+    it('returns false for 10320 prefix', () => {
+      const pid = new PID('10320', 'loc');
+      expect(pid.isResolvable()).toBe(false);
+    });
+  });
+
+  describe('toURL()', () => {
+    it('toString returns handle string for URL construction', () => {
+      const pid = new PID('21.T11981', 'abc123');
+      const url = `https://hdl.handle.net/${pid.toString()}`;
+      expect(url).toBe('https://hdl.handle.net/21.T11981/abc123');
+    });
+  });
+
+  describe('toObject()', () => {
+    it('returns object with prefix and suffix', () => {
+      const pid = new PID('21.T11981', 'test-suffix');
+      const obj = pid.toObject();
+      expect(obj).toEqual({ prefix: '21.T11981', suffix: 'test-suffix' });
     });
   });
 });

@@ -1,69 +1,68 @@
+
 <!doctype html>
 <html lang="en">
 
 <head>
-  <title>Code coverage report for src/rendererModules/Handle/PIDDataType.ts</title>
-  <meta charset="utf-8" />
-  <link rel="stylesheet" href="../../../prettify.css" />
-  <link rel="stylesheet" href="../../../base.css" />
-  <link rel="shortcut icon" type="image/x-icon" href="../../../favicon.png" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style type='text/css'>
-    .coverage-summary .sorter {
-      background-image: url(../../../sort-arrow-sprite.png);
-    }
-  </style>
+    <title>Code coverage report for src/rendererModules/Handle/PIDDataType.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../prettify.css" />
+    <link rel="stylesheet" href="../../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../sort-arrow-sprite.png);
+        }
+    </style>
 </head>
-
+    
 <body>
 <div class='wrapper'>
-  <div class='pad1'>
-    <h1><a href="../../../index.html">All files</a> / <a href="index.html">src/rendererModules/Handle</a> PIDDataType.ts
-    </h1>
-    <div class='clearfix'>
-
-      <div class='fl pad1y space-right2'>
-        <span class="strong">38.18% </span>
-        <span class="quiet">Statements</span>
-        <span class='fraction'>21/55</span>
-      </div>
-
-
-      <div class='fl pad1y space-right2'>
-        <span class="strong">12.5% </span>
-        <span class="quiet">Branches</span>
-        <span class='fraction'>1/8</span>
-      </div>
-
-
-      <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
-        <span class="quiet">Functions</span>
-        <span class='fraction'>9/9</span>
-      </div>
-
-
-      <div class='fl pad1y space-right2'>
-        <span class="strong">40.38% </span>
-        <span class="quiet">Lines</span>
-        <span class='fraction'>21/52</span>
-      </div>
-
-
+    <div class='pad1'>
+        <h1><a href="../../../index.html">All files</a> / <a href="index.html">src/rendererModules/Handle</a> PIDDataType.ts</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">38.18% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>21/55</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">12.5% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>1/8</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>9/9</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">40.38% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>21/52</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
     </div>
-    <p class="quiet">
-      Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the
-      previous block.
-    </p>
-    <template id="filterTemplate">
-      <div class="quiet">
-        Filter:
-        <input type="search" id="fileSearch">
-      </div>
-    </template>
-  </div>
-  <div class='status-line low'></div>
-  <pre><table class="coverage">
+    <div class='status-line low'></div>
+    <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
 <a name='L3'></a><a href='#L3'>3</a>
@@ -276,8 +275,7 @@
 <a name='L210'></a><a href='#L210'>210</a>
 <a name='L211'></a><a href='#L211'>211</a>
 <a name='L212'></a><a href='#L212'>212</a>
-<a name='L213'></a><a href='#L213'>213</a></td><td class="line-coverage quiet"><span
-  class="cline-any cline-yes">5x</span>
+<a name='L213'></a><a href='#L213'>213</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -596,8 +594,7 @@ export class PIDDataType {
    */
   public static async resolveDataType(pid: PID): Promise&lt;PIDDataType | undefined&gt; {
     // Check if PID is already resolved
-    <span class="missing-if-branch" title="if path not taken">I</span>if (typeMap.has(pid)) <span class="cstat-no"
-                                                                                                  title="statement not covered">return typeMap.get(pid);</span>
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (typeMap.has(pid)) <span class="cstat-no" title="statement not covered" >return typeMap.get(pid);</span>
 &nbsp;
     // Check if PID is resolvable
     if (!pid.isResolvable()) {
@@ -606,12 +603,11 @@ export class PIDDataType {
     }
 &nbsp;
     // Resolve PID and make sure it isn't undefined
-    const pidRecord = <span class="cstat-no" title="statement not covered">await pid.resolve();</span>
-<span class="cstat-no" title="statement not covered">    <span class="missing-if-branch"
-                                                               title="if path not taken">I</span>if (pidRecord === undefined) {</span>
-<span class="cstat-no" title="statement not covered">      console.debug(`PID ${pid.toString()} could not be resolved via the API`);</span>
-<span class="cstat-no" title="statement not covered">      unresolvables.add(pid);</span>
-<span class="cstat-no" title="statement not covered">      return undefined;</span>
+    const pidRecord = <span class="cstat-no" title="statement not covered" >await pid.resolve();</span>
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (pidRecord === undefined) {</span>
+<span class="cstat-no" title="statement not covered" >      console.debug(`PID ${pid.toString()} could not be resolved via the API`);</span>
+<span class="cstat-no" title="statement not covered" >      unresolvables.add(pid);</span>
+<span class="cstat-no" title="statement not covered" >      return undefined;</span>
     }
 &nbsp;
     // Create a temporary object to store the information
@@ -621,22 +617,19 @@ export class PIDDataType {
       regex?: RegExp;
       redirectURL: string;
       ePICJSON: object;
-    } = <span class="cstat-no" title="statement not covered">{ name: '', description: '', redirectURL: '', ePICJSON: {} };</span>
+    } = <span class="cstat-no" title="statement not covered" >{ name: '', description: '', redirectURL: '', ePICJSON: {} };</span>
 &nbsp;
     // Check if there is a reference to a ePIC instance via a 10320/Loc type and resolve it
-<span class="cstat-no" title="statement not covered">    for (let i = <span class="cstat-no"
-                                                                            title="statement not covered">0;</span> i &lt; pidRecord.values.length; i++) {</span>
-      const currentValue = <span class="cstat-no" title="statement not covered">pidRecord.values[i];</span>
-<span class="cstat-no" title="statement not covered">      <span class="missing-if-branch"
-                                                                 title="if path not taken">I</span>if (currentValue.type === locationType || currentValue.type.toString() === locationType.toString()) {</span>
-        const parser = <span class="cstat-no" title="statement not covered">new DOMParser();</span>
-        const xmlDoc = <span class="cstat-no" title="statement not covered">parser.parseFromString(currentValue.data.value as string, 'text/xml');</span>
+<span class="cstat-no" title="statement not covered" >    for (let i = <span class="cstat-no" title="statement not covered" >0;</span> i &lt; pidRecord.values.length; i++) {</span>
+      const currentValue = <span class="cstat-no" title="statement not covered" >pidRecord.values[i];</span>
+<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (currentValue.type === locationType || currentValue.type.toString() === locationType.toString()) {</span>
+        const parser = <span class="cstat-no" title="statement not covered" >new DOMParser();</span>
+        const xmlDoc = <span class="cstat-no" title="statement not covered" >parser.parseFromString(currentValue.data.value as string, 'text/xml');</span>
         // Get all locations from the XML specified in 10320/loc
-        const xmlLocations = <span class="cstat-no" title="statement not covered">xmlDoc.getElementsByTagName('location');</span>
-<span class="cstat-no" title="statement not covered">        for (let j = <span class="cstat-no"
-                                                                                title="statement not covered">0;</span> j &lt; xmlLocations.length; j++) {</span>
+        const xmlLocations = <span class="cstat-no" title="statement not covered" >xmlDoc.getElementsByTagName('location');</span>
+<span class="cstat-no" title="statement not covered" >        for (let j = <span class="cstat-no" title="statement not covered" >0;</span> j &lt; xmlLocations.length; j++) {</span>
           // Extract link
-          const newLocation = <span class="cstat-no" title="statement not covered">{</span>
+          const newLocation = <span class="cstat-no" title="statement not covered" >{</span>
             href: xmlLocations[j].getAttribute('href'),
             weight: undefined,
             view: undefined,
@@ -644,35 +637,33 @@ export class PIDDataType {
           };
 &nbsp;
           // Extract weight
-<span class="cstat-no" title="statement not covered">          try {</span>
-<span class="cstat-no" title="statement not covered">            newLocation.weight = parseInt(xmlLocations[j].getAttribute('weight'));</span>
+<span class="cstat-no" title="statement not covered" >          try {</span>
+<span class="cstat-no" title="statement not covered" >            newLocation.weight = parseInt(xmlLocations[j].getAttribute('weight'));</span>
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
           } catch (_ignored) {
             /* empty */
           }
 &nbsp;
           // Extract view e.g. json or html
-<span class="cstat-no" title="statement not covered">          try {</span>
-<span class="cstat-no" title="statement not covered">            newLocation.view = xmlLocations[j].getAttribute('view');</span>
+<span class="cstat-no" title="statement not covered" >          try {</span>
+<span class="cstat-no" title="statement not covered" >            newLocation.view = xmlLocations[j].getAttribute('view');</span>
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
           } catch (ignored) {
             /* empty */
           }
 &nbsp;
           // Try to resolve the data from the link
-<span class="cstat-no" title="statement not covered">          try {</span>
-<span class="cstat-no" title="statement not covered">            if (newLocation.view === 'json') {</span>
+<span class="cstat-no" title="statement not covered" >          try {</span>
+<span class="cstat-no" title="statement not covered" >            if (newLocation.view === 'json') {</span>
               // if view is json then cachedFetch the data from the link (ePIC data type registry) and save them into the temp object
-<span class="cstat-no" title="statement not covered">              newLocation.resolvedData = await cachedFetch(newLocation.href);</span>
+<span class="cstat-no" title="statement not covered" >              newLocation.resolvedData = await cachedFetch(newLocation.href);</span>
               // .then(response =&gt; response.json());
-<span class="cstat-no"
-      title="statement not covered">              tempDataType.ePICJSON = newLocation.resolvedData;</span>
-<span class="cstat-no"
-      title="statement not covered">              tempDataType.name = newLocation.resolvedData['name'];</span>
-<span class="cstat-no" title="statement not covered">              tempDataType.description = newLocation.resolvedData['description'];</span>
+<span class="cstat-no" title="statement not covered" >              tempDataType.ePICJSON = newLocation.resolvedData;</span>
+<span class="cstat-no" title="statement not covered" >              tempDataType.name = newLocation.resolvedData['name'];</span>
+<span class="cstat-no" title="statement not covered" >              tempDataType.description = newLocation.resolvedData['description'];</span>
             } else {
               // if view is html set the redirect URL (activated on user click) to the link
-<span class="cstat-no" title="statement not covered">              tempDataType.redirectURL = newLocation.href;</span>
+<span class="cstat-no" title="statement not covered" >              tempDataType.redirectURL = newLocation.href;</span>
             }
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
           } catch (ignored) {
@@ -683,13 +674,13 @@ export class PIDDataType {
     }
 &nbsp;
     // Create a new PIDDataType object from the temp object
-<span class="cstat-no" title="statement not covered">    try {</span>
-      const type = <span class="cstat-no" title="statement not covered">new PIDDataType(pid, tempDataType.name, tempDataType.description, tempDataType.redirectURL, tempDataType.regex);</span>
-<span class="cstat-no" title="statement not covered">      typeMap.set(pid, type);</span>
-<span class="cstat-no" title="statement not covered">      return type;</span>
+<span class="cstat-no" title="statement not covered" >    try {</span>
+      const type = <span class="cstat-no" title="statement not covered" >new PIDDataType(pid, tempDataType.name, tempDataType.description, tempDataType.redirectURL, tempDataType.regex);</span>
+<span class="cstat-no" title="statement not covered" >      typeMap.set(pid, type);</span>
+<span class="cstat-no" title="statement not covered" >      return type;</span>
     } catch (e) {
-<span class="cstat-no" title="statement not covered">      console.error(e);</span>
-<span class="cstat-no" title="statement not covered">      return undefined;</span>
+<span class="cstat-no" title="statement not covered" >      console.error(e);</span>
+<span class="cstat-no" title="statement not covered" >      return undefined;</span>
     }
   }
 &nbsp;
@@ -710,20 +701,21 @@ export class PIDDataType {
 }
 &nbsp;</pre></td></tr></table></pre>
 
-  <div class='push'></div><!-- for sticky footer -->
-</div><!-- /wrapper -->
-<div class='footer quiet pad2 space-top1 center small'>
-  Code coverage generated by
-  <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-  at 2026-04-17T21:52:43.218Z
-</div>
-<script src="../../../prettify.js"></script>
-<script>
-  window.onload = function() {
-    prettyPrint();
-  };
-</script>
-<script src="../../../sorter.js"></script>
-<script src="../../../block-navigation.js"></script>
-</body>
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2026-04-17T23:16:11.382Z
+            </div>
+        <script src="../../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../../sorter.js"></script>
+        <script src="../../../block-navigation.js"></script>
+    </body>
 </html>
+    

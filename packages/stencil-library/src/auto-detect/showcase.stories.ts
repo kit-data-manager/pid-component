@@ -142,6 +142,14 @@ export const VanillaHTML: Story = {
 
     return container;
   },
+  play: async ({ canvasElement }) => {
+    // @ts-ignore - @storybook/test is available at runtime in Storybook
+    const { expect } = await import('@storybook/test');
+    // Wait for auto-detection and component rendering
+    await new Promise(r => setTimeout(r, 8000));
+    const pidComponents = canvasElement.querySelectorAll('pid-component');
+    await expect(pidComponents.length).toBeGreaterThan(0);
+  },
   parameters: {
     docs: {
       description: {

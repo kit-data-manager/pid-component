@@ -7,6 +7,7 @@
 import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 import { FoldableAction } from './utils/FoldableAction';
 import { FoldableItem } from './utils/FoldableItem';
+
 export { FoldableAction } from "./utils/FoldableAction";
 export { FoldableItem } from "./utils/FoldableItem";
 export namespace Components {

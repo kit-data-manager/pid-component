@@ -1,68 +1,68 @@
+
 <!doctype html>
 <html lang="en">
 
 <head>
-  <title>Code coverage report for src/rendererModules/RORType.tsx</title>
-  <meta charset="utf-8" />
-  <link rel="stylesheet" href="../../prettify.css" />
-  <link rel="stylesheet" href="../../base.css" />
-  <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style type='text/css'>
-    .coverage-summary .sorter {
-      background-image: url(../../sort-arrow-sprite.png);
-    }
-  </style>
+    <title>Code coverage report for src/rendererModules/RORType.tsx</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
 </head>
-
+    
 <body>
 <div class='wrapper'>
-  <div class='pad1'>
-    <h1><a href="../../index.html">All files</a> / <a href="index.html">src/rendererModules</a> RORType.tsx</h1>
-    <div class='clearfix'>
-
-      <div class='fl pad1y space-right2'>
-        <span class="strong">86.66% </span>
-        <span class="quiet">Statements</span>
-        <span class='fraction'>65/75</span>
-      </div>
-
-
-      <div class='fl pad1y space-right2'>
-        <span class="strong">74.46% </span>
-        <span class="quiet">Branches</span>
-        <span class='fraction'>35/47</span>
-      </div>
-
-
-      <div class='fl pad1y space-right2'>
-        <span class="strong">77.77% </span>
-        <span class="quiet">Functions</span>
-        <span class='fraction'>7/9</span>
-      </div>
-
-
-      <div class='fl pad1y space-right2'>
-        <span class="strong">87.83% </span>
-        <span class="quiet">Lines</span>
-        <span class='fraction'>65/74</span>
-      </div>
-
-
+    <div class='pad1'>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/rendererModules</a> RORType.tsx</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">86.66% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>65/75</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">74.46% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>35/47</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">77.77% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>7/9</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">87.83% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>65/74</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
     </div>
-    <p class="quiet">
-      Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the
-      previous block.
-    </p>
-    <template id="filterTemplate">
-      <div class="quiet">
-        Filter:
-        <input type="search" id="fileSearch">
-      </div>
-    </template>
-  </div>
-  <div class='status-line high'></div>
-  <pre><table class="coverage">
+    <div class='status-line high'></div>
+    <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
 <a name='L3'></a><a href='#L3'>3</a>
@@ -649,7 +649,7 @@ export class RORType extends GenericIdentifierType {
       return this.contentMappings[content.toLowerCase()];
     }
     // If not, return the content as is
-<span class="cstat-no" title="statement not covered">    return content;</span>
+<span class="cstat-no" title="statement not covered" >    return content;</span>
   }
 &nbsp;
   /**
@@ -669,8 +669,7 @@ export class RORType extends GenericIdentifierType {
 &nbsp;
       this.rorData = await response.json();
 &nbsp;
-      <span class="missing-if-branch" title="if path not taken">I</span>if (!this.rorData) <span class="cstat-no"
-                                                                                                 title="statement not covered">return;</span>
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (!this.rorData) <span class="cstat-no" title="statement not covered" >return;</span>
 &nbsp;
       // Initialize name, acronym, and labels
       if (!this.rorData.names || this.rorData.names.length === 0) {
@@ -679,7 +678,7 @@ export class RORType extends GenericIdentifierType {
         return;
       } else {
         for (const name of this.rorData.names) {
-          const types = name.types || <span class="branch-1 cbranch-no" title="branch not covered">[];</span>
+          const types = name.types || <span class="branch-1 cbranch-no" title="branch not covered" >[];</span>
           if (types.includes('acronym')) {
             this.acronym = name.value;
             this.items.push(new FoldableItem(20, 'Acronym', name.value, 'Short form of the organization name'));
@@ -688,10 +687,8 @@ export class RORType extends GenericIdentifierType {
             this.items.push(new FoldableItem(1, 'Display Name', name.value, 'Name used for display purposes'));
           } else if (types.includes('alias')) {
             this.items.push(new FoldableItem(5, 'Alias', name.value, 'Alternative name for the organization'));
-          } else <span class="cstat-no" title="statement not covered"><span class="missing-if-branch"
-                                                                            title="if path not taken">I</span><span
-    class="missing-if-branch" title="else path not taken">E</span>if (types.includes('label')) {</span>
-<span class="cstat-no" title="statement not covered">            this.items.push(new FoldableItem(15, 'Label', name.value, 'Name in another language or script'));</span>
+          } else <span class="cstat-no" title="statement not covered" ><span class="missing-if-branch" title="if path not taken" >I</span><span class="missing-if-branch" title="else path not taken" >E</span>if (types.includes('label')) {</span>
+<span class="cstat-no" title="statement not covered" >            this.items.push(new FoldableItem(15, 'Label', name.value, 'Name in another language or script'));</span>
           }
         }
       }
@@ -702,12 +699,11 @@ export class RORType extends GenericIdentifierType {
 &nbsp;
       // Add status of the organization
 &nbsp;
-      this.items.push(new FoldableItem(30, 'Status', this.getOptimizedContent(this.rorData.status || <span
-    class="branch-1 cbranch-no" title="branch not covered">'unknown')</span>, 'Current status of the organization in the ROR registry'));
+      this.items.push(new FoldableItem(30, 'Status', this.getOptimizedContent(this.rorData.status || <span class="branch-1 cbranch-no" title="branch not covered" >'unknown')</span>, 'Current status of the organization in the ROR registry'));
 &nbsp;
       // Add types of the organization
-      <span class="missing-if-branch" title="if path not taken">I</span>if (!this.rorData.types || this.rorData.types.length === 0) {
-<span class="cstat-no" title="statement not covered">        this.items.push(new FoldableItem(25, 'Type', this.getOptimizedContent('unknown'), 'Type of organization'));</span>
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (!this.rorData.types || this.rorData.types.length === 0) {
+<span class="cstat-no" title="statement not covered" >        this.items.push(new FoldableItem(25, 'Type', this.getOptimizedContent('unknown'), 'Type of organization'));</span>
       } else {
         for (const type of this.rorData.types) {
           this.items.push(new FoldableItem(25, 'Type', this.getOptimizedContent(type), 'Type of organization'));
@@ -719,8 +715,8 @@ export class RORType extends GenericIdentifierType {
         for (const link of this.rorData.links) {
           if (link.type) {
             this.items.push(new FoldableItem(35, `Link to ${link.type}`, link.value, 'External link related to the organization'));
-          } else <span class="missing-if-branch" title="else path not taken">E</span>{
-<span class="cstat-no" title="statement not covered">            this.items.push(new FoldableItem(35, `Link`, link.value, 'External link related to the organization'));</span>
+          } else <span class="missing-if-branch" title="else path not taken" >E</span>{
+<span class="cstat-no" title="statement not covered" >            this.items.push(new FoldableItem(35, `Link`, link.value, 'External link related to the organization'));</span>
           }
         }
       }
@@ -729,7 +725,7 @@ export class RORType extends GenericIdentifierType {
       if (this.rorData.external_ids &amp;&amp; this.rorData.external_ids.length &gt; 0) {
         for (const external of this.rorData.external_ids) {
           const type = external.type;
-          const value = external.preferred || <span class="branch-1 cbranch-no" title="branch not covered">external.all[0];</span>
+          const value = external.preferred || <span class="branch-1 cbranch-no" title="branch not covered" >external.all[0];</span>
           this.items.push(new FoldableItem(40, `External ID: ${type}`, value, `Identifier from another system: ${type}`));
         }
       }
@@ -737,8 +733,7 @@ export class RORType extends GenericIdentifierType {
       // Add related organizations with tooltips for relationship types
       if (this.rorData.relationships &amp;&amp; this.rorData.relationships.length &gt; 0) {
         for (const rel of this.rorData.relationships) {
-          const relationType = this.relationshipTypes[rel.type] || <span class="branch-1 cbranch-no"
-                                                                         title="branch not covered">{ title: rel.type, tooltip: `${rel.type} organization` };</span>
+          const relationType = this.relationshipTypes[rel.type] || <span class="branch-1 cbranch-no" title="branch not covered" >{ title: rel.type, tooltip: `${rel.type} organization` };</span>
 &nbsp;
           this.items.push(new FoldableItem(90, relationType.title, rel.id, relationType.tooltip));
         }
@@ -769,15 +764,14 @@ export class RORType extends GenericIdentifierType {
    * Renders a preview of the ROR organization
    * @returns {FunctionalComponent} The preview component
    */
-<span class="fstat-no" title="function not covered">  renderPreview(</span>): FunctionalComponent {
+<span class="fstat-no" title="function not covered" >  renderPreview(</span>): FunctionalComponent {
     // If data is not yet loaded, show the ROR ID
-<span class="cstat-no" title="statement not covered">    <span class="missing-if-branch"
-                                                               title="if path not taken">I</span>if (!this.rorData) {</span>
-<span class="cstat-no" title="statement not covered">      return &lt;span class={`font-mono text-sm`}&gt;Loading ROR: {this.value}...&lt;/span&gt;;</span>
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (!this.rorData) {</span>
+<span class="cstat-no" title="statement not covered" >      return &lt;span class={`font-mono text-sm`}&gt;Loading ROR: {this.value}...&lt;/span&gt;;</span>
     }
 &nbsp;
     // If data is loaded, show organization name and ID
-<span class="cstat-no" title="statement not covered">    return (</span>
+<span class="cstat-no" title="statement not covered" >    return (</span>
       &lt;span class={`inline-flex flex-nowrap items-center align-top font-mono`}&gt;
         &lt;svg
           xmlns="http://www.w3.org/2000/svg"
@@ -812,26 +806,27 @@ export class RORType extends GenericIdentifierType {
    * Returns the data fetched from ROR
    * @returns {unknown} The data fetched from ROR API
    */
-<span class="fstat-no" title="function not covered">  get d</span>ata(): unknown {
-<span class="cstat-no" title="statement not covered">    return this.rorData;</span>
+<span class="fstat-no" title="function not covered" >  get d</span>ata(): unknown {
+<span class="cstat-no" title="statement not covered" >    return this.rorData;</span>
   }
 }
 &nbsp;</pre></td></tr></table></pre>
 
-  <div class='push'></div><!-- for sticky footer -->
-</div><!-- /wrapper -->
-<div class='footer quiet pad2 space-top1 center small'>
-  Code coverage generated by
-  <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-  at 2026-04-17T21:52:43.218Z
-</div>
-<script src="../../prettify.js"></script>
-<script>
-  window.onload = function() {
-    prettyPrint();
-  };
-</script>
-<script src="../../sorter.js"></script>
-<script src="../../block-navigation.js"></script>
-</body>
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2026-04-17T23:16:11.382Z
+            </div>
+        <script src="../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../sorter.js"></script>
+        <script src="../../block-navigation.js"></script>
+    </body>
 </html>
+    

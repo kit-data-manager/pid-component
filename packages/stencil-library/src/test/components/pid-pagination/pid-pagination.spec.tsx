@@ -1,5 +1,6 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { PidPagination } from '../../../components/pid-pagination/pid-pagination';
+import { checkA11y } from '../../axe-helper';
 
 describe('pid-pagination', () => {
   it('renders with required props', async () => {
@@ -313,5 +314,15 @@ describe('pid-pagination', () => {
     });
     const separators = page.root.querySelectorAll('[role="separator"]');
     expect(separators.length).toBeGreaterThan(0);
+  });
+});
+
+describe('pid-pagination accessibility', () => {
+  it('has no a11y violations', async () => {
+    const page = await newSpecPage({
+      components: [PidPagination],
+      html: '<pid-pagination current-page="0" total-items="50" items-per-page="10"></pid-pagination>',
+    });
+    await checkA11y(page.root.outerHTML);
   });
 });

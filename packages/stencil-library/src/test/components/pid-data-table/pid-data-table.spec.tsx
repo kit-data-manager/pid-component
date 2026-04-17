@@ -1,6 +1,7 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { PidDataTable } from '../../../components/pid-data-table/pid-data-table';
 import { FoldableItem } from '../../../utils/FoldableItem';
+import { checkA11y } from '../../axe-helper';
 
 describe('pid-data-table', () => {
   const createItems = (count: number): FoldableItem[] => {
@@ -282,5 +283,16 @@ describe('pid-data-table', () => {
     expect(link.getAttribute('href')).toBe('https://example.com/link');
     expect(link.getAttribute('target')).toBe('_blank');
     expect(link.getAttribute('rel')).toBe('noopener noreferrer');
+  });
+});
+
+describe('pid-data-table accessibility', () => {
+  it('has no a11y violations (empty state)', async () => {
+    const page = await newSpecPage({
+      components: [PidDataTable],
+      html: '<pid-data-table></pid-data-table>',
+    });
+    // Test empty state which avoids custom element ARIA issues
+    await checkA11y(page.root.outerHTML);
   });
 });

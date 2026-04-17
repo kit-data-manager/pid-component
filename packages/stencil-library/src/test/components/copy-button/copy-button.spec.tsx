@@ -1,5 +1,6 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { CopyButton } from '../../../components/copy-button/copy-button';
+import { checkA11y } from '../../axe-helper';
 
 describe('copy-button', () => {
   it('renders with value prop', async () => {
@@ -235,5 +236,91 @@ describe('copy-button', () => {
     expect(page.rootInstance.copied).toBe(false);
 
     jest.useRealTimers();
+  });
+});
+
+describe('copy-button accessibility', () => {
+  it('has no a11y violations', async () => {
+    const page = await newSpecPage({
+      components: [CopyButton],
+      html: '<copy-button value="test-value"></copy-button>',
+    });
+    await checkA11y(page.root.outerHTML);
+  });
+});
+
+describe('copy-button additional coverage', () => {
+  it('copyValue uses execCommand fallback when clipboard API is unavailable', async () => {
+    // Remove clipboard API
+    Object.defineProperty(navigator, 'clipboard', {
+      value: undefined,
+      writable: true,
+      configurable: true,
+    });
+
+    const execCommandMock = jest.fn().mockReturnValue(true);
+    document.execCommand = execCommandMock;
+
+    const page = await newSpecPage({
+      components: [CopyButton],
+      html: '<copy-button value="fallback-value"></copy-button>',
+    });
+
+    const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
+    jest.spyOn(clickEvent, 'stopPropagation');
+    jest.spyOn(clickEvent, 'preventDefault');
+
+    await page.rootInstance.copyValue(clickEvent);
+    // The fallback path creates a textarea and uses setTimeout(200ms),
+    // so we verify the event propagation was stopped
+    expect(clickEvent.stopPropagation).toHaveBeenCalled();
+    expect(clickEvent.preventDefault).toHaveBeenCalled();
+  });
+
+  it('success state shows check icon after copy', async () => {
+    const writeTextMock = jest.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText: writeTextMock },
+      writable: true,
+      configurable: true,
+    });
+
+    const page = await newSpecPage({
+      components: [CopyButton],
+      html: '<copy-button value="test"></copy-button>',
+    });
+
+    const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
+    await page.rootInstance.copyValue(clickEvent);
+    await page.waitForChanges();
+
+    expect(page.rootInstance.copied).toBe(true);
+    const button = page.root.querySelector('button');
+    // The check mark is included in the button text "✓ Copied!"
+    expect(button.textContent).toContain('✓');
+    expect(button.textContent).toContain('Copied!');
+  });
+
+  it('component has sr-only label for screen readers after copy', async () => {
+    const writeTextMock = jest.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText: writeTextMock },
+      writable: true,
+      configurable: true,
+    });
+
+    const page = await newSpecPage({
+      components: [CopyButton],
+      html: '<copy-button value="test"></copy-button>',
+    });
+
+    const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
+    await page.rootInstance.copyValue(clickEvent);
+    await page.waitForChanges();
+
+    const srOnly = page.root.querySelector('.sr-only');
+    expect(srOnly).toBeTruthy();
+    expect(srOnly.getAttribute('aria-live')).toBe('assertive');
+    expect(srOnly.textContent).toContain('Content copied to clipboard');
   });
 });

@@ -1,5 +1,6 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { LocaleVisualization } from '../../../components/locale-vizualization/locale-visualization';
+import { checkA11y } from '../../axe-helper';
 
 describe('locale-visualization', () => {
   it('renders with locale prop', async () => {
@@ -35,5 +36,15 @@ describe('locale-visualization', () => {
       html: '<locale-visualization locale="en"></locale-visualization>',
     });
     expect(page.rootInstance.showFlag).toBe(true);
+  });
+});
+
+describe('locale-visualization accessibility', () => {
+  it('has no a11y violations', async () => {
+    const page = await newSpecPage({
+      components: [LocaleVisualization],
+      html: '<locale-visualization locale="en"></locale-visualization>',
+    });
+    await checkA11y(page.root.outerHTML);
   });
 });

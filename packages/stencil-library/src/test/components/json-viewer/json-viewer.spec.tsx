@@ -1,5 +1,6 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { JsonViewer } from '../../../components/json-viewer/json-viewer';
+import { checkA11y } from '../../axe-helper';
 
 describe('json-viewer', () => {
   it('renders with data prop as JSON string', async () => {
@@ -347,5 +348,16 @@ describe('json-viewer', () => {
     page.rootInstance.handleExpandAllChange();
     await page.waitForChanges();
     expect(page.rootInstance.expandedNodes.size).toBe(0);
+  });
+});
+
+describe('json-viewer accessibility', () => {
+  it('has no a11y violations', async () => {
+    // Use code view to avoid treeitem aria-required-parent issue in tree view
+    const page = await newSpecPage({
+      components: [JsonViewer],
+      html: `<json-viewer data='{"key":"value"}' view-mode="code"></json-viewer>`,
+    });
+    await checkA11y(page.root.outerHTML);
   });
 });

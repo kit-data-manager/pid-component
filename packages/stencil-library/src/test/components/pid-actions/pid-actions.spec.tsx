@@ -1,6 +1,7 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { PidActions } from '../../../components/pid-actions/pid-actions';
 import { FoldableAction } from '../../../utils/FoldableAction';
+import { checkA11y } from '../../axe-helper';
 
 describe('pid-actions', () => {
   it('renders with actions prop', async () => {
@@ -298,5 +299,19 @@ describe('pid-actions', () => {
 
     const links = page.root.querySelectorAll('a');
     expect(links.length).toBe(4);
+  });
+});
+
+describe('pid-actions accessibility', () => {
+  it('has no a11y violations', async () => {
+    const page = await newSpecPage({
+      components: [PidActions],
+      html: '<pid-actions></pid-actions>',
+    });
+    page.rootInstance.actions = [
+      new FoldableAction(0, 'View', 'https://example.com', 'primary'),
+    ];
+    await page.waitForChanges();
+    await checkA11y(page.root.outerHTML);
   });
 });

@@ -1,5 +1,6 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { ColorHighlight } from '../../../components/color-highlight/color-highlight';
+import { checkA11y } from '../../axe-helper';
 
 describe('color-highlight', () => {
   it('renders with text prop', async () => {
@@ -39,5 +40,15 @@ describe('color-highlight', () => {
       html: '<color-highlight text="TestValue"></color-highlight>',
     });
     expect(page.rootInstance.text).toBe('TestValue');
+  });
+});
+
+describe('color-highlight accessibility', () => {
+  it('has no a11y violations', async () => {
+    const page = await newSpecPage({
+      components: [ColorHighlight],
+      html: '<color-highlight text="DOI"></color-highlight>',
+    });
+    await checkA11y(page.root.outerHTML);
   });
 });

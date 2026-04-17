@@ -1,68 +1,68 @@
+
 <!doctype html>
 <html lang="en">
 
 <head>
-  <title>Code coverage report for src/auto-detect/initPidDetection.ts</title>
-  <meta charset="utf-8" />
-  <link rel="stylesheet" href="../../prettify.css" />
-  <link rel="stylesheet" href="../../base.css" />
-  <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style type='text/css'>
-    .coverage-summary .sorter {
-      background-image: url(../../sort-arrow-sprite.png);
-    }
-  </style>
+    <title>Code coverage report for src/auto-detect/initPidDetection.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
 </head>
-
+    
 <body>
 <div class='wrapper'>
-  <div class='pad1'>
-    <h1><a href="../../index.html">All files</a> / <a href="index.html">src/auto-detect</a> initPidDetection.ts</h1>
-    <div class='clearfix'>
-
-      <div class='fl pad1y space-right2'>
-        <span class="strong">72.72% </span>
-        <span class="quiet">Statements</span>
-        <span class='fraction'>96/132</span>
-      </div>
-
-
-      <div class='fl pad1y space-right2'>
-        <span class="strong">60.52% </span>
-        <span class="quiet">Branches</span>
-        <span class='fraction'>23/38</span>
-      </div>
-
-
-      <div class='fl pad1y space-right2'>
-        <span class="strong">82.35% </span>
-        <span class="quiet">Functions</span>
-        <span class='fraction'>14/17</span>
-      </div>
-
-
-      <div class='fl pad1y space-right2'>
-        <span class="strong">76.66% </span>
-        <span class="quiet">Lines</span>
-        <span class='fraction'>92/120</span>
-      </div>
-
-
+    <div class='pad1'>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/auto-detect</a> initPidDetection.ts</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">72.72% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>96/132</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">60.52% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>23/38</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">82.35% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>14/17</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">76.66% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>92/120</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
     </div>
-    <p class="quiet">
-      Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the
-      previous block.
-    </p>
-    <template id="filterTemplate">
-      <div class="quiet">
-        Filter:
-        <input type="search" id="fileSearch">
-      </div>
-    </template>
-  </div>
-  <div class='status-line high'></div>
-  <pre><table class="coverage">
+    <div class='status-line high'></div>
+    <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
 <a name='L3'></a><a href='#L3'>3</a>
@@ -763,33 +763,29 @@ export function initPidDetection(config: PidDetectionConfig = {}): PidDetectionC
   // Try to create the Web Worker
   try {
     worker = createWorker();
-    <span class="missing-if-branch" title="if path not taken">I</span>if (worker) {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (worker) {
       // Configure the worker with the ordered renderer list
-<span class="cstat-no"
-      title="statement not covered">      worker.postMessage({ type: 'init', orderedRenderers });</span>
+<span class="cstat-no" title="statement not covered" >      worker.postMessage({ type: 'init', orderedRenderers });</span>
 &nbsp;
       // Handle worker responses
-<span class="cstat-no" title="statement not covered">      worker.onmessage = <span class="fstat-no"
-                                                                                    title="function not covered">(e</span>vent: MessageEvent&lt;WorkerResultMessage&gt;) =&gt; {</span>
-        const { id, matches } = <span class="cstat-no" title="statement not covered">event.data;</span>
-        const callback = <span class="cstat-no" title="statement not covered">pendingCallbacks.get(id);</span>
-<span class="cstat-no" title="statement not covered">        <span class="missing-if-branch"
-                                                                   title="if path not taken">I</span>if (callback) {</span>
-<span class="cstat-no" title="statement not covered">          pendingCallbacks.delete(id);</span>
-<span class="cstat-no" title="statement not covered">          callback(matches);</span>
+<span class="cstat-no" title="statement not covered" >      worker.onmessage = <span class="fstat-no" title="function not covered" >(e</span>vent: MessageEvent&lt;WorkerResultMessage&gt;) =&gt; {</span>
+        const { id, matches } = <span class="cstat-no" title="statement not covered" >event.data;</span>
+        const callback = <span class="cstat-no" title="statement not covered" >pendingCallbacks.get(id);</span>
+<span class="cstat-no" title="statement not covered" >        <span class="missing-if-branch" title="if path not taken" >I</span>if (callback) {</span>
+<span class="cstat-no" title="statement not covered" >          pendingCallbacks.delete(id);</span>
+<span class="cstat-no" title="statement not covered" >          callback(matches);</span>
         }
       };
 &nbsp;
-<span class="cstat-no" title="statement not covered">      worker.onerror = <span class="fstat-no"
-                                                                                  title="function not covered">(e</span>rror) =&gt; {</span>
-<span class="cstat-no" title="statement not covered">        console.error('PID detection worker error:', error);</span>
+<span class="cstat-no" title="statement not covered" >      worker.onerror = <span class="fstat-no" title="function not covered" >(e</span>rror) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        console.error('PID detection worker error:', error);</span>
         // Fall back to main-thread detection
-<span class="cstat-no" title="statement not covered">        worker = null;</span>
+<span class="cstat-no" title="statement not covered" >        worker = null;</span>
       };
     }
   } catch {
-<span class="cstat-no" title="statement not covered">    console.warn('Could not create Web Worker for PID detection, falling back to main thread.');</span>
-<span class="cstat-no" title="statement not covered">    worker = null;</span>
+<span class="cstat-no" title="statement not covered" >    console.warn('Could not create Web Worker for PID detection, falling back to main thread.');</span>
+<span class="cstat-no" title="statement not covered" >    worker = null;</span>
   }
 &nbsp;
   /**
@@ -797,16 +793,16 @@ export function initPidDetection(config: PidDetectionConfig = {}): PidDetectionC
    */
   function detectText(text: string): Promise&lt;DetectionMatch[]&gt; {
     return new Promise((resolve) =&gt; {
-      <span class="missing-if-branch" title="if path not taken">I</span>if (worker) {
-        const id = <span class="cstat-no" title="statement not covered">nextRequestId++;</span>
-<span class="cstat-no" title="statement not covered">        pendingCallbacks.set(id, resolve);</span>
-        const message: WorkerDetectMessage = <span class="cstat-no" title="statement not covered">{</span>
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (worker) {
+        const id = <span class="cstat-no" title="statement not covered" >nextRequestId++;</span>
+<span class="cstat-no" title="statement not covered" >        pendingCallbacks.set(id, resolve);</span>
+        const message: WorkerDetectMessage = <span class="cstat-no" title="statement not covered" >{</span>
           type: 'detect',
           id,
           text,
           orderedRenderers,
         };
-<span class="cstat-no" title="statement not covered">        worker.postMessage(message);</span>
+<span class="cstat-no" title="statement not covered" >        worker.postMessage(message);</span>
       } else {
         // Main-thread fallback using Parser.getBestFitQuick
         resolve(detectOnMainThread(text, orderedRenderers));
@@ -818,8 +814,7 @@ export function initPidDetection(config: PidDetectionConfig = {}): PidDetectionC
    * Run a full scan of the DOM tree.
    */
   async function runScan() {
-    <span class="missing-if-branch" title="if path not taken">I</span>if (destroyed) <span class="cstat-no"
-                                                                                           title="statement not covered">return;</span>
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (destroyed) <span class="cstat-no" title="statement not covered" >return;</span>
 &nbsp;
     const textNodes = await scanDom(root, config.exclude);
 &nbsp;
@@ -827,26 +822,20 @@ export function initPidDetection(config: PidDetectionConfig = {}): PidDetectionC
     const batches = chunkArray(textNodes, INSERT_BATCH_SIZE);
 &nbsp;
     for (const batch of batches) {
-      <span class="missing-if-branch" title="if path not taken">I</span>if (destroyed) <span class="cstat-no"
-                                                                                             title="statement not covered">return;</span>
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (destroyed) <span class="cstat-no" title="statement not covered" >return;</span>
 &nbsp;
       await new Promise&lt;void&gt;((resolve) =&gt; {
         const requestIdle =
           typeof requestIdleCallback !== 'undefined'
             ? requestIdleCallback
-            : <span class="fstat-no" title="function not covered"><span class="branch-1 cbranch-no"
-                                                                        title="branch not covered">(c</span>b: () =&gt; void) =&gt; <span
-    class="cstat-no" title="statement not covered">setTimeout(cb, 0) as unknown as number;</span></span>
+            : <span class="fstat-no" title="function not covered" ><span class="branch-1 cbranch-no" title="branch not covered" >(c</span>b: () =&gt; void) =&gt; <span class="cstat-no" title="statement not covered" >setTimeout(cb, 0) as unknown as number;</span></span>
 &nbsp;
         requestIdle(async () =&gt; {
           for (const scannedNode of batch) {
-            <span class="missing-if-branch" title="if path not taken">I</span>if (destroyed) <span class="cstat-no"
-                                                                                                   title="statement not covered">break;</span>
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (destroyed) <span class="cstat-no" title="statement not covered" >break;</span>
 &nbsp;
             // Check that the text node is still in the DOM
-            <span class="missing-if-branch"
-                  title="if path not taken">I</span>if (!scannedNode.textNode.parentNode) <span class="cstat-no"
-                                                                                                title="statement not covered">continue;</span>
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (!scannedNode.textNode.parentNode) <span class="cstat-no" title="statement not covered" >continue;</span>
 &nbsp;
             const matches = await detectText(scannedNode.text);
 &nbsp;
@@ -864,33 +853,26 @@ export function initPidDetection(config: PidDetectionConfig = {}): PidDetectionC
   // Set up MutationObserver if requested
   if (config.observe) {
     observer = new MutationObserver((mutations) =&gt; {
-      <span class="missing-if-branch" title="if path not taken">I</span>if (destroyed) <span class="cstat-no"
-                                                                                             title="statement not covered">return;</span>
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (destroyed) <span class="cstat-no" title="statement not covered" >return;</span>
 &nbsp;
       for (const mutation of mutations) {
         for (const node of Array.from(mutation.addedNodes)) {
           if (node.nodeType === Node.ELEMENT_NODE) {
             const element = node as HTMLElement;
             // Skip our own wrapper elements
-            if (element.classList<span class="branch-0 cbranch-no" title="branch not covered">?.c</span>ontains('pid-auto-detect-wrapper')) continue;
+            if (element.classList<span class="branch-0 cbranch-no" title="branch not covered" >?.c</span>ontains('pid-auto-detect-wrapper')) continue;
             if (element.tagName === 'PID-COMPONENT') continue;
 &nbsp;
             // Scan the new subtree
             scanDom(element, config.exclude).then(async (textNodes) =&gt; {
               for (const scannedNode of textNodes) {
-<span class="cstat-no" title="statement not covered">                <span class="missing-if-branch"
-                                                                           title="if path not taken">I</span>if (destroyed) <span
-  class="cstat-no" title="statement not covered">break;</span></span>
-<span class="cstat-no" title="statement not covered">                <span class="missing-if-branch"
-                                                                           title="if path not taken">I</span>if (!scannedNode.textNode.parentNode) <span
-  class="cstat-no" title="statement not covered">continue;</span></span>
+<span class="cstat-no" title="statement not covered" >                <span class="missing-if-branch" title="if path not taken" >I</span>if (destroyed) <span class="cstat-no" title="statement not covered" >break;</span></span>
+<span class="cstat-no" title="statement not covered" >                <span class="missing-if-branch" title="if path not taken" >I</span>if (!scannedNode.textNode.parentNode) <span class="cstat-no" title="statement not covered" >continue;</span></span>
 &nbsp;
-                const matches = <span class="cstat-no"
-                                      title="statement not covered">await detectText(scannedNode.text);</span>
-<span class="cstat-no" title="statement not covered">                <span class="missing-if-branch"
-                                                                           title="if path not taken">I</span>if (matches.length &gt; 0) {</span>
-                  const records = <span class="cstat-no" title="statement not covered">replaceMatches(scannedNode.textNode, matches, config);</span>
-<span class="cstat-no" title="statement not covered">                  allRecords.push(...records);</span>
+                const matches = <span class="cstat-no" title="statement not covered" >await detectText(scannedNode.text);</span>
+<span class="cstat-no" title="statement not covered" >                <span class="missing-if-branch" title="if path not taken" >I</span>if (matches.length &gt; 0) {</span>
+                  const records = <span class="cstat-no" title="statement not covered" >replaceMatches(scannedNode.textNode, matches, config);</span>
+<span class="cstat-no" title="statement not covered" >                  allRecords.push(...records);</span>
                 }
               }
             });
@@ -932,9 +914,9 @@ export function initPidDetection(config: PidDetectionConfig = {}): PidDetectionC
       }
 &nbsp;
       // Terminate worker
-      <span class="missing-if-branch" title="if path not taken">I</span>if (worker) {
-<span class="cstat-no" title="statement not covered">        worker.terminate();</span>
-<span class="cstat-no" title="statement not covered">        worker = null;</span>
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (worker) {
+<span class="cstat-no" title="statement not covered" >        worker.terminate();</span>
+<span class="cstat-no" title="statement not covered" >        worker = null;</span>
       }
 &nbsp;
       // Clear pending callbacks
@@ -957,7 +939,7 @@ function createWorker(): Worker | null {
     return null;
   }
 &nbsp;
-<span class="cstat-no" title="statement not covered">  try {</span>
+<span class="cstat-no" title="statement not covered" >  try {</span>
     // The worker imports from the same bundle. Since Stencil may not
     // support standard worker bundling out of the box, we create the
     // worker using a blob URL that imports from the current script's origin.
@@ -967,9 +949,9 @@ function createWorker(): Worker | null {
     // TODO: Investigate Stencil v4 worker bundling options (Rollup plugin,
     // or using the dist-custom-elements output with a separate worker entry point).
     // For now, the main-thread fallback provides identical functionality.
-<span class="cstat-no" title="statement not covered">    return null;</span>
+<span class="cstat-no" title="statement not covered" >    return null;</span>
   } catch {
-<span class="cstat-no" title="statement not covered">    return null;</span>
+<span class="cstat-no" title="statement not covered" >    return null;</span>
   }
 }
 &nbsp;
@@ -1012,8 +994,7 @@ function detectOnMainThread(text: string, orderedRenderers?: string[]): Detectio
 &nbsp;
     // Sanitize: strip surrounding punctuation that may be part of prose
     const { sanitized, leadingStripped } = sanitizeToken(token);
-    <span class="missing-if-branch" title="if path not taken">I</span>if (sanitized.length &lt; 2) <span
-    class="cstat-no" title="statement not covered">continue;</span>
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (sanitized.length &lt; 2) <span class="cstat-no" title="statement not covered" >continue;</span>
 &nbsp;
     const rendererKey = detectBestFit(sanitized, orderedRenderers);
     if (rendererKey !== null) {
@@ -1041,20 +1022,21 @@ function chunkArray&lt;T&gt;(arr: T[], size: number): T[][] {
 }
 &nbsp;</pre></td></tr></table></pre>
 
-  <div class='push'></div><!-- for sticky footer -->
-</div><!-- /wrapper -->
-<div class='footer quiet pad2 space-top1 center small'>
-  Code coverage generated by
-  <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-  at 2026-04-17T21:52:43.218Z
-</div>
-<script src="../../prettify.js"></script>
-<script>
-  window.onload = function() {
-    prettyPrint();
-  };
-</script>
-<script src="../../sorter.js"></script>
-<script src="../../block-navigation.js"></script>
-</body>
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2026-04-17T23:16:11.382Z
+            </div>
+        <script src="../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../sorter.js"></script>
+        <script src="../../block-navigation.js"></script>
+    </body>
 </html>
+    

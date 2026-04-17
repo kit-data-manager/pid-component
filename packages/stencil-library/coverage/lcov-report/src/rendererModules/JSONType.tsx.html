@@ -1,68 +1,68 @@
+
 <!doctype html>
 <html lang="en">
 
 <head>
-  <title>Code coverage report for src/rendererModules/JSONType.tsx</title>
-  <meta charset="utf-8" />
-  <link rel="stylesheet" href="../../prettify.css" />
-  <link rel="stylesheet" href="../../base.css" />
-  <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style type='text/css'>
-    .coverage-summary .sorter {
-      background-image: url(../../sort-arrow-sprite.png);
-    }
-  </style>
+    <title>Code coverage report for src/rendererModules/JSONType.tsx</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
 </head>
-
+    
 <body>
 <div class='wrapper'>
-  <div class='pad1'>
-    <h1><a href="../../index.html">All files</a> / <a href="index.html">src/rendererModules</a> JSONType.tsx</h1>
-    <div class='clearfix'>
-
-      <div class='fl pad1y space-right2'>
-        <span class="strong">88.63% </span>
-        <span class="quiet">Statements</span>
-        <span class='fraction'>39/44</span>
-      </div>
-
-
-      <div class='fl pad1y space-right2'>
-        <span class="strong">82.35% </span>
-        <span class="quiet">Branches</span>
-        <span class='fraction'>28/34</span>
-      </div>
-
-
-      <div class='fl pad1y space-right2'>
-        <span class="strong">90% </span>
-        <span class="quiet">Functions</span>
-        <span class='fraction'>9/10</span>
-      </div>
-
-
-      <div class='fl pad1y space-right2'>
-        <span class="strong">90.69% </span>
-        <span class="quiet">Lines</span>
-        <span class='fraction'>39/43</span>
-      </div>
-
-
+    <div class='pad1'>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/rendererModules</a> JSONType.tsx</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">88.63% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>39/44</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">82.35% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>28/34</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">90% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>9/10</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">90.69% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>39/43</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
     </div>
-    <p class="quiet">
-      Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the
-      previous block.
-    </p>
-    <template id="filterTemplate">
-      <div class="quiet">
-        Filter:
-        <input type="search" id="fileSearch">
-      </div>
-    </template>
-  </div>
-  <div class='status-line high'></div>
-  <pre><table class="coverage">
+    <div class='status-line high'></div>
+    <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
 <a name='L3'></a><a href='#L3'>3</a>
@@ -350,17 +350,15 @@ export class JSONType extends GenericIdentifierType {
   private getParsedJson(): ParsedJsonResult {
     if (this._parsedJsonResult === undefined) {
       try {
-        <span class="missing-if-branch" title="if path not taken">I</span>if (typeof this.value === 'object' &amp;&amp; <span
-    class="branch-1 cbranch-no" title="branch not covered">this.value !== null)</span> {
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (typeof this.value === 'object' &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >this.value !== null)</span> {
           // If the value is already an object, we can use it directly
-<span class="cstat-no" title="statement not covered">          this._parsedJsonResult = { data: this.value };</span>
-<span class="cstat-no" title="statement not covered">          return this._parsedJsonResult;</span>
+<span class="cstat-no" title="statement not covered" >          this._parsedJsonResult = { data: this.value };</span>
+<span class="cstat-no" title="statement not covered" >          return this._parsedJsonResult;</span>
         }
 &nbsp;
         // Handle potential edge cases with the input value
-        <span class="missing-if-branch" title="if path not taken">I</span>if (typeof this.value !== 'string') {
-<span class="cstat-no"
-      title="statement not covered">          throw new Error('Input value is not a string or object');</span>
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (typeof this.value !== 'string') {
+<span class="cstat-no" title="statement not covered" >          throw new Error('Input value is not a string or object');</span>
         }
 &nbsp;
         // Trim whitespace before parsing to handle common input issues
@@ -375,8 +373,7 @@ export class JSONType extends GenericIdentifierType {
         const parsed = JSON.parse(trimmedValue);
         this._parsedJsonResult = { data: parsed };
       } catch (e) {
-        this._parsedJsonResult = { error: e instanceof Error ? e : <span class="branch-1 cbranch-no"
-                                                                         title="branch not covered">new Error(String(e)) </span>};
+        this._parsedJsonResult = { error: e instanceof Error ? e : <span class="branch-1 cbranch-no" title="branch not covered" >new Error(String(e)) </span>};
       }
     }
     return this._parsedJsonResult;
@@ -439,7 +436,7 @@ export class JSONType extends GenericIdentifierType {
     }
 &nbsp;
     // For simple JSON values (strings, numbers, booleans, null), show the stringified value
-<span class="cstat-no" title="statement not covered">    return (</span>
+<span class="cstat-no" title="statement not covered" >    return (</span>
       &lt;div class="w-full"&gt;
         &lt;pre class={`max-w-full overflow-x-auto rounded-md font-mono text-xs whitespace-pre-wrap`}&gt;{JSON.stringify(jsonObj, null, 2)}&lt;/pre&gt;
       &lt;/div&gt;
@@ -448,10 +445,7 @@ export class JSONType extends GenericIdentifierType {
 &nbsp;
   renderBody(): FunctionalComponent&lt;never&gt; {
     const { data: parsedData, error } = this.getParsedJson();
-    const darkModeValue = (this.settings<span class="branch-1 cbranch-no" title="branch not covered">?.find(<span
-    class="fstat-no" title="function not covered">setting </span>=&gt; <span class="cstat-no"
-                                                                             title="statement not covered">setting.name === 'darkMode')<span
-    class="branch-1 cbranch-no" title="branch not covered"></span>?</span>.value as 'light' | 'dark' | 'system') </span>|| 'system';
+    const darkModeValue = (this.settings<span class="branch-1 cbranch-no" title="branch not covered" >?.find(<span class="fstat-no" title="function not covered" >setting </span>=&gt; <span class="cstat-no" title="statement not covered" >setting.name === 'darkMode')<span class="branch-1 cbranch-no" title="branch not covered" ></span>?</span>.value as 'light' | 'dark' | 'system') </span>|| 'system';
 &nbsp;
     if (error) {
       return (
@@ -473,20 +467,21 @@ export class JSONType extends GenericIdentifierType {
 }
 &nbsp;</pre></td></tr></table></pre>
 
-  <div class='push'></div><!-- for sticky footer -->
-</div><!-- /wrapper -->
-<div class='footer quiet pad2 space-top1 center small'>
-  Code coverage generated by
-  <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-  at 2026-04-17T21:52:43.218Z
-</div>
-<script src="../../prettify.js"></script>
-<script>
-  window.onload = function() {
-    prettyPrint();
-  };
-</script>
-<script src="../../sorter.js"></script>
-<script src="../../block-navigation.js"></script>
-</body>
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2026-04-17T23:16:11.382Z
+            </div>
+        <script src="../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../sorter.js"></script>
+        <script src="../../block-navigation.js"></script>
+    </body>
 </html>
+    

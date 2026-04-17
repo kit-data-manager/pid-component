@@ -49,6 +49,7 @@ export const config: Config = {
   ],
   testing: {
     browserHeadless: 'shell',
+    setupFilesAfterEnv: ['./src/test/setup-axe.ts'],
     coverageDirectory: './coverage',
     collectCoverageFrom: [
       'src/**/*.{ts,tsx}',
@@ -59,10 +60,10 @@ export const config: Config = {
     ],
     coverageThreshold: {
       global: {
-        branches: 55,
-        functions: 70,
-        lines: 68,
-        statements: 68,
+        branches: 58,
+        functions: 75,
+        lines: 72,
+        statements: 70,
       },
     },
   },

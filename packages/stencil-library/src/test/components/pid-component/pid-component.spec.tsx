@@ -1,5 +1,6 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { PidComponent } from '../../../components/pid-component/pid-component';
+import { checkA11y } from '../../axe-helper';
 
 // Mock the Database to avoid real IndexedDB/network calls
 jest.mock('../../../utils/IndexedDBUtil', () => ({
@@ -381,5 +382,21 @@ describe('pid-component', () => {
     const shadowHtml = page.root.shadowRoot.innerHTML;
     expect(shadowHtml).toContain('role="status"');
     expect(shadowHtml).toContain('aria-live="polite"');
+  });
+});
+
+describe('pid-component accessibility', () => {
+  it('has no a11y violations in loading state', async () => {
+    const page = await newSpecPage({
+      components: [PidComponent],
+      html: '<pid-component value="test"></pid-component>',
+    });
+    page.rootInstance.displayStatus = 'loading';
+    page.rootInstance.identifierObject = undefined;
+    await page.waitForChanges();
+
+    // pid-component uses shadow DOM, so we need to get the shadow root HTML
+    const shadowHtml = page.root.shadowRoot.innerHTML;
+    await checkA11y(shadowHtml);
   });
 });

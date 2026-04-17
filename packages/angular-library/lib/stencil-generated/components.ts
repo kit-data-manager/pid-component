@@ -6,8 +6,8 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  Output,
   NgZone,
+  Output,
 } from '@angular/core';
 
 import { ProxyCmp } from './angular-component-lib/utils';
@@ -34,6 +34,7 @@ import {
   defineCustomElement as definePidPagination,
 } from '@kit-data-manager/pid-component/components/pid-pagination.js';
 import { defineCustomElement as definePidTooltip } from '@kit-data-manager/pid-component/components/pid-tooltip.js';
+
 @ProxyCmp({
   defineCustomElementFn: defineColorHighlight,
   inputs: ['text'],

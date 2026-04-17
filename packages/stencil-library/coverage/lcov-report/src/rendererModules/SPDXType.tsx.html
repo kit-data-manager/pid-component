@@ -1,68 +1,68 @@
+
 <!doctype html>
 <html lang="en">
 
 <head>
-  <title>Code coverage report for src/rendererModules/SPDXType.tsx</title>
-  <meta charset="utf-8" />
-  <link rel="stylesheet" href="../../prettify.css" />
-  <link rel="stylesheet" href="../../base.css" />
-  <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style type='text/css'>
-    .coverage-summary .sorter {
-      background-image: url(../../sort-arrow-sprite.png);
-    }
-  </style>
+    <title>Code coverage report for src/rendererModules/SPDXType.tsx</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
 </head>
-
+    
 <body>
 <div class='wrapper'>
-  <div class='pad1'>
-    <h1><a href="../../index.html">All files</a> / <a href="index.html">src/rendererModules</a> SPDXType.tsx</h1>
-    <div class='clearfix'>
-
-      <div class='fl pad1y space-right2'>
-        <span class="strong">73.97% </span>
-        <span class="quiet">Statements</span>
-        <span class='fraction'>108/146</span>
-      </div>
-
-
-      <div class='fl pad1y space-right2'>
-        <span class="strong">52.94% </span>
-        <span class="quiet">Branches</span>
-        <span class='fraction'>36/68</span>
-      </div>
-
-
-      <div class='fl pad1y space-right2'>
-        <span class="strong">73.33% </span>
-        <span class="quiet">Functions</span>
-        <span class='fraction'>22/30</span>
-      </div>
-
-
-      <div class='fl pad1y space-right2'>
-        <span class="strong">77.94% </span>
-        <span class="quiet">Lines</span>
-        <span class='fraction'>106/136</span>
-      </div>
-
-
+    <div class='pad1'>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/rendererModules</a> SPDXType.tsx</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">73.97% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>108/146</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">52.94% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>36/68</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">73.33% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>22/30</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">77.94% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>106/136</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
     </div>
-    <p class="quiet">
-      Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the
-      previous block.
-    </p>
-    <template id="filterTemplate">
-      <div class="quiet">
-        Filter:
-        <input type="search" id="fileSearch">
-      </div>
-    </template>
-  </div>
-  <div class='status-line high'></div>
-  <pre><table class="coverage">
+    <div class='status-line high'></div>
+    <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
 <a name='L3'></a><a href='#L3'>3</a>
@@ -1072,8 +1072,8 @@ export class SPDXType extends GenericIdentifierType {
     const isValidId = SPDXType.ID_REGEX.test(this.value);
 &nbsp;
     // If neither format is valid, return false immediately
-    <span class="missing-if-branch" title="if path not taken">I</span>if (!isValidUrl &amp;&amp; !isValidId) {
-<span class="cstat-no" title="statement not covered">      return false;</span>
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!isValidUrl &amp;&amp; !isValidId) {
+<span class="cstat-no" title="statement not covered" >      return false;</span>
     }
 &nbsp;
     // Extract potential license ID from the value
@@ -1117,8 +1117,7 @@ export class SPDXType extends GenericIdentifierType {
 &nbsp;
       // Attempt to fetch with timeout
       const controller = new AbortController();
-      const timeoutId = setTimeout(<span class="fstat-no" title="function not covered">() =</span>&gt; <span
-    class="cstat-no" title="statement not covered">controller.abort(),</span> this.requestTimeout);
+      const timeoutId = setTimeout(<span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >controller.abort(),</span> this.requestTimeout);
 &nbsp;
       const response = await fetch(url, { signal: controller.signal });
       clearTimeout(timeoutId);
@@ -1142,10 +1141,10 @@ export class SPDXType extends GenericIdentifierType {
       console.log(`Invalid license data received for ${licenseId}`);
       return false;
     } catch (error) {
-<span class="cstat-no" title="statement not covered">      console.error(`License validation error for ${licenseId}:`, error);</span>
+<span class="cstat-no" title="statement not covered" >      console.error(`License validation error for ${licenseId}:`, error);</span>
       // When validation fails due to network issues, we should return false
       // since we can't confirm it's a valid SPDX license
-<span class="cstat-no" title="statement not covered">      return false;</span>
+<span class="cstat-no" title="statement not covered" >      return false;</span>
     }
   }
 &nbsp;
@@ -1157,7 +1156,7 @@ export class SPDXType extends GenericIdentifierType {
   private buildLicenseApiUrl(licenseId: string): string {
     const baseUrl = this.corsFallback
       ? `${this.corsProxy}${encodeURIComponent(`${this.spdxBaseUrl}/${licenseId}.${this.fileFormat}`)}`
-      : <span class="branch-1 cbranch-no" title="branch not covered">`${this.spdxBaseUrl}/${licenseId}.${this.fileFormat}`;</span>
+      : <span class="branch-1 cbranch-no" title="branch not covered" >`${this.spdxBaseUrl}/${licenseId}.${this.fileFormat}`;</span>
 &nbsp;
     return baseUrl;
   }
@@ -1165,15 +1164,15 @@ export class SPDXType extends GenericIdentifierType {
    * Returns the license data that is being rendered in the component
    * @returns The license data
    */
-<span class="fstat-no" title="function not covered">  get d</span>ata(): SPDXLicense | null {
-<span class="cstat-no" title="statement not covered">    return this.licenseData;</span>
+<span class="fstat-no" title="function not covered" >  get d</span>ata(): SPDXLicense | null {
+<span class="cstat-no" title="statement not covered" >    return this.licenseData;</span>
   }
 &nbsp;
   /**
    * Debugging method to log the current license data
    */
-<span class="fstat-no" title="function not covered">  logLicenseData(</span>): void {
-<span class="cstat-no" title="statement not covered">    console.log('Current license data:', {</span>
+<span class="fstat-no" title="function not covered" >  logLicenseData(</span>): void {
+<span class="cstat-no" title="statement not covered" >    console.log('Current license data:', {</span>
       licenseId: this.licenseId,
       licenseData: this.licenseData,
       hasData: Boolean(this.licenseData &amp;&amp; this.licenseData.licenseId &amp;&amp; this.licenseData.name),
@@ -1192,8 +1191,8 @@ export class SPDXType extends GenericIdentifierType {
       // If we already have license data from validation, skip fetching
       if (!this.licenseData) {
         await this.fetchLicenseData();
-      } else <span class="missing-if-branch" title="else path not taken">E</span>{
-<span class="cstat-no" title="statement not covered">        console.debug(`Using pre-fetched data for license ${this.licenseId}`);</span>
+      } else <span class="missing-if-branch" title="else path not taken" >E</span>{
+<span class="cstat-no" title="statement not covered" >        console.debug(`Using pre-fetched data for license ${this.licenseId}`);</span>
       }
 &nbsp;
       this.populateLicenseData();
@@ -1211,9 +1210,9 @@ export class SPDXType extends GenericIdentifierType {
     // If input is likely a direct license ID, set it immediately
     if (!this.value.includes('/') &amp;&amp; !this.value.includes('://')) {
       this.licenseId = this.value.trim();
-    } else <span class="missing-if-branch" title="else path not taken">E</span>{
+    } else <span class="missing-if-branch" title="else path not taken" >E</span>{
       // Extract the license ID from the URL
-<span class="cstat-no" title="statement not covered">      this.licenseId = this.value</span>
+<span class="cstat-no" title="statement not covered" >      this.licenseId = this.value</span>
         .replace(/^https?:\/\/spdx\.org\/licenses\//i, '')
         .replace(/\/$/, '')
         .replace(/\.(json|html)$/i, '');
@@ -1225,8 +1224,7 @@ export class SPDXType extends GenericIdentifierType {
    */
   private async fetchLicenseData(): Promise&lt;void&gt; {
     const timeout = new Promise&lt;never&gt;((_, reject) =&gt; {
-      setTimeout(<span class="fstat-no" title="function not covered">() =</span>&gt; <span class="cstat-no"
-                                                                                           title="statement not covered">reject(new Error('Request timeout')),</span> this.requestTimeout);
+      setTimeout(<span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >reject(new Error('Request timeout')),</span> this.requestTimeout);
     });
 &nbsp;
     try {
@@ -1236,18 +1234,18 @@ export class SPDXType extends GenericIdentifierType {
       const fetchPromise = fetch(apiUrl);
       const response = (await Promise.race([fetchPromise, timeout])) as Response;
 &nbsp;
-      <span class="missing-if-branch" title="if path not taken">I</span>if (!response.ok) {
-<span class="cstat-no" title="statement not covered">        if (this.corsFallback &amp;&amp; apiUrl.includes(this.corsProxy)) {</span>
-<span class="cstat-no" title="statement not covered">          await this.tryFallbackOptions();</span>
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (!response.ok) {
+<span class="cstat-no" title="statement not covered" >        if (this.corsFallback &amp;&amp; apiUrl.includes(this.corsProxy)) {</span>
+<span class="cstat-no" title="statement not covered" >          await this.tryFallbackOptions();</span>
         } else {
-<span class="cstat-no" title="statement not covered">          throw new Error(`Failed to fetch SPDX data: ${response.status}`);</span>
+<span class="cstat-no" title="statement not covered" >          throw new Error(`Failed to fetch SPDX data: ${response.status}`);</span>
         }
       } else {
         this.licenseData = await response.json();
       }
 &nbsp;
-      <span class="missing-if-branch" title="if path not taken">I</span>if (!this.licenseData) {
-<span class="cstat-no" title="statement not covered">        throw new Error('No license data available');</span>
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (!this.licenseData) {
+<span class="cstat-no" title="statement not covered" >        throw new Error('No license data available');</span>
       }
     } catch (fetchError) {
       console.warn('Error fetching SPDX license data:', fetchError);
@@ -1258,25 +1256,20 @@ export class SPDXType extends GenericIdentifierType {
   /**
    * Tries fallback options when the primary fetch fails
    */
-  private <span class="fstat-no" title="function not covered">async </span>tryFallbackOptions(): Promise&lt;void&gt; {
-    const timeout = <span class="cstat-no" title="statement not covered">new Promise&lt;never&gt;(<span class="fstat-no"
-                                                                                                        title="function not covered">(_</span>, reject) =&gt; {</span>
-<span class="cstat-no" title="statement not covered">      setTimeout(<span class="fstat-no"
-                                                                            title="function not covered">() =</span>&gt; <span
-  class="cstat-no"
-  title="statement not covered">reject(new Error('Request timeout')),</span> this.requestTimeout);</span>
+  private <span class="fstat-no" title="function not covered" >async </span>tryFallbackOptions(): Promise&lt;void&gt; {
+    const timeout = <span class="cstat-no" title="statement not covered" >new Promise&lt;never&gt;(<span class="fstat-no" title="function not covered" >(_</span>, reject) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >      setTimeout(<span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >reject(new Error('Request timeout')),</span> this.requestTimeout);</span>
     });
 &nbsp;
-    const directUrl = <span class="cstat-no" title="statement not covered">`${this.spdxBaseUrl}/${this.licenseId}.${this.fileFormat}`;</span>
-    const directFetchPromise = <span class="cstat-no" title="statement not covered">fetch(directUrl);</span>
-    const directResponse = (<span class="cstat-no" title="statement not covered">await Promise.race([directFetchPromise, timeout]))</span> as Response;
+    const directUrl = <span class="cstat-no" title="statement not covered" >`${this.spdxBaseUrl}/${this.licenseId}.${this.fileFormat}`;</span>
+    const directFetchPromise = <span class="cstat-no" title="statement not covered" >fetch(directUrl);</span>
+    const directResponse = (<span class="cstat-no" title="statement not covered" >await Promise.race([directFetchPromise, timeout]))</span> as Response;
 &nbsp;
-<span class="cstat-no" title="statement not covered">    <span class="missing-if-branch"
-                                                               title="if path not taken">I</span>if (!directResponse.ok) {</span>
-<span class="cstat-no" title="statement not covered">      throw new Error(`Failed to fetch SPDX data: ${directResponse.status}`);</span>
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (!directResponse.ok) {</span>
+<span class="cstat-no" title="statement not covered" >      throw new Error(`Failed to fetch SPDX data: ${directResponse.status}`);</span>
     }
 &nbsp;
-<span class="cstat-no" title="statement not covered">    this.licenseData = await directResponse.json();</span>
+<span class="cstat-no" title="statement not covered" >    this.licenseData = await directResponse.json();</span>
   }
 &nbsp;
   /**
@@ -1290,8 +1283,7 @@ export class SPDXType extends GenericIdentifierType {
    * Populates the UI with license data
    */
   private populateLicenseData(): void {
-    <span class="missing-if-branch" title="if path not taken">I</span>if (!this.licenseData) <span class="cstat-no"
-                                                                                                   title="statement not covered">return;</span>
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!this.licenseData) <span class="cstat-no" title="statement not covered" >return;</span>
 &nbsp;
     // Add license name and ID
     this.items.push(new FoldableItem(0, 'Full Name', this.licenseData.name, 'The full legal name of the license', null, null, false));
@@ -1305,8 +1297,7 @@ export class SPDXType extends GenericIdentifierType {
       new FoldableItem(
         20,
         'OSI Approved',
-        this.licenseData.isOsiApproved ? 'Yes' : <span class="branch-1 cbranch-no"
-                                                       title="branch not covered">'No',</span>
+        this.licenseData.isOsiApproved ? 'Yes' : <span class="branch-1 cbranch-no" title="branch not covered" >'No',</span>
         'Whether the license is approved by the Open Source Initiative',
         'https://opensource.org/licenses/',
         null,
@@ -1327,12 +1318,11 @@ export class SPDXType extends GenericIdentifierType {
   private addDeprecationInfo(): void {
     if (!this.licenseData || !this.licenseData.isDeprecatedLicenseId) return;
 &nbsp;
-<span class="cstat-no" title="statement not covered">    this.items.push(new FoldableItem(15, 'Deprecated', 'Yes', 'This license ID has been deprecated by SPDX', null, null, false));</span>
+<span class="cstat-no" title="statement not covered" >    this.items.push(new FoldableItem(15, 'Deprecated', 'Yes', 'This license ID has been deprecated by SPDX', null, null, false));</span>
 &nbsp;
     // Add deprecation notes if available
-<span class="cstat-no" title="statement not covered">    <span class="missing-if-branch"
-                                                               title="if path not taken">I</span>if (this.licenseData.deprecatedVersion) {</span>
-<span class="cstat-no" title="statement not covered">      this.items.push(new FoldableItem(16, 'Deprecated Since', this.licenseData.deprecatedVersion, 'The SPDX version when this license was deprecated', null, null, false));</span>
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (this.licenseData.deprecatedVersion) {</span>
+<span class="cstat-no" title="statement not covered" >      this.items.push(new FoldableItem(16, 'Deprecated Since', this.licenseData.deprecatedVersion, 'The SPDX version when this license was deprecated', null, null, false));</span>
     }
   }
 &nbsp;
@@ -1340,14 +1330,13 @@ export class SPDXType extends GenericIdentifierType {
    * Adds FSF Free/Libre information if available
    */
   private addFsfInfo(): void {
-    <span class="missing-if-branch" title="if path not taken">I</span>if (!this.licenseData || this.licenseData.isFsfLibre === undefined) <span
-    class="cstat-no" title="statement not covered">return;</span>
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!this.licenseData || this.licenseData.isFsfLibre === undefined) <span class="cstat-no" title="statement not covered" >return;</span>
 &nbsp;
     this.items.push(
       new FoldableItem(
         25,
         'FSF Free/Libre',
-        this.licenseData.isFsfLibre ? 'Yes' : <span class="branch-1 cbranch-no" title="branch not covered">'No',</span>
+        this.licenseData.isFsfLibre ? 'Yes' : <span class="branch-1 cbranch-no" title="branch not covered" >'No',</span>
         'Whether the license is considered "Free" by the Free Software Foundation',
         'https://www.fsf.org/licensing/',
         null,
@@ -1360,8 +1349,7 @@ export class SPDXType extends GenericIdentifierType {
    * Adds related URLs if available
    */
   private addRelatedUrls(): void {
-    <span class="missing-if-branch" title="if path not taken">I</span>if (!this.licenseData || !this.licenseData.seeAlso || this.licenseData.seeAlso.length === 0) <span
-    class="cstat-no" title="statement not covered">return;</span>
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!this.licenseData || !this.licenseData.seeAlso || this.licenseData.seeAlso.length === 0) <span class="cstat-no" title="statement not covered" >return;</span>
 &nbsp;
     for (let i = 0; i &lt; this.licenseData.seeAlso.length; i++) {
       const url = this.licenseData.seeAlso[i];
@@ -1373,8 +1361,7 @@ export class SPDXType extends GenericIdentifierType {
    * Adds action buttons for the license
    */
   private addActionButtons(): void {
-    <span class="missing-if-branch" title="if path not taken">I</span>if (!this.licenseData) <span class="cstat-no"
-                                                                                                   title="statement not covered">return;</span>
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!this.licenseData) <span class="cstat-no" title="statement not covered" >return;</span>
 &nbsp;
     // Add main SPDX link
     this.actions.push(new FoldableAction(10, 'View on SPDX', `https://spdx.org/licenses/${this.licenseData.licenseId}`, 'primary'));
@@ -1392,12 +1379,10 @@ export class SPDXType extends GenericIdentifierType {
    * Adds a link to the official license page
    */
   private addOfficialLicenseLink(): void {
-    <span class="missing-if-branch" title="if path not taken">I</span>if (!this.licenseData || !this.licenseData.seeAlso || this.licenseData.seeAlso.length === 0) <span
-    class="cstat-no" title="statement not covered">return;</span>
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!this.licenseData || !this.licenseData.seeAlso || this.licenseData.seeAlso.length === 0) <span class="cstat-no" title="statement not covered" >return;</span>
 &nbsp;
     // Find the most official looking URL to use as a direct link
-    const officialUrl = this.findOfficialUrl(this.licenseData.seeAlso) || <span class="branch-1 cbranch-no"
-                                                                                title="branch not covered">this.licenseData.seeAlso[0];</span>
+    const officialUrl = this.findOfficialUrl(this.licenseData.seeAlso) || <span class="branch-1 cbranch-no" title="branch not covered" >this.licenseData.seeAlso[0];</span>
     this.actions.push(new FoldableAction(30, 'View Official License', officialUrl, 'secondary'));
   }
 &nbsp;
@@ -1412,7 +1397,7 @@ export class SPDXType extends GenericIdentifierType {
         return allowedHosts.includes(parsedUrl.host);
       } catch {
         // Ignore invalid URLs
-<span class="cstat-no" title="statement not covered">        return false;</span>
+<span class="cstat-no" title="statement not covered" >        return false;</span>
       }
     });
   }
@@ -1422,8 +1407,8 @@ export class SPDXType extends GenericIdentifierType {
    */
   private handleInitError(error: { message: string }): void {
     // Add meaningful error information
-    <span class="missing-if-branch" title="if path not taken">I</span>if (error.message &amp;&amp; error.message.includes('CORS')) {
-<span class="cstat-no" title="statement not covered">      this.items.push(</span>
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (error.message &amp;&amp; error.message.includes('CORS')) {
+<span class="cstat-no" title="statement not covered" >      this.items.push(</span>
         new FoldableItem(
           0,
           'Error',
@@ -1453,10 +1438,10 @@ export class SPDXType extends GenericIdentifierType {
       this.items.push(new FoldableItem(10, 'License ID', this.licenseId, 'The license identifier that was detected'));
       // Try to add a meaningful action even in error case
       this.actions.push(new FoldableAction(10, 'View on SPDX', `https://spdx.org/licenses/${this.licenseId}`, 'primary'));
-    } else <span class="missing-if-branch" title="else path not taken">E</span>{
-<span class="cstat-no" title="statement not covered">      this.licenseId = this.value.replace(/^https?:\/\/spdx\.org\/licenses\//i, '').replace(/\/$/, '');</span>
-<span class="cstat-no" title="statement not covered">      this.items.push(new FoldableItem(10, 'Possible License ID', this.licenseId, 'Extracted from the input value'));</span>
-<span class="cstat-no" title="statement not covered">      this.actions.push(new FoldableAction(10, 'Search on SPDX', 'https://spdx.org/licenses/', 'primary'));</span>
+    } else <span class="missing-if-branch" title="else path not taken" >E</span>{
+<span class="cstat-no" title="statement not covered" >      this.licenseId = this.value.replace(/^https?:\/\/spdx\.org\/licenses\//i, '').replace(/\/$/, '');</span>
+<span class="cstat-no" title="statement not covered" >      this.items.push(new FoldableItem(10, 'Possible License ID', this.licenseId, 'Extracted from the input value'));</span>
+<span class="cstat-no" title="statement not covered" >      this.actions.push(new FoldableAction(10, 'Search on SPDX', 'https://spdx.org/licenses/', 'primary'));</span>
     }
   }
 &nbsp;
@@ -1477,15 +1462,14 @@ export class SPDXType extends GenericIdentifierType {
   /**
    * Renders a preview of the SPDX license
    */
-<span class="fstat-no" title="function not covered">  renderPreview(</span>): FunctionalComponent {
+<span class="fstat-no" title="function not covered" >  renderPreview(</span>): FunctionalComponent {
     // If data is not yet loaded, show the SPDX ID
-<span class="cstat-no" title="statement not covered">    <span class="missing-if-branch"
-                                                               title="if path not taken">I</span>if (!this.licenseData) {</span>
-<span class="cstat-no" title="statement not covered">      return &lt;span class={`font-mono text-sm`}&gt;SPDX: {this.licenseId || this.value}&lt;/span&gt;;</span>
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (!this.licenseData) {</span>
+<span class="cstat-no" title="statement not covered" >      return &lt;span class={`font-mono text-sm`}&gt;SPDX: {this.licenseId || this.value}&lt;/span&gt;;</span>
     }
 &nbsp;
     // If data is loaded, show license name and ID with badges
-<span class="cstat-no" title="statement not covered">    return (</span>
+<span class="cstat-no" title="statement not covered" >    return (</span>
       &lt;span class={`flex flex-nowrap items-center align-top font-mono`}&gt;
         &lt;span class={'items-center px-1'}&gt;
           &lt;span class={`font-medium`}&gt;{this.licenseData.name || this.licenseId}&lt;/span&gt;
@@ -1497,20 +1481,21 @@ export class SPDXType extends GenericIdentifierType {
 }
 &nbsp;</pre></td></tr></table></pre>
 
-  <div class='push'></div><!-- for sticky footer -->
-</div><!-- /wrapper -->
-<div class='footer quiet pad2 space-top1 center small'>
-  Code coverage generated by
-  <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-  at 2026-04-17T21:52:43.218Z
-</div>
-<script src="../../prettify.js"></script>
-<script>
-  window.onload = function() {
-    prettyPrint();
-  };
-</script>
-<script src="../../sorter.js"></script>
-<script src="../../block-navigation.js"></script>
-</body>
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2026-04-17T23:16:11.382Z
+            </div>
+        <script src="../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../sorter.js"></script>
+        <script src="../../block-navigation.js"></script>
+    </body>
 </html>
+    

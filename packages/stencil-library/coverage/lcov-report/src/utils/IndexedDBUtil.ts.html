@@ -1,68 +1,68 @@
+
 <!doctype html>
 <html lang="en">
 
 <head>
-  <title>Code coverage report for src/utils/IndexedDBUtil.ts</title>
-  <meta charset="utf-8" />
-  <link rel="stylesheet" href="../../prettify.css" />
-  <link rel="stylesheet" href="../../base.css" />
-  <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style type='text/css'>
-    .coverage-summary .sorter {
-      background-image: url(../../sort-arrow-sprite.png);
-    }
-  </style>
+    <title>Code coverage report for src/utils/IndexedDBUtil.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
 </head>
-
+    
 <body>
 <div class='wrapper'>
-  <div class='pad1'>
-    <h1><a href="../../index.html">All files</a> / <a href="index.html">src/utils</a> IndexedDBUtil.ts</h1>
-    <div class='clearfix'>
-
-      <div class='fl pad1y space-right2'>
-        <span class="strong">76.59% </span>
-        <span class="quiet">Statements</span>
-        <span class='fraction'>72/94</span>
-      </div>
-
-
-      <div class='fl pad1y space-right2'>
-        <span class="strong">72.5% </span>
-        <span class="quiet">Branches</span>
-        <span class='fraction'>29/40</span>
-      </div>
-
-
-      <div class='fl pad1y space-right2'>
-        <span class="strong">83.33% </span>
-        <span class="quiet">Functions</span>
-        <span class='fraction'>10/12</span>
-      </div>
-
-
-      <div class='fl pad1y space-right2'>
-        <span class="strong">75.55% </span>
-        <span class="quiet">Lines</span>
-        <span class='fraction'>68/90</span>
-      </div>
-
-
+    <div class='pad1'>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/utils</a> IndexedDBUtil.ts</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">76.59% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>72/94</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">72.5% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>29/40</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">83.33% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>10/12</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">75.55% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>68/90</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
     </div>
-    <p class="quiet">
-      Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the
-      previous block.
-    </p>
-    <template id="filterTemplate">
-      <div class="quiet">
-        Filter:
-        <input type="search" id="fileSearch">
-      </div>
-    </template>
-  </div>
-  <div class='status-line high'></div>
-  <pre><table class="coverage">
+    <div class='status-line high'></div>
+    <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
 <a name='L3'></a><a href='#L3'>3</a>
@@ -377,7 +377,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">47x</span>
+<span class="cline-any cline-yes">48x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -644,21 +644,20 @@ export class Database {
    * @const
    */
   dbPromise = openDB&lt;PIDComponentDB&gt;(dbName, dbVersion, {
-<span class="fstat-no" title="function not covered">    upgrade(</span>db) {
-      const entityStore = <span class="cstat-no" title="statement not covered">db.createObjectStore('entities', {</span>
+<span class="fstat-no" title="function not covered" >    upgrade(</span>db) {
+      const entityStore = <span class="cstat-no" title="statement not covered" >db.createObjectStore('entities', {</span>
         keyPath: 'value',
       });
-<span class="cstat-no" title="statement not covered">      entityStore.createIndex('by-context', 'context', { unique: false });</span>
+<span class="cstat-no" title="statement not covered" >      entityStore.createIndex('by-context', 'context', { unique: false });</span>
 &nbsp;
-      const relationStore = <span class="cstat-no"
-                                  title="statement not covered">db.createObjectStore('relations', {</span>
+      const relationStore = <span class="cstat-no" title="statement not covered" >db.createObjectStore('relations', {</span>
         autoIncrement: true,
       });
 &nbsp;
       // Create indexes for the relations
-<span class="cstat-no" title="statement not covered">      relationStore.createIndex('by-start', 'start', { unique: false });</span>
-<span class="cstat-no" title="statement not covered">      relationStore.createIndex('by-description', 'description', { unique: false });</span>
-<span class="cstat-no" title="statement not covered">      relationStore.createIndex('by-end', 'end', { unique: false });</span>
+<span class="cstat-no" title="statement not covered" >      relationStore.createIndex('by-start', 'start', { unique: false });</span>
+<span class="cstat-no" title="statement not covered" >      relationStore.createIndex('by-description', 'description', { unique: false });</span>
+<span class="cstat-no" title="statement not covered" >      relationStore.createIndex('by-end', 'end', { unique: false });</span>
     },
   });
 &nbsp;
@@ -682,11 +681,10 @@ export class Database {
         lastAccess: new Date(),
         lastData: renderer.data,
       })
-      .catch(<span class="fstat-no" title="function not covered">reason </span>=&gt; {
-<span class="cstat-no" title="statement not covered">        if (reason.name === 'ConstraintError') {</span>
-<span class="cstat-no" title="statement not covered">          console.debug('Entity already exists', reason);</span>
-        } else <span class="cstat-no"
-                     title="statement not covered">console.error('Could not add entity', reason);</span>
+      .catch(<span class="fstat-no" title="function not covered" >reason </span>=&gt; {
+<span class="cstat-no" title="statement not covered" >        if (reason.name === 'ConstraintError') {</span>
+<span class="cstat-no" title="statement not covered" >          console.debug('Entity already exists', reason);</span>
+        } else <span class="cstat-no" title="statement not covered" >console.error('Could not add entity', reason);</span>
       });
     console.debug('added entity', renderer);
 &nbsp;
@@ -697,24 +695,23 @@ export class Database {
 &nbsp;
     for (const item of renderer.items) {
       // Create a relation object
-      const relation = <span class="cstat-no" title="statement not covered">{</span>
+      const relation = <span class="cstat-no" title="statement not covered" >{</span>
         start: renderer.value,
         description: item.keyTitle,
         end: item.value,
       };
       // Check if the relation already exists
-      const index = <span class="cstat-no" title="statement not covered">tx.store.index('by-start');</span>
-      let cursor = <span class="cstat-no" title="statement not covered">await index.openCursor();</span>
-<span class="cstat-no" title="statement not covered">      while (cursor) {</span>
-<span class="cstat-no" title="statement not covered">        <span class="missing-if-branch"
-                                                                   title="if path not taken">I</span>if (cursor.value.start === relation.start &amp;&amp; cursor.value.end === relation.end &amp;&amp; cursor.value.description === relation.description) {</span>
+      const index = <span class="cstat-no" title="statement not covered" >tx.store.index('by-start');</span>
+      let cursor = <span class="cstat-no" title="statement not covered" >await index.openCursor();</span>
+<span class="cstat-no" title="statement not covered" >      while (cursor) {</span>
+<span class="cstat-no" title="statement not covered" >        <span class="missing-if-branch" title="if path not taken" >I</span>if (cursor.value.start === relation.start &amp;&amp; cursor.value.end === relation.end &amp;&amp; cursor.value.description === relation.description) {</span>
           // relation already exists
-<span class="cstat-no" title="statement not covered">          return;</span>
+<span class="cstat-no" title="statement not covered" >          return;</span>
         }
-<span class="cstat-no" title="statement not covered">        cursor = await cursor.continue();</span>
+<span class="cstat-no" title="statement not covered" >        cursor = await cursor.continue();</span>
       }
       // Add the relation to the relations object store if it does not exist
-<span class="cstat-no" title="statement not covered">      promises.push(tx.store.add(relation));</span>
+<span class="cstat-no" title="statement not covered" >      promises.push(tx.store.add(relation));</span>
     }
     promises.push(tx.done);
     await Promise.all(promises);
@@ -766,9 +763,8 @@ export class Database {
         } else {
           // If the entity was found, check if the TTL has expired
           console.debug('Found entity for value in db', entity, value);
-          const entitySettings = settings.find(value =&gt; value.type === entity.rendererKey)<span
-    class="branch-0 cbranch-no" title="branch not covered">?.v</span>alues;
-          const ttl = entitySettings<span class="branch-0 cbranch-no" title="branch not covered">?.f</span>ind(value =&gt; value.name === 'ttl');
+          const entitySettings = settings.find(value =&gt; value.type === entity.rendererKey)<span class="branch-0 cbranch-no" title="branch not covered" >?.v</span>alues;
+          const ttl = entitySettings<span class="branch-0 cbranch-no" title="branch not covered" >?.f</span>ind(value =&gt; value.name === 'ttl');
 &nbsp;
           if (ttl != undefined &amp;&amp; ttl.value != undefined &amp;&amp; (new Date().getTime() - entity.lastAccess.getTime() &gt; (ttl.value as number) || ttl.value === 0)) {
             // If the TTL has expired, delete the entity from the database and move on to creating a new one (down below)
@@ -785,7 +781,7 @@ export class Database {
         }
       }
     } catch (error) {
-<span class="cstat-no" title="statement not covered">      console.error('Could not get entity from db', error);</span>
+<span class="cstat-no" title="statement not covered" >      console.error('Could not get entity from db', error);</span>
     }
 &nbsp;
     // If no entity was found, create a new one, initialize it and add it to the database
@@ -832,11 +828,10 @@ export class Database {
     const index = tx.store.index('by-start');
     let cursor = await index.openCursor();
     while (cursor) {
-<span class="cstat-no" title="statement not covered">      <span class="missing-if-branch"
-                                                                 title="if path not taken">I</span>if (cursor.value.start === value || cursor.value.end === value) {</span>
-<span class="cstat-no" title="statement not covered">        await tx.store.delete(cursor.primaryKey);</span>
+<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (cursor.value.start === value || cursor.value.end === value) {</span>
+<span class="cstat-no" title="statement not covered" >        await tx.store.delete(cursor.primaryKey);</span>
       }
-<span class="cstat-no" title="statement not covered">      cursor = await cursor.continue();</span>
+<span class="cstat-no" title="statement not covered" >      cursor = await cursor.continue();</span>
     }
     console.log('deleted entity', value);
     await tx.done;
@@ -848,7 +843,7 @@ export class Database {
       try {
         entityKey = JSON.stringify(entityKey);
       } catch {
-<span class="cstat-no" title="statement not covered">        entityKey = String(entityKey);</span>
+<span class="cstat-no" title="statement not covered" >        entityKey = String(entityKey);</span>
       }
       console.warn('Converted entity value to string for IndexedDB key (delete):', entityKey);
     }
@@ -868,20 +863,21 @@ export class Database {
 }
 &nbsp;</pre></td></tr></table></pre>
 
-  <div class='push'></div><!-- for sticky footer -->
-</div><!-- /wrapper -->
-<div class='footer quiet pad2 space-top1 center small'>
-  Code coverage generated by
-  <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-  at 2026-04-17T21:52:43.218Z
-</div>
-<script src="../../prettify.js"></script>
-<script>
-  window.onload = function() {
-    prettyPrint();
-  };
-</script>
-<script src="../../sorter.js"></script>
-<script src="../../block-navigation.js"></script>
-</body>
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2026-04-17T23:16:11.382Z
+            </div>
+        <script src="../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../sorter.js"></script>
+        <script src="../../block-navigation.js"></script>
+    </body>
 </html>
+    

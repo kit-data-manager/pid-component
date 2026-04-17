@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 
+
 /**
  * The pid-component is a versatile component for displaying and interacting with
  * persistent identifiers (PIDs). It supports various display modes, subcomponent
@@ -171,6 +172,16 @@ export const Handle: Story = {
         `,
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    // @ts-ignore - @storybook/test is available at runtime in Storybook
+    const { expect, waitFor } = await import('@storybook/test');
+    // Wait for component to hydrate
+    await waitFor(() => {
+      const pidComponent = canvasElement.querySelector('pid-component');
+      expect(pidComponent).toBeTruthy();
+      expect(pidComponent!.classList.contains('hydrated')).toBeTruthy();
+    }, { timeout: 10000 });
   },
 };
 
@@ -766,6 +777,15 @@ export const RenderersMatchingDOI: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    // @ts-ignore - @storybook/test is available at runtime in Storybook
+    const { expect, waitFor } = await import('@storybook/test');
+    await waitFor(() => {
+      const pidComponent = canvasElement.querySelector('pid-component');
+      expect(pidComponent).toBeTruthy();
+      expect(pidComponent!.getAttribute('renderers')).toBe('["DOIType"]');
+    }, { timeout: 5000 });
+  },
 };
 
 /**
@@ -816,6 +836,15 @@ export const RenderersStrictRestriction: Story = {
         `,
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    // @ts-ignore - @storybook/test is available at runtime in Storybook
+    const { expect } = await import('@storybook/test');
+    await new Promise(r => setTimeout(r, 3000));
+    const pidComponent = canvasElement.querySelector('pid-component');
+    expect(pidComponent).toBeTruthy();
+    // Component should exist but be invisible (unmatched state)
+    expect(pidComponent!.getAttribute('fallback-to-all')).toBe('false');
   },
 };
 

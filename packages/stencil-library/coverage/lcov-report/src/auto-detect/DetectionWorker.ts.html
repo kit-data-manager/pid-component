@@ -1,68 +1,68 @@
+
 <!doctype html>
 <html lang="en">
 
 <head>
-  <title>Code coverage report for src/auto-detect/DetectionWorker.ts</title>
-  <meta charset="utf-8" />
-  <link rel="stylesheet" href="../../prettify.css" />
-  <link rel="stylesheet" href="../../base.css" />
-  <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style type='text/css'>
-    .coverage-summary .sorter {
-      background-image: url(../../sort-arrow-sprite.png);
-    }
-  </style>
+    <title>Code coverage report for src/auto-detect/DetectionWorker.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
 </head>
-
+    
 <body>
 <div class='wrapper'>
-  <div class='pad1'>
-    <h1><a href="../../index.html">All files</a> / <a href="index.html">src/auto-detect</a> DetectionWorker.ts</h1>
-    <div class='clearfix'>
-
-      <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
-        <span class="quiet">Statements</span>
-        <span class='fraction'>0/39</span>
-      </div>
-
-
-      <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
-        <span class="quiet">Branches</span>
-        <span class='fraction'>0/10</span>
-      </div>
-
-
-      <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
-        <span class="quiet">Functions</span>
-        <span class='fraction'>0/3</span>
-      </div>
-
-
-      <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
-        <span class="quiet">Lines</span>
-        <span class='fraction'>0/37</span>
-      </div>
-
-
+    <div class='pad1'>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/auto-detect</a> DetectionWorker.ts</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>0/39</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>0/10</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>0/3</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>0/37</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
     </div>
-    <p class="quiet">
-      Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the
-      previous block.
-    </p>
-    <template id="filterTemplate">
-      <div class="quiet">
-        Filter:
-        <input type="search" id="fileSearch">
-      </div>
-    </template>
-  </div>
-  <div class='status-line low'></div>
-  <pre><table class="coverage">
+    <div class='status-line low'></div>
+    <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
 <a name='L3'></a><a href='#L3'>3</a>
@@ -299,7 +299,7 @@
  * Web Worker context.
  */
 &nbsp;
-<span class="cstat-no" title="statement not covered">import { detectBestFit, sanitizeToken } from './detection-registry';</span>
+<span class="cstat-no" title="statement not covered" >import { detectBestFit, sanitizeToken } from './detection-registry';</span>
 import type { DetectionMatch, WorkerInboundMessage, WorkerResultMessage } from './types';
 &nbsp;
 /** Ordered renderer keys to use for detection. Set via 'init' message. */
@@ -309,73 +309,61 @@ let configuredRenderers: string[] | undefined;
  * Characters that serve as token delimiters when scanning text.
  * PIDs are expected to be whitespace- or punctuation-delimited tokens.
  */
-const DELIMITER_REGEX = <span class="cstat-no" title="statement not covered">/[\s,;()\[\]{}&lt;&gt;"']+/;</span>
+const DELIMITER_REGEX = <span class="cstat-no" title="statement not covered" >/[\s,;()\[\]{}&lt;&gt;"']+/;</span>
 &nbsp;
 /**
  * Tokenize a text string into tokens with their positions.
  */
-function <span class="fstat-no" title="function not covered">tokenize(</span>text: string): { token: string; start: number; end: number }[] {
-  const tokens: { token: string; start: number; end: number }[] = <span class="cstat-no" title="statement not covered">[];</span>
-  let remaining = <span class="cstat-no" title="statement not covered">text;</span>
-  let offset = <span class="cstat-no" title="statement not covered">0;</span>
+function <span class="fstat-no" title="function not covered" >tokenize(</span>text: string): { token: string; start: number; end: number }[] {
+  const tokens: { token: string; start: number; end: number }[] = <span class="cstat-no" title="statement not covered" >[];</span>
+  let remaining = <span class="cstat-no" title="statement not covered" >text;</span>
+  let offset = <span class="cstat-no" title="statement not covered" >0;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered">  while (remaining.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >  while (remaining.length &gt; 0) {</span>
     // Find the next delimiter
-    const match = <span class="cstat-no" title="statement not covered">DELIMITER_REGEX.exec(remaining);</span>
+    const match = <span class="cstat-no" title="statement not covered" >DELIMITER_REGEX.exec(remaining);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered">    <span class="missing-if-branch"
-                                                               title="if path not taken">I</span>if (match === null) {</span>
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (match === null) {</span>
       // No more delimiters — the rest is a single token
-<span class="cstat-no" title="statement not covered">      <span class="missing-if-branch"
-                                                                 title="if path not taken">I</span>if (remaining.length &gt; 0) {</span>
-<span class="cstat-no" title="statement not covered">        tokens.push({ token: remaining, start: offset, end: offset + remaining.length });</span>
+<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (remaining.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >        tokens.push({ token: remaining, start: offset, end: offset + remaining.length });</span>
       }
-<span class="cstat-no" title="statement not covered">      break;</span>
+<span class="cstat-no" title="statement not covered" >      break;</span>
     }
 &nbsp;
     // Extract the token before the delimiter
-<span class="cstat-no" title="statement not covered">    <span class="missing-if-branch"
-                                                               title="if path not taken">I</span>if (match.index &gt; 0) {</span>
-      const token = <span class="cstat-no" title="statement not covered">remaining.substring(0, match.index);</span>
-<span class="cstat-no" title="statement not covered">      tokens.push({ token, start: offset, end: offset + match.index });</span>
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (match.index &gt; 0) {</span>
+      const token = <span class="cstat-no" title="statement not covered" >remaining.substring(0, match.index);</span>
+<span class="cstat-no" title="statement not covered" >      tokens.push({ token, start: offset, end: offset + match.index });</span>
     }
 &nbsp;
     // Skip past the delimiter
-<span class="cstat-no" title="statement not covered">    offset += match.index + match[0].length;</span>
-<span class="cstat-no"
-      title="statement not covered">    remaining = remaining.substring(match.index + match[0].length);</span>
+<span class="cstat-no" title="statement not covered" >    offset += match.index + match[0].length;</span>
+<span class="cstat-no" title="statement not covered" >    remaining = remaining.substring(match.index + match[0].length);</span>
   }
 &nbsp;
-<span class="cstat-no" title="statement not covered">  return tokens;</span>
+<span class="cstat-no" title="statement not covered" >  return tokens;</span>
 }
 &nbsp;
 /**
  * Detect PIDs in a text string using the detection registry.
  */
-function <span class="fstat-no" title="function not covered">detectInText(</span>text: string, orderedRendererKeys?: string[]): DetectionMatch[] {
-  const tokens = <span class="cstat-no" title="statement not covered">tokenize(text);</span>
-  const matches: DetectionMatch[] = <span class="cstat-no" title="statement not covered">[];</span>
-  const effectiveKeys = <span class="cstat-no"
-                              title="statement not covered">orderedRendererKeys || configuredRenderers;</span>
+function <span class="fstat-no" title="function not covered" >detectInText(</span>text: string, orderedRendererKeys?: string[]): DetectionMatch[] {
+  const tokens = <span class="cstat-no" title="statement not covered" >tokenize(text);</span>
+  const matches: DetectionMatch[] = <span class="cstat-no" title="statement not covered" >[];</span>
+  const effectiveKeys = <span class="cstat-no" title="statement not covered" >orderedRendererKeys || configuredRenderers;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered">  for (const { token, start } of tokens) {</span>
+<span class="cstat-no" title="statement not covered" >  for (const { token, start } of tokens) {</span>
     // Skip very short tokens (unlikely to be PIDs)
-<span class="cstat-no" title="statement not covered">    <span class="missing-if-branch"
-                                                               title="if path not taken">I</span>if (token.length &lt; 2) <span
-  class="cstat-no" title="statement not covered">continue;</span></span>
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (token.length &lt; 2) <span class="cstat-no" title="statement not covered" >continue;</span></span>
 &nbsp;
     // Sanitize: strip surrounding punctuation that may be part of prose
-    const { sanitized, leadingStripped } = <span class="cstat-no"
-                                                 title="statement not covered">sanitizeToken(token);</span>
-<span class="cstat-no" title="statement not covered">    <span class="missing-if-branch"
-                                                               title="if path not taken">I</span>if (sanitized.length &lt; 2) <span
-  class="cstat-no" title="statement not covered">continue;</span></span>
+    const { sanitized, leadingStripped } = <span class="cstat-no" title="statement not covered" >sanitizeToken(token);</span>
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (sanitized.length &lt; 2) <span class="cstat-no" title="statement not covered" >continue;</span></span>
 &nbsp;
-    const rendererKey = <span class="cstat-no"
-                              title="statement not covered">detectBestFit(sanitized, effectiveKeys);</span>
-<span class="cstat-no" title="statement not covered">    <span class="missing-if-branch"
-                                                               title="if path not taken">I</span>if (rendererKey !== null) {</span>
-<span class="cstat-no" title="statement not covered">      matches.push({</span>
+    const rendererKey = <span class="cstat-no" title="statement not covered" >detectBestFit(sanitized, effectiveKeys);</span>
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (rendererKey !== null) {</span>
+<span class="cstat-no" title="statement not covered" >      matches.push({</span>
         start: start + leadingStripped,
         end: start + leadingStripped + sanitized.length,
         value: sanitized,
@@ -384,50 +372,50 @@ function <span class="fstat-no" title="function not covered">detectInText(</span
     }
   }
 &nbsp;
-<span class="cstat-no" title="statement not covered">  return matches;</span>
+<span class="cstat-no" title="statement not covered" >  return matches;</span>
 }
 &nbsp;
 /**
  * Handle incoming messages from the main thread.
  */
-<span class="cstat-no" title="statement not covered">self.onmessage = <span class="fstat-no"
-                                                                            title="function not covered">(e</span>vent: MessageEvent&lt;WorkerInboundMessage&gt;) =&gt; {</span>
-  const message = <span class="cstat-no" title="statement not covered">event.data;</span>
+<span class="cstat-no" title="statement not covered" >self.onmessage = <span class="fstat-no" title="function not covered" >(e</span>vent: MessageEvent&lt;WorkerInboundMessage&gt;) =&gt; {</span>
+  const message = <span class="cstat-no" title="statement not covered" >event.data;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered">  switch (message.type) {</span>
+<span class="cstat-no" title="statement not covered" >  switch (message.type) {</span>
     case 'init': {
-<span class="cstat-no" title="statement not covered">      configuredRenderers = message.orderedRenderers;</span>
-<span class="cstat-no" title="statement not covered">      break;</span>
+<span class="cstat-no" title="statement not covered" >      configuredRenderers = message.orderedRenderers;</span>
+<span class="cstat-no" title="statement not covered" >      break;</span>
     }
 &nbsp;
     case 'detect': {
-      const matches = <span class="cstat-no" title="statement not covered">detectInText(message.text, message.orderedRenderers);</span>
-      const response: WorkerResultMessage = <span class="cstat-no" title="statement not covered">{</span>
+      const matches = <span class="cstat-no" title="statement not covered" >detectInText(message.text, message.orderedRenderers);</span>
+      const response: WorkerResultMessage = <span class="cstat-no" title="statement not covered" >{</span>
         type: 'result',
         id: message.id,
         matches,
       };
-<span class="cstat-no" title="statement not covered">      self.postMessage(response);</span>
-<span class="cstat-no" title="statement not covered">      break;</span>
+<span class="cstat-no" title="statement not covered" >      self.postMessage(response);</span>
+<span class="cstat-no" title="statement not covered" >      break;</span>
     }
   }
 };
 &nbsp;</pre></td></tr></table></pre>
 
-  <div class='push'></div><!-- for sticky footer -->
-</div><!-- /wrapper -->
-<div class='footer quiet pad2 space-top1 center small'>
-  Code coverage generated by
-  <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-  at 2026-04-17T21:52:43.218Z
-</div>
-<script src="../../prettify.js"></script>
-<script>
-  window.onload = function() {
-    prettyPrint();
-  };
-</script>
-<script src="../../sorter.js"></script>
-<script src="../../block-navigation.js"></script>
-</body>
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2026-04-17T23:16:11.382Z
+            </div>
+        <script src="../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../sorter.js"></script>
+        <script src="../../block-navigation.js"></script>
+    </body>
 </html>
+    

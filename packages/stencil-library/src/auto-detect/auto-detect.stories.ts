@@ -240,6 +240,17 @@ const controller = initPidDetection({
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    // @ts-ignore - @storybook/test is available at runtime in Storybook
+    const { expect } = await import('@storybook/test');
+    // Wait for auto-detection to scan and create components
+    await new Promise(r => setTimeout(r, 5000));
+    const wrappers = canvasElement.querySelectorAll('.pid-auto-detect-wrapper');
+    await expect(wrappers.length).toBeGreaterThan(0);
+    // Check that pid-components were created
+    const pidComponents = canvasElement.querySelectorAll('pid-component');
+    await expect(pidComponents.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -364,6 +375,23 @@ controller.stop();     // pause MutationObserver (if enabled)
         `,
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    // @ts-ignore - @storybook/test is available at runtime in Storybook
+    const { expect, userEvent } = await import('@storybook/test');
+    // Wait for initial detection
+    await new Promise(r => setTimeout(r, 3000));
+    const wrappersBefore = canvasElement.querySelectorAll('.pid-auto-detect-wrapper');
+    await expect(wrappersBefore.length).toBeGreaterThan(0);
+
+    // Click Destroy button
+    const destroyBtn = canvasElement.querySelector('#btn-destroy');
+    await userEvent.click(destroyBtn!);
+    await new Promise(r => setTimeout(r, 500));
+
+    // Wrappers should be removed
+    const wrappersAfter = canvasElement.querySelectorAll('.pid-auto-detect-wrapper');
+    await expect(wrappersAfter.length).toBe(0);
   },
 };
 
