@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Component, Element, h, Host, Prop, State, Watch } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, h, Host, Prop, State, Watch } from '@stencil/core';
 import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
 import { FoldableItem } from '../../utils/FoldableItem';
 import { FoldableAction } from '../../utils/FoldableAction';
@@ -133,6 +133,16 @@ export class PidComponent {
    * @type {string}
    */
   @Prop() darkMode: 'light' | 'dark' | 'system' = 'light';
+
+  /**
+   * Fired when identifier data has been fully loaded and rendered.
+   */
+  @Event({ eventName: 'pid-component-ready' }) pidComponentReady: EventEmitter<{ value: string }>;
+
+  /**
+   * Fired when identifier data could not be loaded.
+   */
+  @Event({ eventName: 'pid-component-error' }) pidComponentError: EventEmitter<{ value: string }>;
 
   /**
    * Stores the parsed identifier object.
@@ -421,6 +431,7 @@ export class PidComponent {
       this.identifierObject = undefined;
       this.items = [];
       this.actions = [];
+      this.pidComponentError.emit({ value: this.value });
       return;
     }
 
@@ -462,6 +473,7 @@ export class PidComponent {
       this.actions.sort((a, b) => a.priority - b.priority);
     }
     this.displayStatus = 'loaded';
+    this.pidComponentReady.emit({ value: this.value });
     await clearCache();
   }
 

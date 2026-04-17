@@ -49,6 +49,14 @@ Then, you can use this component like this:
 <pid-component value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"></pid-component>
 ```
 
+To automatically detect and render multiple identifiers in existing page text, add a `pid-wrapper` once:
+
+```html
+<pid-wrapper>
+  <p>Identifiers: 21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6, 10.5880/fidgeo.2020.009, 0000-0002-1825-0097</p>
+</pid-wrapper>
+```
+
 <div>
 <aside>
 <script type="module" src="https://unpkg.com/@kit-data-manager/pid-component/dist/pid-component/pid-component.esm.js"></script>
@@ -59,7 +67,7 @@ Then, you can use this component like this:
 
 You can try this web component in the [demo](https://kit-data-manager.github.io/pid-component).
 
-**Only use the `pid-component` component! All the others are only for internal use and may change at any moment...**
+Use `pid-component` for explicit single values and `pid-wrapper` for automatic in-page detection.
 
 There are detailed docs for the `pid-component` component
 available [in the Storybook](https://kit-data-manager.github.io/pid-component) and in

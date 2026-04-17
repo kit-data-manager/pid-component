@@ -330,10 +330,21 @@ export namespace Components {
          */
         "text": string;
     }
+    interface PidWrapper {
+        /**
+          * CSS selector for the area in which identifiers should be detected. Defaults to the full document body.
+          * @default 'body'
+         */
+        "targetSelector": string;
+    }
 }
 export interface PidCollapsibleCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLPidCollapsibleElement;
+}
+export interface PidComponentCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPidComponentElement;
 }
 export interface PidDataTableCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -400,7 +411,19 @@ declare global {
         prototype: HTMLPidCollapsibleElement;
         new (): HTMLPidCollapsibleElement;
     };
+    interface HTMLPidComponentElementEventMap {
+        "pid-component-ready": { value: string };
+        "pid-component-error": { value: string };
+    }
     interface HTMLPidComponentElement extends Components.PidComponent, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLPidComponentElementEventMap>(type: K, listener: (this: HTMLPidComponentElement, ev: PidComponentCustomEvent<HTMLPidComponentElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLPidComponentElementEventMap>(type: K, listener: (this: HTMLPidComponentElement, ev: PidComponentCustomEvent<HTMLPidComponentElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLPidComponentElement: {
         prototype: HTMLPidComponentElement;
@@ -459,6 +482,12 @@ declare global {
         prototype: HTMLPidTooltipElement;
         new (): HTMLPidTooltipElement;
     };
+    interface HTMLPidWrapperElement extends Components.PidWrapper, HTMLStencilElement {
+    }
+    var HTMLPidWrapperElement: {
+        prototype: HTMLPidWrapperElement;
+        new (): HTMLPidWrapperElement;
+    };
     interface HTMLElementTagNameMap {
         "color-highlight": HTMLColorHighlightElement;
         "copy-button": HTMLCopyButtonElement;
@@ -470,6 +499,7 @@ declare global {
         "pid-data-table": HTMLPidDataTableElement;
         "pid-pagination": HTMLPidPaginationElement;
         "pid-tooltip": HTMLPidTooltipElement;
+        "pid-wrapper": HTMLPidWrapperElement;
     }
 }
 declare namespace LocalJSX {
@@ -654,6 +684,14 @@ declare namespace LocalJSX {
          */
         "levelOfSubcomponents"?: number;
         /**
+          * Fired when identifier data could not be loaded.
+         */
+        "onPid-component-error"?: (event: PidComponentCustomEvent<{ value: string }>) => void;
+        /**
+          * Fired when identifier data has been fully loaded and rendered.
+         */
+        "onPid-component-ready"?: (event: PidComponentCustomEvent<{ value: string }>) => void;
+        /**
           * Determines whether the component is open or not by default. (optional)
           * @type {boolean}
          */
@@ -811,6 +849,13 @@ declare namespace LocalJSX {
          */
         "text": string;
     }
+    interface PidWrapper {
+        /**
+          * CSS selector for the area in which identifiers should be detected. Defaults to the full document body.
+          * @default 'body'
+         */
+        "targetSelector"?: string;
+    }
 
     interface ColorHighlightAttributes {
         "text": string;
@@ -883,6 +928,9 @@ declare namespace LocalJSX {
         "maxHeight": string;
         "fitContent": boolean;
     }
+    interface PidWrapperAttributes {
+        "targetSelector": string;
+    }
 
     interface IntrinsicElements {
         "color-highlight": Omit<ColorHighlight, keyof ColorHighlightAttributes> & { [K in keyof ColorHighlight & keyof ColorHighlightAttributes]?: ColorHighlight[K] } & { [K in keyof ColorHighlight & keyof ColorHighlightAttributes as `attr:${K}`]?: ColorHighlightAttributes[K] } & { [K in keyof ColorHighlight & keyof ColorHighlightAttributes as `prop:${K}`]?: ColorHighlight[K] } & OneOf<"text", ColorHighlight["text"], ColorHighlightAttributes["text"]>;
@@ -895,6 +943,7 @@ declare namespace LocalJSX {
         "pid-data-table": Omit<PidDataTable, keyof PidDataTableAttributes> & { [K in keyof PidDataTable & keyof PidDataTableAttributes]?: PidDataTable[K] } & { [K in keyof PidDataTable & keyof PidDataTableAttributes as `attr:${K}`]?: PidDataTableAttributes[K] } & { [K in keyof PidDataTable & keyof PidDataTableAttributes as `prop:${K}`]?: PidDataTable[K] };
         "pid-pagination": Omit<PidPagination, keyof PidPaginationAttributes> & { [K in keyof PidPagination & keyof PidPaginationAttributes]?: PidPagination[K] } & { [K in keyof PidPagination & keyof PidPaginationAttributes as `attr:${K}`]?: PidPaginationAttributes[K] } & { [K in keyof PidPagination & keyof PidPaginationAttributes as `prop:${K}`]?: PidPagination[K] };
         "pid-tooltip": Omit<PidTooltip, keyof PidTooltipAttributes> & { [K in keyof PidTooltip & keyof PidTooltipAttributes]?: PidTooltip[K] } & { [K in keyof PidTooltip & keyof PidTooltipAttributes as `attr:${K}`]?: PidTooltipAttributes[K] } & { [K in keyof PidTooltip & keyof PidTooltipAttributes as `prop:${K}`]?: PidTooltip[K] } & OneOf<"text", PidTooltip["text"], PidTooltipAttributes["text"]>;
+        "pid-wrapper": Omit<PidWrapper, keyof PidWrapperAttributes> & { [K in keyof PidWrapper & keyof PidWrapperAttributes]?: PidWrapper[K] } & { [K in keyof PidWrapper & keyof PidWrapperAttributes as `attr:${K}`]?: PidWrapperAttributes[K] } & { [K in keyof PidWrapper & keyof PidWrapperAttributes as `prop:${K}`]?: PidWrapper[K] };
     }
 }
 export { LocalJSX as JSX };
@@ -915,6 +964,7 @@ declare module "@stencil/core" {
             "pid-data-table": LocalJSX.IntrinsicElements["pid-data-table"] & JSXBase.HTMLAttributes<HTMLPidDataTableElement>;
             "pid-pagination": LocalJSX.IntrinsicElements["pid-pagination"] & JSXBase.HTMLAttributes<HTMLPidPaginationElement>;
             "pid-tooltip": LocalJSX.IntrinsicElements["pid-tooltip"] & JSXBase.HTMLAttributes<HTMLPidTooltipElement>;
+            "pid-wrapper": LocalJSX.IntrinsicElements["pid-wrapper"] & JSXBase.HTMLAttributes<HTMLPidWrapperElement>;
         }
     }
 }

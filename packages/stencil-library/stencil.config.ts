@@ -36,7 +36,7 @@ export const config: Config = {
     webTypesOutputTarget(),
   ],
   testing: {
-    browserHeadless: true,
+    browserHeadless: 'shell',
   },
   plugins:[
     postcss({
