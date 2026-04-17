@@ -87,12 +87,14 @@ export function replaceMatches(
     originalSpan.textContent = match.value;
     wrapper.appendChild(originalSpan);
 
-    // Create the pid-component (hidden initially)
+    // Create the pid-component (invisible but rendered — NOT display:none,
+    // which would prevent the shadow DOM from rendering in some browsers)
     const pidComponent = document.createElement('pid-component');
     pidComponent.setAttribute('value', match.value);
     pidComponent.setAttribute('renderers', JSON.stringify([match.rendererKey]));
     pidComponent.setAttribute('fallback-to-all', String(config.fallbackToAll ?? true));
-    pidComponent.style.display = 'none';
+    // Use visibility/position to hide while allowing full rendering
+    pidComponent.style.cssText = 'visibility:hidden;position:absolute;width:0;height:0;overflow:hidden;pointer-events:none;';
     // Ensure screen readers skip the hidden component until it's ready
     pidComponent.setAttribute('aria-hidden', 'true');
 
@@ -162,11 +164,16 @@ function applyConfig(pidComponent: HTMLElement, config: PidDetectionConfig): voi
 }
 
 /**
- * Creates a MutationObserver that watches a pid-component for load/error/unmatched.
+ * Creates a swap observer that detects when a pid-component finishes rendering.
  *
- * The Stencil component sets `class` on its Host element once rendered.
- * We poll for the shadow root content and check if the component rendered
- * meaningful content vs. an error or unmatched state.
+ * Strategy: the component starts hidden via visibility:hidden + position:absolute.
+ * We poll the shadow DOM for content. The component goes through three phases:
+ *   1. Loading: shadow root contains a spinner (<svg class="...animate-spin...">)
+ *   2. Loaded: shadow root contains preview content (no spinner, no error)
+ *   3. Error: shadow root contains an error element ([role="alert"])
+ *   4. Unmatched: the Host element inside the shadow root has display:none
+ *
+ * Once we detect loaded/error/unmatched, we swap or clean up.
  */
 function createSwapObserver(
   originalSpan: HTMLElement,
@@ -174,6 +181,38 @@ function createSwapObserver(
   wrapper: HTMLElement,
 ): MutationObserver {
   let swapped = false;
+  let pollTimer: ReturnType<typeof setInterval> | null = null;
+  let safetyTimer: ReturnType<typeof setTimeout> | null = null;
+
+  function cleanup() {
+    if (pollTimer) {
+      clearInterval(pollTimer);
+      pollTimer = null;
+    }
+    if (safetyTimer) {
+      clearTimeout(safetyTimer);
+      safetyTimer = null;
+    }
+    observer.disconnect();
+  }
+
+  function handleError() {
+    swapped = true;
+    cleanup();
+    pidComponent.remove();
+    unwrapToText(wrapper, originalSpan.textContent || '');
+  }
+
+  function handleSuccess() {
+    swapped = true;
+    cleanup();
+    // Hide original text, show component
+    originalSpan.style.display = 'none';
+    originalSpan.setAttribute('aria-hidden', 'true');
+    // Reset the component's hidden styles to make it visible and in-flow
+    pidComponent.style.cssText = '';
+    pidComponent.removeAttribute('aria-hidden');
+  }
 
   function trySwap() {
     if (swapped) return;
@@ -181,91 +220,95 @@ function createSwapObserver(
     const shadowRoot = pidComponent.shadowRoot;
     if (!shadowRoot) return;
 
-    // The pid-component Host sets style="display: none" when unmatched
-    const hostEl = pidComponent as HTMLElement;
-    const hostDisplay = hostEl.style.display;
+    // Check for the Stencil Host element inside shadow root
+    // Stencil renders a <host-element> or applies classes/styles directly.
+    // We check for actual rendered child elements.
+    const allElements = shadowRoot.querySelectorAll('*');
+    if (allElements.length === 0) return; // Not yet rendered
 
-    // If the component hid itself (unmatched), clean up
-    if (hostDisplay === 'none' && pidComponent.hasAttribute('renderers')) {
-      // The component's own render() set display:none — unmatched state.
-      // But we initially set display:none too. We need to distinguish.
-      // Check if shadow root has actual content (Stencil renders the Host children)
-      const hostChildren = shadowRoot.querySelectorAll('*');
-      if (hostChildren.length > 0) {
-        // Component rendered but decided to hide itself (unmatched)
-        swapped = true;
-        // Keep original text, remove the component
-        pidComponent.remove();
-        // Unwrap: replace wrapper with just the text
-        unwrapToText(wrapper, originalSpan.textContent || '');
-        observer.disconnect();
+    // Check for unmatched state: the component's render() sets display:none on the Host.
+    // The Host element in shadow DOM is the root — check the first-level element.
+    const hostInShadow = shadowRoot.querySelector('[class*="relative"]');
+    if (hostInShadow) {
+      const hostStyle = (hostInShadow as HTMLElement).style;
+      if (hostStyle && hostStyle.display === 'none') {
+        handleError(); // Unmatched — treat like error, restore text
         return;
       }
     }
 
-    // Check if the component has rendered meaningful content
-    // Look for common rendered elements inside the shadow DOM
-    const hasRenderedContent = shadowRoot.querySelector('span, a, div, svg');
-    if (!hasRenderedContent) return;
-
-    // Check for error state — look for text-red-600 error span
-    const errorEl = shadowRoot.querySelector('.text-red-600, [role="alert"]');
+    // Check for error state
+    const errorEl = shadowRoot.querySelector('[role="alert"]');
     if (errorEl) {
-      // Error state — keep original text
-      swapped = true;
-      pidComponent.remove();
-      unwrapToText(wrapper, originalSpan.textContent || '');
-      observer.disconnect();
+      handleError();
       return;
     }
 
-    // Component rendered successfully — swap
-    swapped = true;
-    originalSpan.style.display = 'none';
-    originalSpan.setAttribute('aria-hidden', 'true');
-    pidComponent.style.display = '';
-    pidComponent.removeAttribute('aria-hidden');
-    observer.disconnect();
+    // Check if still loading — look for the spinner
+    const spinner = shadowRoot.querySelector('.animate-spin');
+    if (spinner) return; // Still loading, wait
+
+    // Check for successfully rendered preview content
+    // The loaded state has either:
+    // - A span with role="button" (preview with expand)
+    // - A <pid-collapsible> element (full component with items)
+    // - A link (<a>) for URLType
+    // - Any meaningful content that isn't the spinner or error
+    const preview = shadowRoot.querySelector('[role="button"], pid-collapsible, a[href], copy-button, color-highlight, locale-visualization');
+    if (preview) {
+      handleSuccess();
+      return;
+    }
+
+    // Fallback: if there are multiple elements and no spinner/error, assume loaded
+    // This handles renderer types we haven't explicitly listed above
+    if (allElements.length > 2 && !spinner && !errorEl) {
+      handleSuccess();
+      return;
+    }
   }
 
   const observer = new MutationObserver(trySwap);
 
-  // Observe the pid-component for changes
+  // Start polling for shadow root and content
+  pollTimer = setInterval(() => {
+    if (swapped) {
+      cleanup();
+      return;
+    }
+
+    if (pidComponent.shadowRoot) {
+      // Observe shadow root mutations
+      try {
+        observer.observe(pidComponent.shadowRoot, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+        });
+      } catch {
+        // Already observing — ignore
+      }
+      trySwap();
+    }
+  }, 100);
+
+  // Safety timeout — after 15s, give up and keep original text
+  safetyTimer = setTimeout(() => {
+    if (!swapped) {
+      // Check one last time
+      trySwap();
+      if (!swapped) {
+        // Timed out waiting — keep original text visible, remove hidden component
+        handleError();
+      }
+    }
+  }, 15000);
+
+  // Also observe the pid-component itself for attribute changes
   observer.observe(pidComponent, {
     attributes: true,
     childList: true,
-    subtree: true,
   });
-
-  // Also observe shadow root when available
-  const attachShadowObserver = () => {
-    if (pidComponent.shadowRoot) {
-      observer.observe(pidComponent.shadowRoot, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-      });
-      // Try immediately in case content is already there
-      trySwap();
-    } else {
-      // Poll for shadow root attachment (Stencil lazy-loads)
-      const checkInterval = setInterval(() => {
-        if (pidComponent.shadowRoot) {
-          clearInterval(checkInterval);
-          observer.observe(pidComponent.shadowRoot, {
-            childList: true,
-            subtree: true,
-            attributes: true,
-          });
-          trySwap();
-        }
-      }, 50);
-      // Safety timeout — stop polling after 10s
-      setTimeout(() => clearInterval(checkInterval), 10000);
-    }
-  };
-
-  attachShadowObserver();
 
   return observer;
 }
