@@ -183,7 +183,7 @@ export namespace Components {
          * @default true
          */
         'fallbackToAll': boolean;
-      /**
+        /**
           * Initial height of the component (e.g. '300px', '50vh'). If not set, defaults to 300px.
           * @type {string}
          */
@@ -209,7 +209,7 @@ export namespace Components {
          * @type {string}
          */
         'renderers'?: string;
-      /**
+        /**
           * A stringified JSON object containing settings for this component. The resulting object is passed to every subcomponent, so that every component has the same settings. Values and the according type are defined by the components themselves. (optional)  Schema: ```typescript {  type: string,  values: {   name: string,   value: any  }[] }[] ```
           * @type {string}
           * @default '[]'
@@ -655,7 +655,7 @@ declare namespace LocalJSX {
          * @default true
          */
         'fallbackToAll'?: boolean;
-      /**
+        /**
           * Initial height of the component (e.g. '300px', '50vh'). If not set, defaults to 300px.
           * @type {string}
          */
@@ -681,7 +681,7 @@ declare namespace LocalJSX {
          * @type {string}
          */
         'renderers'?: string;
-      /**
+        /**
           * A stringified JSON object containing settings for this component. The resulting object is passed to every subcomponent, so that every component has the same settings. Values and the according type are defined by the components themselves. (optional)  Schema: ```typescript {  type: string,  values: {   name: string,   value: any  }[] }[] ```
           * @type {string}
           * @default '[]'
@@ -881,8 +881,8 @@ declare namespace LocalJSX {
         "width": string;
         "height": string;
         "darkMode": 'light' | 'dark' | 'system';
-      'renderers': string;
-      'fallbackToAll': boolean;
+        'renderers': string;
+        'fallbackToAll': boolean;
     }
     interface PidDataTableAttributes {
         "itemsPerPage": number;

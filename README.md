@@ -125,6 +125,79 @@ You can customize the behavior of specific renderers by passing a JSON configura
 ></pid-component>
 ```
 
+## Automatic PID Detection
+
+The `pid-component` package includes an automatic PID detection feature that scans a DOM subtree for text containing
+PIDs and replaces them with interactive `<pid-component>` elements.
+
+```typescript
+import { initPidDetection } from '@kit-data-manager/pid-component';
+
+const controller = initPidDetection({
+  root: document.getElementById('my-content'),
+  darkMode: 'system',
+  renderers: ['DOIType', 'ORCIDType', 'HandleType'],  // optional: try these first
+  observe: true,   // watch for dynamic content changes
+});
+
+// Later:
+controller.stop();     // pause MutationObserver
+controller.rescan();   // re-scan the DOM
+controller.destroy();  // remove all components, restore original text
+```
+
+Or with a plain `<script>` tag (no bundler):
+
+```html
+<script type="module">
+  import { initPidDetection } from 'https://unpkg.com/@kit-data-manager/pid-component/dist/esm/index.js';
+
+  initPidDetection({
+    root: document.getElementById('content'),
+    darkMode: 'system',
+  });
+</script>
+```
+
+### How It Works
+
+1. Walks the DOM tree collecting text nodes (skips `<script>`, `<style>`, `<code>`, `<pre>`, `<pid-component>`, etc.)
+2. Tokenizes text and sanitizes surrounding punctuation (dots, commas, quotes, brackets)
+3. Runs tokens through the detection registry (same regex patterns used by the renderers)
+4. Wraps only matched PID tokens in `<pid-component>` elements — non-matching text stays untouched
+5. Original text stays visible until the component finishes loading; on failure, original text is restored
+
+### Configuration Options
+
+| Option                 | Type          | Default         | Description                                              |
+|------------------------|---------------|-----------------|----------------------------------------------------------|
+| `root`                 | `HTMLElement` | `document.body` | Root element to scan                                     |
+| `renderers`            | `string[]`    | all             | Ordered renderer preselection (non-binding)              |
+| `fallbackToAll`        | `boolean`     | `true`          | Fall back to full registry if preselection doesn't match |
+| `exclude`              | `string`      | —               | CSS selector for elements to skip                        |
+| `observe`              | `boolean`     | `false`         | Watch for new DOM nodes (MutationObserver)               |
+| `darkMode`             | `string`      | `"light"`       | `"light"`, `"dark"`, or `"system"`                       |
+| `settings`             | `string`      | `"[]"`          | JSON settings for all detected components                |
+| `levelOfSubcomponents` | `number`      | `1`             | Max depth of nested subcomponents                        |
+| `amountOfItems`        | `number`      | `10`            | Items per page in data tables                            |
+| `emphasizeComponent`   | `boolean`     | `true`          | Show border/shadow on components                         |
+| `showTopLevelCopy`     | `boolean`     | `true`          | Show copy button on top-level components                 |
+| `defaultTTL`           | `number`      | `86400000`      | Cache TTL in milliseconds                                |
+
+### Available Renderer Keys
+
+`DateType`, `ORCIDType`, `DOIType`, `HandleType`, `RORType`, `SPDXType`, `EmailType`, `URLType`, `LocaleType`,
+`JSONType`
+
+### Framework Integration
+
+- **React**: Call in `useEffect()`, return `controller.destroy()` as cleanup
+- **Angular**: Call in `ngAfterViewInit()`, cleanup in `ngOnDestroy()`
+- **Vue**: Call in `onMounted()`, cleanup in `onUnmounted()`
+
+See the [Storybook documentation](https://kit-data-manager.github.io/pid-component/?path=/docs/auto-detection--docs) for
+detailed examples and interactive demos.
+
 ## PID Resolver
 
 The `pid-component` package exports a useful helper class for resolving PIDs. These are `PID`, `PIDDataType` and `PIDRecord` and can be

@@ -1,0 +1,230 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+
+import * as AutoDetectStories from './auto-detect.stories';
+
+<Meta of={AutoDetectStories} />
+
+# Automatic PID Detection
+
+The `initPidDetection()` function scans a DOM subtree for text content that matches known PID patterns and automatically replaces detected identifiers with interactive `<pid-component>` elements.
+
+This is useful when you have pages with PIDs embedded in running text (research papers, metadata pages, data catalogs, etc.) and want to enrich them without manually wrapping each identifier.
+
+## Quick Start
+
+```html
+<head>
+  <script type="module"
+          src="https://unpkg.com/@kit-data-manager/pid-component/dist/pid-component/pid-component.esm.js"></script>
+</head>
+<body>
+  <div id="content">
+    <p>This paper has DOI 10.1234/example and was authored by 0009-0005-2800-4833.</p>
+  </div>
+
+  <script type="module">
+    import { initPidDetection } from 'https://unpkg.com/@kit-data-manager/pid-component/dist/esm/index.js';
+
+    const controller = initPidDetection({
+      root: document.getElementById('content'),
+      darkMode: 'system',
+    });
+  </script>
+</body>
+```
+
+Or with npm:
+
+```typescript
+import { initPidDetection } from '@kit-data-manager/pid-component';
+
+const controller = initPidDetection({
+  root: document.getElementById('content'),
+  darkMode: 'system',
+});
+```
+
+## How It Works
+
+1. **Scanning**: Walks the DOM tree using a `TreeWalker`, collecting text nodes (skipping `<script>`, `<style>`, `<textarea>`, `<code>`, `<pre>`, `<pid-component>`, and elements matching the `exclude` selector).
+2. **Tokenization**: Splits text into tokens by whitespace and common delimiters.
+3. **Sanitization**: Strips leading/trailing punctuation from each token (dots, commas, quotes, brackets, etc.) so PIDs like `(10.1234/foo)` or `"0009-0005-2800-4833".` are correctly recognized.
+4. **Detection**: Runs each sanitized token through the detection registry (same regex patterns used by the renderers) to identify the best-fit renderer type.
+5. **Replacement**: Only matched PID tokens are wrapped in a `<pid-component>`. Non-matching text stays as plain text nodes (no extra DOM elements).
+6. **Swap**: The original text remains visible until the `<pid-component>` finishes loading. Once rendered, the component replaces the text. If loading fails, the original text is restored.
+
+## Detected Types
+
+Auto-detection supports the following PID types:
+
+| Type | Example | Notes |
+|------|---------|-------|
+| **DateType** | `2022-11-11T08:01:20.557+00:00` | ISO 8601 with timezone |
+| **ORCIDType** | `0009-0005-2800-4833` | With or without `https://orcid.org/` prefix |
+| **DOIType** | `10.1234/example` | With or without `https://doi.org/` or `doi:` prefix |
+| **HandleType** | `21.T11981/be908bd1-...` | Any Handle-based PID |
+| **RORType** | `https://ror.org/04t3en479` | Full ROR URL |
+| **SPDXType** | `https://spdx.org/licenses/Apache-2.0` | Full SPDX URL only (bare IDs like `MIT` are too ambiguous for auto-detection) |
+| **EmailType** | `someone@example.com` | Email addresses |
+| **URLType** | `https://scc.kit.edu` | HTTP/HTTPS URLs |
+| **LocaleType** | `de-DE` | Only with region subtag (bare `de` is too ambiguous) |
+| **JSONType** | `{"key": "value"}` | Valid JSON objects/arrays |
+
+## Examples
+
+### Mixed PIDs in Text
+
+<Canvas of={AutoDetectStories.MixedPIDsInText} />
+
+### Filtered Renderers
+
+<Canvas of={AutoDetectStories.FilteredRenderers} />
+
+### Excluding Elements
+
+<Canvas of={AutoDetectStories.ExcludeElements} />
+
+### Table with PIDs
+
+<Canvas of={AutoDetectStories.TableWithPIDs} />
+
+### Punctuation Handling
+
+<Canvas of={AutoDetectStories.PunctuationHandling} />
+
+### Custom Settings
+
+<Canvas of={AutoDetectStories.WithSettings} />
+
+### Dark Mode
+
+<Canvas of={AutoDetectStories.DarkMode} />
+
+### Controller Lifecycle
+
+<Canvas of={AutoDetectStories.ControllerLifecycle} />
+
+## Configuration Reference
+
+<Controls />
+
+### Full Configuration Example
+
+```typescript
+import { initPidDetection } from '@kit-data-manager/pid-component';
+
+const controller = initPidDetection({
+  // Root element to scan (default: document.body)
+  root: document.getElementById('my-content'),
+
+  // Detection options
+  renderers: ['DOIType', 'ORCIDType', 'HandleType'],  // try these first
+  fallbackToAll: true,                                  // fall back to all if none match
+  exclude: '.code-block, .no-detect',                   // skip these elements
+  observe: true,                                        // watch for new DOM nodes
+
+  // Component appearance
+  darkMode: 'system',
+  emphasizeComponent: true,
+  showTopLevelCopy: true,
+
+  // Component behavior
+  levelOfSubcomponents: 1,
+  amountOfItems: 10,
+  settings: JSON.stringify([
+    { type: 'DOIType', values: [{ name: 'citationStyle', value: 'IEEE' }] },
+    { type: 'ORCIDType', values: [{ name: 'showAffiliation', value: true }] },
+  ]),
+});
+```
+
+## Controller API
+
+The `initPidDetection()` function returns a controller object with three methods:
+
+| Method | Description |
+|--------|-------------|
+| `stop()` | Pauses the MutationObserver (if `observe: true` was set). |
+| `rescan()` | Re-scans the root element for PIDs. Useful after dynamic content changes. |
+| `destroy()` | Tears down everything: disconnects observer, removes all injected `<pid-component>` elements, and restores the original text nodes. |
+
+### Framework Integration
+
+**React:**
+```tsx
+import { useEffect, useRef } from 'react';
+import { initPidDetection } from '@kit-data-manager/pid-component';
+
+function ResearchPage({ content }) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const controller = initPidDetection({ root: ref.current, darkMode: 'system' });
+    return () => controller.destroy();
+  }, [content]);
+
+  return <div ref={ref} dangerouslySetInnerHTML={{ __html: content }} />;
+}
+```
+
+**Vue 3:**
+```vue
+<script setup>
+import { onMounted, onUnmounted, ref } from 'vue';
+import { initPidDetection } from '@kit-data-manager/pid-component';
+
+const el = ref(null);
+let controller;
+
+onMounted(() => {
+  controller = initPidDetection({ root: el.value, darkMode: 'system' });
+});
+onUnmounted(() => controller?.destroy());
+</script>
+
+<template>
+  <div ref="el">
+    <p>This paper has DOI 10.1234/example.</p>
+  </div>
+</template>
+```
+
+**Angular:**
+```typescript
+@Component({ ... })
+export class ResearchPageComponent implements AfterViewInit, OnDestroy {
+  @ViewChild('content') contentEl: ElementRef;
+  private controller: PidDetectionController;
+
+  ngAfterViewInit() {
+    this.controller = initPidDetection({
+      root: this.contentEl.nativeElement,
+      darkMode: 'system',
+    });
+  }
+
+  ngOnDestroy() {
+    this.controller?.destroy();
+  }
+}
+```
+
+## Renderer Preselection
+
+The `renderers` option provides an ordered, non-binding preselection. Listed renderers are tried first in the specified order. If none match a token, the full default registry is tried (unless `fallbackToAll` is set to `false`).
+
+This is useful for:
+- **Performance**: Skip unnecessary checks when you know what PID types are on the page.
+- **Precision**: Avoid false positives by restricting to specific types.
+
+```typescript
+// Only detect DOIs and ORCiDs — other types left as plain text
+initPidDetection({
+  root: document.body,
+  renderers: ['DOIType', 'ORCIDType'],
+  fallbackToAll: false,  // strictly restrict
+});
+```
+
+Available renderer keys: `DateType`, `ORCIDType`, `DOIType`, `HandleType`, `RORType`, `SPDXType`, `EmailType`, `URLType`, `LocaleType`, `JSONType`.

@@ -292,7 +292,6 @@ export class ORCIDInfo {
     // Remove other common things that might be around an ORCiD in a text, like "orcid:", "http://orcid.org/", quotes, dots, etc.
     orcid = orcid
       .replace(/^orcid:/i, '')
-      .replace(/^http:\/\/orcid.org\//i, '')
       .replace(/^https?:\/\/orcid.org\//i, '')
       .replace(/\/+$/, '') // Remove trailing slashes
       .replace(/\.+$/, '') // Remove trailing dots
