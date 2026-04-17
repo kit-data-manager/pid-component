@@ -37,8 +37,12 @@ export class ORCIDType extends GenericIdentifierType {
     return JSON.stringify(this._orcidInfo.toObject());
   }
 
-  async hasCorrectFormat(): Promise<boolean> {
+  hasCorrectFormatQuick(): boolean {
     return ORCIDInfo.isORCiD(this.value);
+  }
+
+  async hasCorrectFormat(): Promise<boolean> {
+    return this.hasCorrectFormatQuick();
   }
 
   async init(data?: string): Promise<void> {

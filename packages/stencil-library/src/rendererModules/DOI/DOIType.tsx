@@ -32,8 +32,12 @@ export class DOIType extends GenericIdentifierType {
     return JSON.stringify(this._doiInfo.toObject());
   }
 
-  async hasCorrectFormat(): Promise<boolean> {
+  hasCorrectFormatQuick(): boolean {
     return DOI.isDOI(this.value);
+  }
+
+  async hasCorrectFormat(): Promise<boolean> {
+    return this.hasCorrectFormatQuick();
   }
 
   async init(data?: string): Promise<void> {

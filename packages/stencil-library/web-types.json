@@ -361,6 +361,22 @@
               "required": false,
               "default": "'light'",
               "priority": "high"
+            },
+            {
+              "name": "renderers",
+              "deprecated": false,
+              "description": "An ordered list of renderer keys to try first (JSON string array).\nThese renderers are tried in the specified order as a non-binding preselection.\nIf none match, the component falls back to the full default renderer registry\n(unless fallbackToAll is explicitly set to false).\nNot forwarded to child subcomponents — their types are independent.\n(optional)\n\nExample: '[\"DOIType\", \"ORCIDType\", \"HandleType\"]'",
+              "required": false,
+              "default": "",
+              "priority": "high"
+            },
+            {
+              "name": "fallback-to-all",
+              "deprecated": false,
+              "description": "When renderers is set and no listed renderer matches the value, this flag\ncontrols whether to fall back to the full default renderer registry.\nDefault: true (always falls back to try all renderers).\nSet to false to strictly restrict detection to only the listed renderers.\nNot forwarded to child subcomponents.\n(optional)",
+              "required": false,
+              "default": "true",
+              "priority": "high"
             }
           ],
           "slots": [],
@@ -744,6 +760,12 @@
             },
             {
               "name": "darkMode"
+            },
+            {
+              "name": "renderers"
+            },
+            {
+              "name": "fallbackToAll"
             }
           ]
         },

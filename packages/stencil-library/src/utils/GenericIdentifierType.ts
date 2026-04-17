@@ -136,6 +136,30 @@ export abstract class GenericIdentifierType {
   abstract hasCorrectFormat(): Promise<boolean>;
 
   /**
+   * Quick, synchronous format check using only regex/parsing — no network I/O.
+   * Used for pre-filtering during auto-detection and for optimizing the parser.
+   * Subclasses with expensive checks (e.g. network calls in hasCorrectFormat)
+   * SHOULD override this to return only the cheap regex portion.
+   * @returns {boolean | undefined} true/false for a definitive answer,
+   *          undefined to signal "unknown — caller must use the async hasCorrectFormat()".
+   */
+  hasCorrectFormatQuick(): boolean | undefined {
+    return undefined;
+  }
+
+  /**
+   * Returns whether the renderer has resolved successfully and can render
+   * a meaningful preview. Used to decide whether to cache in IndexedDB.
+   * Subclasses with external data dependencies (DOI, Handle, ORCiD, etc.)
+   * SHOULD override this to check whether their data was fetched successfully.
+   * Default: true (simple renderers like DateType, EmailType always resolve).
+   * @returns {boolean} Whether the renderer is resolvable.
+   */
+  isResolvable(): boolean {
+    return true;
+  }
+
+  /**
    * This method returns the key that is used to identify the settings for this component.
    * It must be implemented by the child classes as it is abstract.
    * @returns {string} The key that is used to identify the settings for this component.

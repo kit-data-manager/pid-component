@@ -98,6 +98,24 @@ const meta: Meta = {
         defaultValue: { summary: 'system' },
       },
     },
+    renderers: {
+      description:
+        'An ordered list of renderer keys to try first (JSON string array, non-binding preselection). These are tried in order; if none match, the full registry is used (unless fallbackToAll is false).',
+      control: { type: 'text' },
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: 'undefined' },
+      },
+    },
+    fallbackToAll: {
+      description:
+        'When renderers is set and no listed renderer matches, fall back to the full default renderer registry. Set to false to strictly restrict to listed renderers only.',
+      control: { type: 'boolean' },
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'true' },
+      },
+    },
   },
   args: {
     value: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
@@ -716,6 +734,134 @@ export const Locale: Story = {
       source: {
         code: `
 <pid-component value='de-DE'></pid-component>
+        `,
+      },
+    },
+  },
+};
+
+// ==========================================
+// Ordered Renderer List Stories
+// ==========================================
+
+/**
+ * Restricts detection to only the DOIType renderer.
+ * Since the value is a DOI, it matches and renders normally.
+ */
+export const RenderersMatchingDOI: Story = {
+  args: {
+    value: '10.5281/zenodo.1234567',
+    renderers: '["DOIType"]',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Uses the `renderers` prop to restrict detection to only DOIType. The DOI value matches, so it renders as expected.',
+      },
+      source: {
+        code: `
+<pid-component value='10.5281/zenodo.1234567' renderers='["DOIType"]'></pid-component>
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Preselects ORCIDType, but the value is a DOI. Since renderers is a
+ * non-binding preselection, the component falls back to the full registry
+ * and correctly renders it as a DOI.
+ */
+export const RenderersPreselectionFallback: Story = {
+  args: {
+    value: '10.5281/zenodo.1234567',
+    renderers: '["ORCIDType"]',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Uses the `renderers` prop with only ORCIDType, but the value is a DOI. Since renderers is a non-binding preselection (fallbackToAll defaults to true), the component falls back to the full registry and renders as a DOI.',
+      },
+      source: {
+        code: `
+<pid-component value='10.5281/zenodo.1234567' renderers='["ORCIDType"]'></pid-component>
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Strictly restricts detection to only ORCIDType with fallbackToAll=false.
+ * Since ORCIDType doesn't match the DOI value and fallback is disabled,
+ * the component renders nothing (unmatched state).
+ */
+export const RenderersStrictRestriction: Story = {
+  args: {
+    value: '10.5281/zenodo.1234567',
+    renderers: '["ORCIDType"]',
+    fallbackToAll: false,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Strictly restricts detection to ORCIDType only with `fallback-to-all="false"`. Since ORCIDType does not match the DOI, and fallback is disabled, the component is invisible (unmatched state).',
+      },
+      source: {
+        code: `
+<pid-component value='10.5281/zenodo.1234567' renderers='["ORCIDType"]' fallback-to-all='false'></pid-component>
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Demonstrates ordering priority: HandleType is listed before DOIType.
+ * Since DOIs also match HandleType's regex, the Handle renderer is used
+ * instead of the DOI renderer because it appears first in the ordered list.
+ */
+export const RenderersOrderPriority: Story = {
+  args: {
+    value: '10.5281/zenodo.1234567',
+    renderers: '["HandleType", "DOIType"]',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The ordered list puts HandleType before DOIType. Since a DOI like `10.5281/zenodo.1234567` also matches the Handle PID regex, the Handle renderer is used first because it appears earlier in the list.',
+      },
+      source: {
+        code: `
+<pid-component value='10.5281/zenodo.1234567' renderers='["HandleType", "DOIType"]'></pid-component>
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Multiple renderers in the preferred order: DOIType first, then HandleType.
+ * The DOI value matches DOIType first, so the DOI renderer is used.
+ */
+export const RenderersCorrectOrder: Story = {
+  args: {
+    value: '10.5281/zenodo.1234567',
+    renderers: '["DOIType", "HandleType"]',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The ordered list puts DOIType before HandleType. The DOI matches DOIType first, so the DOI renderer is used as expected.',
+      },
+      source: {
+        code: `
+<pid-component value='10.5281/zenodo.1234567' renderers='["DOIType", "HandleType"]'></pid-component>
         `,
       },
     },

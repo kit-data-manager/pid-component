@@ -39,9 +39,20 @@ export class SPDXType extends GenericIdentifierType {
     return 'SPDXType';
   }
 
+  private static readonly ID_REGEX = /^[\w.\-+]+$/;
+
   /**
-   * Checks if the provided value is a valid SPDX license identifier or URL
-   * Always validates against SPDX API without optimizations
+   * Quick, synchronous format check using only regex — no network I/O.
+   * Returns true if the value looks like an SPDX URL or bare license ID.
+   * Does NOT validate against the SPDX API.
+   */
+  hasCorrectFormatQuick(): boolean {
+    return urlRegex.test(this.value) || SPDXType.ID_REGEX.test(this.value);
+  }
+
+  /**
+   * Checks if the provided value is a valid SPDX license identifier or URL.
+   * Validates against the SPDX API to confirm the license exists.
    * @returns Promise resolving to true if the value is a valid SPDX license identifier
    */
   async hasCorrectFormat(): Promise<boolean> {
@@ -49,8 +60,7 @@ export class SPDXType extends GenericIdentifierType {
     const isValidUrl = urlRegex.test(this.value);
 
     // Check if the value looks like a license ID (e.g., "MIT", "Apache-2.0")
-    const idRegex = /^[\w.\-+]+$/;
-    const isValidId = idRegex.test(this.value);
+    const isValidId = SPDXType.ID_REGEX.test(this.value);
 
     // If neither format is valid, return false immediately
     if (!isValidUrl && !isValidId) {

@@ -11,9 +11,16 @@ export class EmailType extends GenericIdentifierType {
     return 'EmailType';
   }
 
+  private static readonly FORMAT_REGEX = /^(([\w\-.]+@([\w-]+\.)+[\w-]{2,})(\s*,\s*)?)+$/gm;
+
+  hasCorrectFormatQuick(): boolean {
+    // Reset lastIndex since the regex has the global flag
+    EmailType.FORMAT_REGEX.lastIndex = 0;
+    return this.value.length > 0 && EmailType.FORMAT_REGEX.test(this.value);
+  }
+
   async hasCorrectFormat(): Promise<boolean> {
-    const regex = /^(([\w\-.]+@([\w-]+\.)+[\w-]{2,})(\s*,\s*)?)*$/gm;
-    return regex.test(this.value);
+    return this.hasCorrectFormatQuick();
   }
 
   init(): Promise<void> {

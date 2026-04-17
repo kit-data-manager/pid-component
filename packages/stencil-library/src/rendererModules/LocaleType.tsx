@@ -11,9 +11,14 @@ export class LocaleType extends GenericIdentifierType {
     return 'LocaleType';
   }
 
+  private static readonly FORMAT_REGEX = /^([a-zA-Z]{2})(-[A-Z]{2})?$/;
+
+  hasCorrectFormatQuick(): boolean {
+    return LocaleType.FORMAT_REGEX.test(this.value);
+  }
+
   async hasCorrectFormat(): Promise<boolean> {
-    const regex = /^([a-zA-Z]{2})(-[A-Z]{2})?$/;
-    return regex.test(this.value);
+    return this.hasCorrectFormatQuick();
   }
 
   init(): Promise<void> {

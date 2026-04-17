@@ -135,6 +135,30 @@ export class PidComponent {
   @Prop() darkMode: 'light' | 'dark' | 'system' = 'light';
 
   /**
+   * An ordered list of renderer keys to try first (JSON string array).
+   * These renderers are tried in the specified order as a non-binding preselection.
+   * If none match, the component falls back to the full default renderer registry
+   * (unless fallbackToAll is explicitly set to false).
+   * Not forwarded to child subcomponents — their types are independent.
+   * (optional)
+   *
+   * Example: '["DOIType", "ORCIDType", "HandleType"]'
+   * @type {string}
+   */
+  @Prop() renderers?: string;
+
+  /**
+   * When renderers is set and no listed renderer matches the value, this flag
+   * controls whether to fall back to the full default renderer registry.
+   * Default: true (always falls back to try all renderers).
+   * Set to false to strictly restrict detection to only the listed renderers.
+   * Not forwarded to child subcomponents.
+   * (optional)
+   * @type {boolean}
+   */
+  @Prop() fallbackToAll: boolean = true;
+
+  /**
    * Stores the parsed identifier object.
    */
   @State() identifierObject: GenericIdentifierType;
@@ -164,10 +188,11 @@ export class PidComponent {
 
   /**
    * The current status of the component.
-   * Can be "loading", "loaded" or "error".
+   * Can be "loading", "loaded", "error", or "unmatched".
+   * "unmatched" means the renderers prop was set but no listed renderer matched the value.
    * Default to "loading".
    */
-  @State() displayStatus: 'loading' | 'loaded' | 'error' = 'loading';
+  @State() displayStatus: 'loading' | 'loaded' | 'error' | 'unmatched' = 'loading';
 
   /**
    * The current page of the table.
@@ -411,10 +436,36 @@ export class PidComponent {
       });
     }
 
+    // Parse the optional ordered renderer list
+    let orderedRendererKeys: string[] | undefined;
+    if (typeof this.renderers === 'string' && this.renderers.trim().length > 0) {
+      try {
+        orderedRendererKeys = JSON.parse(this.renderers);
+        if (!Array.isArray(orderedRendererKeys)) {
+          console.error('renderers prop must be a JSON array of strings, got:', this.renderers);
+          orderedRendererKeys = undefined;
+        }
+      } catch (e) {
+        console.error('Failed to parse renderers prop:', e);
+        orderedRendererKeys = undefined;
+      }
+    }
+
     // Get the renderer for the value
     try {
       const db = new Database();
-      this.identifierObject = await db.getEntity(this.value, settings);
+      const result = await db.getEntity(this.value, settings, orderedRendererKeys, this.fallbackToAll);
+
+      if (result === null) {
+        // No renderer matched (renderers prop was set but none fit)
+        this.displayStatus = 'unmatched';
+        this.identifierObject = undefined;
+        this.items = [];
+        this.actions = [];
+        return;
+      }
+
+      this.identifierObject = result;
     } catch (e) {
       console.error('Failed to get entity from db', e);
       this.displayStatus = 'error';
@@ -586,6 +637,11 @@ export class PidComponent {
           );
         }, 50); // Give it a bit more time for the DOM to update with new content
       }
+    }
+
+    // If unmatched (renderers prop was set but no listed renderer matched), render nothing
+    if (this.displayStatus === 'unmatched') {
+      return <Host class={`relative font-sans`} style={{ display: 'none' }}></Host>;
     }
 
     return (

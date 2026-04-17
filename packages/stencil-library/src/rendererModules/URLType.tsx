@@ -11,9 +11,14 @@ export class URLType extends GenericIdentifierType {
     return 'URLType';
   }
 
+  private static readonly FORMAT_REGEX = new RegExp('^http(s)?:(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?$');
+
+  hasCorrectFormatQuick(): boolean {
+    return URLType.FORMAT_REGEX.test(this.value);
+  }
+
   async hasCorrectFormat(): Promise<boolean> {
-    const regex = new RegExp('^http(s)?:(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?$');
-    return regex.test(this.value);
+    return this.hasCorrectFormatQuick();
   }
 
   init(): Promise<void> {

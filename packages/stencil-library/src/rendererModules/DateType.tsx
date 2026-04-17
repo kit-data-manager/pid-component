@@ -18,11 +18,16 @@ export class DateType extends GenericIdentifierType {
     return 'DateType';
   }
 
+  private static readonly FORMAT_REGEX = new RegExp(
+    '^([0-9]{4})-([0]?[1-9]|1[0-2])-([0-2][0-9]|3[0-1])(T([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9](.[0-9]*)?(Z|([+|-]([0-1][0-9]|2[0-3]):[0-5][0-9])){1}))$',
+  );
+
+  hasCorrectFormatQuick(): boolean {
+    return DateType.FORMAT_REGEX.test(this.value);
+  }
+
   async hasCorrectFormat(): Promise<boolean> {
-    const regex = new RegExp(
-      '^([0-9]{4})-([0]?[1-9]|1[0-2])-([0-2][0-9]|3[0-1])(T([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9](.[0-9]*)?(Z|([+|-]([0-1][0-9]|2[0-3]):[0-5][0-9])){1}))$',
-    );
-    return regex.test(this.value);
+    return this.hasCorrectFormatQuick();
   }
 
   init(): Promise<void> {
