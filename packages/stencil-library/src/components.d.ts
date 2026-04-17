@@ -81,7 +81,7 @@ export namespace Components {
         /**
           * Whether to show the flag of the region.
           * @type {boolean}
-          * @public
+         * @public
           * @default true
          */
         "showFlag": boolean;
@@ -549,7 +549,7 @@ declare namespace LocalJSX {
         /**
           * Whether to show the flag of the region.
           * @type {boolean}
-          * @public
+         * @public
           * @default true
          */
         "showFlag"?: boolean;

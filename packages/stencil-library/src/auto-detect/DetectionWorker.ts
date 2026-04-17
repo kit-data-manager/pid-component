@@ -10,7 +10,7 @@
  * Web Worker context.
  */
 
-import { detectBestFit } from './detection-registry';
+import { detectBestFit, sanitizeToken } from './detection-registry';
 import type { DetectionMatch, WorkerInboundMessage, WorkerResultMessage } from './types';
 
 /** Ordered renderer keys to use for detection. Set via 'init' message. */
@@ -64,13 +64,22 @@ function detectInText(text: string, orderedRendererKeys?: string[]): DetectionMa
   const matches: DetectionMatch[] = [];
   const effectiveKeys = orderedRendererKeys || configuredRenderers;
 
-  for (const { token, start, end } of tokens) {
+  for (const { token, start } of tokens) {
     // Skip very short tokens (unlikely to be PIDs)
     if (token.length < 2) continue;
 
-    const rendererKey = detectBestFit(token, effectiveKeys);
+    // Sanitize: strip surrounding punctuation that may be part of prose
+    const { sanitized, leadingStripped } = sanitizeToken(token);
+    if (sanitized.length < 2) continue;
+
+    const rendererKey = detectBestFit(sanitized, effectiveKeys);
     if (rendererKey !== null) {
-      matches.push({ start, end, value: token, rendererKey });
+      matches.push({
+        start: start + leadingStripped,
+        end: start + leadingStripped + sanitized.length,
+        value: sanitized,
+        rendererKey,
+      });
     }
   }
 

@@ -29,7 +29,7 @@ import type {
 } from './types';
 import { scanDom } from './DomScanner';
 import { replaceMatches, ReplacementRecord, restoreOriginalText } from './TextReplacer';
-import { detectBestFit } from './detection-registry';
+import { detectBestFit, sanitizeToken } from './detection-registry';
 
 /** Batch size for inserting components via requestIdleCallback */
 const INSERT_BATCH_SIZE = 10;
@@ -268,18 +268,15 @@ function detectOnMainThread(text: string, orderedRenderers?: string[]): Detectio
 
     let token: string;
     let tokenStart: number;
-    let tokenEnd: number;
 
     if (delimMatch === null) {
       token = remaining;
       tokenStart = offset;
-      tokenEnd = offset + remaining.length;
       remaining = '';
     } else {
       if (delimMatch.index > 0) {
         token = remaining.substring(0, delimMatch.index);
         tokenStart = offset;
-        tokenEnd = offset + delimMatch.index;
       } else {
         // Delimiter at start — skip it
         offset += delimMatch[0].length;
@@ -292,12 +289,16 @@ function detectOnMainThread(text: string, orderedRenderers?: string[]): Detectio
 
     if (token.length < 2) continue;
 
-    const rendererKey = detectBestFit(token, orderedRenderers);
+    // Sanitize: strip surrounding punctuation that may be part of prose
+    const { sanitized, leadingStripped } = sanitizeToken(token);
+    if (sanitized.length < 2) continue;
+
+    const rendererKey = detectBestFit(sanitized, orderedRenderers);
     if (rendererKey !== null) {
       matches.push({
-        start: tokenStart,
-        end: tokenEnd,
-        value: token,
+        start: tokenStart + leadingStripped,
+        end: tokenStart + leadingStripped + sanitized.length,
+        value: sanitized,
         rendererKey,
       });
     }
