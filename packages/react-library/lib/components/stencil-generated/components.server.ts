@@ -146,7 +146,7 @@ export const PidComponent: StencilReactComponent<PidComponentElement, PidCompone
         height: 'height',
         darkMode: 'dark-mode',
         renderers: 'renderers',
-      fallbackToAll: 'fallback-to-all',
+        fallbackToAll: 'fallback-to-all',
     },
     hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
     clientModule: clientComponents.PidComponent as StencilReactComponent<PidComponentElement, PidComponentEvents, Components.PidComponent>,

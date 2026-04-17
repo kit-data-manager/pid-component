@@ -37,7 +37,7 @@ import { Meta, StoryObj } from '@storybook/web-components-vite';
  */
 const meta: Meta = {
   title: 'Auto-Detection',
-  tags: ['autodocs'],
+  tags: ['autodocs', '!test'],
   argTypes: {
     darkMode: {
       description: 'Dark mode setting for all auto-detected components.',

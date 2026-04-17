@@ -6,6 +6,11 @@
  * that axe-core requires in beforeEach so they persist across all tests.
  */
 
+// Polyfill `self` for modules that reference it (e.g. DataCache.ts uses `'caches' in self`)
+if (typeof (globalThis as any).self === 'undefined') {
+  (globalThis as any).self = globalThis;
+}
+
 // Apply polyfills on EVERY test invocation to handle jest worker pool reuse
 beforeEach(() => {
   const w = window as any;

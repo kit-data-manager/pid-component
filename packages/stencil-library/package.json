@@ -137,6 +137,7 @@
     "@storybook/addon-a11y": "^10.3.5",
     "@storybook/addon-docs": "^10.3.5",
     "@storybook/addon-links": "^10.3.5",
+    "@storybook/test": "^8.6.15",
     "@storybook/test-runner": "^0.24.3",
     "@storybook/web-components-vite": "^10.3.5",
     "@tailwindcss/postcss": "^4.2.2",

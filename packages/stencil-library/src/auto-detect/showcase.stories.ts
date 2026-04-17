@@ -14,7 +14,7 @@ import { Meta, StoryObj } from '@storybook/web-components-vite';
  */
 const meta: Meta = {
   title: 'Showcase',
-  tags: ['autodocs'],
+  tags: ['autodocs', '!test'],
 };
 
 export default meta;
