@@ -49,13 +49,19 @@ Then, you can use this component like this:
 <pid-component value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"></pid-component>
 ```
 
-To automatically detect and render multiple identifiers in existing page text, add a `pid-wrapper` once:
+To automatically detect and render multiple identifiers in existing page text, add a `pid-wrapper` **once** per page.
+All configuration props are forwarded to every auto-injected `pid-component`, so you only need to configure one place:
 
 ```html
-<pid-wrapper>
+<!-- Detects PIDs in the given target area; all injected components inherit dark-mode and settings -->
+<pid-wrapper dark-mode="system" level-of-subcomponents="2" settings='[...]'>
   <p>Identifiers: 21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6, 10.5880/fidgeo.2020.009, 0000-0002-1825-0097</p>
 </pid-wrapper>
 ```
+
+`pid-wrapper` supports all the same props as `pid-component` (except `value`, which is set per detected identifier),
+plus `target-selector` (CSS selector, defaults to `body`) to restrict the scan area.
+Original text remains visible until the component has fully loaded, so there is no visual flash.
 
 <div>
 <aside>
@@ -68,6 +74,7 @@ To automatically detect and render multiple identifiers in existing page text, a
 You can try this web component in the [demo](https://kit-data-manager.github.io/pid-component).
 
 Use `pid-component` for explicit single values and `pid-wrapper` for automatic in-page detection.
+Docs for `pid-wrapper` are at [packages/stencil-library/src/components/pid-wrapper/readme.md](packages/stencil-library/src/components/pid-wrapper/readme.md).
 
 There are detailed docs for the `pid-component` component
 available [in the Storybook](https://kit-data-manager.github.io/pid-component) and in

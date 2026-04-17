@@ -548,6 +548,115 @@
           ],
           "slots": [],
           "css": {}
+        },
+        {
+          "name": "pid-wrapper",
+          "deprecated": false,
+          "description": "",
+          "source": {
+            "module": "src/components/pid-wrapper/pid-wrapper.tsx",
+            "symbol": "PidWrapper"
+          },
+          "attributes": [
+            {
+              "name": "target-selector",
+              "deprecated": false,
+              "description": "CSS selector for the area in which identifiers should be detected.\nDefaults to the full document body.",
+              "required": false,
+              "default": "'body'",
+              "priority": "high"
+            },
+            {
+              "name": "settings",
+              "deprecated": false,
+              "description": "Stringified JSON settings passed to each detected pid-component.",
+              "required": false,
+              "default": "'[]'",
+              "priority": "high"
+            },
+            {
+              "name": "open-by-default",
+              "deprecated": false,
+              "description": "Whether detected pid-components should be open by default.",
+              "required": false,
+              "default": "false",
+              "priority": "high"
+            },
+            {
+              "name": "amount-of-items",
+              "deprecated": false,
+              "description": "Number of table rows per page in each detected pid-component.",
+              "required": false,
+              "default": "10",
+              "priority": "high"
+            },
+            {
+              "name": "level-of-subcomponents",
+              "deprecated": false,
+              "description": "Maximum depth of nested sub-components to render.",
+              "required": false,
+              "default": "1",
+              "priority": "high"
+            },
+            {
+              "name": "hide-subcomponents",
+              "deprecated": false,
+              "description": "When true, sub-components are never shown.",
+              "required": false,
+              "default": "false",
+              "priority": "high"
+            },
+            {
+              "name": "emphasize-component",
+              "deprecated": false,
+              "description": "Whether detected pid-components show a border/shadow emphasis.",
+              "required": false,
+              "default": "true",
+              "priority": "high"
+            },
+            {
+              "name": "show-top-level-copy",
+              "deprecated": false,
+              "description": "Whether the copy button is shown at the top level of detected pid-components.",
+              "required": false,
+              "default": "true",
+              "priority": "high"
+            },
+            {
+              "name": "default-t-t-l",
+              "deprecated": false,
+              "description": "Default time-to-live (ms) for IndexedDB cache entries.",
+              "required": false,
+              "default": "24 * 60 * 60 * 1000",
+              "priority": "high"
+            },
+            {
+              "name": "width",
+              "deprecated": false,
+              "description": "Initial width applied to each detected pid-component (e.g. '500px').",
+              "required": false,
+              "default": "",
+              "priority": "high"
+            },
+            {
+              "name": "height",
+              "deprecated": false,
+              "description": "Initial height applied to each detected pid-component (e.g. '300px').",
+              "required": false,
+              "default": "",
+              "priority": "high"
+            },
+            {
+              "name": "dark-mode",
+              "deprecated": false,
+              "description": "Dark-mode setting forwarded to every detected pid-component.",
+              "required": false,
+              "default": "'light'",
+              "priority": "high"
+            }
+          ],
+          "slots": [],
+          "css": {}
         }
       ]
     },
@@ -581,7 +690,16 @@
           ]
         },
         {
-          "events": []
+          "events": [
+            {
+              "name": "pid-component-ready",
+              "description": "Fired when identifier data has been fully loaded and rendered."
+            },
+            {
+              "name": "pid-component-error",
+              "description": "Fired when identifier data could not be loaded."
+            }
+          ]
         },
         {
           "events": [
@@ -614,6 +732,9 @@
               "description": "Event emitted when tooltip requires row expansion"
             }
           ]
+        },
+        {
+          "events": []
         }
       ],
       "properties": [
@@ -819,6 +940,46 @@
             },
             {
               "name": "fitContent"
+            }
+          ]
+        },
+        {
+          "properties": [
+            {
+              "name": "targetSelector"
+            },
+            {
+              "name": "settings"
+            },
+            {
+              "name": "openByDefault"
+            },
+            {
+              "name": "amountOfItems"
+            },
+            {
+              "name": "levelOfSubcomponents"
+            },
+            {
+              "name": "hideSubcomponents"
+            },
+            {
+              "name": "emphasizeComponent"
+            },
+            {
+              "name": "showTopLevelCopy"
+            },
+            {
+              "name": "defaultTTL"
+            },
+            {
+              "name": "width"
+            },
+            {
+              "name": "height"
+            },
+            {
+              "name": "darkMode"
             }
           ]
         }

@@ -332,10 +332,74 @@ export namespace Components {
     }
     interface PidWrapper {
         /**
+          * Number of table rows per page in each detected pid-component.
+          * @see pid-component#amountOfItems
+          * @default 10
+         */
+        "amountOfItems": number;
+        /**
+          * Dark-mode setting forwarded to every detected pid-component.
+          * @see pid-component#darkMode
+          * @default 'light'
+         */
+        "darkMode": 'light' | 'dark' | 'system';
+        /**
+          * Default time-to-live (ms) for IndexedDB cache entries.
+          * @see pid-component#defaultTTL
+          * @default 24 * 60 * 60 * 1000
+         */
+        "defaultTTL": number;
+        /**
+          * Whether detected pid-components show a border/shadow emphasis.
+          * @see pid-component#emphasizeComponent
+          * @default true
+         */
+        "emphasizeComponent": boolean;
+        /**
+          * Initial height applied to each detected pid-component (e.g. '300px').
+          * @see pid-component#height
+         */
+        "height"?: string;
+        /**
+          * When true, sub-components are never shown.
+          * @see pid-component#hideSubcomponents
+          * @default false
+         */
+        "hideSubcomponents": boolean;
+        /**
+          * Maximum depth of nested sub-components to render.
+          * @see pid-component#levelOfSubcomponents
+          * @default 1
+         */
+        "levelOfSubcomponents": number;
+        /**
+          * Whether detected pid-components should be open by default.
+          * @see pid-component#openByDefault
+          * @default false
+         */
+        "openByDefault": boolean;
+        /**
+          * Stringified JSON settings passed to each detected pid-component.
+          * @see pid-component#settings
+          * @default '[]'
+         */
+        "settings": string;
+        /**
+          * Whether the copy button is shown at the top level of detected pid-components.
+          * @see pid-component#showTopLevelCopy
+          * @default true
+         */
+        "showTopLevelCopy": boolean;
+        /**
           * CSS selector for the area in which identifiers should be detected. Defaults to the full document body.
           * @default 'body'
          */
         "targetSelector": string;
+        /**
+          * Initial width applied to each detected pid-component (e.g. '500px').
+          * @see pid-component#width
+         */
+        "width"?: string;
     }
 }
 export interface PidCollapsibleCustomEvent<T> extends CustomEvent<T> {
@@ -851,10 +915,74 @@ declare namespace LocalJSX {
     }
     interface PidWrapper {
         /**
+          * Number of table rows per page in each detected pid-component.
+          * @see pid-component#amountOfItems
+          * @default 10
+         */
+        "amountOfItems"?: number;
+        /**
+          * Dark-mode setting forwarded to every detected pid-component.
+          * @see pid-component#darkMode
+          * @default 'light'
+         */
+        "darkMode"?: 'light' | 'dark' | 'system';
+        /**
+          * Default time-to-live (ms) for IndexedDB cache entries.
+          * @see pid-component#defaultTTL
+          * @default 24 * 60 * 60 * 1000
+         */
+        "defaultTTL"?: number;
+        /**
+          * Whether detected pid-components show a border/shadow emphasis.
+          * @see pid-component#emphasizeComponent
+          * @default true
+         */
+        "emphasizeComponent"?: boolean;
+        /**
+          * Initial height applied to each detected pid-component (e.g. '300px').
+          * @see pid-component#height
+         */
+        "height"?: string;
+        /**
+          * When true, sub-components are never shown.
+          * @see pid-component#hideSubcomponents
+          * @default false
+         */
+        "hideSubcomponents"?: boolean;
+        /**
+          * Maximum depth of nested sub-components to render.
+          * @see pid-component#levelOfSubcomponents
+          * @default 1
+         */
+        "levelOfSubcomponents"?: number;
+        /**
+          * Whether detected pid-components should be open by default.
+          * @see pid-component#openByDefault
+          * @default false
+         */
+        "openByDefault"?: boolean;
+        /**
+          * Stringified JSON settings passed to each detected pid-component.
+          * @see pid-component#settings
+          * @default '[]'
+         */
+        "settings"?: string;
+        /**
+          * Whether the copy button is shown at the top level of detected pid-components.
+          * @see pid-component#showTopLevelCopy
+          * @default true
+         */
+        "showTopLevelCopy"?: boolean;
+        /**
           * CSS selector for the area in which identifiers should be detected. Defaults to the full document body.
           * @default 'body'
          */
         "targetSelector"?: string;
+        /**
+          * Initial width applied to each detected pid-component (e.g. '500px').
+          * @see pid-component#width
+         */
+        "width"?: string;
     }
 
     interface ColorHighlightAttributes {
@@ -930,6 +1058,17 @@ declare namespace LocalJSX {
     }
     interface PidWrapperAttributes {
         "targetSelector": string;
+        "settings": string;
+        "openByDefault": boolean;
+        "amountOfItems": number;
+        "levelOfSubcomponents": number;
+        "hideSubcomponents": boolean;
+        "emphasizeComponent": boolean;
+        "showTopLevelCopy": boolean;
+        "defaultTTL": number;
+        "width": string;
+        "height": string;
+        "darkMode": 'light' | 'dark' | 'system';
     }
 
     interface IntrinsicElements {

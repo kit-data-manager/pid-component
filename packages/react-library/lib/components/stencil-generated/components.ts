@@ -11,7 +11,7 @@ import type { EventName, StencilReactComponent } from '@stencil/react-output-tar
 import { createComponent } from '@stencil/react-output-target/runtime';
 import React from 'react';
 
-import { type PidCollapsibleCustomEvent, type PidDataTableCustomEvent, type PidPaginationCustomEvent, type PidTooltipCustomEvent } from "@kit-data-manager/pid-component";
+import { type PidCollapsibleCustomEvent, type PidComponentCustomEvent, type PidDataTableCustomEvent, type PidPaginationCustomEvent, type PidTooltipCustomEvent } from "@kit-data-manager/pid-component";
 import type { Components } from "@kit-data-manager/pid-component/dist/components";
 import { ColorHighlight as ColorHighlightElement, defineCustomElement as defineColorHighlight } from "@kit-data-manager/pid-component/dist/components/color-highlight.js";
 import { CopyButton as CopyButtonElement, defineCustomElement as defineCopyButton } from "@kit-data-manager/pid-component/dist/components/copy-button.js";
@@ -23,6 +23,7 @@ import { PidComponent as PidComponentElement, defineCustomElement as definePidCo
 import { PidDataTable as PidDataTableElement, defineCustomElement as definePidDataTable } from "@kit-data-manager/pid-component/dist/components/pid-data-table.js";
 import { PidPagination as PidPaginationElement, defineCustomElement as definePidPagination } from "@kit-data-manager/pid-component/dist/components/pid-pagination.js";
 import { PidTooltip as PidTooltipElement, defineCustomElement as definePidTooltip } from "@kit-data-manager/pid-component/dist/components/pid-tooltip.js";
+import { PidWrapper as PidWrapperElement, defineCustomElement as definePidWrapper } from "@kit-data-manager/pid-component/dist/components/pid-wrapper.js";
 
 export type ColorHighlightEvents = NonNullable<unknown>;
 
@@ -96,14 +97,20 @@ export const PidCollapsible: StencilReactComponent<PidCollapsibleElement, PidCol
     defineCustomElement: definePidCollapsible
 });
 
-export type PidComponentEvents = NonNullable<unknown>;
+export type PidComponentEvents = {
+    onPidComponentReady: EventName<PidComponentCustomEvent<{ value: string }>>,
+    onPidComponentError: EventName<PidComponentCustomEvent<{ value: string }>>
+};
 
 export const PidComponent: StencilReactComponent<PidComponentElement, PidComponentEvents, Components.PidComponent> = /*@__PURE__*/ createComponent<PidComponentElement, PidComponentEvents, Components.PidComponent>({
     tagName: 'pid-component',
     elementClass: PidComponentElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
     react: React,
-    events: {} as PidComponentEvents,
+    events: {
+        onPidComponentReady: 'pid-component-ready',
+        onPidComponentError: 'pid-component-error'
+    } as PidComponentEvents,
     defineCustomElement: definePidComponent
 });
 
@@ -150,4 +157,15 @@ export const PidTooltip: StencilReactComponent<PidTooltipElement, PidTooltipEven
     react: React,
     events: { onTooltipExpansionChange: 'tooltipExpansionChange' } as PidTooltipEvents,
     defineCustomElement: definePidTooltip
+});
+
+export type PidWrapperEvents = NonNullable<unknown>;
+
+export const PidWrapper: StencilReactComponent<PidWrapperElement, PidWrapperEvents, Components.PidWrapper> = /*@__PURE__*/ createComponent<PidWrapperElement, PidWrapperEvents, Components.PidWrapper>({
+    tagName: 'pid-wrapper',
+    elementClass: PidWrapperElement,
+    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+    react: React,
+    events: {} as PidWrapperEvents,
+    defineCustomElement: definePidWrapper
 });

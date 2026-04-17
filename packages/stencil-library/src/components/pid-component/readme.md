@@ -22,11 +22,20 @@
 | `width`                       | `width`                          | Initial width of the component (e.g. '500px', '50%'). If not set, defaults to 500px on large screens, 400px on medium screens, and 300px on small screens.                                                                                                                                                                                             | `string`                        | `undefined`           |
 
 
+## Events
+
+| Event                 | Description                                                    | Type                              |
+| --------------------- | -------------------------------------------------------------- | --------------------------------- |
+| `pid-component-error` | Fired when identifier data could not be loaded.                | `CustomEvent<{ value: string; }>` |
+| `pid-component-ready` | Fired when identifier data has been fully loaded and rendered. | `CustomEvent<{ value: string; }>` |
+
+
 ## Dependencies
 
 ### Used by
 
  - [pid-data-table](../pid-data-table)
+ - [pid-wrapper](../pid-wrapper)
 
 ### Depends on
 
@@ -45,6 +54,7 @@ graph TD;
   pid-component --> pid-pagination
   pid-component --> pid-actions
   pid-data-table --> pid-component
+  pid-wrapper --> pid-component
   style pid-component fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

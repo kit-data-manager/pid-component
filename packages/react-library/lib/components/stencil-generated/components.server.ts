@@ -10,7 +10,7 @@
 import type { EventName, StencilReactComponent } from '@stencil/react-output-target/runtime';
 import { createComponent, type HydrateModule, type SerializeShadowRootOptions } from '@stencil/react-output-target/ssr';
 
-import { type PidCollapsibleCustomEvent, type PidDataTableCustomEvent, type PidPaginationCustomEvent, type PidTooltipCustomEvent } from "@kit-data-manager/pid-component";
+import { type PidCollapsibleCustomEvent, type PidComponentCustomEvent, type PidDataTableCustomEvent, type PidPaginationCustomEvent, type PidTooltipCustomEvent } from "@kit-data-manager/pid-component";
 import type { Components } from "@kit-data-manager/pid-component/dist/components";
 import { ColorHighlight as ColorHighlightElement } from "@kit-data-manager/pid-component/dist/components/color-highlight.js";
 import { CopyButton as CopyButtonElement } from "@kit-data-manager/pid-component/dist/components/copy-button.js";
@@ -22,6 +22,7 @@ import { PidComponent as PidComponentElement } from "@kit-data-manager/pid-compo
 import { PidDataTable as PidDataTableElement } from "@kit-data-manager/pid-component/dist/components/pid-data-table.js";
 import { PidPagination as PidPaginationElement } from "@kit-data-manager/pid-component/dist/components/pid-pagination.js";
 import { PidTooltip as PidTooltipElement } from "@kit-data-manager/pid-component/dist/components/pid-tooltip.js";
+import { PidWrapper as PidWrapperElement } from "@kit-data-manager/pid-component/dist/components/pid-wrapper.js";
 // @ts-ignore - ignore potential type issues as the project is importing itself
 import * as clientComponents from "@kit-data-manager/react-pid-component";
 
@@ -114,7 +115,10 @@ export const PidCollapsible: StencilReactComponent<PidCollapsibleElement, PidCol
     serializeShadowRoot
 });
 
-export type PidComponentEvents = NonNullable<unknown>;
+export type PidComponentEvents = {
+    onPidComponentReady: EventName<PidComponentCustomEvent<{ value: string }>>,
+    onPidComponentError: EventName<PidComponentCustomEvent<{ value: string }>>
+};
 
 export const PidComponent: StencilReactComponent<PidComponentElement, PidComponentEvents, Components.PidComponent> = /*@__PURE__*/ createComponent<PidComponentElement, PidComponentEvents, Components.PidComponent>({
     tagName: 'pid-component',
@@ -192,5 +196,28 @@ export const PidTooltip: StencilReactComponent<PidTooltipElement, PidTooltipEven
     },
     hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
     clientModule: clientComponents.PidTooltip as StencilReactComponent<PidTooltipElement, PidTooltipEvents, Components.PidTooltip>,
+    serializeShadowRoot
+});
+
+export type PidWrapperEvents = NonNullable<unknown>;
+
+export const PidWrapper: StencilReactComponent<PidWrapperElement, PidWrapperEvents, Components.PidWrapper> = /*@__PURE__*/ createComponent<PidWrapperElement, PidWrapperEvents, Components.PidWrapper>({
+    tagName: 'pid-wrapper',
+    properties: {
+        targetSelector: 'target-selector',
+        settings: 'settings',
+        openByDefault: 'open-by-default',
+        amountOfItems: 'amount-of-items',
+        levelOfSubcomponents: 'level-of-subcomponents',
+        hideSubcomponents: 'hide-subcomponents',
+        emphasizeComponent: 'emphasize-component',
+        showTopLevelCopy: 'show-top-level-copy',
+        defaultTTL: 'default-t-t-l',
+        width: 'width',
+        height: 'height',
+        darkMode: 'dark-mode'
+    },
+    hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
+    clientModule: clientComponents.PidWrapper as StencilReactComponent<PidWrapperElement, PidWrapperEvents, Components.PidWrapper>,
     serializeShadowRoot
 });

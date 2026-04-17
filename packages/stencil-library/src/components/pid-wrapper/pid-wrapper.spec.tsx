@@ -48,4 +48,41 @@ describe('pid-wrapper', () => {
     expect(original?.style.display).toBe('none');
     expect(pidComponent.style.display).toBe('inline-block');
   });
+
+  it('forwards all inherited config props to injected pid-component', async () => {
+    const page = await newSpecPage({
+      components: [PidWrapper],
+      html: `<pid-wrapper
+        dark-mode="dark"
+        settings='[{"type":"DOIType","values":[]}]'
+        open-by-default="true"
+        amount-of-items="5"
+        level-of-subcomponents="2"
+        hide-subcomponents="true"
+        emphasize-component="false"
+        show-top-level-copy="false"
+        default-t-t-l="3600000"
+        width="400px"
+        height="250px"
+      ><p>DOI: 10.5880/fidgeo.2020.009</p></pid-wrapper>`,
+    });
+
+    await page.waitForChanges();
+    await new Promise(resolve => setTimeout(resolve, 0));
+    await page.waitForChanges();
+
+    const pidComponent = page.root?.querySelector('[data-pid-wrapper-enhanced] pid-component');
+
+    expect(pidComponent?.getAttribute('dark-mode')).toBe('dark');
+    expect(pidComponent?.getAttribute('settings')).toBe('[{"type":"DOIType","values":[]}]');
+    expect(pidComponent?.getAttribute('open-by-default')).toBe('true');
+    expect(pidComponent?.getAttribute('amount-of-items')).toBe('5');
+    expect(pidComponent?.getAttribute('level-of-subcomponents')).toBe('2');
+    expect(pidComponent?.getAttribute('hide-subcomponents')).toBe('true');
+    expect(pidComponent?.getAttribute('emphasize-component')).toBe('false');
+    expect(pidComponent?.getAttribute('show-top-level-copy')).toBe('false');
+    expect(pidComponent?.getAttribute('default-t-t-l')).toBe('3600000');
+    expect(pidComponent?.getAttribute('width')).toBe('400px');
+    expect(pidComponent?.getAttribute('height')).toBe('250px');
+  });
 });
