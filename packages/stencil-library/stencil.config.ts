@@ -1,5 +1,7 @@
 import { Config } from '@stencil/core';
 import { reactOutputTarget } from '@stencil/react-output-target';
+import { vueOutputTarget } from '@stencil/vue-output-target';
+import { angularOutputTarget } from '@stencil/angular-output-target';
 import { webTypesOutputTarget } from '@stencil-community/web-types-output-target';
 import { postcss } from '@stencil-community/postcss';
 import tailwindcss from '@tailwindcss/postcss';
@@ -21,6 +23,16 @@ export const config: Config = {
       outDir: '../react-library/lib/components/stencil-generated/',
       hydrateModule: '@kit-data-manager/pid-component/hydrate',
       clientModule: '@kit-data-manager/react-pid-component',
+    }),
+    vueOutputTarget({
+      componentCorePackage: '@kit-data-manager/pid-component',
+      proxiesFile: '../vue-library/lib/components.ts',
+    }),
+    angularOutputTarget({
+      componentCorePackage: '@kit-data-manager/pid-component',
+      outputType: 'standalone',
+      directivesProxyFile: '../angular-library/lib/stencil-generated/components.ts',
+      directivesArrayFile: '../angular-library/lib/stencil-generated/index.ts',
     }),
     {
       type: 'dist-custom-elements',
