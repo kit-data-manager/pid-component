@@ -1,0 +1,67 @@
+{
+  "orcid-identifier": {
+    "uri": "https://orcid.org/0009-0005-2800-4833",
+    "path": "0009-0005-2800-4833"
+  },
+  "person": {
+    "name": {
+      "given-names": {
+        "value": "Maximilian"
+      },
+      "family-name": {
+        "value": "Inckmann"
+      }
+    },
+    "biography": {
+      "content": "Researcher at KIT"
+    },
+    "emails": {
+      "email": [
+        {
+          "email": "maximilian.inckmann@kit.edu"
+        }
+      ]
+    },
+    "keywords": {
+      "keyword": [
+        {
+          "content": "FAIR Digital Objects"
+        }
+      ]
+    },
+    "researcher-urls": {
+      "researcher-url": []
+    }
+  },
+  "activities-summary": {
+    "employments": {
+      "affiliation-group": [
+        {
+          "summaries": [
+            {
+              "employment-summary": {
+                "organization": {
+                  "name": "Karlsruhe Institute of Technology",
+                  "disambiguated-organization": {
+                    "disambiguated-organization-identifier": "https://ror.org/04t3en479",
+                    "disambiguation-source": "ROR"
+                  }
+                },
+                "start-date": {
+                  "year": {
+                    "value": "2022"
+                  },
+                  "month": {
+                    "value": "01"
+                  },
+                  "day": null
+                },
+                "end-date": null
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

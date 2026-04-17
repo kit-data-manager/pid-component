@@ -7,7 +7,6 @@
 import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 import { FoldableAction } from './utils/FoldableAction';
 import { FoldableItem } from './utils/FoldableItem';
-
 export { FoldableAction } from "./utils/FoldableAction";
 export { FoldableItem } from "./utils/FoldableItem";
 export namespace Components {
@@ -881,8 +880,8 @@ declare namespace LocalJSX {
         "width": string;
         "height": string;
         "darkMode": 'light' | 'dark' | 'system';
-        'renderers': string;
-        'fallbackToAll': boolean;
+      'renderers': string;
+      'fallbackToAll': boolean;
     }
     interface PidDataTableAttributes {
         "itemsPerPage": number;

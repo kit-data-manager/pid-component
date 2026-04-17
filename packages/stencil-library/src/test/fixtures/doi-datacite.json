@@ -1,0 +1,60 @@
+{
+  "data": {
+    "id": "10.5445/ir/1000185135",
+    "type": "dois",
+    "attributes": {
+      "doi": "10.5445/ir/1000185135",
+      "titles": [
+        {
+          "title": "The PID Component"
+        }
+      ],
+      "creators": [
+        {
+          "name": "Inckmann, Maximilian",
+          "givenName": "Maximilian",
+          "familyName": "Inckmann",
+          "nameIdentifiers": [
+            {
+              "nameIdentifier": "https://orcid.org/0009-0005-2800-4833",
+              "nameIdentifierScheme": "ORCID"
+            }
+          ]
+        }
+      ],
+      "publisher": {
+        "name": "Karlsruhe Institute of Technology"
+      },
+      "publicationYear": 2024,
+      "types": {
+        "resourceTypeGeneral": "Software",
+        "resourceType": "Software"
+      },
+      "descriptions": [
+        {
+          "description": "A web component for PIDs.",
+          "descriptionType": "Abstract"
+        }
+      ],
+      "url": "https://github.com/kit-data-manager/pid-component",
+      "subjects": [
+        {
+          "subject": "Computer Science"
+        }
+      ],
+      "dates": [
+        {
+          "date": "2024-06-15",
+          "dateType": "Issued"
+        }
+      ],
+      "rightsList": [
+        {
+          "rights": "Apache License 2.0",
+          "rightsUri": "https://spdx.org/licenses/Apache-2.0",
+          "rightsIdentifier": "Apache-2.0"
+        }
+      ]
+    }
+  }
+}

@@ -6,8 +6,8 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  NgZone,
   Output,
+  NgZone,
 } from '@angular/core';
 
 import { ProxyCmp } from './angular-component-lib/utils';
@@ -34,7 +34,6 @@ import {
   defineCustomElement as definePidPagination,
 } from '@kit-data-manager/pid-component/components/pid-pagination.js';
 import { defineCustomElement as definePidTooltip } from '@kit-data-manager/pid-component/components/pid-tooltip.js';
-
 @ProxyCmp({
   defineCustomElementFn: defineColorHighlight,
   inputs: ['text'],
@@ -48,7 +47,6 @@ import { defineCustomElement as definePidTooltip } from '@kit-data-manager/pid-c
 })
 export class ColorHighlight {
   protected el: HTMLColorHighlightElement;
-
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
@@ -73,7 +71,6 @@ export declare interface ColorHighlight extends Components.ColorHighlight {
 })
 export class CopyButton {
   protected el: HTMLCopyButtonElement;
-
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
@@ -99,7 +96,6 @@ export declare interface CopyButton extends Components.CopyButton {
 })
 export class JsonViewer {
   protected el: HTMLJsonViewerElement;
-
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
@@ -124,7 +120,6 @@ export declare interface JsonViewer extends Components.JsonViewer {
 })
 export class LocaleVisualization {
   protected el: HTMLLocaleVisualizationElement;
-
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
@@ -149,7 +144,6 @@ export declare interface LocaleVisualization extends Components.LocaleVisualizat
 })
 export class PidActions {
   protected el: HTMLPidActionsElement;
-
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
@@ -178,7 +172,6 @@ export class PidCollapsible {
   protected el: HTMLPidCollapsibleElement;
   @Output() collapsibleToggle = new EventEmitter<CustomEvent<boolean>>();
   @Output() contentHeightChange = new EventEmitter<CustomEvent<{ maxHeight: number }>>();
-
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
@@ -212,7 +205,6 @@ export declare interface PidCollapsible extends Components.PidCollapsible {
 })
 export class PidComponent {
   protected el: HTMLPidComponentElement;
-
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
@@ -240,7 +232,6 @@ export class PidDataTable {
   protected el: HTMLPidDataTableElement;
   @Output() pageChange = new EventEmitter<CustomEvent<number>>();
   @Output() itemsPerPageChange = new EventEmitter<CustomEvent<number>>();
-
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
@@ -276,7 +267,6 @@ export class PidPagination {
   protected el: HTMLPidPaginationElement;
   @Output() pageChange = new EventEmitter<CustomEvent<number>>();
   @Output() itemsPerPageChange = new EventEmitter<CustomEvent<number>>();
-
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
@@ -311,7 +301,6 @@ export declare interface PidPagination extends Components.PidPagination {
 export class PidTooltip {
   protected el: HTMLPidTooltipElement;
   @Output() tooltipExpansionChange = new EventEmitter<CustomEvent<{ expand: boolean; requiredHeight: number }>>();
-
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;

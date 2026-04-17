@@ -1,6 +1,6 @@
 {
   "name": "@kit-data-manager/pid-component",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "license": "Apache-2.0",
   "description": "The PID-Component is a web component that can be used to evaluate and display FAIR Digital Objects, PIDs, ORCiDs, and possibly other identifiers in a user-friendly way. It is easily extensible to support other identifier types.",
   "author": {
@@ -138,6 +138,7 @@
     "@storybook/web-components-vite": "^10.3.5",
     "@tailwindcss/postcss": "^4.2.2",
     "@types/eslint-config-prettier": "^6.11.3",
+    "@types/jest": "^29.5.14",
     "@types/node": "^25.6.0",
     "@typescript-eslint/eslint-plugin": "^8.58.2",
     "@typescript-eslint/parser": "^8.58.2",
@@ -149,6 +150,8 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-storybook": "^10.3.5",
     "globals": "^17.5.0",
+    "jest": "^29.7.0",
+    "jest-cli": "^29.7.0",
     "lit": "^3.3.2",
     "postcss": "^8.5.10",
     "prettier": "^3.8.3",

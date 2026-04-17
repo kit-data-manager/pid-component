@@ -730,7 +730,7 @@ export class PidComponent {
             >
               <span
                 slot="summary"
-                class={`inline-flex items-center overflow-x-auto font-mono text-sm font-medium select-all ${this.isExpanded ? 'flex-wrap overflow-visible wrap-break-word' : 'flex-nowrap whitespace-nowrap'}`}
+                class={`inline-flex items-center overflow-x-auto font-mono text-sm font-medium select-all mr-2 ${this.isExpanded ? 'flex-wrap overflow-visible wrap-break-word' : 'flex-nowrap whitespace-nowrap'}`}
                 aria-label={`Preview of ${this.value}`}
               >
                 {this.identifierObject?.renderPreview()}

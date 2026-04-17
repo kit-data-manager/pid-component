@@ -48,7 +48,23 @@ export const config: Config = {
     webTypesOutputTarget(),
   ],
   testing: {
-    browserHeadless: true,
+    browserHeadless: 'shell',
+    coverageDirectory: './coverage',
+    collectCoverageFrom: [
+      'src/**/*.{ts,tsx}',
+      '!src/**/*.stories.{ts,tsx}',
+      '!src/**/*.mdx',
+      '!src/auto-detect/types.ts',
+      '!src/test/**',
+    ],
+    coverageThreshold: {
+      global: {
+        branches: 55,
+        functions: 70,
+        lines: 68,
+        statements: 68,
+      },
+    },
   },
   plugins:[
     postcss({

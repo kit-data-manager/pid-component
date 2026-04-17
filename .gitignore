@@ -3,6 +3,7 @@ dist/
 www/
 loader/
 test-results/
+coverage/
 
 *~
 *.sw[mnpcod]
@@ -159,3 +160,4 @@ fabric.properties
 # End of https://www.toptal.com/developers/gitignore/api/macos,webstorm+all,storybookjs
 
 .nx
+!/packages/stencil-library/coverage/

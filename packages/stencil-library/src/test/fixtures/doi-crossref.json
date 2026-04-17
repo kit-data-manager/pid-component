@@ -1,0 +1,40 @@
+{
+  "status": "ok",
+  "message-type": "work",
+  "message": {
+    "DOI": "10.1109/escience65000.2025.00022",
+    "title": [
+      "FAIR Digital Objects in Practice"
+    ],
+    "author": [
+      {
+        "given": "Maximilian",
+        "family": "Inckmann",
+        "ORCID": "https://orcid.org/0009-0005-2800-4833"
+      },
+      {
+        "given": "Andreas",
+        "family": "Pfeil"
+      }
+    ],
+    "publisher": "IEEE",
+    "type": "journal-article",
+    "abstract": "<jats:p>This paper presents FDO capabilities.</jats:p>",
+    "URL": "https://doi.org/10.1109/escience65000.2025.00022",
+    "subject": [
+      "Computer Science"
+    ],
+    "published": {
+      "date-parts": [
+        [
+          2025,
+          1,
+          15
+        ]
+      ]
+    },
+    "container-title": [
+      "IEEE eScience"
+    ]
+  }
+}
