@@ -750,7 +750,7 @@ export const Locale: Story = {
  */
 export const RenderersMatchingDOI: Story = {
   args: {
-    value: '10.5281/zenodo.1234567',
+    value: '10.5445/IR/1000185135',
     renderers: '["DOIType"]',
   },
   parameters: {
@@ -761,7 +761,7 @@ export const RenderersMatchingDOI: Story = {
       },
       source: {
         code: `
-<pid-component value='10.5281/zenodo.1234567' renderers='["DOIType"]'></pid-component>
+<pid-component value='10.5445/IR/1000185135' renderers='["DOIType"]'></pid-component>
         `,
       },
     },
@@ -775,7 +775,7 @@ export const RenderersMatchingDOI: Story = {
  */
 export const RenderersPreselectionFallback: Story = {
   args: {
-    value: '10.5281/zenodo.1234567',
+    value: '10.5445/IR/1000185135',
     renderers: '["ORCIDType"]',
   },
   parameters: {
@@ -786,7 +786,7 @@ export const RenderersPreselectionFallback: Story = {
       },
       source: {
         code: `
-<pid-component value='10.5281/zenodo.1234567' renderers='["ORCIDType"]'></pid-component>
+<pid-component value='10.5445/IR/1000185135' renderers='["ORCIDType"]'></pid-component>
         `,
       },
     },
@@ -800,7 +800,7 @@ export const RenderersPreselectionFallback: Story = {
  */
 export const RenderersStrictRestriction: Story = {
   args: {
-    value: '10.5281/zenodo.1234567',
+    value: '10.5445/IR/1000185135',
     renderers: '["ORCIDType"]',
     fallbackToAll: false,
   },
@@ -812,7 +812,7 @@ export const RenderersStrictRestriction: Story = {
       },
       source: {
         code: `
-<pid-component value='10.5281/zenodo.1234567' renderers='["ORCIDType"]' fallback-to-all='false'></pid-component>
+<pid-component value='10.5445/IR/1000185135' renderers='["ORCIDType"]' fallback-to-all='false'></pid-component>
         `,
       },
     },
@@ -826,18 +826,18 @@ export const RenderersStrictRestriction: Story = {
  */
 export const RenderersOrderPriority: Story = {
   args: {
-    value: '10.5281/zenodo.1234567',
+    value: '10.5445/IR/1000185135',
     renderers: '["HandleType", "DOIType"]',
   },
   parameters: {
     docs: {
       description: {
         story:
-          'The ordered list puts HandleType before DOIType. Since a DOI like `10.5281/zenodo.1234567` also matches the Handle PID regex, the Handle renderer is used first because it appears earlier in the list.',
+          'The ordered list puts HandleType before DOIType. Since a DOI like `10.5445/IR/1000185135` also matches the Handle PID regex, the Handle renderer is used first because it appears earlier in the list.',
       },
       source: {
         code: `
-<pid-component value='10.5281/zenodo.1234567' renderers='["HandleType", "DOIType"]'></pid-component>
+<pid-component value='110.5445/IR/1000185135' renderers='["HandleType", "DOIType"]'></pid-component>
         `,
       },
     },
@@ -850,7 +850,7 @@ export const RenderersOrderPriority: Story = {
  */
 export const RenderersCorrectOrder: Story = {
   args: {
-    value: '10.5281/zenodo.1234567',
+    value: '10.5445/IR/1000185135',
     renderers: '["DOIType", "HandleType"]',
   },
   parameters: {
@@ -861,7 +861,7 @@ export const RenderersCorrectOrder: Story = {
       },
       source: {
         code: `
-<pid-component value='10.5281/zenodo.1234567' renderers='["DOIType", "HandleType"]'></pid-component>
+<pid-component value='10.5445/IR/1000185135' renderers='["DOIType", "HandleType"]'></pid-component>
         `,
       },
     },
