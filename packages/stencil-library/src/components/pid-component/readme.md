@@ -35,7 +35,6 @@
 ### Used by
 
  - [pid-data-table](../pid-data-table)
- - [pid-wrapper](../pid-wrapper)
 
 ### Depends on
 
@@ -54,7 +53,6 @@ graph TD;
   pid-component --> pid-pagination
   pid-component --> pid-actions
   pid-data-table --> pid-component
-  pid-wrapper --> pid-component
   style pid-component fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

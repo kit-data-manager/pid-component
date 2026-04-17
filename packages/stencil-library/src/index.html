@@ -3,6 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <title>PID-Component Demonstrator</title>
+  <script>
+    // Entry-point approach: set global config BEFORE loading the component bundle.
+    // The module's global initialization will pick this up automatically and scan
+    // the page for PIDs — no custom element needed.
+    window.pidComponentConfig = {
+      targetSelector: '#auto-detect-demo',
+      darkMode: 'system',
+    };
+  </script>
   <script type="module"
           src="./build/pid-component.esm.js"></script>
   <script nomodule src="./build/pid-component.js"></script>
@@ -57,15 +66,32 @@
                                                        target="_blank" rel="noopener noreferrer">https://github.com/kit-data-manager/pid-component</a>.
 </p>
 
-<h2>Example</h2>
+<h2>Explicit single-value example</h2>
 <pid-component value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6" dark-mode="system"></pid-component>
 
-<h2>Automatic detection example</h2>
-<pid-wrapper dark-mode="system">
+<h2>Automatic detection (entry-point approach — preferred)</h2>
+<p>
+  This page configured <code>window.pidComponentConfig</code> before loading the script, so the
+  module automatically detected and replaced all PIDs in the paragraph below without any additional markup.
+</p>
+<div id="auto-detect-demo">
   <p>
-    This page references several identifiers: 21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6, 10.5880/fidgeo.2020.009, and
-    0000-0002-1825-0097.
+    This paragraph references several identifiers: 21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6,
+    10.5880/fidgeo.2020.009, and 0000-0002-1825-0097.
   </p>
+</div>
+
+<h2>Automatic detection (pid-wrapper fallback)</h2>
+<p>
+  The <code>&lt;pid-wrapper&gt;</code> element is an alternative for environments where a global
+  config is not practical (e.g., multiple independent widgets on the same page with different settings).
+</p>
+<pid-wrapper dark-mode="system" target-selector="#wrapper-demo">
+  <div id="wrapper-demo">
+    <p>
+      This paragraph also references 10.5880/fidgeo.2020.009 and 0000-0002-1825-0097.
+    </p>
+  </div>
 </pid-wrapper>
 
 </body>

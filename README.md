@@ -49,19 +49,46 @@ Then, you can use this component like this:
 <pid-component value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"></pid-component>
 ```
 
-To automatically detect and render multiple identifiers in existing page text, add a `pid-wrapper` **once** per page.
-All configuration props are forwarded to every auto-injected `pid-component`, so you only need to configure one place:
+### Automatic PID detection (preferred: entry-point approach)
+
+Set `window.pidComponentConfig` **before** loading the script and the module will scan the page
+automatically — no extra markup required:
 
 ```html
-<!-- Detects PIDs in the given target area; all injected components inherit dark-mode and settings -->
-<pid-wrapper dark-mode="system" level-of-subcomponents="2" settings='[...]'>
+<script>
+  window.pidComponentConfig = {
+    targetSelector: 'main',   // CSS selector of the area to scan (defaults to 'body')
+    darkMode: 'system',       // forwarded to every auto-injected pid-component
+  };
+</script>
+<script type="module" src="pid-component.esm.js"></script>
+```
+
+If you use the npm package, you can alternatively call the exported helper after import:
+
+```typescript
+import { PidAutoDetector } from '@kit-data-manager/pid-component';
+// or use window.pidComponentConfig before the import — both work
+const detector = new PidAutoDetector({ targetSelector: 'main', darkMode: 'system' });
+await detector.start();
+```
+
+`PidAutoDetectConfig` accepts the same properties as `pid-component` (minus `value`, which is set per
+detected identifier) plus `targetSelector` (CSS selector, defaults to `body`).
+
+### Automatic PID detection (fallback: `pid-wrapper` element)
+
+For environments where a global config is not practical — e.g., multiple independent widgets on the
+same page with different settings — you can use the `<pid-wrapper>` custom element instead:
+
+```html
+<pid-wrapper dark-mode="system" level-of-subcomponents="2">
   <p>Identifiers: 21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6, 10.5880/fidgeo.2020.009, 0000-0002-1825-0097</p>
 </pid-wrapper>
 ```
 
-`pid-wrapper` supports all the same props as `pid-component` (except `value`, which is set per detected identifier),
-plus `target-selector` (CSS selector, defaults to `body`) to restrict the scan area.
-Original text remains visible until the component has fully loaded, so there is no visual flash.
+`pid-wrapper` supports all the same props as `pid-component` (except `value`) plus `target-selector`.
+Original text remains visible until each component loads, so there is no visual flash.
 
 <div>
 <aside>
@@ -73,7 +100,7 @@ Original text remains visible until the component has fully loaded, so there is 
 
 You can try this web component in the [demo](https://kit-data-manager.github.io/pid-component).
 
-Use `pid-component` for explicit single values and `pid-wrapper` for automatic in-page detection.
+Use `pid-component` for explicit single values; use the entry-point config or `pid-wrapper` for automatic in-page detection.
 Docs for `pid-wrapper` are at [packages/stencil-library/src/components/pid-wrapper/readme.md](packages/stencil-library/src/components/pid-wrapper/readme.md).
 
 There are detailed docs for the `pid-component` component

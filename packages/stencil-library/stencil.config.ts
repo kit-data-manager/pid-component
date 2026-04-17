@@ -7,6 +7,7 @@ import cssnanoPlugin from 'cssnano';
 
 export const config: Config = {
   namespace: 'pid-component',
+  globalScript: 'src/global.ts',
   globalStyle: 'src/tailwind.css',
   buildEs5: true,
   outputTargets: [

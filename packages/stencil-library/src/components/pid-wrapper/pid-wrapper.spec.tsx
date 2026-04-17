@@ -19,7 +19,7 @@ describe('pid-wrapper', () => {
     await new Promise(resolve => setTimeout(resolve, 0));
     await page.waitForChanges();
 
-    const enhancedNode = page.root?.querySelector('[data-pid-wrapper-enhanced]');
+    const enhancedNode = page.root?.querySelector('[data-pid-enhanced]');
     const pidComponent = enhancedNode?.querySelector('pid-component');
 
     expect(enhancedNode).toBeTruthy();
@@ -38,7 +38,7 @@ describe('pid-wrapper', () => {
     await new Promise(resolve => setTimeout(resolve, 0));
     await page.waitForChanges();
 
-    const enhancedNode = page.root?.querySelector('[data-pid-wrapper-enhanced]');
+    const enhancedNode = page.root?.querySelector('[data-pid-enhanced]');
     const original = enhancedNode?.querySelector('span');
     const pidComponent = enhancedNode?.querySelector('pid-component') as HTMLElement;
 
@@ -71,7 +71,7 @@ describe('pid-wrapper', () => {
     await new Promise(resolve => setTimeout(resolve, 0));
     await page.waitForChanges();
 
-    const pidComponent = page.root?.querySelector('[data-pid-wrapper-enhanced] pid-component');
+    const pidComponent = page.root?.querySelector('[data-pid-enhanced] pid-component');
 
     expect(pidComponent?.getAttribute('dark-mode')).toBe('dark');
     expect(pidComponent?.getAttribute('settings')).toBe('[{"type":"DOIType","values":[]}]');

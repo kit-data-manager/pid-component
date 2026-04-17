@@ -23,27 +23,6 @@
 | `width`                | `width`                  | Initial width applied to each detected pid-component (e.g. '500px').                                   | `string`                        | `undefined`           |
 
 
-## Dependencies
-
-### Depends on
-
-- [pid-component](../pid-component)
-
-### Graph
-```mermaid
-graph TD;
-  pid-wrapper --> pid-component
-  pid-component --> copy-button
-  pid-component --> pid-collapsible
-  pid-component --> pid-data-table
-  pid-component --> pid-pagination
-  pid-component --> pid-actions
-  pid-data-table --> pid-tooltip
-  pid-data-table --> pid-component
-  pid-data-table --> copy-button
-  style pid-wrapper fill:#f9f,stroke:#333,stroke-width:4px
-```
-
 ----------------------------------------------
 
 *Built with [StencilJS](https://stenciljs.com/)*
