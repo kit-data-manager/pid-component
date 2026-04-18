@@ -6,16 +6,38 @@
     "packages/*"
   ],
   "devDependencies": {
+    "@chromatic-com/storybook": "^5.1.2",
+    "@storybook/addon-a11y": "^10.3.5",
+    "@storybook/addon-docs": "^10.3.5",
+    "@storybook/addon-links": "^10.3.5",
+    "@storybook/addon-vitest": "^10.3.5",
+    "@storybook/web-components-vite": "^10.3.5",
     "@types/node": "^25.6.0",
+    "ajv": "^8.18.0",
+    "chromatic": "^16.3.0",
+    "concurrently": "^9.2.1",
+    "eslint-plugin-storybook": "^10.3.5",
     "lerna": "^9.0.7",
-    "typescript": "^6.0.2"
+    "lit": "^3.3.2",
+    "storybook": "^10.3.5",
+    "typescript": "^6.0.2",
+    "vitest": "^4.1.4",
+    "wait-on": "^7.2.0"
   },
   "dependencies": {
     "vite": "8.0.8"
   },
   "scripts": {
     "build": "lerna run build",
-    "test": "lerna run test"
+    "test": "lerna run test",
+    "storybook": "storybook dev -p 6006 --no-open",
+    "build-storybook": "storybook build -o storybook-static && npm run build-storybook:children && npm run build-storybook:copy",
+    "build-storybook:children": "npm run build-storybook --workspace=packages/react-library && npm run build-storybook --workspace=packages/vue-library && npm run build-storybook --workspace=packages/angular-library && npm run build-storybook --workspace=packages/nextjs-app",
+    "build-storybook:copy": "cp -r packages/react-library/storybook-static storybook-static/react-vite && cp -r packages/vue-library/storybook-static storybook-static/vue && cp -r packages/angular-library/storybook-static storybook-static/angular && cp -r packages/nextjs-app/storybook-static storybook-static/react-nextjs",
+    "test-storybook": "vitest --project=storybook",
+    "storybook:children": "concurrently \"npm run storybook --workspace=packages/react-library\" \"npm run storybook --workspace=packages/vue-library\" \"npm run storybook --workspace=packages/angular-library\" \"npm run storybook --workspace=packages/nextjs-app\"",
+    "storybook:composed": "wait-on http://localhost:6007 http://localhost:6008 http://localhost:6009 http://localhost:6010 && storybook dev -p 6006",
+    "storybook:all": "concurrently \"npm run storybook:children\" \"npm run storybook:composed\""
   },
   "description": "Monorepo for the PID Component and related packages",
   "author": {
