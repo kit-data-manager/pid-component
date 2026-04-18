@@ -58,11 +58,17 @@
   "keywords": [
     "vue",
     "pid",
+    "datatyperegistry",
     "handle.net",
     "orcid",
     "identifier",
     "kit-data-manager",
+    "typescript",
+    "storybook",
+    "tailwindcss",
     "fair",
+    "fairdata",
+    "fairdo",
     "fairdigitalobject"
   ]
 }
