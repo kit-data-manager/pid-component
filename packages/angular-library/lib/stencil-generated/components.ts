@@ -1,43 +1,24 @@
 /* tslint:disable */
 /* auto-generated angular directive proxies */
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  EventEmitter,
-  NgZone,
-  Output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Output, NgZone } from '@angular/core';
 
 import { ProxyCmp } from './angular-component-lib/utils';
 
 import type { Components } from '@kit-data-manager/pid-component/components';
 
-import {
-  defineCustomElement as defineColorHighlight,
-} from '@kit-data-manager/pid-component/components/color-highlight.js';
+import { defineCustomElement as defineColorHighlight } from '@kit-data-manager/pid-component/components/color-highlight.js';
 import { defineCustomElement as defineCopyButton } from '@kit-data-manager/pid-component/components/copy-button.js';
 import { defineCustomElement as defineJsonViewer } from '@kit-data-manager/pid-component/components/json-viewer.js';
-import {
-  defineCustomElement as defineLocaleVisualization,
-} from '@kit-data-manager/pid-component/components/locale-visualization.js';
+import { defineCustomElement as defineLocaleVisualization } from '@kit-data-manager/pid-component/components/locale-visualization.js';
 import { defineCustomElement as definePidActions } from '@kit-data-manager/pid-component/components/pid-actions.js';
-import {
-  defineCustomElement as definePidCollapsible,
-} from '@kit-data-manager/pid-component/components/pid-collapsible.js';
+import { defineCustomElement as definePidCollapsible } from '@kit-data-manager/pid-component/components/pid-collapsible.js';
 import { defineCustomElement as definePidComponent } from '@kit-data-manager/pid-component/components/pid-component.js';
-import {
-  defineCustomElement as definePidDataTable,
-} from '@kit-data-manager/pid-component/components/pid-data-table.js';
-import {
-  defineCustomElement as definePidPagination,
-} from '@kit-data-manager/pid-component/components/pid-pagination.js';
+import { defineCustomElement as definePidDataTable } from '@kit-data-manager/pid-component/components/pid-data-table.js';
+import { defineCustomElement as definePidPagination } from '@kit-data-manager/pid-component/components/pid-pagination.js';
 import { defineCustomElement as definePidTooltip } from '@kit-data-manager/pid-component/components/pid-tooltip.js';
-
 @ProxyCmp({
   defineCustomElementFn: defineColorHighlight,
-  inputs: ['text'],
+  inputs: ['text']
 })
 @Component({
   selector: 'color-highlight',
@@ -55,13 +36,12 @@ export class ColorHighlight {
 }
 
 
-export declare interface ColorHighlight extends Components.ColorHighlight {
-}
+export declare interface ColorHighlight extends Components.ColorHighlight {}
 
 
 @ProxyCmp({
   defineCustomElementFn: defineCopyButton,
-  inputs: ['label', 'value'],
+  inputs: ['label', 'value']
 })
 @Component({
   selector: 'copy-button',
@@ -79,14 +59,13 @@ export class CopyButton {
 }
 
 
-export declare interface CopyButton extends Components.CopyButton {
-}
+export declare interface CopyButton extends Components.CopyButton {}
 
 
 @ProxyCmp({
   defineCustomElementFn: defineJsonViewer,
   inputs: ['data', 'expandAll', 'maxHeight', 'showLineNumbers', 'theme', 'viewMode'],
-  methods: ['expandAllNodes', 'collapseAllNodes'],
+  methods: ['expandAllNodes', 'collapseAllNodes']
 })
 @Component({
   selector: 'json-viewer',
@@ -104,13 +83,12 @@ export class JsonViewer {
 }
 
 
-export declare interface JsonViewer extends Components.JsonViewer {
-}
+export declare interface JsonViewer extends Components.JsonViewer {}
 
 
 @ProxyCmp({
   defineCustomElementFn: defineLocaleVisualization,
-  inputs: ['locale', 'showFlag'],
+  inputs: ['locale', 'showFlag']
 })
 @Component({
   selector: 'locale-visualization',
@@ -128,13 +106,12 @@ export class LocaleVisualization {
 }
 
 
-export declare interface LocaleVisualization extends Components.LocaleVisualization {
-}
+export declare interface LocaleVisualization extends Components.LocaleVisualization {}
 
 
 @ProxyCmp({
   defineCustomElementFn: definePidActions,
-  inputs: ['actions', 'actionsId', 'darkMode'],
+  inputs: ['actions', 'actionsId', 'darkMode']
 })
 @Component({
   selector: 'pid-actions',
@@ -152,14 +129,13 @@ export class PidActions {
 }
 
 
-export declare interface PidActions extends Components.PidActions {
-}
+export declare interface PidActions extends Components.PidActions {}
 
 
 @ProxyCmp({
   defineCustomElementFn: definePidCollapsible,
   inputs: ['darkMode', 'emphasize', 'initialHeight', 'initialWidth', 'lineHeight', 'open', 'showFooter'],
-  methods: ['recalculateContentDimensions'],
+  methods: ['recalculateContentDimensions']
 })
 @Component({
   selector: 'pid-collapsible',
@@ -187,7 +163,7 @@ export declare interface PidCollapsible extends Components.PidCollapsible {
   collapsibleToggle: EventEmitter<CustomEvent<boolean>>;
   /**
    * Event emitted when content dimensions need to be recalculated
-   Useful for pagination to ensure proper height
+Useful for pagination to ensure proper height
    */
   contentHeightChange: EventEmitter<CustomEvent<{ maxHeight: number }>>;
 }
@@ -195,7 +171,7 @@ export declare interface PidCollapsible extends Components.PidCollapsible {
 
 @ProxyCmp({
   defineCustomElementFn: definePidComponent,
-  inputs: ['amountOfItems', 'currentLevelOfSubcomponents', 'darkMode', 'defaultTTL', 'emphasizeComponent', 'fallbackToAll', 'height', 'hideSubcomponents', 'levelOfSubcomponents', 'openByDefault', 'renderers', 'settings', 'showTopLevelCopy', 'value', 'width'],
+  inputs: ['amountOfItems', 'currentLevelOfSubcomponents', 'darkMode', 'defaultTTL', 'emphasizeComponent', 'fallbackToAll', 'height', 'hideSubcomponents', 'levelOfSubcomponents', 'openByDefault', 'renderers', 'settings', 'showTopLevelCopy', 'value', 'width']
 })
 @Component({
   selector: 'pid-component',
@@ -213,13 +189,12 @@ export class PidComponent {
 }
 
 
-export declare interface PidComponent extends Components.PidComponent {
-}
+export declare interface PidComponent extends Components.PidComponent {}
 
 
 @ProxyCmp({
   defineCustomElementFn: definePidDataTable,
-  inputs: ['currentLevelOfSubcomponents', 'currentPage', 'darkMode', 'hideSubcomponents', 'items', 'itemsPerPage', 'levelOfSubcomponents', 'loadSubcomponents', 'pageSizes', 'settings'],
+  inputs: ['currentLevelOfSubcomponents', 'currentPage', 'darkMode', 'hideSubcomponents', 'items', 'itemsPerPage', 'levelOfSubcomponents', 'loadSubcomponents', 'pageSizes', 'settings']
 })
 @Component({
   selector: 'pid-data-table',
@@ -254,7 +229,7 @@ export declare interface PidDataTable extends Components.PidDataTable {
 
 @ProxyCmp({
   defineCustomElementFn: definePidPagination,
-  inputs: ['currentPage', 'darkMode', 'itemsPerPage', 'pageSizes', 'showItemsPerPageControl', 'totalItems'],
+  inputs: ['currentPage', 'darkMode', 'itemsPerPage', 'pageSizes', 'showItemsPerPageControl', 'totalItems']
 })
 @Component({
   selector: 'pid-pagination',
@@ -289,7 +264,7 @@ export declare interface PidPagination extends Components.PidPagination {
 
 @ProxyCmp({
   defineCustomElementFn: definePidTooltip,
-  inputs: ['fitContent', 'maxHeight', 'maxWidth', 'position', 'text'],
+  inputs: ['fitContent', 'maxHeight', 'maxWidth', 'position', 'text']
 })
 @Component({
   selector: 'pid-tooltip',

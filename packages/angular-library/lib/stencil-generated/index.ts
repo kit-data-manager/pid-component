@@ -1,3 +1,4 @@
+
 import * as d from './components';
 
 export const DIRECTIVES = [
@@ -10,5 +11,5 @@ export const DIRECTIVES = [
   d.PidComponent,
   d.PidDataTable,
   d.PidPagination,
-  d.PidTooltip,
+  d.PidTooltip
 ];
