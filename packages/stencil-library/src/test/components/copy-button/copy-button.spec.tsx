@@ -1,10 +1,35 @@
-import { render, h } from '@stencil/vitest';
-import { describe, it, expect, vi, afterEach } from 'vitest';
-import { checkA11y } from '../../axe-helper';
+import { render } from '@stencil/vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+
+/**
+ * Helper: mock navigator.clipboard.writeText and return the mock function.
+ */
+function mockClipboard() {
+  const writeTextMock = vi.fn().mockResolvedValue(undefined);
+  Object.defineProperty(navigator, 'clipboard', {
+    value: { writeText: writeTextMock },
+    writable: true,
+    configurable: true,
+  });
+  return writeTextMock;
+}
+
+/**
+ * Helper: click the <button> inside the component and wait for re-render.
+ */
+async function clickCopyButton(root: HTMLElement, waitForChanges: () => Promise<void>) {
+  const button = root.querySelector('button');
+  const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
+  button.dispatchEvent(clickEvent);
+  // Give the async clipboard handler time to resolve
+  await new Promise(r => setTimeout(r, 0));
+  await waitForChanges();
+}
 
 describe('copy-button', () => {
   afterEach(() => {
     vi.useRealTimers();
+    vi.restoreAllMocks();
   });
 
   it('renders with value prop', async () => {
@@ -55,26 +80,13 @@ describe('copy-button', () => {
   });
 
   it('shows success state after copyValue is called', async () => {
-    // Mock navigator.clipboard
-    const writeTextMock = vi.fn().mockResolvedValue(undefined);
-    Object.defineProperty(navigator, 'clipboard', {
-      value: { writeText: writeTextMock },
-      writable: true,
-      configurable: true,
-    });
+    const writeTextMock = mockClipboard();
 
     const { root, waitForChanges } = await render(<copy-button value="copy-me"></copy-button>);
 
-    // Simulate click with a mock MouseEvent
-    const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
-    vi.spyOn(clickEvent, 'stopPropagation');
-    vi.spyOn(clickEvent, 'preventDefault');
-
-    await root.copyValue(clickEvent);
-    await waitForChanges();
+    await clickCopyButton(root, waitForChanges);
 
     expect(writeTextMock).toHaveBeenCalledWith('copy-me');
-    expect(root.copied).toBe(true);
 
     // Button text should change to success state
     const updatedButton = root.querySelector('button');
@@ -82,30 +94,18 @@ describe('copy-button', () => {
   });
 
   it('aria-label changes to copied state after successful copy', async () => {
-    const writeTextMock = vi.fn().mockResolvedValue(undefined);
-    Object.defineProperty(navigator, 'clipboard', {
-      value: { writeText: writeTextMock },
-      writable: true,
-      configurable: true,
-    });
+    mockClipboard();
 
     const { root, waitForChanges } = await render(<copy-button value="test" label="DOI"></copy-button>);
 
-    const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
-    await root.copyValue(clickEvent);
-    await waitForChanges();
+    await clickCopyButton(root, waitForChanges);
 
     const button = root.querySelector('button');
     expect(button.getAttribute('aria-label')).toBe('DOI copied to clipboard');
   });
 
   it('renders sr-only live region when copied is true', async () => {
-    const writeTextMock = vi.fn().mockResolvedValue(undefined);
-    Object.defineProperty(navigator, 'clipboard', {
-      value: { writeText: writeTextMock },
-      writable: true,
-      configurable: true,
-    });
+    mockClipboard();
 
     const { root, waitForChanges } = await render(<copy-button value="test"></copy-button>);
 
@@ -113,9 +113,7 @@ describe('copy-button', () => {
     let srOnly = root.querySelector('.sr-only');
     expect(srOnly).toBeNull();
 
-    const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
-    await root.copyValue(clickEvent);
-    await waitForChanges();
+    await clickCopyButton(root, waitForChanges);
 
     srOnly = root.querySelector('.sr-only');
     expect(srOnly).toBeTruthy();
@@ -135,18 +133,11 @@ describe('copy-button', () => {
   });
 
   it('button has green background CSS class after successful copy', async () => {
-    const writeTextMock = vi.fn().mockResolvedValue(undefined);
-    Object.defineProperty(navigator, 'clipboard', {
-      value: { writeText: writeTextMock },
-      writable: true,
-      configurable: true,
-    });
+    mockClipboard();
 
     const { root, waitForChanges } = await render(<copy-button value="test"></copy-button>);
 
-    const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
-    await root.copyValue(clickEvent);
-    await waitForChanges();
+    await clickCopyButton(root, waitForChanges);
 
     const button = root.querySelector('button');
     expect(button.className).toContain('bg-green-200');
@@ -158,51 +149,80 @@ describe('copy-button', () => {
   });
 
   it('copyValue stops event propagation', async () => {
-    const writeTextMock = vi.fn().mockResolvedValue(undefined);
-    Object.defineProperty(navigator, 'clipboard', {
-      value: { writeText: writeTextMock },
-      writable: true,
-      configurable: true,
-    });
+    mockClipboard();
 
-    const { root } = await render(<copy-button value="test"></copy-button>);
+    const { root, waitForChanges } = await render(<copy-button value="test"></copy-button>);
 
-    const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
-    const stopSpy = vi.spyOn(clickEvent, 'stopPropagation');
-    const preventSpy = vi.spyOn(clickEvent, 'preventDefault');
+    // Attach a listener on the host to verify the click does NOT bubble up
+    const parentClickSpy = vi.fn();
+    root.addEventListener('click', parentClickSpy);
 
-    await root.copyValue(clickEvent);
+    await clickCopyButton(root, waitForChanges);
 
-    expect(stopSpy).toHaveBeenCalled();
-    expect(preventSpy).toHaveBeenCalled();
+    // The component calls stopPropagation, so the click should not reach the host
+    expect(parentClickSpy).not.toHaveBeenCalled();
   });
 
   it('showSuccess sets copied to true then resets', async () => {
-    // Create component BEFORE enabling fake timers
-    const { root } = await render(<copy-button value="test"></copy-button>);
+    mockClipboard();
 
-    vi.useFakeTimers();
+    // Render BEFORE enabling fake timers (render uses real async internally)
+    const { root, waitForChanges } = await render(<copy-button value="test"></copy-button>);
 
-    // Call showSuccess directly to avoid clipboard API issues with fake timers
-    root.showSuccess();
-    expect(root.copied).toBe(true);
+    // Click to trigger copy, wait for the async clipboard handler
+    await clickCopyButton(root, waitForChanges);
 
-    // Fast-forward 1.5 seconds
-    vi.advanceTimersByTime(1500);
-    expect(root.copied).toBe(false);
+    // After clicking, copied state should be true
+    expect(root.querySelector('button').textContent).toContain('Copied!');
 
-    vi.useRealTimers();
-  });
+    // Wait for the 1.5s reset timeout (real timer in the component)
+    await new Promise(r => setTimeout(r, 1600));
+    await waitForChanges();
+
+    expect(root.querySelector('button').textContent).toBe('Copy');
+  }, 10000);
 });
 
 describe('copy-button accessibility', () => {
   it('has no a11y violations', async () => {
+    const { checkA11y } = await import('../../axe-helper');
     const { root } = await render(<copy-button value="test-value"></copy-button>);
     await checkA11y(root.outerHTML);
   });
 });
 
 describe('copy-button additional coverage', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
+  it('success state shows check icon after copy', async () => {
+    mockClipboard();
+
+    const { root, waitForChanges } = await render(<copy-button value="test"></copy-button>);
+
+    await clickCopyButton(root, waitForChanges);
+
+    const button = root.querySelector('button');
+    // The check mark is included in the button text "✓ Copied!"
+    expect(button.textContent).toContain('✓');
+    expect(button.textContent).toContain('Copied!');
+  });
+
+  it('component has sr-only label for screen readers after copy', async () => {
+    mockClipboard();
+
+    const { root, waitForChanges } = await render(<copy-button value="test"></copy-button>);
+
+    await clickCopyButton(root, waitForChanges);
+
+    const srOnly = root.querySelector('.sr-only');
+    expect(srOnly).toBeTruthy();
+    expect(srOnly.getAttribute('aria-live')).toBe('assertive');
+    expect(srOnly.textContent).toContain('Content copied to clipboard');
+  });
+
   it('copyValue uses execCommand fallback when clipboard API is unavailable', async () => {
     // Remove clipboard API
     Object.defineProperty(navigator, 'clipboard', {
@@ -214,57 +234,36 @@ describe('copy-button additional coverage', () => {
     const execCommandMock = vi.fn().mockReturnValue(true);
     document.execCommand = execCommandMock;
 
-    const { root } = await render(<copy-button value="fallback-value"></copy-button>);
+    // Stub textarea methods that mock-doc does not implement
+    const origCreateElement = document.createElement.bind(document);
+    document.createElement = ((tag: string) => {
+      const el = origCreateElement(tag);
+      if (tag === 'textarea') {
+        el.select = vi.fn();
+        el.setSelectionRange = vi.fn();
+        el.focus = el.focus || vi.fn();
+      }
+      return el;
+    }) as typeof document.createElement;
 
-    const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
-    vi.spyOn(clickEvent, 'stopPropagation');
-    vi.spyOn(clickEvent, 'preventDefault');
+    // Render BEFORE enabling fake timers
+    const { root, waitForChanges } = await render(<copy-button value="fallback-value"></copy-button>);
 
-    await root.copyValue(clickEvent);
-    // The fallback path creates a textarea and uses setTimeout(200ms),
-    // so we verify the event propagation was stopped
-    expect(clickEvent.stopPropagation).toHaveBeenCalled();
-    expect(clickEvent.preventDefault).toHaveBeenCalled();
-  });
+    vi.useFakeTimers();
 
-  it('success state shows check icon after copy', async () => {
-    const writeTextMock = vi.fn().mockResolvedValue(undefined);
-    Object.defineProperty(navigator, 'clipboard', {
-      value: { writeText: writeTextMock },
-      writable: true,
-      configurable: true,
-    });
-
-    const { root, waitForChanges } = await render(<copy-button value="test"></copy-button>);
-
-    const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
-    await root.copyValue(clickEvent);
-    await waitForChanges();
-
-    expect(root.copied).toBe(true);
     const button = root.querySelector('button');
-    // The check mark is included in the button text "✓ Copied!"
-    expect(button.textContent).toContain('✓');
-    expect(button.textContent).toContain('Copied!');
-  });
-
-  it('component has sr-only label for screen readers after copy', async () => {
-    const writeTextMock = vi.fn().mockResolvedValue(undefined);
-    Object.defineProperty(navigator, 'clipboard', {
-      value: { writeText: writeTextMock },
-      writable: true,
-      configurable: true,
-    });
-
-    const { root, waitForChanges } = await render(<copy-button value="test"></copy-button>);
-
     const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
-    await root.copyValue(clickEvent);
+    button.dispatchEvent(clickEvent);
+
+    // The fallback uses setTimeout(200ms) before calling execCommand
+    vi.advanceTimersByTime(200);
+
+    vi.useRealTimers();
     await waitForChanges();
 
-    const srOnly = root.querySelector('.sr-only');
-    expect(srOnly).toBeTruthy();
-    expect(srOnly.getAttribute('aria-live')).toBe('assertive');
-    expect(srOnly.textContent).toContain('Content copied to clipboard');
+    expect(execCommandMock).toHaveBeenCalledWith('copy');
+
+    // Restore original createElement
+    document.createElement = origCreateElement;
   });
 });

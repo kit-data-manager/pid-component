@@ -1,27 +1,46 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { Database } from '../../utils/IndexedDBUtil';
+import { Parser } from '../../utils/Parser';
 
 // ---------------------------------------------------------------------------
-// Mocks — must be declared before imports that trigger module evaluation
+// Mocks — vi.hoisted() ensures these are available when vi.mock factories
+// run (which are hoisted above all other code including const declarations).
 // ---------------------------------------------------------------------------
 
-const mockDb = {
-  get: vi.fn(),
-  put: vi.fn(),
-  add: vi.fn().mockResolvedValue(undefined),
-  delete: vi.fn().mockResolvedValue(undefined),
-  clear: vi.fn().mockResolvedValue(undefined),
-  getAll: vi.fn(),
-  transaction: vi.fn().mockReturnValue({
-    store: {
-      index: vi.fn().mockReturnValue({
-        openCursor: vi.fn().mockResolvedValue(null),
-      }),
-      add: vi.fn().mockResolvedValue(undefined),
-      delete: vi.fn().mockResolvedValue(undefined),
-    },
-    done: Promise.resolve(),
-  }),
-};
+const { mockDb, mockRendererConstructor } = vi.hoisted(() => {
+  const mockDb = {
+    get: vi.fn(),
+    put: vi.fn(),
+    add: vi.fn().mockResolvedValue(undefined),
+    delete: vi.fn().mockResolvedValue(undefined),
+    clear: vi.fn().mockResolvedValue(undefined),
+    getAll: vi.fn(),
+    transaction: vi.fn().mockReturnValue({
+      store: {
+        index: vi.fn().mockReturnValue({
+          openCursor: vi.fn().mockResolvedValue(null),
+        }),
+        add: vi.fn().mockResolvedValue(undefined),
+        delete: vi.fn().mockResolvedValue(undefined),
+      },
+      done: Promise.resolve(),
+    }),
+  };
+
+  const mockRendererConstructor = vi.fn().mockImplementation(function(value: string, settings?: unknown) {
+    return {
+      value,
+      settings,
+      init: vi.fn().mockResolvedValue(undefined),
+      getSettingsKey: vi.fn().mockReturnValue('DOIType'),
+      isResolvable: vi.fn().mockReturnValue(true),
+      items: [],
+      data: { some: 'data' },
+    };
+  });
+
+  return { mockDb, mockRendererConstructor };
+});
 
 vi.mock('@tempfix/idb', () => ({
   openDB: vi.fn().mockResolvedValue(mockDb),
@@ -31,17 +50,6 @@ vi.mock('../../utils/Parser', () => ({
   Parser: {
     getBestFit: vi.fn(),
   },
-}));
-
-// Mock the renderers array from utils
-const mockRendererConstructor = vi.fn().mockImplementation((value: string, settings?: unknown) => ({
-  value,
-  settings,
-  init: vi.fn().mockResolvedValue(undefined),
-  getSettingsKey: vi.fn().mockReturnValue('DOIType'),
-  isResolvable: vi.fn().mockReturnValue(true),
-  items: [],
-  data: { some: 'data' },
 }));
 
 vi.mock('../../utils/utils', () => ({
@@ -55,9 +63,6 @@ vi.mock('../../utils/utils', () => ({
 // ---------------------------------------------------------------------------
 // Imports (after mocks)
 // ---------------------------------------------------------------------------
-
-import { Database } from '../../utils/IndexedDBUtil';
-import { Parser } from '../../utils/Parser';
 
 // ---------------------------------------------------------------------------
 // Tests

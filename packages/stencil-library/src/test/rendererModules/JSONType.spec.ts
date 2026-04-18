@@ -1,5 +1,9 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { JSONType } from '../../rendererModules/JSONType';
+
+// Mock the json-viewer Stencil component to prevent decorator evaluation
+// (Stencil's @Prop/@State decorators are not available in the spec environment)
+vi.mock('../../components/json-viewer/json-viewer', () => ({}));
 
 describe('JSONType', () => {
   describe('hasCorrectFormatQuick()', () => {

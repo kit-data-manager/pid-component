@@ -1,10 +1,15 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { PIDDataType } from '../../../rendererModules/Handle/PIDDataType';
+import { PID } from '../../../rendererModules/Handle/PID';
 
-// Shared mock instances — must be declared BEFORE vi.mock so the factory can reference them
-const mockTypeMap = new Map();
-const mockUnresolvables = new Set();
-const mockHandleMap = new Map();
-const mockCachedFetch = vi.fn();
+// vi.hoisted() ensures these are available when vi.mock factories run
+// (which are hoisted above all other code including const declarations).
+const { mockTypeMap, mockUnresolvables, mockHandleMap, mockCachedFetch } = vi.hoisted(() => ({
+  mockTypeMap: new Map(),
+  mockUnresolvables: new Set(),
+  mockHandleMap: new Map(),
+  mockCachedFetch: vi.fn(),
+}));
 
 vi.mock('../../../utils/utils', () => ({
   handleMap: mockHandleMap,
@@ -14,9 +19,6 @@ vi.mock('../../../utils/utils', () => ({
 vi.mock('../../../utils/DataCache', () => ({
   cachedFetch: mockCachedFetch,
 }));
-
-import { PIDDataType } from '../../../rendererModules/Handle/PIDDataType';
-import { PID } from '../../../rendererModules/Handle/PID';
 
 describe('PIDDataType', () => {
   describe('constructor and getters', () => {

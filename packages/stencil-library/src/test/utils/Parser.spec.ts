@@ -1,4 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { Parser } from '../../utils/Parser';
+import { renderers } from '../../utils/utils';
 
 // ---------------------------------------------------------------------------
 // Mock renderers — we replace the real `renderers` array from ./utils with
@@ -15,15 +17,17 @@ function createMockConstructor(opts: {
   asyncResult?: boolean;
   settingsKey?: string;
 }) {
-  return vi.fn().mockImplementation((value: string) => ({
-    value,
-    hasCorrectFormatQuick: vi.fn().mockReturnValue(opts.quickResult),
-    hasCorrectFormat: vi.fn().mockResolvedValue(opts.asyncResult ?? false),
-    init: vi.fn().mockResolvedValue(undefined),
-    getSettingsKey: vi.fn().mockReturnValue(opts.settingsKey ?? opts.key),
-    isResolvable: vi.fn().mockReturnValue(true),
-    settings: undefined as unknown,
-  }));
+  return vi.fn().mockImplementation(function(value: string) {
+    return {
+      value,
+      hasCorrectFormatQuick: vi.fn().mockReturnValue(opts.quickResult),
+      hasCorrectFormat: vi.fn().mockResolvedValue(opts.asyncResult ?? false),
+      init: vi.fn().mockResolvedValue(undefined),
+      getSettingsKey: vi.fn().mockReturnValue(opts.settingsKey ?? opts.key),
+      isResolvable: vi.fn().mockReturnValue(true),
+      settings: undefined as unknown,
+    };
+  });
 }
 
 vi.mock('../../utils/utils', () => {
@@ -34,15 +38,17 @@ vi.mock('../../utils/utils', () => {
     quickResult?: boolean | undefined;
     asyncResult?: boolean;
   }) {
-    return vi.fn().mockImplementation((value: string) => ({
-      value,
-      hasCorrectFormatQuick: vi.fn().mockReturnValue(opts.quickResult),
-      hasCorrectFormat: vi.fn().mockResolvedValue(opts.asyncResult ?? false),
-      init: vi.fn().mockResolvedValue(undefined),
-      getSettingsKey: vi.fn().mockReturnValue(opts.key),
-      isResolvable: vi.fn().mockReturnValue(true),
-      settings: undefined as unknown,
-    }));
+    return vi.fn().mockImplementation(function(value: string) {
+      return {
+        value,
+        hasCorrectFormatQuick: vi.fn().mockReturnValue(opts.quickResult),
+        hasCorrectFormat: vi.fn().mockResolvedValue(opts.asyncResult ?? false),
+        init: vi.fn().mockResolvedValue(undefined),
+        getSettingsKey: vi.fn().mockReturnValue(opts.key),
+        isResolvable: vi.fn().mockReturnValue(true),
+        settings: undefined as unknown,
+      };
+    });
   }
 
   return {
@@ -59,9 +65,6 @@ vi.mock('../../utils/utils', () => {
     ],
   };
 });
-
-import { Parser } from '../../utils/Parser';
-import { renderers } from '../../utils/utils';
 
 // Typed reference to the mocked renderers array for easy mutation in tests
 const mockRenderers = renderers as {
@@ -250,16 +253,18 @@ describe('Parser', () => {
     });
 
     it('warns on settings error but still returns the renderer', async () => {
-      const badConstructor = vi.fn().mockImplementation((value: string) => ({
-        value,
-        hasCorrectFormatQuick: vi.fn().mockReturnValue(true),
-        hasCorrectFormat: vi.fn().mockResolvedValue(true),
-        init: vi.fn().mockResolvedValue(undefined),
-        getSettingsKey: vi.fn().mockImplementation(() => {
-          throw new Error('boom');
-        }),
-        settings: undefined as unknown,
-      }));
+      const badConstructor = vi.fn().mockImplementation(function(value: string) {
+        return {
+          value,
+          hasCorrectFormatQuick: vi.fn().mockReturnValue(true),
+          hasCorrectFormat: vi.fn().mockResolvedValue(true),
+          init: vi.fn().mockResolvedValue(undefined),
+          getSettingsKey: vi.fn().mockImplementation(() => {
+            throw new Error('boom');
+          }),
+          settings: undefined as unknown,
+        };
+      });
       mockRenderers[1].constructor = badConstructor;
 
       const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
