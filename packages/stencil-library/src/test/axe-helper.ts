@@ -10,14 +10,7 @@
 // per-file since each test file gets its own module scope.
 let axeModule: any = null;
 
-/**
- * Run an axe accessibility check on the given HTML string.
- *
- * @param html - The HTML string to test (typically from `page.root.outerHTML`)
- * @returns Promise that rejects if violations are found
- */
-export async function checkA11y(html: string): Promise<void> {
-  // Ensure polyfills are on window before axe-core loads
+export function applyAxePolyfills() {
   const w = window as any;
   w.NamedNodeMap = w.NamedNodeMap || function NamedNodeMap() {
   };
@@ -28,7 +21,6 @@ export async function checkA11y(html: string): Promise<void> {
   w.HTMLCollection = w.HTMLCollection || function HTMLCollection() {
   };
 
-  // Patch element prototypes at multiple levels
   try {
     const div = document.createElement('div');
     const proto = Object.getPrototypeOf(div);
@@ -38,7 +30,6 @@ export async function checkA11y(html: string): Promise<void> {
           return this.attributes && this.attributes.length > 0;
         };
       }
-      // Patch the parent prototype chain too
       const parentProto = Object.getPrototypeOf(proto);
       if (parentProto && !parentProto.hasAttributes) {
         parentProto.hasAttributes = function() {
@@ -46,7 +37,6 @@ export async function checkA11y(html: string): Promise<void> {
         };
       }
     }
-    // Also patch body directly
     if (document.body && !document.body.hasAttributes) {
       (document.body as any).hasAttributes = function() {
         return this.attributes && this.attributes.length > 0;
@@ -55,6 +45,17 @@ export async function checkA11y(html: string): Promise<void> {
   } catch {
     // ignore
   }
+}
+
+/**
+ * Run an axe accessibility check on the given HTML string.
+ *
+ * @param html - The HTML string to test (typically from `page.root.outerHTML`)
+ * @returns Promise that rejects if violations are found
+ */
+export async function checkA11y(html: string): Promise<void> {
+  // Ensure polyfills are on window before axe-core loads
+  applyAxePolyfills();
 
   // Always require jest-axe fresh — Stencil creates a new window per test file,
   // and axe-core's IIFE captures window at load time. Using require() will

@@ -213,6 +213,100 @@ const pidDataType = await PIDDataType.resolveDataType(pid)
 
 Further documentation is available in the [source code](packages/stencil-library/src/rendererModules/Handle/PID.ts).
 
+## Development and Testing
+
+This project uses a combination of unit, end-to-end (E2E), accessibility (a11y), and visual regression tests to ensure
+high quality.
+
+### Prerequisites
+
+1. Clone the repo
+2. Run `npm ci` at the root
+
+### Build
+
+To build all packages in the correct order using Lerna:
+
+```bash
+npm run build
+```
+
+### Running Tests
+
+**1. Unit and E2E Tests (Stencil + Jest + Puppeteer)**
+Run all spec and E2E tests across the monorepo with coverage enforcement:
+
+```bash
+npm test
+```
+
+To run tests in watch mode during development (from `packages/stencil-library`):
+
+```bash
+npm run test.watch
+```
+
+**2. Storybook Accessibility Tests**
+The Storybook test runner audits all stories for accessibility violations using `axe-core`. It uses a ratchet mechanism
+to ensure violations never increase.
+
+```bash
+cd packages/stencil-library
+npm run test:storybook
+```
+
+*Note: If you intentionally add a story with unavoidable a11y violations, you can update the baseline by
+running `UPDATE_A11Y_BASELINE=true npm run test:storybook`.*
+
+**3. Playwright Interaction & Visual Regression Tests**
+Playwright tests are located in `packages/stencil-library/test/` and run against the Storybook UI.
+
+```bash
+cd packages/stencil-library
+npx playwright install --with-deps chromium
+npx playwright test --project=chromium
+```
+
+To update visual baseline screenshots:
+
+```bash
+npx playwright test --update-snapshots --project=chromium
+```
+
+### Adding New Playwright Tests
+
+To add a new test, create a `*.spec.ts` file in `packages/stencil-library/test/`.
+Tests should navigate to an isolated Storybook story and interact with it:
+
+```typescript
+import { test, expect } from '@playwright/test';
+
+test('my new component interaction', async ({ page }) => {
+  // 1. Navigate to the isolated story (get the ID from the Storybook URL)
+  await page.goto('/iframe.html?id=my-component--default&viewMode=story');
+
+  // 2. Interact with the component
+  const button = page.locator('my-component button');
+  await button.click();
+
+  // 3. Assert state and take a visual snapshot
+  await expect(button).toHaveText('Clicked');
+  await expect(page).toHaveScreenshot('my-component-clicked.png');
+});
+```
+
+### Continuous Integration (CI)
+
+The `.github/workflows/npm-ci.yml` pipeline automatically runs on pushes and PRs:
+
+- Builds the components
+- Enforces code formatting and linting
+- Runs Stencil Unit & E2E tests with coverage thresholds (Branches: 58%, Functions: 75%, Lines: 72%, Statements: 70%)
+- Builds Storybook and runs the A11y test-runner ratchet
+- Runs Playwright interaction and visual regression tests
+
+Additionally, Chromatic runs on PRs to provide visual UI review and a deployed Storybook preview link.
+
 ## Monorepo
 
 This is a monorepo containing the following packages:

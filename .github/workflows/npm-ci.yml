@@ -21,5 +21,23 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-      - run: npm ci
-      - run: npx lerna run build
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Browser Dependencies (Puppeteer & Playwright)
+        run: npx playwright install --with-deps chromium
+        working-directory: packages/stencil-library
+      - name: Build packages
+        run: npx lerna run build
+      - name: Lint code
+        run: npx lerna run lint --if-present
+      - name: Check formatting
+        run: npx lerna run format:check --if-present
+      - name: Run tests with coverage
+        run: npx lerna run test -- --coverage
+      - name: Build Storybook
+        run: npx lerna run build-storybook
+      - name: Run Storybook Tests (a11y ratchet)
+        run: npx lerna run test:storybook
+      - name: Run Playwright Tests (Interaction & Visual)
+        run: npx playwright test --project=chromium
+        working-directory: packages/stencil-library

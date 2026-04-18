@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { Meta, StoryObj } from '@storybook/web-components-vite';
+import { expect, waitFor } from '@storybook/test';
 
 
 /**
@@ -174,8 +175,6 @@ export const Handle: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    // @ts-ignore - @storybook/test is available at runtime in Storybook
-    const { expect, waitFor } = await import('@storybook/test');
     // Wait for component to hydrate
     await waitFor(() => {
       const pidComponent = canvasElement.querySelector('pid-component');
@@ -778,12 +777,11 @@ export const RenderersMatchingDOI: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    // @ts-ignore - @storybook/test is available at runtime in Storybook
-    const { expect, waitFor } = await import('@storybook/test');
+    // Wait for auto-detection and check output
     await waitFor(() => {
       const pidComponent = canvasElement.querySelector('pid-component');
       expect(pidComponent).toBeTruthy();
-      expect(pidComponent!.getAttribute('renderers')).toBe('["DOIType"]');
+      expect((pidComponent as any).renderers).toEqual('["DOIType"]');
     }, { timeout: 5000 });
   },
 };
@@ -838,13 +836,11 @@ export const RenderersStrictRestriction: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    // @ts-ignore - @storybook/test is available at runtime in Storybook
-    const { expect } = await import('@storybook/test');
     await new Promise(r => setTimeout(r, 3000));
     const pidComponent = canvasElement.querySelector('pid-component');
     expect(pidComponent).toBeTruthy();
     // Component should exist but be invisible (unmatched state)
-    expect(pidComponent!.getAttribute('fallback-to-all')).toBe('false');
+    expect((pidComponent as any).fallbackToAll).toBe(false);
   },
 };
 

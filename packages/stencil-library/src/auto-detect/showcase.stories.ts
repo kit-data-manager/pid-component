@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from '@storybook/web-components-vite';
+import { expect } from '@storybook/test';
 
 /**
  * Full-page showcase examples demonstrating automatic PID detection across
@@ -143,8 +144,6 @@ export const VanillaHTML: Story = {
     return container;
   },
   play: async ({ canvasElement }) => {
-    // @ts-ignore - @storybook/test is available at runtime in Storybook
-    const { expect } = await import('@storybook/test');
     // Wait for auto-detection and component rendering
     await new Promise(r => setTimeout(r, 8000));
     const pidComponents = canvasElement.querySelectorAll('pid-component');

@@ -114,13 +114,14 @@
     "storybook": "storybook dev -p 6006 --no-open",
     "build-storybook": "storybook build",
     "storybook-docs": "storybook dev --docs",
+    "test:storybook": "concurrently -k -s first \"http-server storybook-static -p 6006 -s\" \"wait-on http://127.0.0.1:6006 && test-storybook --url http://127.0.0.1:6006\"",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,mdx}\"",
-    "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,md,mdx}\"",
-    "test:storybook": "npx test-storybook --url http://localhost:6006"
+    "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,md,mdx}\""
   },
   "dependencies": {
+    "@chromatic-com/playwright": "^0.13.1",
     "@stencil/core": "^4.43.4",
     "@tempfix/idb": "^8.0.3",
     "tailwindcss": "^4.2.2"
@@ -151,11 +152,13 @@
     "axe-playwright": "^2.2.2",
     "baseline-browser-mapping": "^2.10.19",
     "chromatic": "^16.3.0",
+    "concurrently": "^9.2.1",
     "cssnano": "^7.1.5",
     "eslint": "^10.2.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-storybook": "^10.3.5",
     "globals": "^17.5.0",
+    "http-server": "^14.1.1",
     "jest": "^29.7.0",
     "jest-axe": "^10.0.0",
     "jest-cli": "^29.7.0",
@@ -169,6 +172,7 @@
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.58.2",
     "vite": "^8.0.8",
+    "wait-on": "^7.2.0",
     "workbox-build": "^7.4.0"
   },
   "maintainers": [

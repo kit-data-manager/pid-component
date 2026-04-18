@@ -50,6 +50,7 @@ export const config: Config = {
   testing: {
     browserHeadless: 'shell',
     setupFilesAfterEnv: ['./src/test/setup-axe.ts'],
+    testPathIgnorePatterns: ['<rootDir>/test/'],
     coverageDirectory: './coverage',
     collectCoverageFrom: [
       'src/**/*.{ts,tsx}',

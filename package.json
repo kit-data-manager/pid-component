@@ -14,7 +14,8 @@
     "vite": "8.0.8"
   },
   "scripts": {
-    "build": "lerna run build"
+    "build": "lerna run build",
+    "test": "lerna run test"
   },
   "description": "Monorepo for the PID Component and related packages",
   "author": {

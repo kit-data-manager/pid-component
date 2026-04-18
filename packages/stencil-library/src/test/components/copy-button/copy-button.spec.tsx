@@ -3,6 +3,10 @@ import { CopyButton } from '../../../components/copy-button/copy-button';
 import { checkA11y } from '../../axe-helper';
 
 describe('copy-button', () => {
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   it('renders with value prop', async () => {
     const page = await newSpecPage({
       components: [CopyButton],

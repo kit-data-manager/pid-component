@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from '@storybook/web-components-vite';
+import { expect, userEvent } from '@storybook/test';
 
 /**
  * The `initPidDetection()` function enables automatic detection and rendering
@@ -241,8 +242,6 @@ const controller = initPidDetection({
     },
   },
   play: async ({ canvasElement }) => {
-    // @ts-ignore - @storybook/test is available at runtime in Storybook
-    const { expect } = await import('@storybook/test');
     // Wait for auto-detection to scan and create components
     await new Promise(r => setTimeout(r, 5000));
     const wrappers = canvasElement.querySelectorAll('.pid-auto-detect-wrapper');
@@ -377,8 +376,6 @@ controller.stop();     // pause MutationObserver (if enabled)
     },
   },
   play: async ({ canvasElement }) => {
-    // @ts-ignore - @storybook/test is available at runtime in Storybook
-    const { expect, userEvent } = await import('@storybook/test');
     // Wait for initial detection
     await new Promise(r => setTimeout(r, 3000));
     const wrappersBefore = canvasElement.querySelectorAll('.pid-auto-detect-wrapper');
