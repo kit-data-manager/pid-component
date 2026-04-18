@@ -35,7 +35,9 @@
   },
   "scripts": {
     "build": "npm run tsc",
-    "tsc": "tsc -p . --outDir ./dist"
+    "tsc": "tsc -p . --outDir ./dist",
+    "storybook": "storybook dev -p 6007 --no-open",
+    "build-storybook": "storybook build -o storybook-static"
   },
   "bugs": {
     "url": "https://github.com/kit-data-manager/pid-component/issues"
@@ -48,7 +50,14 @@
     "@stencil/react-output-target": "^1.5.0"
   },
   "devDependencies": {
-    "typescript": "^6.0.2"
+    "@storybook/addon-a11y": "^10.3.5",
+    "@storybook/addon-docs": "^10.3.5",
+    "@storybook/react-vite": "^10.3.5",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "storybook": "^10.3.5",
+    "typescript": "^6.0.2",
+    "vite": "^8.0.8"
   },
   "keywords": [
     "react",
