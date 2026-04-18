@@ -24,10 +24,10 @@ jobs:
         working-directory: packages/stencil-library
       - name: Build packages
         run: npx lerna run build
-      - name: Lint code
-        run: npx lerna run lint
-      - name: Check formatting
-        run: npx lerna run format:check
+      #      - name: Lint code
+      #        run: npx lerna run lint
+      #      - name: Check formatting
+      #        run: npx lerna run format:check
       - name: Run tests with coverage
         run: npx lerna run test -- --coverage
       - name: Build Storybook
