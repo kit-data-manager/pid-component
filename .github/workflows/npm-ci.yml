@@ -5,9 +5,11 @@ permissions:
 
 on:
   push:
-    branches: [ main, dev ]
+    branches:
+      - '*'
   pull_request:
-    branches: [ main, dev ]
+    branches:
+      - '*'
 
 jobs:
   build:
@@ -41,3 +43,19 @@ jobs:
       - name: Run Playwright Tests (Interaction & Visual)
         run: npx playwright test --project=chromium
         working-directory: packages/stencil-library
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: '**/coverage'
+          retention-days: 7
+      - name: Post test and coverage results to PR
+        if: github.event_name == 'pull_request'
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ## Test Results for Node.js ${{ matrix.node }}
+            - Tests: ${{ steps.test.outcome }}
+            - Coverage: [View Report]( ${{ steps.upload-artifact.outputs.artifact_url }} )
