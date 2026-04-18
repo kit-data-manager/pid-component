@@ -27,7 +27,9 @@
     "url": "https://github.com/kit-data-manager/pid-component"
   },
   "scripts": {
-    "build": "tsc -p . --outDir ./dist"
+    "build": "tsc -p . --outDir ./dist",
+    "storybook": "storybook dev -p 6008 --no-open",
+    "build-storybook": "storybook build -o storybook-static"
   },
   "bugs": {
     "url": "https://github.com/kit-data-manager/pid-component/issues"
@@ -40,7 +42,14 @@
     "@stencil/vue-output-target": "^0.13.1"
   },
   "devDependencies": {
+    "@storybook/addon-a11y": "^10.3.5",
+    "@storybook/addon-docs": "^10.3.5",
+    "@storybook/vue3-vite": "^10.3.5",
+    "@vue/server-renderer": "^3.5.0",
+    "ast-types": "^0.14.2",
+    "storybook": "^10.3.5",
     "typescript": "^6.0.2",
+    "vite": "^8.0.8",
     "vue": "^3.5.0"
   },
   "peerDependencies": {

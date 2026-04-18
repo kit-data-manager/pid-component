@@ -6,14 +6,17 @@ import { defineContainer, type StencilVueComponent } from '@stencil/vue-output-t
 import type { JSX } from '@kit-data-manager/pid-component';
 
 
+
+
+
 export const ColorHighlight: StencilVueComponent<JSX.ColorHighlight> = /*@__PURE__*/ defineContainer<JSX.ColorHighlight>('color-highlight', undefined, [
-  'text',
+  'text'
 ]);
 
 
 export const CopyButton: StencilVueComponent<JSX.CopyButton> = /*@__PURE__*/ defineContainer<JSX.CopyButton>('copy-button', undefined, [
   'value',
-  'label',
+  'label'
 ]);
 
 
@@ -23,20 +26,20 @@ export const JsonViewer: StencilVueComponent<JSX.JsonViewer> = /*@__PURE__*/ def
   'maxHeight',
   'showLineNumbers',
   'expandAll',
-  'theme',
+  'theme'
 ]);
 
 
 export const LocaleVisualization: StencilVueComponent<JSX.LocaleVisualization> = /*@__PURE__*/ defineContainer<JSX.LocaleVisualization>('locale-visualization', undefined, [
   'locale',
-  'showFlag',
+  'showFlag'
 ]);
 
 
 export const PidActions: StencilVueComponent<JSX.PidActions> = /*@__PURE__*/ defineContainer<JSX.PidActions>('pid-actions', undefined, [
   'actions',
   'actionsId',
-  'darkMode',
+  'darkMode'
 ]);
 
 
@@ -49,10 +52,10 @@ export const PidCollapsible: StencilVueComponent<JSX.PidCollapsible> = /*@__PURE
   'lineHeight',
   'showFooter',
   'collapsibleToggle',
-  'contentHeightChange',
+  'contentHeightChange'
 ], [
   'collapsibleToggle',
-  'contentHeightChange',
+  'contentHeightChange'
 ]);
 
 
@@ -71,7 +74,7 @@ export const PidComponent: StencilVueComponent<JSX.PidComponent> = /*@__PURE__*/
   'height',
   'darkMode',
   'renderers',
-  'fallbackToAll',
+  'fallbackToAll'
 ]);
 
 
@@ -87,10 +90,10 @@ export const PidDataTable: StencilVueComponent<JSX.PidDataTable> = /*@__PURE__*/
   'settings',
   'darkMode',
   'pageChange',
-  'itemsPerPageChange',
+  'itemsPerPageChange'
 ], [
   'pageChange',
-  'itemsPerPageChange',
+  'itemsPerPageChange'
 ]);
 
 
@@ -102,10 +105,10 @@ export const PidPagination: StencilVueComponent<JSX.PidPagination> = /*@__PURE__
   'showItemsPerPageControl',
   'darkMode',
   'pageChange',
-  'itemsPerPageChange',
+  'itemsPerPageChange'
 ], [
   'pageChange',
-  'itemsPerPageChange',
+  'itemsPerPageChange'
 ]);
 
 
@@ -115,9 +118,9 @@ export const PidTooltip: StencilVueComponent<JSX.PidTooltip> = /*@__PURE__*/ def
   'maxWidth',
   'maxHeight',
   'fitContent',
-  'tooltipExpansionChange',
+  'tooltipExpansionChange'
 ], [
-  'tooltipExpansionChange',
+  'tooltipExpansionChange'
 ]);
 
 
