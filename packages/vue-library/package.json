@@ -45,12 +45,12 @@
     "@storybook/addon-a11y": "^10.3.5",
     "@storybook/addon-docs": "^10.3.5",
     "@storybook/vue3-vite": "^10.3.5",
-    "@vue/server-renderer": "^3.5.0",
-    "ast-types": "^0.14.2",
+    "@vue/server-renderer": "^3.5.32",
+    "ast-types": "^0.16.1",
     "storybook": "^10.3.5",
-    "typescript": "^6.0.2",
+    "typescript": "^6.0.3",
     "vite": "^8.0.8",
-    "vue": "^3.5.0"
+    "vue": "^3.5.32"
   },
   "peerDependencies": {
     "vue": "^3.0.0"

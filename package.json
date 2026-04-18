@@ -20,9 +20,9 @@
     "lerna": "^9.0.7",
     "lit": "^3.3.2",
     "storybook": "^10.3.5",
-    "typescript": "^6.0.2",
+    "typescript": "^6.0.3",
     "vitest": "^4.1.4",
-    "wait-on": "^7.2.0"
+    "wait-on": "^9.0.5"
   },
   "dependencies": {
     "vite": "8.0.8"
@@ -31,8 +31,9 @@
     "build": "lerna run build",
     "test": "lerna run test",
     "storybook": "storybook dev -p 6006 --no-open",
-    "build-storybook": "storybook build -o storybook-static && npm run build-storybook:children && npm run build-storybook:copy",
-    "build-storybook:children": "npm run build-storybook --workspace=packages/react-library && npm run build-storybook --workspace=packages/vue-library && npm run build-storybook --workspace=packages/angular-library && npm run build-storybook --workspace=packages/nextjs-app",
+    "build-storybook": "npm run build-storybook:root && npm run build-storybook:children && npm run build-storybook:copy",
+    "build-storybook:root": "storybook build -o storybook-static",
+    "build-storybook:children": "npm run build-storybook -w packages/react-library && npm run build-storybook -w packages/vue-library && npm run build-storybook -w packages/angular-library && npm run build-storybook -w packages/nextjs-app",
     "build-storybook:copy": "cp -r packages/react-library/storybook-static storybook-static/react-vite && cp -r packages/vue-library/storybook-static storybook-static/vue && cp -r packages/angular-library/storybook-static storybook-static/angular && cp -r packages/nextjs-app/storybook-static storybook-static/react-nextjs",
     "test-storybook": "vitest --project=storybook",
     "storybook:children": "concurrently \"npm run storybook --workspace=packages/react-library\" \"npm run storybook --workspace=packages/vue-library\" \"npm run storybook --workspace=packages/angular-library\" \"npm run storybook --workspace=packages/nextjs-app\"",

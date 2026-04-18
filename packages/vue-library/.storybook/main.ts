@@ -1,8 +1,10 @@
 import type { StorybookConfig } from '@storybook/vue3-vite';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const require = createRequire(import.meta.url);
 const stencilRoot = path.resolve(__dirname, '../../stencil-library');
 
 const config: StorybookConfig = {
@@ -14,10 +16,10 @@ const config: StorybookConfig = {
     config.resolve = config.resolve || {};
     config.resolve.alias = {
       ...config.resolve.alias,
-      // Stencil's Vue output target runtime imports 'vue/server-renderer'.
-      // Vite incorrectly rewrites it. Fix by resolving explicitly.
-      'vue/server-renderer': '@vue/server-renderer',
-      '@kit-data-manager/pid-component/loader': path.join(stencilRoot, 'dist/loader'),
+      // Fix: @stencil/vue-output-target runtime imports 'vue/server-renderer'
+      // which Vite mis-resolves when Vue is pre-bundled. Point it to the
+      // actual @vue/server-renderer package.
+      'vue/server-renderer': path.dirname(require.resolve('@vue/server-renderer')),
       '@kit-data-manager/pid-component/dist': path.join(stencilRoot, 'dist'),
       '@kit-data-manager/pid-component': stencilRoot,
     };

@@ -11,10 +11,13 @@ const config: StorybookConfig = {
   core: { disableTelemetry: true },
   addons: ['@storybook/addon-docs', '@storybook/addon-a11y'],
   viteFinal: async (config) => {
+    // Stencil's dist-custom-elements output lives under dist/components/.
+    // Vite needs aliases so that imports like
+    //   @kit-data-manager/pid-component/dist/components/pid-component.js
+    // resolve to the actual files in the workspace-linked package.
     config.resolve = config.resolve || {};
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@kit-data-manager/pid-component/loader': path.join(stencilRoot, 'dist/loader'),
       '@kit-data-manager/pid-component/dist': path.join(stencilRoot, 'dist'),
       '@kit-data-manager/pid-component': stencilRoot,
     };
