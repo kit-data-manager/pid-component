@@ -3,13 +3,7 @@ name: NPM CI
 permissions:
   contents: read
 
-on:
-  push:
-    branches:
-      - '*'
-  pull_request:
-    branches:
-      - '*'
+on: [ push, pull_request ]
 
 jobs:
   build:
@@ -31,9 +25,9 @@ jobs:
       - name: Build packages
         run: npx lerna run build
       - name: Lint code
-        run: npx lerna run lint --if-present
+        run: npx lerna run lint
       - name: Check formatting
-        run: npx lerna run format:check --if-present
+        run: npx lerna run format:check
       - name: Run tests with coverage
         run: npx lerna run test -- --coverage
       - name: Build Storybook

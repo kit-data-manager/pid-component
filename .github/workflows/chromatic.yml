@@ -27,6 +27,7 @@ jobs:
           autoAcceptChanges: ${{ github.ref == 'refs/heads/main' }}
           exitZeroOnChanges: true
       - name: Post Chromatic comment to PR
+        if: github.event_name == 'pull_request'
         uses: peter-evans/create-or-update-comment@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
