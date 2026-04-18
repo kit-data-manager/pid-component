@@ -1,0 +1,31 @@
+{
+  "name": "@kit-data-manager/nextjs-pid-component-demo",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Next.js demo app and Storybook for the PID Component (not published)",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build:next": "next build",
+    "build": "echo 'Skipping next build (demo only). Use build:next for full Next.js build.'",
+    "start": "next start",
+    "storybook": "storybook dev -p 6010 --no-open",
+    "build-storybook": "storybook build -o storybook-static"
+  },
+  "dependencies": {
+    "@kit-data-manager/pid-component": "^0.4.0",
+    "@kit-data-manager/react-pid-component": "^0.4.0",
+    "next": "^15.3.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@storybook/addon-a11y": "^10.3.5",
+    "@storybook/addon-docs": "^10.3.5",
+    "@storybook/nextjs-vite": "^10.3.5",
+    "@types/react": "19.2.14",
+    "storybook": "^10.3.5",
+    "typescript": "^6.0.2",
+    "vite": "^8.0.8"
+  }
+}
