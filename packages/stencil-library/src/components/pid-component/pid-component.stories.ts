@@ -162,6 +162,9 @@ export const Default: Story = {
 };
 
 export const Handle: Story = {
+  // Exclude from vitest: this test requires network access to resolve PIDs
+  // from handle.net and can time out in CI environments.
+  tags: ['!test'],
   args: {
     value: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
   },
@@ -175,12 +178,12 @@ export const Handle: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    // Wait for component to hydrate
+    // Wait for component to hydrate (requires network access to resolve the PID)
     await waitFor(() => {
       const pidComponent = canvasElement.querySelector('pid-component');
       expect(pidComponent).toBeTruthy();
       expect(pidComponent!.classList.contains('hydrated')).toBeTruthy();
-    }, { timeout: 10000 });
+    }, { timeout: 30000 });
   },
 };
 

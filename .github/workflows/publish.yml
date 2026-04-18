@@ -24,7 +24,8 @@ jobs:
           node-version: 24
           cache: 'npm'  # Added caching
       - run: npm ci
-      - run: npx puppeteer browsers install chrome
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
       - run: npx lerna run build
       - run: npx lerna run test -- --coverage
       - name: Upload build artifacts

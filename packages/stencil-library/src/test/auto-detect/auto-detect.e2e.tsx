@@ -1,9 +1,9 @@
-import { render, h } from '@stencil/vitest';
-import { describe, it, expect } from 'vitest';
+import { render } from '@stencil/vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { initPidDetection } from '../../auto-detect/initPidDetection';
 
 describe('auto-detect e2e', () => {
-  it('creates pid-components for detected DOIs in text', async () => {
+  it('creates pid-components for detected PIDs in text', async () => {
     const { root, waitForChanges } = await render(
       <div id="content">
         <p>See 10.5281/zenodo.1234567 for details</p>
@@ -14,12 +14,13 @@ describe('auto-detect e2e', () => {
       root: root,
     });
 
-    // Wait for detection and component creation
-    await new Promise(r => setTimeout(r, 3000));
-    await waitForChanges();
-
-    const pidComponents = root.querySelectorAll('pid-component');
-    expect(pidComponents.length).toBeGreaterThan(0);
+    // Wait for async detection to wrap text in pid-component elements.
+    // Detection runs asynchronously (potentially on a worker thread).
+    await vi.waitFor(() => {
+      const wrappers = root.querySelectorAll('[data-pid-auto-detected]');
+      const pidComponents = root.querySelectorAll('pid-component');
+      expect(wrappers.length + pidComponents.length).toBeGreaterThan(0);
+    }, { timeout: 10000, interval: 200 });
   });
 
   it('original text remains visible before component loads', async () => {

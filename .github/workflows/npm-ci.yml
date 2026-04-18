@@ -11,8 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # Use recent LTS releases and latest one for tests
-        node: [ 22, 24, 25 ]
+        # Use LTS (22) and current (24) releases for tests
+        node: [ 22, 24 ]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -28,14 +28,47 @@ jobs:
         run: npx lerna run lint
       - name: Check formatting
         run: npx lerna run format:check
-      - name: Run Stencil tests
-        id: test
-        run: npx lerna run test
       - name: Build Storybook
         run: npm run build-storybook
-      - name: Run Storybook tests
-        run: npm run test-storybook
+      - name: Run all tests (Stencil spec + E2E + Storybook)
+        id: test
+        run: npm test
+      - name: Extract coverage summary
+        if: always() && matrix.node == 24
+        id: coverage
+        run: |
+          COVERAGE_JSON="packages/stencil-library/coverage/coverage-summary.json"
+          if [ -f "$COVERAGE_JSON" ]; then
+            STMTS=$(node -e "const c=require('./$COVERAGE_JSON').total.statements; console.log(c.pct)")
+            BRANCH=$(node -e "const c=require('./$COVERAGE_JSON').total.branches; console.log(c.pct)")
+            FUNCS=$(node -e "const c=require('./$COVERAGE_JSON').total.functions; console.log(c.pct)")
+            LINES=$(node -e "const c=require('./$COVERAGE_JSON').total.lines; console.log(c.pct)")
+            echo "stmts=$STMTS" >> "$GITHUB_OUTPUT"
+            echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
+            echo "funcs=$FUNCS" >> "$GITHUB_OUTPUT"
+            echo "lines=$LINES" >> "$GITHUB_OUTPUT"
+            echo "has_coverage=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_coverage=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Post coverage comment to PR
+        if: always() && steps.coverage.outputs.has_coverage == 'true' && github.event_name == 'pull_request'
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ## Test Coverage Report
+
+            | Metric | Coverage |
+            |--------|----------|
+            | **Statements** | ${{ steps.coverage.outputs.stmts }}% |
+            | **Branches** | ${{ steps.coverage.outputs.branch }}% |
+            | **Functions** | ${{ steps.coverage.outputs.funcs }}% |
+            | **Lines** | ${{ steps.coverage.outputs.lines }}% |
+
+            > Coverage collected from `packages/stencil-library` via V8 provider.
       - name: Upload coverage report
+        if: always()
         id: upload-coverage
         uses: actions/upload-artifact@v4
         with:

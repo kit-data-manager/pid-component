@@ -1,6 +1,9 @@
 name: "Chromatic"
 
-on: push
+on: [ push, pull_request ]
+
+permissions:
+  contents: read
 
 jobs:
   chromatic:
@@ -20,17 +23,10 @@ jobs:
       - name: Build all packages
         run: npx lerna run build
       - name: Run Chromatic
+        id: chromatic
         uses: chromaui/action@latest
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          # Storybook is now at the repo root
           autoAcceptChanges: ${{ github.ref == 'refs/heads/main' }}
           exitZeroOnChanges: true
           zip: true
-      - name: Post Chromatic comment to PR
-        if: github.event_name == 'pull_request'
-        uses: peter-evans/create-or-update-comment@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          issue-number: ${{ github.event.pull_request.number }}
-          body: "Chromatic visual regression tests have completed. Please review the results in the [Chromatic dashboard](https://www.chromatic.com/builds?appId=5f8e9c1b2b6d4e001f8e9c1b)."

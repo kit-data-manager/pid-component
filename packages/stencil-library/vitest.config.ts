@@ -44,5 +44,18 @@ export default defineVitestConfig({
   stencilConfig: './stencil.config.ts',
   test: {
     projects,
+    coverage: {
+      provider: 'v8',
+      enabled: true,
+      reporter: ['text', 'json', 'json-summary', 'html'],
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: [
+        'src/**/*.spec.{ts,tsx}',
+        'src/**/*.e2e.{ts,tsx}',
+        'src/**/*.test.{ts,tsx}',
+        'src/test/**',
+        'src/components.d.ts',
+      ],
+    },
   },
 });
