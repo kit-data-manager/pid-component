@@ -2,6 +2,7 @@ name: NPM CI
 
 permissions:
   contents: read
+  pull-requests: write
 
 on: [ push, pull_request ]
 
@@ -19,37 +20,25 @@ jobs:
           node-version: ${{ matrix.node }}
       - name: Install dependencies
         run: npm ci
-      - name: Install Browser Dependencies (Puppeteer & Playwright)
+      - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
-        working-directory: packages/stencil-library
       - name: Build packages
         run: npx lerna run build
-      #      - name: Lint code
-      #        run: npx lerna run lint
-      #      - name: Check formatting
-      #        run: npx lerna run format:check
-      - name: Run tests with coverage
-        run: npx lerna run test -- --coverage
+      - name: Lint code
+        run: npx lerna run lint
+      - name: Check formatting
+        run: npx lerna run format:check
+      - name: Run Stencil tests
+        id: test
+        run: npx lerna run test
       - name: Build Storybook
-        run: npx lerna run build-storybook
-      - name: Run Storybook Tests (a11y ratchet)
-        run: npx lerna run test:storybook
-      - name: Run Playwright Tests (Interaction & Visual)
-        run: npx playwright test --project=chromium
-        working-directory: packages/stencil-library
+        run: npm run build-storybook
+      - name: Run Storybook tests
+        run: npm run test-storybook
       - name: Upload coverage report
+        id: upload-coverage
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-report
+          name: coverage-report-node-${{ matrix.node }}
           path: '**/coverage'
           retention-days: 7
-      - name: Post test and coverage results to PR
-        if: github.event_name == 'pull_request'
-        uses: peter-evans/create-or-update-comment@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          issue-number: ${{ github.event.pull_request.number }}
-          body: |
-            ## Test Results for Node.js ${{ matrix.node }}
-            - Tests: ${{ steps.test.outcome }}
-            - Coverage: [View Report]( ${{ steps.upload-artifact.outputs.artifact_url }} )

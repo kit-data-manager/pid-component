@@ -4,6 +4,7 @@ www/
 loader/
 test-results/
 coverage/
+playwright-report/
 .nx
 
 *~
