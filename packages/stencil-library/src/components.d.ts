@@ -881,8 +881,8 @@ declare namespace LocalJSX {
         "width": string;
         "height": string;
         "darkMode": 'light' | 'dark' | 'system';
-      'renderers': string;
-      'fallbackToAll': boolean;
+        'renderers': string;
+        'fallbackToAll': boolean;
     }
     interface PidDataTableAttributes {
         "itemsPerPage": number;

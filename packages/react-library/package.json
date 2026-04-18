@@ -44,7 +44,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@kit-data-manager/pid-component": "^0.3.0",
+    "@kit-data-manager/pid-component": "^0.4.0",
     "@stencil/react-output-target": "^1.5.0"
   },
   "devDependencies": {
