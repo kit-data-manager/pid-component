@@ -1,3 +1,4 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { RORType } from '../../rendererModules/RORType';
 
 describe('RORType', () => {
@@ -71,12 +72,12 @@ describe('RORType', () => {
     };
 
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
       // Mock global fetch for the ROR API call
-      global.fetch = jest.fn().mockResolvedValue({
+      global.fetch = vi.fn().mockResolvedValue({
         ok: true,
-        json: jest.fn().mockResolvedValue(rorApiResponse),
-      }) as jest.Mock;
+        json: vi.fn().mockResolvedValue(rorApiResponse),
+      }) as any;
     });
 
     afterEach(() => {
@@ -119,7 +120,7 @@ describe('RORType', () => {
     });
 
     it('handles API failure gracefully', async () => {
-      (global.fetch as jest.Mock).mockResolvedValue({
+      (global.fetch as any).mockResolvedValue({
         ok: false,
         status: 404,
       });
@@ -132,9 +133,9 @@ describe('RORType', () => {
     });
 
     it('handles organization with no names', async () => {
-      (global.fetch as jest.Mock).mockResolvedValue({
+      (global.fetch as any).mockResolvedValue({
         ok: true,
-        json: jest.fn().mockResolvedValue({ ...rorApiResponse, names: [] }),
+        json: vi.fn().mockResolvedValue({ ...rorApiResponse, names: [] }),
       });
 
       const rt = new RORType('https://ror.org/04t3en479');

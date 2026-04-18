@@ -1,24 +1,22 @@
-// Polyfill `self` before any module imports
-(globalThis as any).self = globalThis;
-
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { DOIInfo, DOISource } from '../../../rendererModules/DOI/DOIInfo';
 import { DOI } from '../../../rendererModules/DOI/DOI';
 import * as DataCiteInfoModule from '../../../rendererModules/DOI/DataCiteInfo';
 import * as CrossRefInfoModule from '../../../rendererModules/DOI/CrossRefInfo';
 
-let dataCiteFetchSpy: jest.SpyInstance;
-let crossRefFetchSpy: jest.SpyInstance;
-let dataCiteFromObjectSpy: jest.SpyInstance;
-let crossRefFromObjectSpy: jest.SpyInstance;
+let dataCiteFetchSpy: any;
+let crossRefFetchSpy: any;
+let dataCiteFromObjectSpy: any;
+let crossRefFromObjectSpy: any;
 
 describe('DOIInfo', () => {
   const testDOI = new DOI('10.5281/zenodo.1234567');
 
   beforeEach(() => {
-    dataCiteFetchSpy = jest.spyOn(DataCiteInfoModule.DataCiteInfo, 'fetch');
-    crossRefFetchSpy = jest.spyOn(CrossRefInfoModule.CrossRefInfo, 'fetch');
-    dataCiteFromObjectSpy = jest.spyOn(DataCiteInfoModule.DataCiteInfo, 'fromObject');
-    crossRefFromObjectSpy = jest.spyOn(CrossRefInfoModule.CrossRefInfo, 'fromObject');
+    dataCiteFetchSpy = vi.spyOn(DataCiteInfoModule.DataCiteInfo, 'fetch');
+    crossRefFetchSpy = vi.spyOn(CrossRefInfoModule.CrossRefInfo, 'fetch');
+    dataCiteFromObjectSpy = vi.spyOn(DataCiteInfoModule.DataCiteInfo, 'fromObject');
+    crossRefFromObjectSpy = vi.spyOn(CrossRefInfoModule.CrossRefInfo, 'fromObject');
   });
 
   afterEach(() => {
@@ -37,8 +35,8 @@ describe('DOIInfo', () => {
         rawMetadata: {},
         creators: [{ name: 'Doe', familyName: 'Doe' }],
         publicationDate: '2024',
-        generateItems: jest.fn().mockReturnValue([]),
-        toObject: jest.fn().mockReturnValue({ doi: '{}', rawMetadata: {} }),
+        generateItems: vi.fn().mockReturnValue([]),
+        toObject: vi.fn().mockReturnValue({ doi: '{}', rawMetadata: {} }),
       };
       dataCiteFetchSpy.mockResolvedValue(mockDataCiteInfo);
 
@@ -60,8 +58,8 @@ describe('DOIInfo', () => {
         rawMetadata: {},
         creators: [{ name: 'Smith' }],
         publicationDate: '2025',
-        generateItems: jest.fn().mockReturnValue([]),
-        toObject: jest.fn().mockReturnValue({ doi: '{}', rawMetadata: {} }),
+        generateItems: vi.fn().mockReturnValue([]),
+        toObject: vi.fn().mockReturnValue({ doi: '{}', rawMetadata: {} }),
       };
       crossRefFetchSpy.mockResolvedValue(mockCrossRefInfo);
 
@@ -82,8 +80,8 @@ describe('DOIInfo', () => {
         rawMetadata: {},
         creators: [],
         publicationDate: '2025',
-        generateItems: jest.fn().mockReturnValue([]),
-        toObject: jest.fn().mockReturnValue({ doi: '{}', rawMetadata: {} }),
+        generateItems: vi.fn().mockReturnValue([]),
+        toObject: vi.fn().mockReturnValue({ doi: '{}', rawMetadata: {} }),
       };
       crossRefFetchSpy.mockResolvedValue(mockCrossRefInfo);
 
@@ -107,8 +105,8 @@ describe('DOIInfo', () => {
         rawMetadata: {},
         creators: [],
         publicationDate: '2024',
-        generateItems: jest.fn().mockReturnValue([]),
-        toObject: jest.fn().mockReturnValue({ doi: '{}', rawMetadata: {} }),
+        generateItems: vi.fn().mockReturnValue([]),
+        toObject: vi.fn().mockReturnValue({ doi: '{}', rawMetadata: {} }),
       };
       dataCiteFetchSpy.mockResolvedValue(mockDataCiteInfo);
 
@@ -128,8 +126,8 @@ describe('DOIInfo', () => {
         rawMetadata: {},
         creators: [],
         publicationDate: '2024',
-        generateItems: jest.fn().mockReturnValue(mockItems),
-        toObject: jest.fn().mockReturnValue({ doi: '{}', rawMetadata: {} }),
+        generateItems: vi.fn().mockReturnValue(mockItems),
+        toObject: vi.fn().mockReturnValue({ doi: '{}', rawMetadata: {} }),
       };
       dataCiteFetchSpy.mockResolvedValue(mockDataCiteInfo);
 
@@ -151,8 +149,8 @@ describe('DOIInfo', () => {
         rawMetadata: {},
         creators: [],
         publicationDate: '2025',
-        generateItems: jest.fn().mockReturnValue(mockItems),
-        toObject: jest.fn().mockReturnValue({ doi: '{}', rawMetadata: {} }),
+        generateItems: vi.fn().mockReturnValue(mockItems),
+        toObject: vi.fn().mockReturnValue({ doi: '{}', rawMetadata: {} }),
       };
       crossRefFetchSpy.mockResolvedValue(mockCrossRefInfo);
 
@@ -174,7 +172,7 @@ describe('DOIInfo', () => {
       });
 
       // DataCiteInfo.fromObject is mocked, so set up the mock
-      const mockReconstructed = { title: 'Test', generateItems: jest.fn().mockReturnValue([]) };
+      const mockReconstructed = { title: 'Test', generateItems: vi.fn().mockReturnValue([]) };
       dataCiteFromObjectSpy.mockReturnValue(mockReconstructed);
 
       const info = DOIInfo.fromJSON(serialized);
@@ -191,7 +189,7 @@ describe('DOIInfo', () => {
         crossRefInfo: { doi: '{}', rawMetadata: { message: { title: ['Test'] } } },
       });
 
-      const mockReconstructed = { title: 'Test', generateItems: jest.fn().mockReturnValue([]) };
+      const mockReconstructed = { title: 'Test', generateItems: vi.fn().mockReturnValue([]) };
       crossRefFromObjectSpy.mockReturnValue(mockReconstructed);
 
       const info = DOIInfo.fromJSON(serialized);

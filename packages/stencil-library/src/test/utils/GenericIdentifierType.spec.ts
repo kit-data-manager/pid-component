@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { FunctionalComponent } from '@stencil/core';
 import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
 

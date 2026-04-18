@@ -1,167 +1,131 @@
-import { newSpecPage } from '@stencil/core/testing';
-import { CopyButton } from '../../../components/copy-button/copy-button';
+import { render, h } from '@stencil/vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { checkA11y } from '../../axe-helper';
 
 describe('copy-button', () => {
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('renders with value prop', async () => {
-    const page = await newSpecPage({
-      components: [CopyButton],
-      html: '<copy-button value="test-value"></copy-button>',
-    });
-    expect(page.root).toBeTruthy();
-    expect(page.root.tagName).toBe('COPY-BUTTON');
+    const { root } = await render(<copy-button value="test-value"></copy-button>);
+    expect(root).toBeTruthy();
+    expect(root.tagName).toBe('COPY-BUTTON');
   });
 
   it('sets the value prop correctly', async () => {
-    const page = await newSpecPage({
-      components: [CopyButton],
-      html: '<copy-button value="my-value"></copy-button>',
-    });
-    expect(page.rootInstance.value).toBe('my-value');
+    const { root } = await render(<copy-button value="my-value"></copy-button>);
+    expect(root.value).toBe('my-value');
   });
 
   it('renders with optional label prop', async () => {
-    const page = await newSpecPage({
-      components: [CopyButton],
-      html: '<copy-button value="val" label="DOI"></copy-button>',
-    });
-    expect(page.rootInstance.label).toBe('DOI');
+    const { root } = await render(<copy-button value="val" label="DOI"></copy-button>);
+    expect(root.label).toBe('DOI');
   });
 
   it('has a button element', async () => {
-    const page = await newSpecPage({
-      components: [CopyButton],
-      html: '<copy-button value="test"></copy-button>',
-    });
-    const button = page.root.querySelector('button');
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    const button = root.querySelector('button');
     expect(button).toBeTruthy();
     expect(button.getAttribute('type')).toBe('button');
   });
 
   it('button has correct aria-label when no label prop is provided', async () => {
-    const page = await newSpecPage({
-      components: [CopyButton],
-      html: '<copy-button value="test"></copy-button>',
-    });
-    const button = page.root.querySelector('button');
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    const button = root.querySelector('button');
     expect(button.getAttribute('aria-label')).toBe('Copy content to clipboard');
   });
 
   it('button has correct aria-label when label prop is provided', async () => {
-    const page = await newSpecPage({
-      components: [CopyButton],
-      html: '<copy-button value="test" label="DOI"></copy-button>',
-    });
-    const button = page.root.querySelector('button');
+    const { root } = await render(<copy-button value="test" label="DOI"></copy-button>);
+    const button = root.querySelector('button');
     expect(button.getAttribute('aria-label')).toBe('Copy DOI to clipboard');
   });
 
   it('renders aria-label containing the value when label matches value', async () => {
-    const page = await newSpecPage({
-      components: [CopyButton],
-      html: '<copy-button value="10.1234/test" label="10.1234/test"></copy-button>',
-    });
-    const button = page.root.querySelector('button');
+    const { root } = await render(<copy-button value="10.1234/test" label="10.1234/test"></copy-button>);
+    const button = root.querySelector('button');
     expect(button.getAttribute('aria-label')).toContain('10.1234/test');
   });
 
   it('renders "Copy" as default button text', async () => {
-    const page = await newSpecPage({
-      components: [CopyButton],
-      html: '<copy-button value="test"></copy-button>',
-    });
-    const button = page.root.querySelector('button');
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    const button = root.querySelector('button');
     expect(button.textContent).toBe('Copy');
   });
 
   it('shows success state after copyValue is called', async () => {
     // Mock navigator.clipboard
-    const writeTextMock = jest.fn().mockResolvedValue(undefined);
+    const writeTextMock = vi.fn().mockResolvedValue(undefined);
     Object.defineProperty(navigator, 'clipboard', {
       value: { writeText: writeTextMock },
       writable: true,
       configurable: true,
     });
 
-    const page = await newSpecPage({
-      components: [CopyButton],
-      html: '<copy-button value="copy-me"></copy-button>',
-    });
+    const { root, waitForChanges } = await render(<copy-button value="copy-me"></copy-button>);
 
     // Simulate click with a mock MouseEvent
     const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
-    jest.spyOn(clickEvent, 'stopPropagation');
-    jest.spyOn(clickEvent, 'preventDefault');
+    vi.spyOn(clickEvent, 'stopPropagation');
+    vi.spyOn(clickEvent, 'preventDefault');
 
-    await page.rootInstance.copyValue(clickEvent);
-    await page.waitForChanges();
+    await root.copyValue(clickEvent);
+    await waitForChanges();
 
     expect(writeTextMock).toHaveBeenCalledWith('copy-me');
-    expect(page.rootInstance.copied).toBe(true);
+    expect(root.copied).toBe(true);
 
     // Button text should change to success state
-    const updatedButton = page.root.querySelector('button');
+    const updatedButton = root.querySelector('button');
     expect(updatedButton.textContent).toContain('Copied!');
   });
 
   it('aria-label changes to copied state after successful copy', async () => {
-    const writeTextMock = jest.fn().mockResolvedValue(undefined);
+    const writeTextMock = vi.fn().mockResolvedValue(undefined);
     Object.defineProperty(navigator, 'clipboard', {
       value: { writeText: writeTextMock },
       writable: true,
       configurable: true,
     });
 
-    const page = await newSpecPage({
-      components: [CopyButton],
-      html: '<copy-button value="test" label="DOI"></copy-button>',
-    });
+    const { root, waitForChanges } = await render(<copy-button value="test" label="DOI"></copy-button>);
 
     const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
-    await page.rootInstance.copyValue(clickEvent);
-    await page.waitForChanges();
+    await root.copyValue(clickEvent);
+    await waitForChanges();
 
-    const button = page.root.querySelector('button');
+    const button = root.querySelector('button');
     expect(button.getAttribute('aria-label')).toBe('DOI copied to clipboard');
   });
 
   it('renders sr-only live region when copied is true', async () => {
-    const writeTextMock = jest.fn().mockResolvedValue(undefined);
+    const writeTextMock = vi.fn().mockResolvedValue(undefined);
     Object.defineProperty(navigator, 'clipboard', {
       value: { writeText: writeTextMock },
       writable: true,
       configurable: true,
     });
 
-    const page = await newSpecPage({
-      components: [CopyButton],
-      html: '<copy-button value="test"></copy-button>',
-    });
+    const { root, waitForChanges } = await render(<copy-button value="test"></copy-button>);
 
     // Before copy, no sr-only region
-    let srOnly = page.root.querySelector('.sr-only');
+    let srOnly = root.querySelector('.sr-only');
     expect(srOnly).toBeNull();
 
     const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
-    await page.rootInstance.copyValue(clickEvent);
-    await page.waitForChanges();
+    await root.copyValue(clickEvent);
+    await waitForChanges();
 
-    srOnly = page.root.querySelector('.sr-only');
+    srOnly = root.querySelector('.sr-only');
     expect(srOnly).toBeTruthy();
     expect(srOnly.getAttribute('aria-live')).toBe('assertive');
     expect(srOnly.textContent).toContain('Content copied to clipboard');
   });
 
   it('button has correct CSS classes for default state', async () => {
-    const page = await newSpecPage({
-      components: [CopyButton],
-      html: '<copy-button value="test"></copy-button>',
-    });
-    const button = page.root.querySelector('button');
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    const button = root.querySelector('button');
     expect(button.className).toContain('rounded-md');
     expect(button.className).toContain('border');
     expect(button.className).toContain('font-mono');
@@ -171,85 +135,70 @@ describe('copy-button', () => {
   });
 
   it('button has green background CSS class after successful copy', async () => {
-    const writeTextMock = jest.fn().mockResolvedValue(undefined);
+    const writeTextMock = vi.fn().mockResolvedValue(undefined);
     Object.defineProperty(navigator, 'clipboard', {
       value: { writeText: writeTextMock },
       writable: true,
       configurable: true,
     });
 
-    const page = await newSpecPage({
-      components: [CopyButton],
-      html: '<copy-button value="test"></copy-button>',
-    });
+    const { root, waitForChanges } = await render(<copy-button value="test"></copy-button>);
 
     const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
-    await page.rootInstance.copyValue(clickEvent);
-    await page.waitForChanges();
+    await root.copyValue(clickEvent);
+    await waitForChanges();
 
-    const button = page.root.querySelector('button');
+    const button = root.querySelector('button');
     expect(button.className).toContain('bg-green-200');
   });
 
   it('host has inline-block class', async () => {
-    const page = await newSpecPage({
-      components: [CopyButton],
-      html: '<copy-button value="test"></copy-button>',
-    });
-    expect(page.root.className).toContain('inline-block');
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    expect(root.className).toContain('inline-block');
   });
 
   it('copyValue stops event propagation', async () => {
-    const writeTextMock = jest.fn().mockResolvedValue(undefined);
+    const writeTextMock = vi.fn().mockResolvedValue(undefined);
     Object.defineProperty(navigator, 'clipboard', {
       value: { writeText: writeTextMock },
       writable: true,
       configurable: true,
     });
 
-    const page = await newSpecPage({
-      components: [CopyButton],
-      html: '<copy-button value="test"></copy-button>',
-    });
+    const { root } = await render(<copy-button value="test"></copy-button>);
 
     const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
-    const stopSpy = jest.spyOn(clickEvent, 'stopPropagation');
-    const preventSpy = jest.spyOn(clickEvent, 'preventDefault');
+    const stopSpy = vi.spyOn(clickEvent, 'stopPropagation');
+    const preventSpy = vi.spyOn(clickEvent, 'preventDefault');
 
-    await page.rootInstance.copyValue(clickEvent);
+    await root.copyValue(clickEvent);
 
     expect(stopSpy).toHaveBeenCalled();
     expect(preventSpy).toHaveBeenCalled();
   });
 
   it('showSuccess sets copied to true then resets', async () => {
-    // Create page BEFORE enabling fake timers (newSpecPage uses real timers internally)
-    const page = await newSpecPage({
-      components: [CopyButton],
-      html: '<copy-button value="test"></copy-button>',
-    });
+    // Create component BEFORE enabling fake timers
+    const { root } = await render(<copy-button value="test"></copy-button>);
 
-    jest.useFakeTimers();
+    vi.useFakeTimers();
 
     // Call showSuccess directly to avoid clipboard API issues with fake timers
-    page.rootInstance.showSuccess();
-    expect(page.rootInstance.copied).toBe(true);
+    root.showSuccess();
+    expect(root.copied).toBe(true);
 
     // Fast-forward 1.5 seconds
-    jest.advanceTimersByTime(1500);
-    expect(page.rootInstance.copied).toBe(false);
+    vi.advanceTimersByTime(1500);
+    expect(root.copied).toBe(false);
 
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 });
 
 describe('copy-button accessibility', () => {
   it('has no a11y violations', async () => {
-    const page = await newSpecPage({
-      components: [CopyButton],
-      html: '<copy-button value="test-value"></copy-button>',
-    });
-    await checkA11y(page.root.outerHTML);
+    const { root } = await render(<copy-button value="test-value"></copy-button>);
+    await checkA11y(root.outerHTML);
   });
 });
 
@@ -262,19 +211,16 @@ describe('copy-button additional coverage', () => {
       configurable: true,
     });
 
-    const execCommandMock = jest.fn().mockReturnValue(true);
+    const execCommandMock = vi.fn().mockReturnValue(true);
     document.execCommand = execCommandMock;
 
-    const page = await newSpecPage({
-      components: [CopyButton],
-      html: '<copy-button value="fallback-value"></copy-button>',
-    });
+    const { root } = await render(<copy-button value="fallback-value"></copy-button>);
 
     const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
-    jest.spyOn(clickEvent, 'stopPropagation');
-    jest.spyOn(clickEvent, 'preventDefault');
+    vi.spyOn(clickEvent, 'stopPropagation');
+    vi.spyOn(clickEvent, 'preventDefault');
 
-    await page.rootInstance.copyValue(clickEvent);
+    await root.copyValue(clickEvent);
     // The fallback path creates a textarea and uses setTimeout(200ms),
     // so we verify the event propagation was stopped
     expect(clickEvent.stopPropagation).toHaveBeenCalled();
@@ -282,47 +228,41 @@ describe('copy-button additional coverage', () => {
   });
 
   it('success state shows check icon after copy', async () => {
-    const writeTextMock = jest.fn().mockResolvedValue(undefined);
+    const writeTextMock = vi.fn().mockResolvedValue(undefined);
     Object.defineProperty(navigator, 'clipboard', {
       value: { writeText: writeTextMock },
       writable: true,
       configurable: true,
     });
 
-    const page = await newSpecPage({
-      components: [CopyButton],
-      html: '<copy-button value="test"></copy-button>',
-    });
+    const { root, waitForChanges } = await render(<copy-button value="test"></copy-button>);
 
     const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
-    await page.rootInstance.copyValue(clickEvent);
-    await page.waitForChanges();
+    await root.copyValue(clickEvent);
+    await waitForChanges();
 
-    expect(page.rootInstance.copied).toBe(true);
-    const button = page.root.querySelector('button');
+    expect(root.copied).toBe(true);
+    const button = root.querySelector('button');
     // The check mark is included in the button text "✓ Copied!"
     expect(button.textContent).toContain('✓');
     expect(button.textContent).toContain('Copied!');
   });
 
   it('component has sr-only label for screen readers after copy', async () => {
-    const writeTextMock = jest.fn().mockResolvedValue(undefined);
+    const writeTextMock = vi.fn().mockResolvedValue(undefined);
     Object.defineProperty(navigator, 'clipboard', {
       value: { writeText: writeTextMock },
       writable: true,
       configurable: true,
     });
 
-    const page = await newSpecPage({
-      components: [CopyButton],
-      html: '<copy-button value="test"></copy-button>',
-    });
+    const { root, waitForChanges } = await render(<copy-button value="test"></copy-button>);
 
     const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
-    await page.rootInstance.copyValue(clickEvent);
-    await page.waitForChanges();
+    await root.copyValue(clickEvent);
+    await waitForChanges();
 
-    const srOnly = page.root.querySelector('.sr-only');
+    const srOnly = root.querySelector('.sr-only');
     expect(srOnly).toBeTruthy();
     expect(srOnly.getAttribute('aria-live')).toBe('assertive');
     expect(srOnly.textContent).toContain('Content copied to clipboard');

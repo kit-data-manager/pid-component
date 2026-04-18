@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { HSLColor } from '../../../components/color-highlight/HSLColor';
 
 describe('HSLColor', () => {

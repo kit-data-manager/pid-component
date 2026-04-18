@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { scanDom } from '../../auto-detect/DomScanner';
 
 // Polyfill NodeFilter constants for Stencil's test environment

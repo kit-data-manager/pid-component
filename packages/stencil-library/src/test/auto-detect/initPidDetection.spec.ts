@@ -1,3 +1,4 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { initPidDetection } from '../../auto-detect/initPidDetection';
 import * as DomScanner from '../../auto-detect/DomScanner';
 import * as TextReplacer from '../../auto-detect/TextReplacer';
@@ -5,11 +6,11 @@ import * as DetectionRegistry from '../../auto-detect/detection-registry';
 
 // ─── Spies ───────────────────────────────────────────────────────────
 
-let spyScanDom: jest.SpyInstance;
-let spyReplaceMatches: jest.SpyInstance;
-let spyRestoreOriginalText: jest.SpyInstance;
-let spyDetectBestFit: jest.SpyInstance;
-let spySanitizeToken: jest.SpyInstance;
+let spyScanDom: any;
+let spyReplaceMatches: any;
+let spyRestoreOriginalText: any;
+let spyDetectBestFit: any;
+let spySanitizeToken: any;
 
 // ─── Helpers ─────────────────────────────────────────────────────────
 
@@ -27,12 +28,12 @@ if (typeof (globalThis as any).NodeFilter === 'undefined') {
 
 beforeEach(() => {
   // Set up spies on imported modules
-  spyScanDom = jest.spyOn(DomScanner, 'scanDom').mockResolvedValue([]);
-  spyReplaceMatches = jest.spyOn(TextReplacer, 'replaceMatches').mockReturnValue([]);
-  spyRestoreOriginalText = jest.spyOn(TextReplacer, 'restoreOriginalText').mockImplementation(() => {
+  spyScanDom = vi.spyOn(DomScanner, 'scanDom').mockResolvedValue([]);
+  spyReplaceMatches = vi.spyOn(TextReplacer, 'replaceMatches').mockReturnValue([]);
+  spyRestoreOriginalText = vi.spyOn(TextReplacer, 'restoreOriginalText').mockImplementation(() => {
   });
-  spyDetectBestFit = jest.spyOn(DetectionRegistry, 'detectBestFit').mockReturnValue(null);
-  spySanitizeToken = jest.spyOn(DetectionRegistry, 'sanitizeToken').mockImplementation(
+  spyDetectBestFit = vi.spyOn(DetectionRegistry, 'detectBestFit').mockReturnValue(null);
+  spySanitizeToken = vi.spyOn(DetectionRegistry, 'sanitizeToken').mockImplementation(
     (token: string) => ({ sanitized: token, leadingStripped: 0 }),
   );
 
@@ -44,7 +45,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
   delete (globalThis as any).requestIdleCallback;
 });
 
@@ -374,13 +375,13 @@ describe('initPidDetection', () => {
   describe('MutationObserver (observe: true)', () => {
     it('stop() disconnects the MutationObserver', async () => {
       const root = document.createElement('div');
-      const disconnectSpy = jest.fn();
+      const disconnectSpy = vi.fn();
 
       const OriginalMutationObserver = globalThis.MutationObserver;
       (globalThis as any).MutationObserver = class {
-        observe = jest.fn();
+        observe = vi.fn();
         disconnect = disconnectSpy;
-        takeRecords = jest.fn().mockReturnValue([]);
+        takeRecords = vi.fn().mockReturnValue([]);
 
         constructor(public callback: MutationCallback) {
         }
@@ -398,13 +399,13 @@ describe('initPidDetection', () => {
 
     it('destroy() disconnects the MutationObserver', async () => {
       const root = document.createElement('div');
-      const disconnectSpy = jest.fn();
+      const disconnectSpy = vi.fn();
 
       const OriginalMutationObserver = globalThis.MutationObserver;
       (globalThis as any).MutationObserver = class {
-        observe = jest.fn();
+        observe = vi.fn();
         disconnect = disconnectSpy;
-        takeRecords = jest.fn().mockReturnValue([]);
+        takeRecords = vi.fn().mockReturnValue([]);
 
         constructor(public callback: MutationCallback) {
         }
@@ -425,9 +426,9 @@ describe('initPidDetection', () => {
 
       const OriginalMutationObserver = globalThis.MutationObserver;
       (globalThis as any).MutationObserver = class {
-        observe = jest.fn();
-        disconnect = jest.fn();
-        takeRecords = jest.fn().mockReturnValue([]);
+        observe = vi.fn();
+        disconnect = vi.fn();
+        takeRecords = vi.fn().mockReturnValue([]);
 
         constructor(cb: MutationCallback) {
           observerCallback = cb;
@@ -467,9 +468,9 @@ describe('initPidDetection', () => {
 
       const OriginalMutationObserver = globalThis.MutationObserver;
       (globalThis as any).MutationObserver = class {
-        observe = jest.fn();
-        disconnect = jest.fn();
-        takeRecords = jest.fn().mockReturnValue([]);
+        observe = vi.fn();
+        disconnect = vi.fn();
+        takeRecords = vi.fn().mockReturnValue([]);
 
         constructor(cb: MutationCallback) {
           observerCallback = cb;
@@ -505,9 +506,9 @@ describe('initPidDetection', () => {
 
       const OriginalMutationObserver = globalThis.MutationObserver;
       (globalThis as any).MutationObserver = class {
-        observe = jest.fn();
-        disconnect = jest.fn();
-        takeRecords = jest.fn().mockReturnValue([]);
+        observe = vi.fn();
+        disconnect = vi.fn();
+        takeRecords = vi.fn().mockReturnValue([]);
 
         constructor(cb: MutationCallback) {
           observerCallback = cb;

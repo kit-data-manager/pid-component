@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/web-components-vite';
-import { expect } from '@storybook/test';
+import { expect } from 'storybook/test';
 
 /**
  * Full-page showcase examples demonstrating automatic PID detection across

@@ -1,50 +1,35 @@
-import { newSpecPage } from '@stencil/core/testing';
-import { LocaleVisualization } from '../../../components/locale-vizualization/locale-visualization';
+import { render, h } from '@stencil/vitest';
+import { describe, it, expect } from 'vitest';
 import { checkA11y } from '../../axe-helper';
 
 describe('locale-visualization', () => {
   it('renders with locale prop', async () => {
-    const page = await newSpecPage({
-      components: [LocaleVisualization],
-      html: '<locale-visualization locale="en"></locale-visualization>',
-    });
-    expect(page.root).toBeTruthy();
-    expect(page.root.tagName).toBe('LOCALE-VISUALIZATION');
+    const { root } = await render(<locale-visualization locale="en"></locale-visualization>);
+    expect(root).toBeTruthy();
+    expect(root.tagName).toBe('LOCALE-VISUALIZATION');
   });
 
   it('sets the locale prop correctly', async () => {
-    const page = await newSpecPage({
-      components: [LocaleVisualization],
-      html: '<locale-visualization locale="de"></locale-visualization>',
-    });
-    expect(page.rootInstance.locale).toBe('de');
+    const { root } = await render(<locale-visualization locale="de"></locale-visualization>);
+    expect(root.locale).toBe('de');
   });
 
   it('displays locale information in a span', async () => {
-    const page = await newSpecPage({
-      components: [LocaleVisualization],
-      html: '<locale-visualization locale="en"></locale-visualization>',
-    });
-    const span = page.root.querySelector('span');
+    const { root } = await render(<locale-visualization locale="en"></locale-visualization>);
+    const span = root.querySelector('span');
     expect(span).toBeTruthy();
     expect(span.textContent.length).toBeGreaterThan(0);
   });
 
   it('showFlag defaults to true', async () => {
-    const page = await newSpecPage({
-      components: [LocaleVisualization],
-      html: '<locale-visualization locale="en"></locale-visualization>',
-    });
-    expect(page.rootInstance.showFlag).toBe(true);
+    const { root } = await render(<locale-visualization locale="en"></locale-visualization>);
+    expect(root.showFlag).toBe(true);
   });
 });
 
 describe('locale-visualization accessibility', () => {
   it('has no a11y violations', async () => {
-    const page = await newSpecPage({
-      components: [LocaleVisualization],
-      html: '<locale-visualization locale="en"></locale-visualization>',
-    });
-    await checkA11y(page.root.outerHTML);
+    const { root } = await render(<locale-visualization locale="en"></locale-visualization>);
+    await checkA11y(root.outerHTML);
   });
 });

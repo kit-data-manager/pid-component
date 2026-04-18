@@ -1,8 +1,10 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+
 // ---------------------------------------------------------------------------
 // Mock renderers — we replace the real `renderers` array from ./utils with
 // lightweight stubs so we never pull in Stencil component dependencies.
 //
-// Jest hoists jest.mock() calls above imports, so we cannot reference
+// vi.mock() calls are hoisted above imports, so we cannot reference
 // variables declared in the outer scope. Instead we build the mock array
 // inside the factory and later obtain a reference to it via require().
 // ---------------------------------------------------------------------------
@@ -13,32 +15,32 @@ function createMockConstructor(opts: {
   asyncResult?: boolean;
   settingsKey?: string;
 }) {
-  return jest.fn().mockImplementation((value: string) => ({
+  return vi.fn().mockImplementation((value: string) => ({
     value,
-    hasCorrectFormatQuick: jest.fn().mockReturnValue(opts.quickResult),
-    hasCorrectFormat: jest.fn().mockResolvedValue(opts.asyncResult ?? false),
-    init: jest.fn().mockResolvedValue(undefined),
-    getSettingsKey: jest.fn().mockReturnValue(opts.settingsKey ?? opts.key),
-    isResolvable: jest.fn().mockReturnValue(true),
+    hasCorrectFormatQuick: vi.fn().mockReturnValue(opts.quickResult),
+    hasCorrectFormat: vi.fn().mockResolvedValue(opts.asyncResult ?? false),
+    init: vi.fn().mockResolvedValue(undefined),
+    getSettingsKey: vi.fn().mockReturnValue(opts.settingsKey ?? opts.key),
+    isResolvable: vi.fn().mockReturnValue(true),
     settings: undefined as unknown,
   }));
 }
 
-jest.mock('../../utils/utils', () => {
+vi.mock('../../utils/utils', () => {
   // This helper is duplicated inside the factory because the outer
-  // createMockConstructor is not yet available when jest.mock runs.
+  // createMockConstructor is not yet available when vi.mock runs.
   function _create(opts: {
     key: string;
     quickResult?: boolean | undefined;
     asyncResult?: boolean;
   }) {
-    return jest.fn().mockImplementation((value: string) => ({
+    return vi.fn().mockImplementation((value: string) => ({
       value,
-      hasCorrectFormatQuick: jest.fn().mockReturnValue(opts.quickResult),
-      hasCorrectFormat: jest.fn().mockResolvedValue(opts.asyncResult ?? false),
-      init: jest.fn().mockResolvedValue(undefined),
-      getSettingsKey: jest.fn().mockReturnValue(opts.key),
-      isResolvable: jest.fn().mockReturnValue(true),
+      hasCorrectFormatQuick: vi.fn().mockReturnValue(opts.quickResult),
+      hasCorrectFormat: vi.fn().mockResolvedValue(opts.asyncResult ?? false),
+      init: vi.fn().mockResolvedValue(undefined),
+      getSettingsKey: vi.fn().mockReturnValue(opts.key),
+      isResolvable: vi.fn().mockReturnValue(true),
       settings: undefined as unknown,
     }));
   }
@@ -65,7 +67,7 @@ import { renderers } from '../../utils/utils';
 const mockRenderers = renderers as {
   priority: number;
   key: string;
-  constructor: jest.Mock;
+  constructor: any;
 }[];
 
 // ---------------------------------------------------------------------------
@@ -84,7 +86,7 @@ describe('Parser', () => {
   }
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     resetRenderers();
   });
 
@@ -248,19 +250,19 @@ describe('Parser', () => {
     });
 
     it('warns on settings error but still returns the renderer', async () => {
-      const badConstructor = jest.fn().mockImplementation((value: string) => ({
+      const badConstructor = vi.fn().mockImplementation((value: string) => ({
         value,
-        hasCorrectFormatQuick: jest.fn().mockReturnValue(true),
-        hasCorrectFormat: jest.fn().mockResolvedValue(true),
-        init: jest.fn().mockResolvedValue(undefined),
-        getSettingsKey: jest.fn().mockImplementation(() => {
+        hasCorrectFormatQuick: vi.fn().mockReturnValue(true),
+        hasCorrectFormat: vi.fn().mockResolvedValue(true),
+        init: vi.fn().mockResolvedValue(undefined),
+        getSettingsKey: vi.fn().mockImplementation(() => {
           throw new Error('boom');
         }),
         settings: undefined as unknown,
       }));
       mockRenderers[1].constructor = badConstructor;
 
-      const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       const result = await Parser.getBestFit('value', emptySettings);
       expect(result).not.toBeNull();
       expect(warnSpy).toHaveBeenCalledWith('Error while adding settings to object:', expect.any(Error));
@@ -316,7 +318,7 @@ describe('Parser', () => {
 
   describe('getEffectiveRenderers() (via public API)', () => {
     it('warns on unknown renderer keys', () => {
-      const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       // getBestFitQuick calls getEffectiveRenderers internally
       Parser.getBestFitQuick('value', ['NonExistentKey']);
       expect(warnSpy).toHaveBeenCalledWith('Parser: Unknown renderer key "NonExistentKey" in ordered renderer list, skipping.');
@@ -336,7 +338,7 @@ describe('Parser', () => {
     });
 
     it('returns empty effective list for all unknown keys', () => {
-      const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       const result = Parser.getBestFitQuick('value', ['Alpha', 'Beta']);
       expect(result).toBeNull();
       expect(warnSpy).toHaveBeenCalledTimes(2);

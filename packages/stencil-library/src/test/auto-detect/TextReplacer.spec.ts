@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach } from 'vitest';
 import { replaceMatches, restoreOriginalText } from '../../auto-detect/TextReplacer';
 import type { DetectionMatch, PidDetectionConfig } from '../../auto-detect/types';
 

@@ -1,15 +1,16 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { PIDRecord } from '../../../rendererModules/Handle/PIDRecord';
 import { PID } from '../../../rendererModules/Handle/PID';
 import { PIDDataType } from '../../../rendererModules/Handle/PIDDataType';
 
 // Mock dependencies
-jest.mock('../../../utils/utils', () => ({
+vi.mock('../../../utils/utils', () => ({
   handleMap: new Map(),
   unresolvables: new Set(),
   typeMap: new Map(),
 }));
-jest.mock('../../../utils/DataCache', () => ({
-  cachedFetch: jest.fn(),
+vi.mock('../../../utils/DataCache', () => ({
+  cachedFetch: vi.fn(),
 }));
 
 describe('PIDRecord', () => {

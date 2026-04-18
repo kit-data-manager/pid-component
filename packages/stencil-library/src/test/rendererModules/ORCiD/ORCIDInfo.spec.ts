@@ -1,8 +1,9 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ORCIDInfo } from '../../../rendererModules/ORCiD/ORCIDInfo';
 
 // Mock the cachedFetch dependency to prevent real network calls
-jest.mock('../../../utils/DataCache', () => ({
-  cachedFetch: jest.fn(),
+vi.mock('../../../utils/DataCache', () => ({
+  cachedFetch: vi.fn(),
 }));
 
 describe('ORCIDInfo', () => {

@@ -1,165 +1,114 @@
-import { newSpecPage } from '@stencil/core/testing';
-import { PidTooltip } from '../../../components/pid-tooltip/pid-tooltip';
+import { render, h } from '@stencil/vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { checkA11y } from '../../axe-helper';
 
 describe('pid-tooltip', () => {
   it('renders with text prop', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="Tooltip content"></pid-tooltip>',
-    });
-    expect(page.root).toBeTruthy();
-    expect(page.root.tagName).toBe('PID-TOOLTIP');
+    const { root } = await render(<pid-tooltip text="Tooltip content"></pid-tooltip>);
+    expect(root).toBeTruthy();
+    expect(root.tagName).toBe('PID-TOOLTIP');
   });
 
   it('sets the text prop correctly', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="Some info"></pid-tooltip>',
-    });
-    expect(page.rootInstance.text).toBe('Some info');
+    const { root } = await render(<pid-tooltip text="Some info"></pid-tooltip>);
+    expect(root.text).toBe('Some info');
   });
 
   it('tooltip is hidden by default', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="Hidden tooltip"></pid-tooltip>',
-    });
-    expect(page.rootInstance.isVisible).toBe(false);
-    const tooltipDiv = page.root.querySelector('[role="tooltip"]');
+    const { root } = await render(<pid-tooltip text="Hidden tooltip"></pid-tooltip>);
+    expect(root.isVisible).toBe(false);
+    const tooltipDiv = root.querySelector('[role="tooltip"]');
     expect(tooltipDiv).toBeTruthy();
     expect(tooltipDiv.classList.contains('hidden')).toBe(true);
   });
 
   it('has correct default position prop', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="test"></pid-tooltip>',
-    });
-    expect(page.rootInstance.position).toBe('top');
+    const { root } = await render(<pid-tooltip text="test"></pid-tooltip>);
+    expect(root.position).toBe('top');
   });
 
   it('has correct default maxWidth prop', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="test"></pid-tooltip>',
-    });
-    expect(page.rootInstance.maxWidth).toBe('250px');
+    const { root } = await render(<pid-tooltip text="test"></pid-tooltip>);
+    expect(root.maxWidth).toBe('250px');
   });
 
   it('renders an info button when text is provided', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="Some help text"></pid-tooltip>',
-    });
-    const button = page.root.querySelector('button');
+    const { root } = await render(<pid-tooltip text="Some help text"></pid-tooltip>);
+    const button = root.querySelector('button');
     expect(button).toBeTruthy();
     expect(button.getAttribute('aria-label')).toContain('additional information');
   });
 
   it('does not render button or tooltip when text is empty', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text=""></pid-tooltip>',
-    });
-    const button = page.root.querySelector('button');
+    const { root } = await render(<pid-tooltip text=""></pid-tooltip>);
+    const button = root.querySelector('button');
     expect(button).toBeNull();
-    const tooltipDiv = page.root.querySelector('[role="tooltip"]');
+    const tooltipDiv = root.querySelector('[role="tooltip"]');
     expect(tooltipDiv).toBeNull();
   });
 
   it('does not render button or tooltip when text is whitespace only', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="   "></pid-tooltip>',
-    });
-    const button = page.root.querySelector('button');
+    const { root } = await render(<pid-tooltip text="   "></pid-tooltip>);
+    const button = root.querySelector('button');
     expect(button).toBeNull();
   });
 
   it('showTooltip sets isVisible to true', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="Info text"></pid-tooltip>',
-    });
-    expect(page.rootInstance.isVisible).toBe(false);
-    page.rootInstance.showTooltip();
-    expect(page.rootInstance.isVisible).toBe(true);
+    const { root } = await render(<pid-tooltip text="Info text"></pid-tooltip>);
+    expect(root.isVisible).toBe(false);
+    root.showTooltip();
+    expect(root.isVisible).toBe(true);
   });
 
   it('hideTooltip sets isVisible to false', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="Info text"></pid-tooltip>',
-    });
-    page.rootInstance.isVisible = true;
-    page.rootInstance.hideTooltip();
-    expect(page.rootInstance.isVisible).toBe(false);
+    const { root } = await render(<pid-tooltip text="Info text"></pid-tooltip>);
+    root.isVisible = true;
+    root.hideTooltip();
+    expect(root.isVisible).toBe(false);
   });
 
   it('toggleTooltip toggles visibility', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="Info text"></pid-tooltip>',
-    });
-    const mockEvent = { preventDefault: jest.fn(), stopPropagation: jest.fn() };
+    const { root } = await render(<pid-tooltip text="Info text"></pid-tooltip>);
+    const mockEvent = { preventDefault: vi.fn(), stopPropagation: vi.fn() };
 
-    expect(page.rootInstance.isVisible).toBe(false);
-    page.rootInstance.toggleTooltip(mockEvent);
-    expect(page.rootInstance.isVisible).toBe(true);
-    page.rootInstance.toggleTooltip(mockEvent);
-    expect(page.rootInstance.isVisible).toBe(false);
+    expect(root.isVisible).toBe(false);
+    root.toggleTooltip(mockEvent);
+    expect(root.isVisible).toBe(true);
+    root.toggleTooltip(mockEvent);
+    expect(root.isVisible).toBe(false);
   });
 
   it('position prop defaults to top', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="test"></pid-tooltip>',
-    });
-    expect(page.rootInstance.position).toBe('top');
+    const { root } = await render(<pid-tooltip text="test"></pid-tooltip>);
+    expect(root.position).toBe('top');
   });
 
   it('position prop can be set to bottom', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="test" position="bottom"></pid-tooltip>',
-    });
-    expect(page.rootInstance.position).toBe('bottom');
+    const { root } = await render(<pid-tooltip text="test" position="bottom"></pid-tooltip>);
+    expect(root.position).toBe('bottom');
   });
 
   it('maxWidth prop defaults to 250px', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="test"></pid-tooltip>',
-    });
-    expect(page.rootInstance.maxWidth).toBe('250px');
+    const { root } = await render(<pid-tooltip text="test"></pid-tooltip>);
+    expect(root.maxWidth).toBe('250px');
   });
 
   it('maxHeight prop defaults to 150px', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="test"></pid-tooltip>',
-    });
-    expect(page.rootInstance.maxHeight).toBe('150px');
+    const { root } = await render(<pid-tooltip text="test"></pid-tooltip>);
+    expect(root.maxHeight).toBe('150px');
   });
 
   it('maxWidth prop applies to tooltip element styles', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="test" max-width="400px"></pid-tooltip>',
-    });
-    expect(page.rootInstance.maxWidth).toBe('400px');
-    const tooltipDiv = page.root.querySelector('[role="tooltip"]');
+    const { root } = await render(<pid-tooltip text="test" max-width="400px"></pid-tooltip>);
+    expect(root.maxWidth).toBe('400px');
+    const tooltipDiv = root.querySelector('[role="tooltip"]');
     expect(tooltipDiv).toBeTruthy();
     expect(tooltipDiv.getAttribute('style')).toContain('max-width: 400px');
   });
 
   it('tooltip renders text content in a paragraph', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="Detailed info here"></pid-tooltip>',
-    });
-    const tooltipDiv = page.root.querySelector('[role="tooltip"]');
+    const { root } = await render(<pid-tooltip text="Detailed info here"></pid-tooltip>);
+    const tooltipDiv = root.querySelector('[role="tooltip"]');
     expect(tooltipDiv).toBeTruthy();
     const paragraph = tooltipDiv.querySelector('p');
     expect(paragraph).toBeTruthy();
@@ -167,192 +116,145 @@ describe('pid-tooltip', () => {
   });
 
   it('tooltip div has hidden class when not visible', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="test"></pid-tooltip>',
-    });
-    const tooltipDiv = page.root.querySelector('[role="tooltip"]');
+    const { root } = await render(<pid-tooltip text="test"></pid-tooltip>);
+    const tooltipDiv = root.querySelector('[role="tooltip"]');
     expect(tooltipDiv.classList.contains('hidden')).toBe(true);
     expect(tooltipDiv.classList.contains('block')).toBe(false);
   });
 
   it('tooltip div has block class when visible', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="test"></pid-tooltip>',
-    });
-    page.rootInstance.isVisible = true;
-    await page.waitForChanges();
-    const tooltipDiv = page.root.querySelector('[role="tooltip"]');
+    const { root, waitForChanges } = await render(<pid-tooltip text="test"></pid-tooltip>);
+    root.isVisible = true;
+    await waitForChanges();
+    const tooltipDiv = root.querySelector('[role="tooltip"]');
     expect(tooltipDiv.classList.contains('block')).toBe(true);
     expect(tooltipDiv.classList.contains('hidden')).toBe(false);
   });
 
   it('button aria-expanded reflects visibility state', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="test"></pid-tooltip>',
-    });
-    let button = page.root.querySelector('button');
+    const { root, waitForChanges } = await render(<pid-tooltip text="test"></pid-tooltip>);
+    let button = root.querySelector('button');
     expect(button.getAttribute('aria-expanded')).toBe('false');
 
-    page.rootInstance.isVisible = true;
-    await page.waitForChanges();
-    button = page.root.querySelector('button');
+    root.isVisible = true;
+    await waitForChanges();
+    button = root.querySelector('button');
     expect(button.getAttribute('aria-expanded')).toBe('true');
   });
 
   it('button aria-label changes based on visibility', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="test"></pid-tooltip>',
-    });
-    let button = page.root.querySelector('button');
+    const { root, waitForChanges } = await render(<pid-tooltip text="test"></pid-tooltip>);
+    let button = root.querySelector('button');
     expect(button.getAttribute('aria-label')).toContain('Show');
 
-    page.rootInstance.isVisible = true;
-    await page.waitForChanges();
-    button = page.root.querySelector('button');
+    root.isVisible = true;
+    await waitForChanges();
+    button = root.querySelector('button');
     expect(button.getAttribute('aria-label')).toContain('Hide');
   });
 
   it('renders sr-only announcement when tooltip is visible', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="test"></pid-tooltip>',
-    });
+    const { root, waitForChanges } = await render(<pid-tooltip text="test"></pid-tooltip>);
     // Not visible initially
-    let srOnly = page.root.querySelector('.sr-only[aria-live="assertive"]');
+    let srOnly = root.querySelector('.sr-only[aria-live="assertive"]');
     expect(srOnly).toBeNull();
 
-    page.rootInstance.isVisible = true;
-    await page.waitForChanges();
-    srOnly = page.root.querySelector('.sr-only[aria-live="assertive"]');
+    root.isVisible = true;
+    await waitForChanges();
+    srOnly = root.querySelector('.sr-only[aria-live="assertive"]');
     expect(srOnly).toBeTruthy();
     expect(srOnly.textContent).toContain('Information tooltip opened');
   });
 
   it('host has relative inline-block class', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="test"></pid-tooltip>',
-    });
-    expect(page.root.className).toContain('relative');
-    expect(page.root.className).toContain('inline-block');
+    const { root } = await render(<pid-tooltip text="test"></pid-tooltip>);
+    expect(root.className).toContain('relative');
+    expect(root.className).toContain('inline-block');
   });
 
   it('has a trigger slot area for content', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="test"><div slot="trigger">Trigger content</div></pid-tooltip>',
-    });
+    const { root } = await render(
+      <pid-tooltip text="test"><div slot="trigger">Trigger content</div></pid-tooltip>
+    );
     // Non-shadow components distribute slot content directly; verify the trigger content is present
-    const triggerContent = page.root.querySelector('[slot="trigger"]');
+    const triggerContent = root.querySelector('[slot="trigger"]');
     expect(triggerContent).toBeTruthy();
     expect(triggerContent.textContent).toBe('Trigger content');
   });
 
   it('hideTooltip is called on Escape when visible', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="test"></pid-tooltip>',
-    });
+    const { root } = await render(<pid-tooltip text="test"></pid-tooltip>);
     // Set visible first directly
-    page.rootInstance.isVisible = true;
-    expect(page.rootInstance.isVisible).toBe(true);
+    root.isVisible = true;
+    expect(root.isVisible).toBe(true);
 
-    // Call hideTooltip directly to verify behavior (the @Listen decorator
-    // wires this up at runtime but is not fully active in spec test DOM)
-    page.rootInstance.hideTooltip();
-    expect(page.rootInstance.isVisible).toBe(false);
+    // Call hideTooltip directly to verify behavior
+    root.hideTooltip();
+    expect(root.isVisible).toBe(false);
   });
 
   it('fitContent prop defaults to true', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="test"></pid-tooltip>',
-    });
-    expect(page.rootInstance.fitContent).toBe(true);
+    const { root } = await render(<pid-tooltip text="test"></pid-tooltip>);
+    expect(root.fitContent).toBe(true);
   });
 });
 
 describe('pid-tooltip accessibility', () => {
   it('has no a11y violations', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="Tooltip content"></pid-tooltip>',
-    });
-    await checkA11y(page.root.outerHTML);
+    const { root } = await render(<pid-tooltip text="Tooltip content"></pid-tooltip>);
+    await checkA11y(root.outerHTML);
   });
 });
 
 describe('pid-tooltip additional coverage', () => {
-  it('showTooltip sets isVisible to true via rootInstance', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="Info"></pid-tooltip>',
-    });
-    expect(page.rootInstance.isVisible).toBe(false);
-    page.rootInstance.showTooltip();
-    expect(page.rootInstance.isVisible).toBe(true);
+  it('showTooltip sets isVisible to true via root', async () => {
+    const { root } = await render(<pid-tooltip text="Info"></pid-tooltip>);
+    expect(root.isVisible).toBe(false);
+    root.showTooltip();
+    expect(root.isVisible).toBe(true);
   });
 
-  it('hideTooltip sets isVisible to false via rootInstance', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="Info"></pid-tooltip>',
-    });
-    page.rootInstance.isVisible = true;
-    page.rootInstance.hideTooltip();
-    expect(page.rootInstance.isVisible).toBe(false);
+  it('hideTooltip sets isVisible to false via root', async () => {
+    const { root } = await render(<pid-tooltip text="Info"></pid-tooltip>);
+    root.isVisible = true;
+    root.hideTooltip();
+    expect(root.isVisible).toBe(false);
   });
 
   it('Escape key hides tooltip when visible (via direct hideTooltip call)', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="Info"></pid-tooltip>',
-    });
+    const { root } = await render(<pid-tooltip text="Info"></pid-tooltip>);
     // The @Listen('keydown') decorator handles Escape by calling hideTooltip
     // In spec tests, we verify the behavior by simulating the effect
-    page.rootInstance.isVisible = true;
-    expect(page.rootInstance.isVisible).toBe(true);
+    root.isVisible = true;
+    expect(root.isVisible).toBe(true);
 
     // hideTooltip is what gets called when Escape is pressed
-    page.rootInstance.hideTooltip();
-    expect(page.rootInstance.isVisible).toBe(false);
+    root.hideTooltip();
+    expect(root.isVisible).toBe(false);
   });
 
   it('non-Escape key does not hide tooltip', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="Info"></pid-tooltip>',
-    });
-    page.rootInstance.isVisible = true;
+    const { root } = await render(<pid-tooltip text="Info"></pid-tooltip>);
+    root.isVisible = true;
 
     // Dispatching a non-Escape keydown should not hide the tooltip
     // Since @Listen is wired at runtime, we just verify the state is unchanged
-    expect(page.rootInstance.isVisible).toBe(true);
+    expect(root.isVisible).toBe(true);
   });
 
   it('position prop set to bottom applies bottom position', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="Info" position="bottom"></pid-tooltip>',
-    });
-    expect(page.rootInstance.position).toBe('bottom');
+    const { root } = await render(<pid-tooltip text="Info" position="bottom"></pid-tooltip>);
+    expect(root.position).toBe('bottom');
     // After componentDidLoad, calculatedPosition should be bottom
-    expect(page.rootInstance.calculatedPosition).toBe('bottom');
+    expect(root.calculatedPosition).toBe('bottom');
   });
 
   it('dark mode class is applied when parent pid-component has bg-gray-800', async () => {
-    const page = await newSpecPage({
-      components: [PidTooltip],
-      html: '<pid-tooltip text="Info"></pid-tooltip>',
-    });
+    const { root } = await render(<pid-tooltip text="Info"></pid-tooltip>);
     // The dark mode detection depends on closest pid-component having bg-gray-800 class
     // Without that parent, isDarkMode logic in render uses parentComponent?.classList
     // Just verify the component renders without errors in default (light) mode
-    const button = page.root.querySelector('button');
+    const button = root.querySelector('button');
     expect(button).toBeTruthy();
     expect(button.className).toContain('text-gray-600');
   });

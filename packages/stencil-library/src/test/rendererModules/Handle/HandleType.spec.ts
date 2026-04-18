@@ -1,12 +1,13 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { HandleType } from '../../../rendererModules/Handle/HandleType';
 
 // Mock PID module dependencies
-jest.mock('../../../utils/utils', () => ({
+vi.mock('../../../utils/utils', () => ({
   handleMap: new Map(),
   unresolvables: new Set(),
 }));
-jest.mock('../../../utils/DataCache', () => ({
-  cachedFetch: jest.fn(),
+vi.mock('../../../utils/DataCache', () => ({
+  cachedFetch: vi.fn(),
 }));
 
 describe('HandleType', () => {

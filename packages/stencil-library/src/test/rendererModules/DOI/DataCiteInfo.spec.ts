@@ -1,12 +1,10 @@
-// Polyfill `self` before any module imports
-(globalThis as any).self = globalThis;
-
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { DataCiteInfo } from '../../../rendererModules/DOI/DataCiteInfo';
 import { DOI } from '../../../rendererModules/DOI/DOI';
 import * as DataCache from '../../../utils/DataCache';
 import dataCiteFixture from '../../fixtures/doi-datacite.json';
 
-let cachedFetchSpy: jest.SpyInstance;
+let cachedFetchSpy: any;
 
 describe('DataCiteInfo', () => {
   const testDOI = new DOI('10.5445/ir/1000185135');
@@ -14,7 +12,7 @@ describe('DataCiteInfo', () => {
   describe('fetch()', () => {
 
     beforeEach(() => {
-      cachedFetchSpy = jest.spyOn(DataCache, 'cachedFetch');
+      cachedFetchSpy = vi.spyOn(DataCache, 'cachedFetch');
     });
 
     afterEach(() => {

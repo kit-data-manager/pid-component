@@ -1,14 +1,12 @@
 /**
- * Helper for running jest-axe accessibility tests in Stencil's mock DOM environment.
+ * Helper for running axe-core accessibility tests in Stencil's mock DOM environment.
  *
  * axe-core captures `window` at load time. Stencil creates its mock window
  * before each test suite, so we must ensure the polyfills are on `window`
- * BEFORE jest-axe is first loaded, and we must defer the import.
+ * BEFORE axe-core is first loaded, and we must defer the import.
  */
 
-// Cache axe module per test file to avoid re-loading. Note: this is set
-// per-file since each test file gets its own module scope.
-let axeModule: any = null;
+import { expect } from 'vitest';
 
 export function applyAxePolyfills() {
   const w = window as any;
@@ -57,23 +55,24 @@ export async function checkA11y(html: string): Promise<void> {
   // Ensure polyfills are on window before axe-core loads
   applyAxePolyfills();
 
-  // Always require jest-axe fresh — Stencil creates a new window per test file,
-  // and axe-core's IIFE captures window at load time. Using require() will
-  // return the cached module (same window ref) unless we resetModules first.
-  // However, resetModules breaks Stencil, so we require() and accept the
-  // cached axe-core. The polyfills above ensure window.NamedNodeMap exists.
-  if (!axeModule) {
-    axeModule = require('jest-axe');
-  }
-  expect.extend(axeModule.toHaveNoViolations);
+  // Dynamically import axe-core
+  const axe = await import('axe-core');
+  const container = document.createElement('div');
+  container.innerHTML = html;
+  document.body.appendChild(container);
 
-  const results = await axeModule.axe(html, {
-    rules: {
-      // Disable rules that are not relevant for isolated component testing
-      region: { enabled: false },
-      'page-has-heading-one': { enabled: false },
-      'landmark-one-main': { enabled: false },
-    },
-  });
-  expect(results).toHaveNoViolations();
+  try {
+    const results = await axe.default.run(container, {
+      rules: {
+        // Disable rules that are not relevant for isolated component testing
+        region: { enabled: false },
+        'page-has-heading-one': { enabled: false },
+        'landmark-one-main': { enabled: false },
+      },
+    });
+
+    expect(results.violations).toEqual([]);
+  } finally {
+    document.body.removeChild(container);
+  }
 }

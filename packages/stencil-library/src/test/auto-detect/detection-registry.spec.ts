@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { sanitizeToken, detectBestFit, detectionRegistry } from '../../auto-detect/detection-registry';
 
 describe('detection-registry', () => {

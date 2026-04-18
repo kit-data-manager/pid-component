@@ -1,3 +1,4 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { SPDXType } from '../../rendererModules/SPDXType';
 
 describe('SPDXType', () => {
@@ -68,8 +69,8 @@ describe('SPDXType', () => {
     };
 
     beforeEach(() => {
-      jest.clearAllMocks();
-      global.fetch = jest.fn() as jest.Mock;
+      vi.clearAllMocks();
+      global.fetch = vi.fn() as any;
     });
 
     afterEach(() => {
@@ -77,9 +78,9 @@ describe('SPDXType', () => {
     });
 
     it('returns true for valid license ID validated by API', async () => {
-      (global.fetch as jest.Mock).mockResolvedValue({
+      (global.fetch as any).mockResolvedValue({
         ok: true,
-        json: jest.fn().mockResolvedValue(spdxLicenseResponse),
+        json: vi.fn().mockResolvedValue(spdxLicenseResponse),
       });
 
       const st = new SPDXType('Apache-2.0');
@@ -89,7 +90,7 @@ describe('SPDXType', () => {
     });
 
     it('returns false when API returns 404', async () => {
-      (global.fetch as jest.Mock).mockResolvedValue({
+      (global.fetch as any).mockResolvedValue({
         ok: false,
         status: 404,
       });
@@ -101,9 +102,9 @@ describe('SPDXType', () => {
     });
 
     it('returns false when API response has no licenseId', async () => {
-      (global.fetch as jest.Mock).mockResolvedValue({
+      (global.fetch as any).mockResolvedValue({
         ok: true,
-        json: jest.fn().mockResolvedValue({}),
+        json: vi.fn().mockResolvedValue({}),
       });
 
       const st = new SPDXType('Apache-2.0');
@@ -113,9 +114,9 @@ describe('SPDXType', () => {
     });
 
     it('returns true for SPDX URL validated by API', async () => {
-      (global.fetch as jest.Mock).mockResolvedValue({
+      (global.fetch as any).mockResolvedValue({
         ok: true,
-        json: jest.fn().mockResolvedValue(spdxLicenseResponse),
+        json: vi.fn().mockResolvedValue(spdxLicenseResponse),
       });
 
       const st = new SPDXType('https://spdx.org/licenses/Apache-2.0');
@@ -136,11 +137,11 @@ describe('SPDXType', () => {
     };
 
     beforeEach(() => {
-      jest.clearAllMocks();
-      global.fetch = jest.fn().mockResolvedValue({
+      vi.clearAllMocks();
+      global.fetch = vi.fn().mockResolvedValue({
         ok: true,
-        json: jest.fn().mockResolvedValue(spdxLicenseResponse),
-      }) as jest.Mock;
+        json: vi.fn().mockResolvedValue(spdxLicenseResponse),
+      }) as any;
     });
 
     afterEach(() => {
@@ -187,7 +188,7 @@ describe('SPDXType', () => {
     });
 
     it('handles fetch error gracefully', async () => {
-      (global.fetch as jest.Mock).mockRejectedValue(new Error('Network error'));
+      (global.fetch as any).mockRejectedValue(new Error('Network error'));
 
       const st = new SPDXType('MIT');
       await st.init();

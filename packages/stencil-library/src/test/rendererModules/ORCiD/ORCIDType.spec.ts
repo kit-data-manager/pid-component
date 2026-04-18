@@ -1,12 +1,13 @@
 // Polyfill `self` before any module imports (DataCache uses `self.caches`)
 (globalThis as any).self = globalThis;
 
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ORCIDType } from '../../../rendererModules/ORCiD/ORCIDType';
 import * as DataCache from '../../../utils/DataCache';
 
-let cachedFetchSpy: jest.SpyInstance;
+let cachedFetchSpy: any;
 beforeEach(() => {
-  cachedFetchSpy = jest.spyOn(DataCache, 'cachedFetch');
+  cachedFetchSpy = vi.spyOn(DataCache, 'cachedFetch');
 });
 afterEach(() => {
   cachedFetchSpy.mockRestore();
@@ -86,7 +87,7 @@ describe('ORCIDType', () => {
     };
 
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it('fetches ORCIDInfo from API and populates items', async () => {
@@ -118,7 +119,7 @@ describe('ORCIDType', () => {
 
   describe('isResolvable()', () => {
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it('returns true when ORCiDJSON is defined (successful API response)', async () => {
@@ -172,7 +173,7 @@ describe('ORCIDType', () => {
     };
 
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it('returns a truthy functional component', async () => {
@@ -188,7 +189,7 @@ describe('ORCIDType', () => {
 
   describe('data getter', () => {
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it('returns serialized ORCIDInfo as JSON string', async () => {
@@ -217,7 +218,7 @@ describe('ORCIDType', () => {
 
   describe('init() with cached data', () => {
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it('loads from cached data without fetching', async () => {
@@ -239,7 +240,7 @@ describe('ORCIDType', () => {
       const cachedData = ot1.data;
 
       // Create a new instance and init with cached data
-      jest.clearAllMocks();
+      vi.clearAllMocks();
       const ot2 = new ORCIDType('0009-0005-2800-4833');
       await ot2.init(cachedData);
 

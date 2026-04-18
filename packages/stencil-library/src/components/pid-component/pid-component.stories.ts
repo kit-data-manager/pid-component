@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { Meta, StoryObj } from '@storybook/web-components-vite';
-import { expect, waitFor } from '@storybook/test';
+import { expect, waitFor } from 'storybook/test';
 
 
 /**

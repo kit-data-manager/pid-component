@@ -1,4 +1,6 @@
-// DataCache.ts uses `self.caches` (a browser/worker global). In Jest's Node
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+
+// DataCache.ts uses `self.caches` (a browser/worker global). In Vitest's Node
 // environment `self` is not defined, so we need to polyfill it on `globalThis`
 // before importing the module.
 (globalThis as any).self = globalThis;
@@ -30,10 +32,10 @@ describe('DataCache', () => {
     it('falls back to fetch when no cache is available', async () => {
       const mockData = { name: 'test-resource' };
       const mockResponse = {
-        json: jest.fn().mockResolvedValue(mockData),
+        json: vi.fn().mockResolvedValue(mockData),
       } as unknown as Response;
 
-      global.fetch = jest.fn().mockResolvedValue(mockResponse);
+      global.fetch = vi.fn().mockResolvedValue(mockResponse);
 
       const result = await cachedFetch('https://example.com/api/data');
 
@@ -44,11 +46,11 @@ describe('DataCache', () => {
     it('passes init options through to fetch', async () => {
       const mockData = { result: 'ok' };
       const mockResponse = {
-        json: jest.fn().mockResolvedValue(mockData),
+        json: vi.fn().mockResolvedValue(mockData),
       } as unknown as Response;
       const init = { headers: { Authorization: 'Bearer token' } };
 
-      global.fetch = jest.fn().mockResolvedValue(mockResponse);
+      global.fetch = vi.fn().mockResolvedValue(mockResponse);
 
       const result = await cachedFetch('https://example.com/api/data', init);
 
@@ -59,30 +61,30 @@ describe('DataCache', () => {
 
   describe('cachedFetch() with cache API available', () => {
     let mockCache: {
-      match: jest.Mock;
-      put: jest.Mock;
-      delete: jest.Mock;
+      match: any;
+      put: any;
+      delete: any;
     };
 
     beforeEach(() => {
       mockCache = {
-        match: jest.fn(),
-        put: jest.fn().mockResolvedValue(undefined),
-        delete: jest.fn().mockResolvedValue(true),
+        match: vi.fn(),
+        put: vi.fn().mockResolvedValue(undefined),
+        delete: vi.fn().mockResolvedValue(true),
       };
 
       (globalThis as any).caches = {
-        open: jest.fn().mockResolvedValue(mockCache),
+        open: vi.fn().mockResolvedValue(mockCache),
       };
     });
 
     it('returns cached response when cache hit occurs', async () => {
       const cachedData = { cached: true };
       const cachedResponse = {
-        json: jest.fn().mockResolvedValue(cachedData),
+        json: vi.fn().mockResolvedValue(cachedData),
       };
       mockCache.match.mockResolvedValue(cachedResponse);
-      global.fetch = jest.fn();
+      global.fetch = vi.fn();
 
       const result = await cachedFetch('https://example.com/resource');
 
@@ -97,11 +99,11 @@ describe('DataCache', () => {
       const networkData = { fresh: true };
       const clonedResponse = {} as Response;
       const networkResponse = {
-        json: jest.fn().mockResolvedValue(networkData),
-        clone: jest.fn().mockReturnValue(clonedResponse),
+        json: vi.fn().mockResolvedValue(networkData),
+        clone: vi.fn().mockReturnValue(clonedResponse),
       } as unknown as Response;
 
-      global.fetch = jest.fn().mockResolvedValue(networkResponse);
+      global.fetch = vi.fn().mockResolvedValue(networkResponse);
 
       const result = await cachedFetch('https://example.com/resource');
 
@@ -116,11 +118,11 @@ describe('DataCache', () => {
       const networkData = { upgraded: true };
       const clonedResponse = {} as Response;
       const networkResponse = {
-        json: jest.fn().mockResolvedValue(networkData),
-        clone: jest.fn().mockReturnValue(clonedResponse),
+        json: vi.fn().mockResolvedValue(networkData),
+        clone: vi.fn().mockReturnValue(clonedResponse),
       } as unknown as Response;
 
-      global.fetch = jest.fn().mockResolvedValue(networkResponse);
+      global.fetch = vi.fn().mockResolvedValue(networkResponse);
 
       const result = await cachedFetch('http://example.com/resource');
 
@@ -137,21 +139,21 @@ describe('DataCache', () => {
 
     it('calls delete on the cache instance when it exists', async () => {
       const mockCache = {
-        match: jest.fn(),
-        put: jest.fn().mockResolvedValue(undefined),
-        delete: jest.fn().mockResolvedValue(true),
+        match: vi.fn(),
+        put: vi.fn().mockResolvedValue(undefined),
+        delete: vi.fn().mockResolvedValue(true),
       };
 
       (globalThis as any).caches = {
-        open: jest.fn().mockResolvedValue(mockCache),
+        open: vi.fn().mockResolvedValue(mockCache),
       };
 
       // Trigger open() by calling cachedFetch so cacheInstance is populated
       const mockResponse = {
-        json: jest.fn().mockResolvedValue({}),
+        json: vi.fn().mockResolvedValue({}),
       };
       mockCache.match.mockResolvedValue(mockResponse);
-      global.fetch = jest.fn();
+      global.fetch = vi.fn();
 
       await cachedFetch('https://example.com/init');
 

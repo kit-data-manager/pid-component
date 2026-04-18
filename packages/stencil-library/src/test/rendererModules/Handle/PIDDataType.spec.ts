@@ -1,15 +1,17 @@
-// Shared mock instances — must be declared BEFORE jest.mock so the factory can reference them
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+
+// Shared mock instances — must be declared BEFORE vi.mock so the factory can reference them
 const mockTypeMap = new Map();
 const mockUnresolvables = new Set();
 const mockHandleMap = new Map();
-const mockCachedFetch = jest.fn();
+const mockCachedFetch = vi.fn();
 
-jest.mock('../../../utils/utils', () => ({
+vi.mock('../../../utils/utils', () => ({
   handleMap: mockHandleMap,
   unresolvables: mockUnresolvables,
   typeMap: mockTypeMap,
 }));
-jest.mock('../../../utils/DataCache', () => ({
+vi.mock('../../../utils/DataCache', () => ({
   cachedFetch: mockCachedFetch,
 }));
 
@@ -67,7 +69,7 @@ describe('PIDDataType', () => {
 
   describe('resolveDataType()', () => {
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
       mockTypeMap.clear();
       mockUnresolvables.clear();
       mockHandleMap.clear();
@@ -96,9 +98,9 @@ describe('PIDDataType', () => {
     it('returns undefined when PID resolve() returns undefined', async () => {
       const pid = new PID('21.T11148', 'unresolvable');
       // Mock isResolvable to return true so we get past the first check
-      jest.spyOn(pid, 'isResolvable').mockReturnValue(true);
+      vi.spyOn(pid, 'isResolvable').mockReturnValue(true);
       // Mock resolve to return undefined (API failure)
-      jest.spyOn(pid, 'resolve').mockResolvedValue(undefined);
+      vi.spyOn(pid, 'resolve').mockResolvedValue(undefined);
 
       const result = await PIDDataType.resolveDataType(pid);
 
@@ -108,7 +110,7 @@ describe('PIDDataType', () => {
 
     it('resolves a PID with 10320/loc XML containing json and html locations', async () => {
       const pid = new PID('21.T11148', '076759916209e5d62bd5');
-      jest.spyOn(pid, 'isResolvable').mockReturnValue(true);
+      vi.spyOn(pid, 'isResolvable').mockReturnValue(true);
 
       // Build a mock PIDRecord with a 10320/Loc entry containing XML
       const xmlData = `<?xml version="1.0" encoding="UTF-8"?>
@@ -128,7 +130,7 @@ describe('PIDDataType', () => {
         ],
       };
 
-      jest.spyOn(pid, 'resolve').mockResolvedValue(mockRecord as any);
+      vi.spyOn(pid, 'resolve').mockResolvedValue(mockRecord as any);
 
       // Mock cachedFetch to return ePIC registry data for the JSON location
       mockCachedFetch.mockResolvedValue({
@@ -151,7 +153,7 @@ describe('PIDDataType', () => {
 
     it('resolves a PID with only an html location (no json)', async () => {
       const pid = new PID('21.T11148', 'htmlonly');
-      jest.spyOn(pid, 'isResolvable').mockReturnValue(true);
+      vi.spyOn(pid, 'isResolvable').mockReturnValue(true);
 
       const xmlData = `<?xml version="1.0" encoding="UTF-8"?>
         <locations>
@@ -169,7 +171,7 @@ describe('PIDDataType', () => {
         ],
       };
 
-      jest.spyOn(pid, 'resolve').mockResolvedValue(mockRecord as any);
+      vi.spyOn(pid, 'resolve').mockResolvedValue(mockRecord as any);
 
       const result = await PIDDataType.resolveDataType(pid);
 
@@ -181,7 +183,7 @@ describe('PIDDataType', () => {
 
     it('resolves a PID with no 10320/loc entries (no location data)', async () => {
       const pid = new PID('21.T11148', 'noloc');
-      jest.spyOn(pid, 'isResolvable').mockReturnValue(true);
+      vi.spyOn(pid, 'isResolvable').mockReturnValue(true);
 
       const mockRecord = {
         pid,
@@ -194,7 +196,7 @@ describe('PIDDataType', () => {
         ],
       };
 
-      jest.spyOn(pid, 'resolve').mockResolvedValue(mockRecord as any);
+      vi.spyOn(pid, 'resolve').mockResolvedValue(mockRecord as any);
 
       const result = await PIDDataType.resolveDataType(pid);
 
@@ -205,7 +207,7 @@ describe('PIDDataType', () => {
 
     it('handles cachedFetch failure gracefully', async () => {
       const pid = new PID('21.T11148', 'fetchfail');
-      jest.spyOn(pid, 'isResolvable').mockReturnValue(true);
+      vi.spyOn(pid, 'isResolvable').mockReturnValue(true);
 
       const xmlData = `<?xml version="1.0" encoding="UTF-8"?>
         <locations>
@@ -223,7 +225,7 @@ describe('PIDDataType', () => {
         ],
       };
 
-      jest.spyOn(pid, 'resolve').mockResolvedValue(mockRecord as any);
+      vi.spyOn(pid, 'resolve').mockResolvedValue(mockRecord as any);
       mockCachedFetch.mockRejectedValue(new Error('Network error'));
 
       const result = await PIDDataType.resolveDataType(pid);
@@ -235,7 +237,7 @@ describe('PIDDataType', () => {
 
     it('handles XML with weight attribute on locations', async () => {
       const pid = new PID('21.T11148', 'weighted');
-      jest.spyOn(pid, 'isResolvable').mockReturnValue(true);
+      vi.spyOn(pid, 'isResolvable').mockReturnValue(true);
 
       const xmlData = `<?xml version="1.0" encoding="UTF-8"?>
         <locations>
@@ -253,7 +255,7 @@ describe('PIDDataType', () => {
         ],
       };
 
-      jest.spyOn(pid, 'resolve').mockResolvedValue(mockRecord as any);
+      vi.spyOn(pid, 'resolve').mockResolvedValue(mockRecord as any);
       mockCachedFetch.mockResolvedValue({
         name: 'WeightedType',
         description: 'A type with weight',
@@ -267,7 +269,7 @@ describe('PIDDataType', () => {
 
     it('matches locationType by string comparison when type is a string', async () => {
       const pid = new PID('21.T11148', 'stringtype');
-      jest.spyOn(pid, 'isResolvable').mockReturnValue(true);
+      vi.spyOn(pid, 'isResolvable').mockReturnValue(true);
 
       const xmlData = `<?xml version="1.0" encoding="UTF-8"?>
         <locations>
@@ -286,7 +288,7 @@ describe('PIDDataType', () => {
         ],
       };
 
-      jest.spyOn(pid, 'resolve').mockResolvedValue(mockRecord as any);
+      vi.spyOn(pid, 'resolve').mockResolvedValue(mockRecord as any);
 
       const result = await PIDDataType.resolveDataType(pid);
 

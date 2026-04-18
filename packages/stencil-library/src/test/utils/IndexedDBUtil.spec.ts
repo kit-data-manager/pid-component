@@ -1,52 +1,54 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+
 // ---------------------------------------------------------------------------
 // Mocks — must be declared before imports that trigger module evaluation
 // ---------------------------------------------------------------------------
 
 const mockDb = {
-  get: jest.fn(),
-  put: jest.fn(),
-  add: jest.fn().mockResolvedValue(undefined),
-  delete: jest.fn().mockResolvedValue(undefined),
-  clear: jest.fn().mockResolvedValue(undefined),
-  getAll: jest.fn(),
-  transaction: jest.fn().mockReturnValue({
+  get: vi.fn(),
+  put: vi.fn(),
+  add: vi.fn().mockResolvedValue(undefined),
+  delete: vi.fn().mockResolvedValue(undefined),
+  clear: vi.fn().mockResolvedValue(undefined),
+  getAll: vi.fn(),
+  transaction: vi.fn().mockReturnValue({
     store: {
-      index: jest.fn().mockReturnValue({
-        openCursor: jest.fn().mockResolvedValue(null),
+      index: vi.fn().mockReturnValue({
+        openCursor: vi.fn().mockResolvedValue(null),
       }),
-      add: jest.fn().mockResolvedValue(undefined),
-      delete: jest.fn().mockResolvedValue(undefined),
+      add: vi.fn().mockResolvedValue(undefined),
+      delete: vi.fn().mockResolvedValue(undefined),
     },
     done: Promise.resolve(),
   }),
 };
 
-jest.mock('@tempfix/idb', () => ({
-  openDB: jest.fn().mockResolvedValue(mockDb),
+vi.mock('@tempfix/idb', () => ({
+  openDB: vi.fn().mockResolvedValue(mockDb),
 }));
 
-jest.mock('../../utils/Parser', () => ({
+vi.mock('../../utils/Parser', () => ({
   Parser: {
-    getBestFit: jest.fn(),
+    getBestFit: vi.fn(),
   },
 }));
 
 // Mock the renderers array from utils
-const mockRendererConstructor = jest.fn().mockImplementation((value: string, settings?: unknown) => ({
+const mockRendererConstructor = vi.fn().mockImplementation((value: string, settings?: unknown) => ({
   value,
   settings,
-  init: jest.fn().mockResolvedValue(undefined),
-  getSettingsKey: jest.fn().mockReturnValue('DOIType'),
-  isResolvable: jest.fn().mockReturnValue(true),
+  init: vi.fn().mockResolvedValue(undefined),
+  getSettingsKey: vi.fn().mockReturnValue('DOIType'),
+  isResolvable: vi.fn().mockReturnValue(true),
   items: [],
   data: { some: 'data' },
 }));
 
-jest.mock('../../utils/utils', () => ({
+vi.mock('../../utils/utils', () => ({
   renderers: [
     { priority: 0, key: 'DOIType', constructor: mockRendererConstructor },
-    { priority: 1, key: 'ORCIDType', constructor: jest.fn() },
-    { priority: 99, key: 'FallbackType', constructor: jest.fn() },
+    { priority: 1, key: 'ORCIDType', constructor: vi.fn() },
+    { priority: 99, key: 'FallbackType', constructor: vi.fn() },
   ],
 }));
 
@@ -90,15 +92,15 @@ describe('Database', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     // Reset the transaction mock for each test
     mockDb.transaction.mockReturnValue({
       store: {
-        index: jest.fn().mockReturnValue({
-          openCursor: jest.fn().mockResolvedValue(null),
+        index: vi.fn().mockReturnValue({
+          openCursor: vi.fn().mockResolvedValue(null),
         }),
-        add: jest.fn().mockResolvedValue(undefined),
-        delete: jest.fn().mockResolvedValue(undefined),
+        add: vi.fn().mockResolvedValue(undefined),
+        delete: vi.fn().mockResolvedValue(undefined),
       },
       done: Promise.resolve(),
     });
@@ -130,14 +132,14 @@ describe('Database', () => {
       // After deletion, Parser.getBestFit returns a new renderer
       const freshRenderer = {
         value: 'test-doi',
-        getSettingsKey: jest.fn().mockReturnValue('DOIType'),
-        init: jest.fn().mockResolvedValue(undefined),
-        isResolvable: jest.fn().mockReturnValue(true),
+        getSettingsKey: vi.fn().mockReturnValue('DOIType'),
+        init: vi.fn().mockResolvedValue(undefined),
+        isResolvable: vi.fn().mockReturnValue(true),
         settings: undefined as unknown,
         items: [],
         data: { fresh: true },
       };
-      (Parser.getBestFit as jest.Mock).mockResolvedValue(freshRenderer);
+      (Parser.getBestFit as any).mockResolvedValue(freshRenderer);
 
       const result = await db.getEntity('test-doi', settings);
 
@@ -153,14 +155,14 @@ describe('Database', () => {
 
       const newRenderer = {
         value: 'new-doi',
-        getSettingsKey: jest.fn().mockReturnValue('DOIType'),
-        init: jest.fn().mockResolvedValue(undefined),
-        isResolvable: jest.fn().mockReturnValue(true),
+        getSettingsKey: vi.fn().mockReturnValue('DOIType'),
+        init: vi.fn().mockResolvedValue(undefined),
+        isResolvable: vi.fn().mockReturnValue(true),
         settings: undefined as unknown,
         items: [],
         data: {},
       };
-      (Parser.getBestFit as jest.Mock).mockResolvedValue(newRenderer);
+      (Parser.getBestFit as any).mockResolvedValue(newRenderer);
 
       const result = await db.getEntity('new-doi', settings);
 
@@ -173,14 +175,14 @@ describe('Database', () => {
 
       const resolvableRenderer = {
         value: 'doi-resolvable',
-        getSettingsKey: jest.fn().mockReturnValue('DOIType'),
-        init: jest.fn().mockResolvedValue(undefined),
-        isResolvable: jest.fn().mockReturnValue(true),
+        getSettingsKey: vi.fn().mockReturnValue('DOIType'),
+        init: vi.fn().mockResolvedValue(undefined),
+        isResolvable: vi.fn().mockReturnValue(true),
         settings: undefined as unknown,
         items: [],
         data: {},
       };
-      (Parser.getBestFit as jest.Mock).mockResolvedValue(resolvableRenderer);
+      (Parser.getBestFit as any).mockResolvedValue(resolvableRenderer);
 
       await db.getEntity('doi-resolvable', settingsNoTtl);
 
@@ -193,14 +195,14 @@ describe('Database', () => {
 
       const unresolvableRenderer = {
         value: 'doi-unresolvable',
-        getSettingsKey: jest.fn().mockReturnValue('DOIType'),
-        init: jest.fn().mockResolvedValue(undefined),
-        isResolvable: jest.fn().mockReturnValue(false),
+        getSettingsKey: vi.fn().mockReturnValue('DOIType'),
+        init: vi.fn().mockResolvedValue(undefined),
+        isResolvable: vi.fn().mockReturnValue(false),
         settings: undefined as unknown,
         items: [],
         data: {},
       };
-      (Parser.getBestFit as jest.Mock).mockResolvedValue(unresolvableRenderer);
+      (Parser.getBestFit as any).mockResolvedValue(unresolvableRenderer);
 
       const result = await db.getEntity('doi-unresolvable', settingsNoTtl);
 
@@ -211,7 +213,7 @@ describe('Database', () => {
 
     it('returns null when Parser returns null', async () => {
       mockDb.get.mockResolvedValue(undefined);
-      (Parser.getBestFit as jest.Mock).mockResolvedValue(null);
+      (Parser.getBestFit as any).mockResolvedValue(null);
 
       const result = await db.getEntity('unknown', settings);
 
@@ -224,14 +226,14 @@ describe('Database', () => {
 
       const freshRenderer = {
         value: 'test-doi',
-        getSettingsKey: jest.fn().mockReturnValue('ORCIDType'),
-        init: jest.fn().mockResolvedValue(undefined),
-        isResolvable: jest.fn().mockReturnValue(true),
+        getSettingsKey: vi.fn().mockReturnValue('ORCIDType'),
+        init: vi.fn().mockResolvedValue(undefined),
+        isResolvable: vi.fn().mockReturnValue(true),
         settings: undefined as unknown,
         items: [],
         data: {},
       };
-      (Parser.getBestFit as jest.Mock).mockResolvedValue(freshRenderer);
+      (Parser.getBestFit as any).mockResolvedValue(freshRenderer);
 
       const result = await db.getEntity('test-doi', settings, ['ORCIDType'], false);
 
@@ -290,7 +292,7 @@ describe('Database', () => {
   describe('normalizeKey() (via public API)', () => {
     it('returns string for string input', async () => {
       mockDb.get.mockResolvedValue(undefined);
-      (Parser.getBestFit as jest.Mock).mockResolvedValue(null);
+      (Parser.getBestFit as any).mockResolvedValue(null);
 
       await db.getEntity('my-string-key', settings);
 
@@ -300,8 +302,8 @@ describe('Database', () => {
 
     it('handles non-string inputs by converting to string', async () => {
       mockDb.get.mockResolvedValue(undefined);
-      (Parser.getBestFit as jest.Mock).mockResolvedValue(null);
-      const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
+      (Parser.getBestFit as any).mockResolvedValue(null);
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
       // Force a non-string value through the public API by casting
       await db.getEntity({ weird: 'object' } as unknown as string, settings);

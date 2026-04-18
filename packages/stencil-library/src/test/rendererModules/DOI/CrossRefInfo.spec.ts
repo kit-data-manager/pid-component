@@ -1,12 +1,10 @@
-// Polyfill `self` before any module imports
-(globalThis as any).self = globalThis;
-
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { CrossRefInfo } from '../../../rendererModules/DOI/CrossRefInfo';
 import { DOI } from '../../../rendererModules/DOI/DOI';
 import * as DataCache from '../../../utils/DataCache';
 import crossRefFixture from '../../fixtures/doi-crossref.json';
 
-let cachedFetchSpy: jest.SpyInstance;
+let cachedFetchSpy: any;
 
 describe('CrossRefInfo', () => {
   const testDOI = new DOI('10.1109/escience65000.2025.00022');
@@ -14,7 +12,7 @@ describe('CrossRefInfo', () => {
   describe('fetch()', () => {
 
     beforeEach(() => {
-      cachedFetchSpy = jest.spyOn(DataCache, 'cachedFetch');
+      cachedFetchSpy = vi.spyOn(DataCache, 'cachedFetch');
     });
 
     afterEach(() => {

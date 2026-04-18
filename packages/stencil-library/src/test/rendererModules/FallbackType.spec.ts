@@ -1,3 +1,4 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { FallbackType } from '../../rendererModules/FallbackType';
 
 describe('FallbackType', () => {

@@ -10,7 +10,6 @@ import cssnanoPlugin from 'cssnano';
 export const config: Config = {
   namespace: 'pid-component',
   globalStyle: 'src/tailwind.css',
-  buildEs5: true,
   outputTargets: [
     {
       type: 'dist'
@@ -47,27 +46,6 @@ export const config: Config = {
     },
     webTypesOutputTarget(),
   ],
-  testing: {
-    browserHeadless: 'shell',
-    setupFilesAfterEnv: ['./src/test/setup-axe.ts'],
-    testPathIgnorePatterns: ['<rootDir>/test/'],
-    coverageDirectory: './coverage',
-    collectCoverageFrom: [
-      'src/**/*.{ts,tsx}',
-      '!src/**/*.stories.{ts,tsx}',
-      '!src/**/*.mdx',
-      '!src/auto-detect/types.ts',
-      '!src/test/**',
-    ],
-    coverageThreshold: {
-      global: {
-        branches: 58,
-        functions: 75,
-        lines: 72,
-        statements: 70,
-      },
-    },
-  },
   plugins:[
     postcss({
       plugins:[
@@ -78,7 +56,6 @@ export const config: Config = {
   ],
   sourceMap: true,
   extras: {
-    enableImportInjection: true,
     experimentalSlotFixes: true
   },
   preamble:

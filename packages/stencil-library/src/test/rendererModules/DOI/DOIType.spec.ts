@@ -1,14 +1,12 @@
-// Polyfill `self` before any module imports (DataCache uses `self.caches`)
-(globalThis as any).self = globalThis;
-
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { DOIType } from '../../../rendererModules/DOI/DOIType';
 import { DOISource } from '../../../rendererModules/DOI/DOIInfo';
 import * as DataCache from '../../../utils/DataCache';
 
 // Spy on cachedFetch to intercept all network calls
-let cachedFetchSpy: jest.SpyInstance;
+let cachedFetchSpy: any;
 beforeEach(() => {
-  cachedFetchSpy = jest.spyOn(DataCache, 'cachedFetch');
+  cachedFetchSpy = vi.spyOn(DataCache, 'cachedFetch');
 });
 afterEach(() => {
   cachedFetchSpy.mockRestore();
@@ -84,7 +82,7 @@ describe('DOIType', () => {
     };
 
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it('fetches DOIInfo via DataCite API and populates items and actions', async () => {
@@ -133,7 +131,7 @@ describe('DOIType', () => {
 
   describe('isResolvable()', () => {
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it('returns true when DOIInfo has a title', async () => {
@@ -177,7 +175,7 @@ describe('DOIType', () => {
 
   describe('renderPreview()', () => {
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it('returns a truthy functional component', async () => {
@@ -207,7 +205,7 @@ describe('DOIType', () => {
 
   describe('data getter', () => {
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it('returns serialized DOIInfo as JSON string', async () => {
@@ -233,7 +231,7 @@ describe('DOIType', () => {
 
   describe('init() with cached data', () => {
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it('loads from cached data via second arg without fetching', async () => {
@@ -253,7 +251,7 @@ describe('DOIType', () => {
       const cachedData = dt1.data;
 
       // Now create a new instance and init with cached data
-      jest.clearAllMocks();
+      vi.clearAllMocks();
       const dt2 = new DOIType('10.5281/zenodo.9999999');
       await dt2.init(cachedData);
 

@@ -1,11 +1,12 @@
 /**
- * Setup file for jest-axe / axe-core compatibility with Stencil's mock DOM.
+ * Setup file for axe-core compatibility with Stencil's mock DOM.
  *
- * This runs via stencil.config.ts `testing.setupFilesAfterEnv` AFTER
- * Stencil sets up its MockWindow. We add missing DOM constructors
+ * This was previously configured via stencil.config.ts `testing.setupFilesAfterEnv`.
+ * Now it is loaded via vitest-setup.ts. We add missing DOM constructors
  * that axe-core requires in beforeEach so they persist across all tests.
  */
 
+import { beforeEach } from 'vitest';
 import { applyAxePolyfills } from './axe-helper';
 
 // Polyfill `self` for modules that reference it (e.g. DataCache.ts uses `'caches' in self`)
@@ -13,7 +14,7 @@ if (typeof (globalThis as any).self === 'undefined') {
   (globalThis as any).self = globalThis;
 }
 
-// Apply polyfills on EVERY test invocation to handle jest worker pool reuse
+// Apply polyfills on EVERY test invocation to handle worker pool reuse
 beforeEach(() => {
   applyAxePolyfills();
 
