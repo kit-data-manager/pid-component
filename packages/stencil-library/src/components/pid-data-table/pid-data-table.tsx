@@ -241,7 +241,7 @@ export class PidDataTable {
                           )
                         }
                       </div>
-                      <div class="shrink-0 p-2">
+                      <div class="shrink-0 px-2">
                         <copy-button
                           value={value.value}
                           class={`visible z-50 cursor-pointer rounded-xs ${isDarkMode ? 'bg-gray-700/90 hover:bg-gray-600' : 'bg-white/90 hover:bg-white'} opacity-100 shadow-xs transition-all duration-200 hover:shadow-md`}
