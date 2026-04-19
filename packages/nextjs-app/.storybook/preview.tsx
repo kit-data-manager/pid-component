@@ -1,3 +1,6 @@
+// Import Tailwind CSS for ShadCN-style components
+import './preview.css';
+
 // Register all custom elements using the dist-custom-elements bundle.
 // The lazy loader (defineCustomElements from /loader) does NOT work in
 // static Storybook builds because Vite bundles everything at build time

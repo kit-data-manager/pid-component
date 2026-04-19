@@ -13,16 +13,20 @@ const config: StorybookConfig = {
   core: { disableTelemetry: true },
   addons: ['@storybook/addon-docs', '@storybook/addon-a11y'],
   viteFinal: async (config) => {
+    // Dynamic import to avoid ESM resolution failure in npm workspaces
+    // (the package is hoisted to root node_modules but ESM resolves
+    // relative to this file's location)
+    const { default: vue } = await import('@vitejs/plugin-vue');
+
     config.resolve = config.resolve || {};
     config.resolve.alias = {
       ...config.resolve.alias,
-      // Fix: @stencil/vue-output-target runtime imports 'vue/server-renderer'
-      // which Vite mis-resolves when Vue is pre-bundled. Point it to the
-      // actual @vue/server-renderer package.
       'vue/server-renderer': path.dirname(require.resolve('@vue/server-renderer')),
       '@kit-data-manager/pid-component/dist': path.join(stencilRoot, 'dist'),
       '@kit-data-manager/pid-component': stencilRoot,
     };
+    config.plugins = config.plugins || [];
+    config.plugins.push(vue());
     return config;
   },
 };

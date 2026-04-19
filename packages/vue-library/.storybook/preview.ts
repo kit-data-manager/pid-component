@@ -45,9 +45,30 @@ definePidTooltip();
 defineColorHighlight();
 defineLocaleVisualization();
 
-export default {
+// Import Vuetify styles and MDI icon font
+import 'vuetify/styles';
+import '@mdi/font/css/materialdesignicons.css';
+import { createVuetify } from 'vuetify';
+import * as components from 'vuetify/components';
+import * as directives from 'vuetify/directives';
+import { setup } from '@storybook/vue3-vite';
+import type { Preview } from '@storybook/vue3-vite';
+
+const vuetify = createVuetify({
+  components,
+  directives,
+});
+
+// Install Vuetify 3 on the Vue app instance (required for Vue 3 + Vuetify 3).
+// Must call the framework's setup() to register the plugin, not just export it.
+setup((app) => {
+  app.use(vuetify);
+});
+
+const preview: Preview = {
   tags: ['autodocs'],
   parameters: {
+    layout: 'fullscreen',
     backgrounds: {
       options: {
         dark: { name: 'Dark', value: '#222' },
@@ -61,4 +82,12 @@ export default {
       },
     },
   },
+  decorators: [
+    (story) => ({
+      components: { story },
+      template: '<v-app><story /></v-app>',
+    }),
+  ],
 };
+
+export default preview;

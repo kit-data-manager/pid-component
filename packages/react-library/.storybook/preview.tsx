@@ -45,6 +45,9 @@ definePidTooltip();
 defineColorHighlight();
 defineLocaleVisualization();
 
+// Import Mantine styles for ResearchNexus demo
+import '@mantine/core/styles.css';
+
 export default {
   tags: ['autodocs'],
   parameters: {

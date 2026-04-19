@@ -290,6 +290,8 @@ This uses `concurrently` + `wait-on` to:
 4. Start the React (Next.js) sub-Storybook on port 6010
 5. Wait for all four, then start the main composed Storybook on port 6006
 
+You can kill all storybooks with `lsof -tiTCP:6006-6010 -sTCP:LISTEN | xargs kill`.
+
 You can also run just the main Storybook (`npm run storybook`) without the framework
 sub-Storybooks; the composed refs will simply show as unavailable.
 

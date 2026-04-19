@@ -17,3 +17,52 @@ details summary::-webkit-details-marker {
   display: inline-block;
   vertical-align: top;
 }
+
+/*
+ * Tailwind utility classes for pid-collapsible emphasized mode.
+ *
+ * REASON: pid-collapsible uses shadow:false and renders inside pid-component's
+ * shadow DOM (shadow:true). The Tailwind global stylesheet is injected into the
+ * document <head>, which cannot penetrate the shadow boundary. These classes are
+ * applied by pid-collapsible's getHostClasses() when emphasize=true, so the
+ * corresponding CSS rules must be available inside this shadow root.
+ */
+.border {
+  border-width: 1px;
+  border-style: solid;
+}
+
+.border-gray-300 {
+  border-color: #d1d5db;
+}
+
+.border-gray-600 {
+  border-color: #4b5563;
+}
+
+.rounded-md {
+  border-radius: 0.375rem;
+}
+
+.shadow-xs {
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+/* Background for expanded emphasized state */
+.bg-white {
+  background-color: #fff;
+}
+
+/* Bottom border on summary when open + emphasized */
+.border-b {
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+
+.border-gray-100 {
+  border-color: #f3f4f6;
+}
+
+.border-gray-700 {
+  border-color: #374151;
+}

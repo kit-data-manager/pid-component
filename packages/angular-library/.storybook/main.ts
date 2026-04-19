@@ -17,12 +17,14 @@ const config: StorybookConfig = {
     //   @kit-data-manager/pid-component/dist/components/pid-component.js
     //   @kit-data-manager/pid-component/components/pid-component.js
     // resolve to the actual files in the workspace-linked package.
+    const angularLibRoot = path.resolve(__dirname, '..');
     config.resolve = config.resolve || {};
     config.resolve.alias = {
       ...config.resolve.alias,
       '@kit-data-manager/pid-component/dist': path.join(stencilRoot, 'dist'),
       '@kit-data-manager/pid-component/components': path.join(stencilRoot, 'dist/components'),
       '@kit-data-manager/pid-component': stencilRoot,
+      '@kit-data-manager/angular-pid-component': angularLibRoot,
     };
     return config;
   },

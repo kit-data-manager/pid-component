@@ -14,7 +14,10 @@
             "outputPath": "dist-storybook",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "tsConfig": "tsconfig.storybook.json"
+            "tsConfig": "tsconfig.storybook.json",
+            "styles": [
+              "../../node_modules/@angular/material/prebuilt-themes/azure-blue.css"
+            ]
           }
         },
         "storybook": {
