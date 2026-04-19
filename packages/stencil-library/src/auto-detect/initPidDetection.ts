@@ -53,7 +53,7 @@ export function initPidDetection(config: PidDetectionConfig = {}): PidDetectionC
   let worker: Worker | null = null;
   let observer: MutationObserver | null = null;
   let allRecords: ReplacementRecord[] = [];
-  let pendingCallbacks = new Map<number, (matches: DetectionMatch[]) => void>();
+  const pendingCallbacks = new Map<number, (matches: DetectionMatch[]) => void>();
   let nextRequestId = 0;
   let destroyed = false;
 

@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FunctionalComponent, h } from '@stencil/core';
 import { GenericIdentifierType } from '../utils/GenericIdentifierType';
 

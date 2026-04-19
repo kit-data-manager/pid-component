@@ -1,7 +1,7 @@
 // Polyfill `self` before any module imports (DataCache uses `self.caches`)
 (globalThis as any).self = (globalThis as any).self || globalThis;
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { PID } from '../../../rendererModules/Handle/PID';
 
 // Mock the modules that PID.ts imports at the top level

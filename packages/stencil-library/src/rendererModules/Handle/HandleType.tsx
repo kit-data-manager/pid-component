@@ -1,7 +1,7 @@
 import { PIDRecord } from './PIDRecord';
 import { PID } from './PID';
 import { PIDDataType } from './PIDDataType';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 import { FunctionalComponent, h } from '@stencil/core';
 import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
 import { FoldableItem } from '../../utils/FoldableItem';

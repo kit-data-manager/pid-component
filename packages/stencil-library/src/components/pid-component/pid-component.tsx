@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Component, Element, h, Host, Prop, State, Watch } from '@stencil/core';
 import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
 import { FoldableItem } from '../../utils/FoldableItem';

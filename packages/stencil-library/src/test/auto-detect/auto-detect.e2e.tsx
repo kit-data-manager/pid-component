@@ -4,7 +4,7 @@ import { initPidDetection } from '../../auto-detect/initPidDetection';
 
 describe('auto-detect e2e', () => {
   it('creates pid-components for detected PIDs in text', async () => {
-    const { root, waitForChanges } = await render(
+    const { root } = await render(
       <div id="content">
         <p>See 10.5281/zenodo.1234567 for details</p>
       </div>,
