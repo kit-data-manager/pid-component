@@ -30,3 +30,4 @@ jobs:
           autoAcceptChanges: ${{ github.ref == 'refs/heads/main' }}
           exitZeroOnChanges: true
           zip: true
+          buildScriptName: build-storybook:root
