@@ -257,7 +257,7 @@ function createWorker(): Worker | null {
  * Uses Parser.getBestFitQuick() which calls hasCorrectFormatQuick() on renderers.
  */
 function detectOnMainThread(text: string, orderedRenderers?: string[]): DetectionMatch[] {
-  const DELIMITER_REGEX = /[\s,;()\[\]{}<>"']+/;
+  const DELIMITER_REGEX = /[\s,;()[\]{}<>"']+/;
   const matches: DetectionMatch[] = [];
 
   let remaining = text;

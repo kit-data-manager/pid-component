@@ -3,13 +3,25 @@ import { GenericIdentifierType } from '../utils/GenericIdentifierType';
 import { FoldableItem } from '../utils/FoldableItem';
 import { FoldableAction } from '../utils/FoldableAction';
 
+/** Shape of the ROR API v2 response used by this renderer. */
+interface RorApiResponse {
+  id: string;
+  status: string;
+  names: { value: string; types: string[] }[];
+  types: string[];
+  links: { type?: string; value: string }[];
+  external_ids: { type: string; preferred: string; all: string[] }[];
+  relationships: { type: string; id: string }[];
+  locations: { geonames_details: { country_code?: string; lat?: number; lng?: number } }[];
+}
+
 /**
  * This class specifies a custom renderer for Research Organization Registry (ROR) identifiers.
  * It fetches organization details from the ROR API v2 and displays them.
  * @extends GenericIdentifierType
  */
 export class RORType extends GenericIdentifierType {
-  private rorData: Record<string, any>;
+  private rorData: RorApiResponse;
   private label: string;
   private acronym: string;
 

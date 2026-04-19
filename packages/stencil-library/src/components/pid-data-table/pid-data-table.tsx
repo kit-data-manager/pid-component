@@ -111,9 +111,9 @@ export class PidDataTable {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         const collapsible = this.el.closest('pid-collapsible');
-        if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
+        if (collapsible && typeof (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions === 'function') {
           // Call the method on collapsible to calculate proper dimensions based on content
-          (collapsible as any).recalculateContentDimensions();
+          (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions();
         }
       });
     });

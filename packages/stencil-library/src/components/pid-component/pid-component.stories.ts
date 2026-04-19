@@ -784,7 +784,7 @@ export const RenderersMatchingDOI: Story = {
     await waitFor(() => {
       const pidComponent = canvasElement.querySelector('pid-component');
       expect(pidComponent).toBeTruthy();
-      expect((pidComponent as any).renderers).toEqual('["DOIType"]');
+      expect((pidComponent as HTMLPidComponentElement).renderers).toEqual('["DOIType"]');
     }, { timeout: 5000 });
   },
 };
@@ -843,7 +843,7 @@ export const RenderersStrictRestriction: Story = {
     const pidComponent = canvasElement.querySelector('pid-component');
     expect(pidComponent).toBeTruthy();
     // Component should exist but be invisible (unmatched state)
-    expect((pidComponent as any).fallbackToAll).toBe(false);
+    expect((pidComponent as HTMLPidComponentElement).fallbackToAll).toBe(false);
   },
 };
 

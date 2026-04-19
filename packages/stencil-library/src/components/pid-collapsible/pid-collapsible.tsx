@@ -271,7 +271,12 @@ export class PidCollapsible {
         window.cancelAnimationFrame(this.resizeDebounceTimer);
       }
 
-      return new Promise<any>(resolve => {
+      return new Promise<{
+        contentWidth: number;
+        contentHeight: number;
+        maxWidth: number;
+        maxHeight: number
+      }>(resolve => {
         this.resizeDebounceTimer = window.requestAnimationFrame(() => {
           const dimensions = this.calculateContentDimensions();
 

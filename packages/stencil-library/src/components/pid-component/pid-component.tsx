@@ -220,8 +220,8 @@ export class PidComponent {
     // Use a longer delay to ensure DOM is fully rendered before recalculating
     setTimeout(() => {
       const collapsible = this.el.querySelector('pid-collapsible');
-      if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
-        (collapsible as any).recalculateContentDimensions();
+      if (collapsible && typeof (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions === 'function') {
+        (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions();
       }
     }, 50);
   }
@@ -248,8 +248,8 @@ export class PidComponent {
     // After value updates, ensure dimensions are properly recalculated
     setTimeout(() => {
       const collapsible = this.el.querySelector('pid-collapsible');
-      if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
-        (collapsible as any).recalculateContentDimensions();
+      if (collapsible && typeof (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions === 'function') {
+        (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions();
       }
     }, 10);
   }
@@ -313,8 +313,8 @@ export class PidComponent {
           // After loading subcomponents, ensure dimensions are recalculated
           setTimeout(() => {
             const collapsible = this.el.querySelector('pid-collapsible');
-            if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
-              (collapsible as any).recalculateContentDimensions();
+            if (collapsible && typeof (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions === 'function') {
+              (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions();
             }
           }, 50);
         }
@@ -628,8 +628,8 @@ export class PidComponent {
         // After loading subcomponents, ensure dimensions are recalculated
         setTimeout(() => {
           const collapsible = this.el.querySelector('pid-collapsible');
-          if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
-            (collapsible as any).recalculateContentDimensions();
+          if (collapsible && typeof (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions === 'function') {
+            (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions();
           }
           console.log(
             `Loaded subcomponents and recalculated dimensions. expanded: ${this.isExpanded}, loadSubcomponents: ${this.loadSubcomponents}, currentLevel: ${this.currentLevelOfSubcomponents}, totalLevels: ${this.levelOfSubcomponents}`,

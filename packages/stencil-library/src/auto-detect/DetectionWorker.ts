@@ -20,7 +20,7 @@ let configuredRenderers: string[] | undefined;
  * Characters that serve as token delimiters when scanning text.
  * PIDs are expected to be whitespace- or punctuation-delimited tokens.
  */
-const DELIMITER_REGEX = /[\s,;()\[\]{}<>"']+/;
+const DELIMITER_REGEX = /[\s,;()[\]{}<>"']+/;
 
 /**
  * Tokenize a text string into tokens with their positions.
