@@ -33,7 +33,7 @@
     "build": "lerna run build",
     "test": "lerna run test && npm run test-storybook",
     "storybook": "storybook dev -p 6006 --no-open",
-    "build-storybook": "npm run build-storybook:root && npm run build-storybook:children && npm run build-storybook:copy",
+    "build-storybook": "npm run build && npm run build-storybook:root && npm run build-storybook:children && npm run build-storybook:copy",
     "build-storybook:root": "storybook build -o storybook-static",
     "build-storybook:children": "npm run build-storybook -w packages/react-library && npm run build-storybook -w packages/vue-library && npm run build-storybook -w packages/angular-library && npm run build-storybook -w packages/nextjs-app",
     "build-storybook:copy": "cp -r packages/react-library/storybook-static storybook-static/react-vite && cp -r packages/vue-library/storybook-static storybook-static/vue && cp -r packages/angular-library/storybook-static storybook-static/angular && cp -r packages/nextjs-app/storybook-static storybook-static/react-nextjs",

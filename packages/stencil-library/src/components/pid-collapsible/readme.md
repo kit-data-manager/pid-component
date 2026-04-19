@@ -80,7 +80,8 @@ with resize capability and cross-browser compatibility
 
 ## Methods
 
-### `recalculateContentDimensions() => Promise<any>`
+###
+`recalculateContentDimensions() => Promise<{ contentWidth: number; contentHeight: number; maxWidth: number; maxHeight: number; }>`
 
 Public method to recalculate content dimensions
 Can be called externally, for example when pagination changes
@@ -88,7 +89,7 @@ Optimized for better performance
 
 #### Returns
 
-Type: `Promise<any>`
+Type: `Promise<{ contentWidth: number; contentHeight: number; maxWidth: number; maxHeight: number; }>`
 
 
 
