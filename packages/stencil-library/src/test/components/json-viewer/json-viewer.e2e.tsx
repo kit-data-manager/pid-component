@@ -1,5 +1,6 @@
-import { render, h } from '@stencil/vitest';
-import { describe, it, expect } from 'vitest';
+// noinspection JSUnusedLocalSymbols – h is the JSX factory used implicitly by TSX
+import { render } from '@stencil/vitest';
+import { describe, expect, it } from 'vitest';
 
 describe('json-viewer e2e', () => {
   const sampleJson = JSON.stringify({ name: 'test', value: 42, active: true });

@@ -1,3 +1,4 @@
+// noinspection JSUnusedLocalSymbols – h is the JSX factory used implicitly by TSX
 import { render } from '@stencil/vitest';
 import { beforeEach, describe, expect, it } from 'vitest';
 

@@ -1,5 +1,6 @@
-import { render, h } from '@stencil/vitest';
-import { describe, it, expect } from 'vitest';
+// noinspection JSUnusedLocalSymbols – h is the JSX factory used implicitly by TSX
+import { render } from '@stencil/vitest';
+import { describe, expect, it } from 'vitest';
 
 describe('pid-component e2e', () => {
   it('renders and gets hydrated class', async () => {
