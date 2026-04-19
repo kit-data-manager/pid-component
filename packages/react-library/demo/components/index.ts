@@ -7,3 +7,5 @@ export { SortableList, FilterForm } from './InteractiveFilters';
 export { ContentTypeToggles, ProgressIndicators } from './InteractiveComponents';
 export { LicenseDialog } from './LicenseDialog';
 export { Footer } from './Footer';
+export { DatasetsPage } from './DatasetsPage';
+export { AboutPage } from './AboutPage';

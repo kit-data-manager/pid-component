@@ -11,3 +11,5 @@ export { default as ContentToggles } from './ContentToggles.vue';
 export { default as ProgressIndicators } from './ProgressIndicators.vue';
 export { default as LicenseDialog } from './LicenseDialog.vue';
 export { default as AppFooter } from './AppFooter.vue';
+export { default as DatasetsPage } from './DatasetsPage.vue';
+export { default as AboutPage } from './AboutPage.vue';

@@ -676,7 +676,7 @@ export class PidComponent {
                 aria-expanded={this.isExpanded}
               >
                 <span
-                  class={`inline-flex max-w-full flex-nowrap overflow-x-auto font-mono font-medium text-ellipsis whitespace-nowrap select-all ${this.isExpanded ? 'text-xs' : 'text-sm'}`}
+                  class={`inline-flex max-w-[300px] flex-nowrap overflow-x-auto font-mono font-medium text-ellipsis whitespace-nowrap select-all ${this.isExpanded ? 'text-xs' : 'text-sm'}`}
                 >
                   { // Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
                     this.identifierObject?.renderPreview()
@@ -694,27 +694,17 @@ export class PidComponent {
                 }
               </span>
             ) : this.displayStatus === 'error' ? (
-              <span class={'inline-flex items-center font-medium text-red-600'} role="alert" aria-live="assertive">
-                <svg class="mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-2h2v2h-2zm0-10v6h2V7h-2z" clip-rule="evenodd" />
-                </svg>
-                Error loading data for: {this.value}
+              <span class={'inline-flex items-center font-mono text-sm text-gray-600 dark:text-gray-300'} role="status">
+                {this.value}
               </span>
             ) : (
-              <span class={'inline-flex items-center transition ease-in-out'} role="status" aria-live="polite">
-                <svg class="mr-3 ml-1 h-5 w-5 animate-spin text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
-                  <path
-                    class="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  />
-                </svg>
-                <span>Loading... {this.value}</span>
+              <span class={'inline-flex items-center font-mono text-sm text-gray-500'} role="status" aria-live="polite">
+                {this.value}
               </span>
             )
           ) : (
             <pid-collapsible
+              expanded={this.isExpanded}
               open={this.isExpanded}
               emphasize={this.emphasizeComponent || this.temporarilyEmphasized}
               initialWidth={this.width}
@@ -729,7 +719,7 @@ export class PidComponent {
             >
               <span
                 slot="summary"
-                class={`inline-flex items-center overflow-x-auto font-mono text-sm font-medium select-all mr-2 ${this.isExpanded ? 'flex-wrap overflow-visible wrap-break-word' : 'flex-nowrap whitespace-nowrap'}`}
+                class={`inline-flex items-center overflow-x-auto font-mono text-sm font-medium select-all mr-2 max-w-[300px] ${this.isExpanded ? 'flex-wrap overflow-visible wrap-break-word' : 'flex-nowrap whitespace-nowrap'}`}
                 aria-label={`Preview of ${this.value}`}
               >
                 {this.identifierObject?.renderPreview()}

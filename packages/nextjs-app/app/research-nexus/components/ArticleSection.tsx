@@ -14,7 +14,12 @@ export function ArticleSection({ className, config }: ArticleSectionProps) {
 
   useEffect(() => {
     if (!articleRef.current) return;
-    const ctrl = initPidDetection({ root: articleRef.current, darkMode: 'light', ...config });
+    const ctrl = initPidDetection({
+      root: articleRef.current,
+      darkMode: 'light',
+      emphasizeComponent: false,
+      ...config,
+    });
     return () => ctrl.destroy();
   }, [config]);
 
@@ -40,16 +45,23 @@ export function ArticleSection({ className, config }: ArticleSectionProps) {
           the methodology to handle Handle System resolutions at scale.
         </p>
         <p className="text-sm leading-relaxed text-slate-700 mb-4">
-          For questions about the dataset, please contact the corresponding author
+          For questions about this research, please contact the corresponding author
           at <strong>someone@example.com</strong>. The complete analysis framework is available under
           <strong> https://spdx.org/licenses/Apache-2.0</strong> and can be freely reused
-          in accordance with the license terms.
+          in accordance with the license terms. The research was conducted at the institution
+          associated with ROR <strong>https://ror.org/04t3en479</strong>.
+        </p>
+        <p className="text-sm leading-relaxed text-slate-700 mb-4">
+          The research has been published in multiple venues including the.Handle System
+          <strong> 20.1000/100</strong> and DOI <strong>10.1016/j.future.2025.01.004</strong>.
+          Related works include ISBN references <strong>978-3-642-54441-6</strong> and
+          ISSN <strong>2041-1723</strong> for the journal.
         </p>
         <p className="text-sm leading-relaxed text-slate-700">
-          The research team, led by <strong>0009-0005-2800-4833</strong> and including
-          contributions from <strong>0009-0003-2196-9187</strong>, has made the dataset
-          available through the KIT Data Manager repository. Additional resources are accessible
-          at <strong>https://scc.kit.edu</strong>.
+          The Handle identifier <strong>20.1000/100</strong> resolves to the Handle system
+          documentation. For more information about persistent identifiers, visit
+          <strong> https://www.pidconsortium.eu/</strong>. The research data is archived
+          at <strong>https://doi.org/10.5281/zenodo.1234567</strong>.
         </p>
       </div>
     </div>

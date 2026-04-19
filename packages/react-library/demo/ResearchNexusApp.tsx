@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { Container, Grid, Badge } from '@mantine/core';
+import { useState, useRef, useEffect, createContext, useContext, type ReactNode } from 'react';
+import { Container, Grid, Badge, Title, Text, Card } from '@mantine/core';
 import {
   Navigation,
   HeroCard,
@@ -15,7 +15,24 @@ import {
   ProgressIndicators,
   LicenseDialog,
   Footer,
+  DatasetsPage,
+  AboutPage,
 } from './components';
+import { initPidDetection, type PidDetectionController } from '@kit-data-manager/pid-component';
+
+interface AutodiscoveryContextValue {
+  controller: PidDetectionController | null;
+  isActive: boolean;
+}
+
+const AutodiscoveryContext = createContext<AutodiscoveryContextValue>({
+  controller: null,
+  isActive: false,
+});
+
+export function useAutodiscovery() {
+  return useContext(AutodiscoveryContext);
+}
 
 const datasets = [
   {
@@ -50,61 +67,97 @@ interface AppProps {
 }
 
 export function ResearchNexusApp({ activePage = 'home', onNavigate }: AppProps) {
+  const [currentPage, setCurrentPage] = useState(activePage);
+  const [isActive, setIsActive] = useState(false);
+  const articleRef = useRef<HTMLDivElement>(null);
+  const controllerRef = useRef<PidDetectionController | null>(null);
+
+  const handleNavigate = (page: string) => {
+    setCurrentPage(page);
+    onNavigate?.(page);
+  };
+
+  useEffect(() => {
+    if (articleRef.current && !controllerRef.current) {
+      controllerRef.current = initPidDetection({
+        root: articleRef.current,
+        darkMode: 'light',
+      });
+      setIsActive(true);
+    }
+
+    return () => {
+      if (controllerRef.current) {
+        controllerRef.current.destroy();
+        controllerRef.current = null;
+        setIsActive(false);
+      }
+    };
+  }, []);
+
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#f8f9fa' }}>
-      <Navigation activePage={activePage} onNavigate={onNavigate} />
+    <AutodiscoveryContext.Provider value={{ controller: controllerRef.current, isActive }}>
+      <div style={{ minHeight: '100vh', backgroundColor: '#f8f9fa' }}>
+        <Navigation activePage={currentPage} onNavigate={handleNavigate} />
 
-      <Container size="xl" py="xl">
-        <Grid gutter="lg">
-          <Grid.Col span={{ base: 12, md: 8 }}>
-            <HeroCard
-              title="Comprehensive Analysis of Persistent Identifier Systems in FAIR Digital Objects"
-              description="This dataset contains the complete analysis of PID systems including Handle, DOI, and ORCID integrations across major research institutions. Published in IEEE eScience 2025."
-            />
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 4 }}>
-            <DoiCard
-              value="10.1109/eScience65000.2025.00022"
-              license="https://spdx.org/licenses/Apache-2.0"
-            />
-          </Grid.Col>
-        </Grid>
+        <Container size="xl" py="xl">
+          {currentPage === 'home' && (
+            <>
+              <Grid gutter="lg">
+                <Grid.Col span={{ base: 12, md: 8 }}>
+                  <HeroCard
+                    title="Comprehensive Analysis of Persistent Identifier Systems in FAIR Digital Objects"
+                    description="This dataset contains the complete analysis of PID systems including Handle, DOI, and ORCID integrations across major research institutions. Published in IEEE eScience 2025."
+                  />
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, md: 4 }}>
+                  <DoiCard
+                    value="10.1109/eScience65000.2025.00022"
+                    license="https://spdx.org/licenses/Apache-2.0"
+                  />
+                </Grid.Col>
+              </Grid>
 
-        <div style={{ marginTop: 32 }}>
-          <DatasetTable datasets={datasets} />
-        </div>
+              <div style={{ marginTop: 32 }}>
+                <DatasetTable datasets={datasets} />
+              </div>
 
-        <AuthorGrid authors={authors} />
+              <AuthorGrid authors={authors} />
 
-        <ArticleSection />
+              <div ref={articleRef}>
+                <ArticleSection />
+              </div>
 
-        <div style={{ marginBottom: 32 }}>
-          <div style={{ marginBottom: 16 }}>
-            <Badge color="yellow" variant="light" size="lg">
-              Working Below Autodetection
-            </Badge>
-            <span style={{ marginLeft: 8, fontWeight: 600 }}>Interactive Components</span>
-          </div>
-          <Grid gutter="md">
-            <Grid.Col span={{ base: 12, md: 6 }}>
-              <SortableList />
-            </Grid.Col>
-            <Grid.Col span={{ base: 12, md: 6 }}>
-              <FilterForm />
-            </Grid.Col>
-            <Grid.Col span={{ base: 12, md: 6 }}>
-              <ContentTypeToggles />
-            </Grid.Col>
-            <Grid.Col span={{ base: 12, md: 6 }}>
-              <ProgressIndicators />
-            </Grid.Col>
-          </Grid>
-        </div>
+              <div style={{ marginBottom: 32 }}>
+                <Title order={3} mb="md" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  Interactive Components
+                </Title>
+                <Grid gutter="md">
+                  <Grid.Col span={{ base: 12, md: 6 }}>
+                    <SortableList />
+                  </Grid.Col>
+                  <Grid.Col span={{ base: 12, md: 6 }}>
+                    <FilterForm />
+                  </Grid.Col>
+                  <Grid.Col span={{ base: 12, md: 6 }}>
+                    <ContentTypeToggles />
+                  </Grid.Col>
+                  <Grid.Col span={{ base: 12, md: 6 }}>
+                    <ProgressIndicators />
+                  </Grid.Col>
+                </Grid>
+              </div>
+            </>
+          )}
 
-        <LicenseDialog />
-      </Container>
+          {currentPage === 'datasets' && <DatasetsPage />}
+          {currentPage === 'about' && <AboutPage />}
 
-      <Footer />
-    </div>
+          <LicenseDialog />
+        </Container>
+
+        <Footer />
+      </div>
+    </AutodiscoveryContext.Provider>
   );
 }

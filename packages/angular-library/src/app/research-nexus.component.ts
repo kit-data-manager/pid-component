@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal, inject, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   NavigationComponent,
@@ -15,7 +15,10 @@ import {
   ProgressIndicatorsComponent,
   LicenseDialogComponent,
   FooterComponent,
+  DatasetsPageComponent,
+  AboutPageComponent,
 } from './components';
+import { initPidDetection, type PidDetectionController } from '@kit-data-manager/pid-component';
 
 @Component({
   selector: 'app-research-nexus',
@@ -34,46 +37,57 @@ import {
     ProgressIndicatorsComponent,
     LicenseDialogComponent,
     FooterComponent,
+    DatasetsPageComponent,
+    AboutPageComponent,
   ],
   template: `
     <div class="research-nexus-app">
-      <app-navigation [activePage]="activePage" (navigate)="onNavigate($event)" />
+      <app-navigation [activePage]="activePage()" (navigate)="onNavigate($event)" />
 
       <main class="main-content">
         <div class="container">
-          <div class="hero-grid">
-            <div class="hero-main">
-              <app-hero-card
-                title="Comprehensive Analysis of Persistent Identifier Systems in FAIR Digital Objects"
-                description="This dataset contains the complete analysis of PID systems including Handle, DOI, and ORCID integrations across major research institutions. Published in IEEE eScience 2025."
-              />
+          @if (activePage() === 'home') {
+            <div class="hero-grid">
+              <div class="hero-main">
+                <app-hero-card
+                  title="Comprehensive Analysis of Persistent Identifier Systems in FAIR Digital Objects"
+                  description="This dataset contains the complete analysis of PID systems including Handle, DOI, and ORCID integrations across major research institutions. Published in IEEE eScience 2025."
+                />
+              </div>
+              <div class="hero-doi">
+                <app-doi-card
+                  value="10.1109/eScience65000.2025.00022"
+                  license="https://spdx.org/licenses/Apache-2.0"
+                />
+              </div>
             </div>
-            <div class="hero-doi">
-              <app-doi-card
-                value="10.1109/eScience65000.2025.00022"
-                license="https://spdx.org/licenses/Apache-2.0"
-              />
+
+            <app-dataset-table [datasets]="datasets" />
+
+            <app-author-grid [authors]="authors" />
+
+            <div #articleSection>
+              <app-article-section [standalone]="false" />
             </div>
-          </div>
 
-          <app-dataset-table [datasets]="datasets" />
-
-          <app-author-grid [authors]="authors" />
-
-          <app-article-section />
-
-          <div class="interactive-section">
-            <h2 class="section-title">
-              Interactive Components
-              <span class="badge badge-warning">Working Below Autodetection</span>
-            </h2>
-            <div class="interactive-grid">
-              <app-sortable-list />
-              <app-filter-form />
-              <app-content-toggles />
-              <app-progress-indicators />
+            <div class="interactive-section">
+              <h2 class="section-title">Interactive Components</h2>
+              <div class="interactive-grid">
+                <app-sortable-list />
+                <app-filter-form />
+                <app-content-toggles />
+                <app-progress-indicators />
+              </div>
             </div>
-          </div>
+          }
+
+          @if (activePage() === 'datasets') {
+            <app-datasets-page />
+          }
+
+          @if (activePage() === 'about') {
+            <app-about-page />
+          }
 
           <app-license-dialog />
         </div>
@@ -118,18 +132,6 @@ import {
       gap: 12px;
     }
 
-    .badge {
-      font-size: 12px;
-      font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 12px;
-    }
-
-    .badge-warning {
-      background: #fff3e0;
-      color: #e65100;
-    }
-
     .interactive-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -137,8 +139,12 @@ import {
     }
   `],
 })
-export class ResearchNexusComponent {
-  activePage = 'home';
+export class ResearchNexusComponent implements AfterViewInit, OnDestroy {
+  @ViewChild('articleSection') articleSection!: ElementRef<HTMLElement>;
+
+  activePage = signal('home');
+  isAutodiscoveryActive = signal(false);
+  private controller?: PidDetectionController;
 
   datasets: Dataset[] = [
     {
@@ -167,7 +173,25 @@ export class ResearchNexusComponent {
     { orcid: '0000-0001-6575-1022', name: 'Andreas Pfeil', institution: 'Karlsruhe Institute of Technology' },
   ];
 
+  ngAfterViewInit() {
+    if (this.articleSection?.nativeElement) {
+      this.controller = initPidDetection({
+        root: this.articleSection.nativeElement,
+        darkMode: 'light',
+        emphasizeComponent: false,
+      });
+      this.isAutodiscoveryActive.set(true);
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.controller) {
+      this.controller.destroy();
+      this.controller = undefined;
+    }
+  }
+
   onNavigate(page: string) {
-    this.activePage = page;
+    this.activePage.set(page);
   }
 }

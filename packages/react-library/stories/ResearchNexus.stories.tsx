@@ -4,13 +4,13 @@ import React from 'react';
 import { DemoProvider } from '../demo/DemoProvider';
 
 const meta: Meta = {
-  title: 'ResearchNexus',
+  title: 'ResearchDemo',
   parameters: {
     layout: 'fullscreen',
     docs: {
       description: {
         component: `
-**ResearchNexus** - A comprehensive demonstration of @kit-data-manager/pid-component
+**ResearchDemo** - A comprehensive demonstration of @kit-data-manager/pid-component
 integrated with React + Mantine UI.
 
 This story showcases:
@@ -21,6 +21,7 @@ This story showcases:
   components below it in the DOM tree
 - A research data portal with navigation, hero card, dataset table,
   author profiles, article content, interactive components, and license modal
+- Varied configurations: emphasized, non-emphasized, hidden subcomponents, and active subcomponents
 
 **Key demonstration:** The components below the autodetection zone (interactive list,
 working form with state, content toggles, progress bars) remain fully functional while
@@ -38,6 +39,7 @@ demo/
 └── components/
     ├── Navigation.tsx
     ├── HeroCard.tsx
+    ├── DoiCard.tsx
     ├── DatasetTable.tsx
     ├── AuthorCard.tsx
     ├── ArticleSection.tsx
@@ -55,7 +57,7 @@ export default meta;
 
 type Story = StoryObj;
 
-export const ResearchNexus: Story = {
+export const ResearchDemo: Story = {
   name: 'Research Data Portal',
   decorators: [
     (Story) => (

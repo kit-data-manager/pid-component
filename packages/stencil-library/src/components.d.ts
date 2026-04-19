@@ -117,6 +117,11 @@ export namespace Components {
          */
         "emphasize": boolean;
         /**
+         * Whether to apply floating/overlay styling when expanded. When true, applies absolute positioning and z-index for overlay behavior.
+         * @default false
+         */
+        'expanded': boolean;
+      /**
           * Initial height when expanded
          */
         "initialHeight"?: string;
@@ -590,6 +595,11 @@ declare namespace LocalJSX {
          */
         "emphasize"?: boolean;
         /**
+         * Whether to apply floating/overlay styling when expanded. When true, applies absolute positioning and z-index for overlay behavior.
+         * @default false
+         */
+        'expanded'?: boolean;
+      /**
           * Initial height when expanded
          */
         "initialHeight"?: string;
@@ -870,6 +880,7 @@ declare namespace LocalJSX {
         "initialHeight": string;
         "lineHeight": number;
         "showFooter": boolean;
+      'expanded': boolean;
     }
     interface PidComponentAttributes {
         "value": string;

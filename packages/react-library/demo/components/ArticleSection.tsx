@@ -1,27 +1,51 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Paper, Badge, Text } from '@mantine/core';
-import { initPidDetection, type PidDetectionConfig } from '@kit-data-manager/pid-component';
+import {
+  initPidDetection,
+  type PidDetectionController,
+  type PidDetectionConfig,
+} from '@kit-data-manager/pid-component';
 
 interface ArticleSectionProps {
-  config?: Partial<PidDetectionConfig>;
+  config?: PidDetectionConfig;
+  standalone?: boolean;
 }
 
-export function ArticleSection({ config }: ArticleSectionProps) {
+export function ArticleSection({ config, standalone = true }: ArticleSectionProps) {
   const articleRef = useRef<HTMLDivElement>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    if (!articleRef.current) return;
-    const ctrl = initPidDetection({ root: articleRef.current, darkMode: 'light', ...config });
-    return () => ctrl.destroy();
-  }, [config]);
+    if (!articleRef.current || !standalone) return;
+
+    const controller = initPidDetection({
+      root: articleRef.current,
+      darkMode: 'light',
+      emphasizeComponent: false,
+      ...config,
+    });
+
+    setIsInitialized(true);
+
+    return () => {
+      controller.destroy();
+      setIsInitialized(false);
+    };
+  }, [config, standalone]);
 
   return (
     <div style={{ marginBottom: 32 }}>
       <Text fw={600} size="md" mb="md" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         Article Content
-        <Badge color="green" variant="light" size="sm">Autodetection Active</Badge>
+        <Badge
+          color={isInitialized ? 'green' : 'red'}
+          variant="light"
+          size="sm"
+        >
+          {isInitialized ? 'Autodetection Active' : 'Autodetection Inactive'}
+        </Badge>
       </Text>
       <Paper
         ref={articleRef}
@@ -39,16 +63,23 @@ export function ArticleSection({ config }: ArticleSectionProps) {
           the methodology to handle Handle System resolutions at scale.
         </Text>
         <Text size="sm" style={{ lineHeight: 1.8, marginBottom: 16, color: '#374151' }}>
-          For questions about the dataset, please contact the corresponding author
+          For questions about this research, please contact the corresponding author
           at <strong>someone@example.com</strong>. The complete analysis framework is available under
           <strong> https://spdx.org/licenses/Apache-2.0</strong> and can be freely reused
-          in accordance with the license terms.
+          in accordance with the license terms. The research was conducted at the institution
+          associated with ROR <strong>https://ror.org/04t3en479</strong>.
+        </Text>
+        <Text size="sm" style={{ lineHeight: 1.8, marginBottom: 16, color: '#374151' }}>
+          The research has been published in multiple venues including the.Handle System
+          <strong> 20.1000/100</strong> and DOI <strong>10.1016/j.future.2025.01.004</strong>.
+          Related works include ISBN references <strong>978-3-642-54441-6</strong> and
+          ISSN <strong>2041-1723</strong> for the journal.
         </Text>
         <Text size="sm" style={{ lineHeight: 1.8, color: '#374151' }}>
-          The research team, led by <strong>0009-0005-2800-4833</strong> and including
-          contributions from <strong>0009-0003-2196-9187</strong>, has made the dataset
-          available through the KIT Data Manager repository. Additional resources are accessible
-          at <strong>https://scc.kit.edu</strong>.
+          The Handle identifier <strong>20.1000/100</strong> resolves to the Handle system
+          documentation. For more information about persistent identifiers, visit
+          <strong> https://www.pidconsortium.eu/</strong>. The research data is archived
+          at <strong>https://doi.org/10.5281/zenodo.1234567</strong>.
         </Text>
       </Paper>
     </div>

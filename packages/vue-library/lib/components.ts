@@ -51,6 +51,7 @@ export const PidCollapsible: StencilVueComponent<JSX.PidCollapsible> = /*@__PURE
   'initialHeight',
   'lineHeight',
   'showFooter',
+  'expanded',
   'collapsibleToggle',
   'contentHeightChange'
 ], [

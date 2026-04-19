@@ -2,13 +2,13 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import ResearchNexusApp from '../demo/ResearchNexusApp.vue';
 
 const meta: Meta = {
-  title: 'ResearchNexus',
+  title: 'ResearchDemo',
   parameters: {
     layout: 'fullscreen',
     docs: {
       description: {
         component: `
-**ResearchNexus** - A comprehensive demonstration of @kit-data-manager/pid-component
+**ResearchDemo** - A comprehensive demonstration of @kit-data-manager/pid-component
 integrated with Vuetify 3 components.
 
 This story showcases:
@@ -16,6 +16,7 @@ This story showcases:
 - Explicit PID component usage alongside design system components
 - Autodetection scanning (initPidDetection) running without blocking
   components below it in the DOM tree
+- Varied configurations: emphasized, non-emphasized, hidden subcomponents, and active subcomponents
 - A realistic research data portal UI
 
 Key demonstration: The components below the autodetection zone (interactive cards,
@@ -53,7 +54,7 @@ export default meta;
 
 type Story = StoryObj;
 
-export const ResearchNexus: Story = {
+export const ResearchDemo: Story = {
   name: 'Research Data Portal',
   render: () => ({
     components: { ResearchNexusApp },

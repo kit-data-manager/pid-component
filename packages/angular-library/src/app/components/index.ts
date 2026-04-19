@@ -8,3 +8,5 @@ export { SortableListComponent, FilterFormComponent } from './interactive-filter
 export { ContentTogglesComponent, ProgressIndicatorsComponent } from './interactive-components.component';
 export { LicenseDialogComponent } from './license-dialog.component';
 export { FooterComponent } from './footer.component';
+export { DatasetsPageComponent } from './datasets-page.component';
+export { AboutPageComponent } from './about-page.component';

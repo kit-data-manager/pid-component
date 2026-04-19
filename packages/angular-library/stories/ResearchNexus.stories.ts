@@ -4,13 +4,13 @@ import { moduleMetadata, applicationConfig } from '@storybook/angular';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 
 const meta: Meta = {
-  title: 'ResearchNexus',
+  title: 'ResearchDemo',
   parameters: {
     layout: 'fullscreen',
     docs: {
       description: {
         component: `
-**ResearchNexus** - A comprehensive demonstration of @kit-data-manager/pid-component
+**ResearchDemo** - A comprehensive demonstration of @kit-data-manager/pid-component
 integrated with Angular Material.
 
 This story showcases:
@@ -19,6 +19,7 @@ This story showcases:
 - Explicit PID component usage alongside design system components
 - Autodetection scanning (initPidDetection) running without blocking
   components below it in the DOM tree
+- Varied configurations: emphasized, non-emphasized, hidden subcomponents, and active subcomponents
 - A research data portal with navigation, hero card, dataset table,
   author profiles, article content, interactive components, and license dialog
 
@@ -62,7 +63,7 @@ export default meta;
 
 type Story = StoryObj;
 
-export const ResearchNexus: Story = {
+export const ResearchDemo: Story = {
   name: 'Research Data Portal',
   render: () => ({
     template: '<app-research-nexus />',

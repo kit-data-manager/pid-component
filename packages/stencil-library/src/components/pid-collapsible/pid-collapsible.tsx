@@ -86,6 +86,12 @@ export class PidCollapsible {
   @Prop() showFooter: boolean = false;
 
   /**
+   * Whether to apply floating/overlay styling when expanded.
+   * When true, applies absolute positioning and z-index for overlay behavior.
+   */
+  @Prop() expanded: boolean = false;
+
+  /**
    * Event emitted when the collapsible is toggled
    */
   @Event() collapsibleToggle: EventEmitter<boolean>;
@@ -146,8 +152,8 @@ export class PidCollapsible {
   }
 
   componentWillLoad() {
-    // Default to 75% width if no initial width is provided
-    this.currentWidth = this.initialWidth || '75%'; // Changed from DEFAULT_WIDTH to use 75% (w-3/4)
+    // Default width if no initial width is provided
+    this.currentWidth = this.initialWidth || CONSTANTS.DEFAULT_WIDTH;
     this.currentHeight = this.initialHeight || CONSTANTS.DEFAULT_HEIGHT;
 
     // Initialize dark mode
@@ -791,8 +797,8 @@ export class PidCollapsible {
 
     // Add state-specific classes
     if (this.open) {
-      // Expanded: block-level, resizable, with width
-      baseClasses.push('mb-2', 'max-w-full', 'text-xs', 'block', 'w-3/4');
+      // Expanded: block-level display, dimensions controlled via inline styles by recalculateContentDimensions()
+      baseClasses.push('mb-2', 'max-w-full', 'text-xs', 'block');
     } else {
       // Collapsed: inline with text, no float (float causes clear/line-break issues)
       baseClasses.push('my-0', 'text-sm', 'inline-block', 'align-top');
@@ -934,7 +940,13 @@ export class PidCollapsible {
     const footerActionsClasses = this.getFooterActionsClasses();
 
     return (
-      <Host class={hostClasses}>
+      <Host class={hostClasses} onDblClick={e => {
+        if (this.open) {
+          e.stopPropagation();
+          this.open = false;
+          this.updateAppearance();
+        }
+      }}>
         <details
           class={detailsClasses}
           open={this.open}

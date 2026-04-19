@@ -18,6 +18,47 @@ details summary::-webkit-details-marker {
   vertical-align: top;
 }
 
+/* Truncate renderPreview content with horizontal scroll as fallback */
+::slotted(slot[name="summary"]) {
+  max-width: 300px;
+  overflow-x: auto;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Ensure preview content doesn't cause layout overflow in constrained contexts */
+:host([expanded]) {
+  max-width: 100%;
+  overflow: visible;
+}
+
+.pid-preview-wrapper {
+  max-width: 300px;
+  max-height: 48px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+}
+
+/* Horizontal scroll fallback for long preview content */
+.pid-preview-scroll {
+  max-width: 300px;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: thin;
+}
+
+.pid-preview-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+
+.pid-preview-scroll::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 2px;
+}
+
 /*
  * Tailwind utility classes for pid-collapsible emphasized mode.
  *

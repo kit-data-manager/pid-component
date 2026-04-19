@@ -244,6 +244,14 @@
               "required": false,
               "default": "false",
               "priority": "high"
+            },
+            {
+              "name": "expanded",
+              "deprecated": false,
+              "description": "Whether to apply floating/overlay styling when expanded.\nWhen true, applies absolute positioning and z-index for overlay behavior.",
+              "required": false,
+              "default": "false",
+              "priority": "high"
             }
           ],
           "slots": [],
@@ -717,6 +725,9 @@
             },
             {
               "name": "showFooter"
+            },
+            {
+              "name": "expanded"
             }
           ]
         },
