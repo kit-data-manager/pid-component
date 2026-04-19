@@ -681,7 +681,7 @@ export class PidComponent {
                 aria-expanded={this.isExpanded}
               >
                 <span
-                  class={`inline-flex flex-nowrap font-mono font-medium select-all ${this.isExpanded ? 'text-xs' : 'text-sm'}`}
+                  class={`inline-flex flex-nowrap font-mono font-medium select-all min-w-0 overflow-x-auto ${this.isExpanded ? 'text-xs' : 'text-sm'}`}
                   style={{ maxWidth: '50vw' }}
                 >
                   { // Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
@@ -689,9 +689,11 @@ export class PidComponent {
                   }
                 </span>
                 {
-                  // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
-                  this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy ? (
-                    <copy-button value={this.identifierObject.value} class="shrink-0"
+                  // Show copy button on top level, but hide it in collapsed non-emphasized mode.
+                  // The copy button is always pinned to the right via ml-auto + shrink-0.
+                  this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy
+                  && (this.emphasizeComponent || this.temporarilyEmphasized || this.isExpanded) ? (
+                    <copy-button value={this.identifierObject.value} class="ml-auto shrink-0"
                                  aria-label={`Copy value: ${this.identifierObject.value}`}
                                  onClick={this.blockEventPropagation} />
                   ) : (
@@ -713,7 +715,7 @@ export class PidComponent {
               expanded={this.isExpanded}
               open={this.isExpanded}
               emphasize={this.emphasizeComponent || this.temporarilyEmphasized}
-              initialWidth={this.width}
+              initialWidth={this.currentLevelOfSubcomponents > 0 ? '100%' : this.width}
               initialHeight={this.height}
               lineHeight={this._lineHeight}
               showFooter={this.shouldShowFooter}
@@ -726,7 +728,7 @@ export class PidComponent {
               <span
                 slot="summary"
                 class={`inline-flex items-center font-mono text-sm font-medium select-all mr-2 ${
-                  this.isExpanded ? 'flex-wrap overflow-visible wrap-break-word' : 'flex-nowrap'
+                  this.isExpanded ? 'flex-wrap overflow-visible wrap-break-word' : 'flex-nowrap overflow-x-auto'
                 }`}
                 style={{ maxWidth: '50vw' }}
                 aria-label={`Preview of ${this.value}`}
@@ -734,11 +736,12 @@ export class PidComponent {
                 {this.identifierObject?.renderPreview()}
               </span>
 
-              {this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy && (this.emphasizeComponent || this.temporarilyEmphasized) ? (
+              {this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy
+              && (this.emphasizeComponent || this.temporarilyEmphasized || this.isExpanded) ? (
                 <copy-button
                   slot="summary-actions"
                   value={this.value}
-                  class="self-end shrink-0"
+                  class="ml-auto shrink-0"
                   aria-label={`Copy value: ${this.value}`}
                   onClick={this.blockEventPropagation}
                 />

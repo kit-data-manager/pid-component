@@ -100,3 +100,22 @@ details summary::-webkit-details-marker {
 .border-gray-700 {
   border-color: #374151;
 }
+
+/* Thin scrollbar for preview overflow */
+.overflow-x-auto {
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.overflow-x-auto::-webkit-scrollbar {
+  height: 3px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 2px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track {
+  background: transparent;
+}

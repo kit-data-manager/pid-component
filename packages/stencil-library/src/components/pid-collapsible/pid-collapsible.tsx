@@ -282,22 +282,29 @@ export class PidCollapsible {
         maxHeight: number
       }>(resolve => {
         this.resizeDebounceTimer = window.requestAnimationFrame(() => {
-          const dimensions = this.calculateContentDimensions();
+          // Width: use stored user-resized width, configured initial width, or responsive default
+          if (this.lastExpandedWidth) {
+            this.currentWidth = this.lastExpandedWidth;
+          } else {
+            this.currentWidth = this.initialWidth || this.getResponsiveDefaultWidth();
+          }
+
+          this.el.style.width = this.currentWidth;
+
+          // Set height to auto to let content drive it, then measure
+          this.el.style.height = 'auto';
 
           requestAnimationFrame(() => {
-            // Width: use stored user-resized width, configured initial width, or 75%
-            if (this.lastExpandedWidth) {
-              this.currentWidth = this.lastExpandedWidth;
-            } else {
-              this.currentWidth = this.initialWidth || '75%';
+            // Capture the actual content height and set as concrete pixels
+            // so resize:both works in Safari
+            if (this.open) {
+              const actualHeight = this.el.scrollHeight;
+              this.el.style.height = `${actualHeight}px`;
             }
-
-            this.el.style.width = this.currentWidth;
-            // Let height be auto so content drives it naturally
-            this.el.style.height = 'auto';
 
             this.lastExpandedWidth = this.currentWidth;
 
+            const dimensions = this.calculateContentDimensions();
             this.contentHeightChange.emit({ maxHeight: dimensions.maxHeight });
             this.resizeDebounceTimer = null;
 
@@ -498,19 +505,21 @@ export class PidCollapsible {
         this.el.classList.add('bg-white');
       }
 
-      // Width: use stored user-resized width, configured initial width, or 75% default
+      // Width: use stored user-resized width, configured initial width, or responsive default
       if (this.lastExpandedWidth) {
         this.currentWidth = this.lastExpandedWidth;
       } else if (this.initialWidth) {
         this.currentWidth = this.initialWidth;
       } else {
-        this.currentWidth = '75%';
+        this.currentWidth = this.getResponsiveDefaultWidth();
       }
 
       this.el.style.width = this.currentWidth;
 
-      // Height: let content drive the height naturally.
-      // Use 'auto' so the browser calculates height from actual content.
+      // Height: set to auto first so the browser lays out the content,
+      // then after one paint, measure the actual height and set it as a
+      // concrete pixel value. Safari requires a concrete height for
+      // resize:both to work; auto alone makes the resize handle inert.
       this.el.style.height = 'auto';
 
       // Ensure we're not adding extra padding to the summary
@@ -525,6 +534,17 @@ export class PidCollapsible {
       this.el.style.resize = 'both';
       this.addResizeIndicator();
 
+      // After the browser has laid out the content with height:auto,
+      // capture the actual height and set it as a concrete pixel value.
+      // This makes resize:both work in Safari and also limits the
+      // component height to exactly what the content needs.
+      requestAnimationFrame(() => {
+        if (this.open) {
+          const actualHeight = this.el.scrollHeight;
+          this.el.style.height = `${actualHeight}px`;
+        }
+      });
+
       // Observe for resize events
       if (this.resizeObserver) {
         this.resizeObserver.observe(this.el);
@@ -532,6 +552,56 @@ export class PidCollapsible {
     } catch (error) {
       console.error('Failed to apply expanded styles:', error);
     }
+  }
+
+  /**
+   * Returns a responsive default width based on the actual available width
+   * of the container that holds this component.
+   *
+   * Walks from the pid-collapsible host through shadow roots and
+   * pid-component wrappers until it reaches the real layout ancestor
+   * in the user's document, then measures its clientWidth.
+   *
+   *  - Narrow (< 600px, e.g. sidebar, mobile, table cell): 100%
+   *  - Medium (600–1024px, e.g. tablet, card in a grid):   50%
+   *  - Wide   (> 1024px, e.g. full-width content area):    30%
+   */
+  private getResponsiveDefaultWidth(): string {
+    let node: Node | null = this.el;
+
+    // Escape shadow roots and skip pid-component / pid-collapsible wrappers
+    // until we land on a real layout ancestor in the document.
+    while (node) {
+      // If we're inside a shadow root, jump to its host element
+      const root = node.getRootNode();
+      if (root instanceof ShadowRoot) {
+        node = root.host;
+        continue;
+      }
+
+      // Skip pid-component and pid-collapsible elements themselves
+      if (node instanceof HTMLElement) {
+        const tag = node.tagName.toLowerCase();
+        if (tag === 'pid-component' || tag === 'pid-collapsible') {
+          node = node.parentElement;
+          continue;
+        }
+      }
+
+      // Found a real layout ancestor
+      break;
+    }
+
+    const container = node instanceof HTMLElement ? node : null;
+    const availableWidth = container?.clientWidth ?? window.innerWidth;
+
+    if (availableWidth < 600) {
+      return '100%';
+    }
+    if (availableWidth <= 1024) {
+      return '50%';
+    }
+    return '30%';
   }
 
   /**
@@ -657,8 +727,19 @@ export class PidCollapsible {
   private handleSummaryClick = (event: MouseEvent) => {
     // Don't intercept clicks on interactive elements inside the summary
     // (e.g. copy-button, links). Only handle clicks on the summary itself.
-    const target = event.target as HTMLElement;
-    if (target && target.closest('copy-button, button, a, [role="button"], pid-actions')) {
+    // Use composedPath() to reliably find the actual click target across
+    // shadow DOM boundaries.
+    const path = event.composedPath() as HTMLElement[];
+    const clickedInteractive = path.some(el =>
+        el instanceof HTMLElement && (
+          el.tagName === 'BUTTON' ||
+          el.tagName === 'A' ||
+          el.tagName === 'COPY-BUTTON' ||
+          el.tagName === 'PID-ACTIONS' ||
+          el.getAttribute?.('role') === 'button'
+        ),
+    );
+    if (clickedInteractive) {
       return;
     }
 
