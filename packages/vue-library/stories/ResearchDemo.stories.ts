@@ -12,37 +12,29 @@ const meta: Meta = {
 integrated with Vuetify 3 components.
 
 This story showcases:
-- Multiple UI contexts using Vuetify components (cards, tables, chips, buttons, dialogs)
+- Multiple UI contexts using Vuetify components (cards, tables, chips, dialogs)
 - Explicit PID component usage alongside design system components
-- Autodetection scanning (initPidDetection) running without blocking
-  components below it in the DOM tree
+- Autodetection scanning (initPidDetection) on article content
 - Varied configurations: emphasized, non-emphasized, hidden subcomponents, and active subcomponents
 - A realistic research data portal UI
-
-Key demonstration: The components below the autodetection zone (interactive cards,
-working form elements, progress indicators) remain fully functional while
-autodetection runs above them, proving the DOM tree traversal does not block.
 
 **Tech stack:** Vuetify 3 + Vue 3 + @kit-data-manager/vue-pid-component
 
 **Folder structure:**
 \`\`\`
 demo/
-├── ResearchDemoApp.vue  # Main application component
-├── index.ts              # Exports
+├── ResearchDemoApp.vue    # Main application component
+├── index.ts                # Exports
 └── components/
-    ├── AppNavigation.vue
-    ├── HeroCard.vue
-    ├── DoiCard.vue
-    ├── DatasetTable.vue
-    ├── AuthorCard.vue
-    ├── AuthorGrid.vue
-    ├── ArticleSection.vue
-    ├── SortableList.vue
-    ├── FilterForm.vue
-    ├── ContentToggles.vue
-    ├── ProgressIndicators.vue
-    ├── LicenseDialog.vue
+    ├── AppNavigation.vue   # Sticky nav with ROR pid-component
+    ├── HeroCard.vue        # Hero card
+    ├── DoiCard.vue         # DOI card with pid-component
+    ├── DatasetTable.vue    # Table with DOI and license pid-components
+    ├── AuthorCard.vue      # Author card with ORCID pid-component
+    ├── AuthorGrid.vue      # Author grid layout
+    ├── ArticleSection.vue  # Autodetection (initPidDetection) zone
+    ├── LicenseDialog.vue   # Dialog with SPDX pid-component
+    ├── AboutPage.vue       # Tabbed PID type showcase
     └── AppFooter.vue
 \`\`\`
         `,

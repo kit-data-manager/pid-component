@@ -42,11 +42,20 @@ export class SPDXType extends GenericIdentifierType {
 
   /**
    * Quick, synchronous format check using only regex — no network I/O.
-   * Returns true if the value looks like an SPDX URL or bare license ID.
-   * Does NOT validate against the SPDX API.
+   * Returns `true` only for unambiguous SPDX license URLs (e.g. https://spdx.org/licenses/MIT).
+   * Returns `undefined` (uncertain) for bare ID-like strings (e.g. "MIT", "Apache-2.0")
+   * which need async API validation because the regex `/^[\w.\-+]+$/` is too broad
+   * and would incorrectly match locale codes, short words, etc.
    */
-  hasCorrectFormatQuick(): boolean {
-    return urlRegex.test(this.value) || SPDXType.ID_REGEX.test(this.value);
+  hasCorrectFormatQuick(): boolean | undefined {
+    if (urlRegex.test(this.value)) {
+      return true;
+    }
+    if (SPDXType.ID_REGEX.test(this.value)) {
+      // Bare ID — can't confirm without API validation
+      return undefined;
+    }
+    return false;
   }
 
   /**

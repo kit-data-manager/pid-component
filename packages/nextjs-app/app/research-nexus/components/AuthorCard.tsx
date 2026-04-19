@@ -47,7 +47,7 @@ export function AuthorGrid({ authors, className }: { authors: Author[]; classNam
   return (
     <div className={cn('mb-8', className)}>
       <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2 mb-4">
-        Research Team
+        Developers of the pid-component
       </h2>
       <div className="grid grid-cols-3 gap-4">
         {authors.map((author) => (

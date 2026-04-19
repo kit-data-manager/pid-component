@@ -32,7 +32,7 @@ export default function DatasetsPage() {
           </p>
         </div>
 
-        <h2 className="text-xl font-semibold text-slate-900 mb-4">Core Team</h2>
+        <h2 className="text-xl font-semibold text-slate-900 mb-4">Developers of the pid-component</h2>
         <div className="grid grid-cols-3 gap-4">
           {authors.map((author) => (
             <AuthorCard key={author.orcid} author={author} />

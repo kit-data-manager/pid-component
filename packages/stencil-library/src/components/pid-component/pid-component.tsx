@@ -610,8 +610,6 @@ export class PidComponent {
 
   private blockEventPropagation = (e: Event) => {
     e.stopPropagation();
-    e.stopImmediatePropagation();
-    e.preventDefault()
   }
 
   /**
@@ -666,15 +664,14 @@ export class PidComponent {
                 class={
                   this.currentLevelOfSubcomponents === 0
                     ? //(w/o sub components)
-                      'group rounded-md border px-2 py-0 shadow-sm' +
                       (this.emphasizeComponent || this.temporarilyEmphasized
-                        ? this.isDarkMode
+                        ? 'group rounded-md border px-2 py-0 shadow-sm ' +
+                        (this.isDarkMode
                           ? 'border-gray-600 bg-gray-800'
-                          : 'border-gray-300 bg-white'
-                        : this.isDarkMode
-                          ? 'bg-gray-800/60'
-                          : 'bg-white/60') +
-                    ' inline-flex cursor-pointer list-none flex-nowrap items-center overflow-hidden font-mono font-bold text-clip' +
+                          : 'border-gray-300 bg-white') +
+                        ' inline-flex cursor-pointer list-none flex-nowrap items-center overflow-hidden font-mono font-bold text-clip'
+                        : (this.isDarkMode ? 'bg-gray-800/60' : '') +
+                        ' inline-flex cursor-pointer list-none flex-nowrap items-center font-mono font-bold') +
                       (!this.isExpanded ? ` h-[${this._lineHeight || 24}px] leading-[${this._lineHeight || 24}px]` : '')
                     : ''
                 }
@@ -684,7 +681,8 @@ export class PidComponent {
                 aria-expanded={this.isExpanded}
               >
                 <span
-                  class={`inline-flex max-w-[300px] flex-nowrap overflow-x-auto font-mono font-medium text-ellipsis whitespace-nowrap select-all ${this.isExpanded ? 'text-xs' : 'text-sm'}`}
+                  class={`inline-flex flex-nowrap font-mono font-medium select-all ${this.isExpanded ? 'text-xs' : 'text-sm'}`}
+                  style={{ maxWidth: '50vw' }}
                 >
                   { // Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
                     this.identifierObject?.renderPreview()
@@ -727,7 +725,10 @@ export class PidComponent {
             >
               <span
                 slot="summary"
-                class={`inline-flex items-center overflow-x-auto font-mono text-sm font-medium select-all mr-2 max-w-[300px] ${this.isExpanded ? 'flex-wrap overflow-visible wrap-break-word' : 'flex-nowrap whitespace-nowrap'}`}
+                class={`inline-flex items-center font-mono text-sm font-medium select-all mr-2 ${
+                  this.isExpanded ? 'flex-wrap overflow-visible wrap-break-word' : 'flex-nowrap'
+                }`}
+                style={{ maxWidth: '50vw' }}
                 aria-label={`Preview of ${this.value}`}
               >
                 {this.identifierObject?.renderPreview()}

@@ -18,12 +18,9 @@ details summary::-webkit-details-marker {
   vertical-align: top;
 }
 
-/* Truncate renderPreview content with horizontal scroll as fallback */
+/* Preview content: fill available space, cap at 50% of viewport width */
 ::slotted(slot[name="summary"]) {
-  max-width: 300px;
-  overflow-x: auto;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  max-width: 50vw;
 }
 
 /* Ensure preview content doesn't cause layout overflow in constrained contexts */
@@ -32,19 +29,15 @@ details summary::-webkit-details-marker {
   overflow: visible;
 }
 
+/* Preview wrappers: fill available space, cap at 50% viewport width */
 .pid-preview-wrapper {
-  max-width: 300px;
-  max-height: 48px;
+  max-width: 50vw;
   overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
   text-overflow: ellipsis;
 }
 
-/* Horizontal scroll fallback for long preview content */
 .pid-preview-scroll {
-  max-width: 300px;
+  max-width: 50vw;
   overflow-x: auto;
   white-space: nowrap;
   scrollbar-width: thin;

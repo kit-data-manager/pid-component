@@ -20,7 +20,7 @@ const articleRef = inject<{
     </h2>
     <v-card class="pa-6" elevation="1">
       <p class="text-body-2 text-grey-darken-1 mb-4" style="line-height: 1.8;">
-        ResearchDemo is a demonstration application showcasing the
+        This is a demonstration application showcasing the
         <strong>PID Component</strong> library. This component enables
         seamless detection and rendering of Persistent Identifiers (PIDs)
         including DOIs, ORCIDs, Handles, RORs, and more.

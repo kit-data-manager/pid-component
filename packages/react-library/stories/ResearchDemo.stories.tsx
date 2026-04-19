@@ -15,37 +15,29 @@ integrated with React + Mantine UI.
 
 This story showcases:
 - A realistic React application with proper component structure
-- Multiple UI contexts using Mantine components (cards, tables, forms, modals)
+- Multiple UI contexts using Mantine components (cards, tables, modals)
 - Explicit PID component usage alongside design system components
-- Autodetection scanning (initPidDetection) running without blocking
-  components below it in the DOM tree
+- Autodetection scanning (initPidDetection) on article content
 - A research data portal with navigation, hero card, dataset table,
-  author profiles, article content, interactive components, and license modal
+  author profiles, article content with autodetection, and license modal
 - Varied configurations: emphasized, non-emphasized, hidden subcomponents, and active subcomponents
-
-**Key demonstration:** The components below the autodetection zone (interactive list,
-working form with state, content toggles, progress bars) remain fully functional while
-autodetection runs above them, proving the DOM tree traversal does not block event
-handlers or React state.
 
 **Tech stack:** React 19 + Mantine v7 + @kit-data-manager/react-pid-component
 
 **Folder structure:**
 \`\`\`
 demo/
-├── ResearchDemoApp.tsx  # Main application component
-├── DemoProvider.tsx      # Mantine provider wrapper
-├── index.ts              # Exports
+├── ResearchDemoApp.tsx   # Main application component
+├── DemoProvider.tsx       # Mantine provider wrapper
+├── index.ts               # Exports
 └── components/
-    ├── Navigation.tsx
-    ├── HeroCard.tsx
-    ├── DoiCard.tsx
-    ├── DatasetTable.tsx
-    ├── AuthorCard.tsx
-    ├── ArticleSection.tsx
-    ├── InteractiveFilters.tsx
-    ├── InteractiveComponents.tsx
-    ├── LicenseDialog.tsx
+    ├── Navigation.tsx     # Sticky nav with ROR pid-component
+    ├── HeroCard.tsx       # Hero + DOI card with pid-component
+    ├── DatasetTable.tsx   # Table with DOI and license pid-components
+    ├── AuthorCard.tsx     # Author cards with ORCID pid-component
+    ├── ArticleSection.tsx # Autodetection (initPidDetection) zone
+    ├── LicenseDialog.tsx  # Modal with SPDX pid-component
+    ├── AboutPage.tsx      # Tabbed PID type showcase
     └── Footer.tsx
 \`\`\`
         `,

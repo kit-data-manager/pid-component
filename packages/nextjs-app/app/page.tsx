@@ -57,94 +57,6 @@ function ArticleSection() {
   );
 }
 
-function InteractiveComponentsBelowAutodetection() {
-  return (
-    <div style={{ marginBottom: 32 }}>
-      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
-        <span>Interactive Components Below Autodetection</span>
-        <span style={{
-          fontSize: 12,
-          backgroundColor: '#fef3c7',
-          color: '#92400e',
-          padding: '4px 10px',
-          borderRadius: 12,
-          fontWeight: 600,
-        }}>
-          DOM Tree Non-Blocking Demo
-        </span>
-      </h2>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
-        {/* Sortable List */}
-        <div
-          style={{ backgroundColor: 'white', borderRadius: 12, padding: 24, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>Sortable Dataset List</h3>
-          <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 16 }}>
-            This list is interactive while autodetection runs above.
-          </p>
-          {['Dataset A - 1,234 items', 'Dataset B - 567 items', 'Dataset C - 2,891 items'].map((item, i) => (
-            <div key={i} style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 12,
-              padding: '12px 16px',
-              backgroundColor: '#f9fafb',
-              borderRadius: 8,
-              marginBottom: 8,
-              cursor: 'pointer',
-            }}>
-              <div style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#10b981' }} />
-              <span style={{ flex: 1, fontSize: 14 }}>{item}</span>
-              <button style={{
-                backgroundColor: '#e0e7ff',
-                color: '#4f46e5',
-                padding: '4px 8px',
-                borderRadius: 4,
-                border: 'none',
-                fontSize: 12,
-                cursor: 'pointer',
-              }}>
-                Sort
-              </button>
-            </div>
-          ))}
-        </div>
-
-        {/* Filter Form */}
-        <div
-          style={{ backgroundColor: 'white', borderRadius: 12, padding: 24, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>Dataset Filter</h3>
-          <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 16 }}>
-            This form is functional while autodetection runs.
-          </p>
-          <div style={{ marginBottom: 12 }}>
-            <label style={{ fontSize: 12, fontWeight: 600, color: '#6b7280', display: 'block', marginBottom: 4 }}>Dataset
-              Name</label>
-            <input type="text" placeholder="Search..." style={{
-              width: '100%',
-              padding: '10px 12px',
-              border: '1px solid #e5e7eb',
-              borderRadius: 8,
-              fontSize: 14,
-              boxSizing: 'border-box',
-            }} />
-          </div>
-          <button style={{
-            backgroundColor: '#6366f1',
-            color: 'white',
-            padding: '10px 16px',
-            borderRadius: 8,
-            border: 'none',
-            fontWeight: 600,
-            cursor: 'pointer',
-            width: '100%',
-          }}>
-            Apply Filters
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export default function HomePage() {
   return (
@@ -256,7 +168,7 @@ export default function HomePage() {
 
         {/* Author Section */}
         <div style={{ marginBottom: 32 }}>
-          <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 20 }}>Research Team</h2>
+          <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 20 }}>Developers of the pid-component</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
             <AuthorCard
               orcid="0009-0005-2800-4833"
@@ -279,8 +191,7 @@ export default function HomePage() {
         {/* Autodetection Zone */}
         <ArticleSection />
 
-        {/* Components Below Autodetection - These work while autodetection runs */}
-        <InteractiveComponentsBelowAutodetection />
+
       </main>
 
       <Footer />

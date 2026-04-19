@@ -95,7 +95,7 @@ export class AuthorCardComponent {
   imports: [CommonModule, AuthorCardComponent],
   template: `
     <div class="author-grid">
-      <h2 class="grid-title">Research Team</h2>
+      <h2 class="grid-title">Developers of the pid-component</h2>
       <div class="grid">
         @for (author of authors; track author.orcid) {
           <app-author-card [author]="author" />

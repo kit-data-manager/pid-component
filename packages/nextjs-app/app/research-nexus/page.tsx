@@ -3,8 +3,6 @@ import { HeroCard, DoiCard } from './components/HeroCard';
 import { DatasetTable } from './components/DatasetTable';
 import { AuthorGrid } from './components/AuthorCard';
 import { ArticleSection } from './components/ArticleSection';
-import { SortableList, FilterForm } from './components/InteractiveFilters';
-import { ContentTypeToggles, ProgressIndicators } from './components/InteractiveComponents';
 import { LicenseDialog } from './components/LicenseDialog';
 import { Footer } from './components/Footer';
 
@@ -58,22 +56,6 @@ export default function ResearchDemoPage() {
         <AuthorGrid authors={authors} />
 
         <ArticleSection />
-
-        <div className="mb-8">
-          <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2 mb-4">
-            Interactive Components
-            <span
-              className="inline-flex items-center rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-xs font-semibold text-amber-700">
-              Working Below Autodetection
-            </span>
-          </h2>
-          <div className="grid grid-cols-2 gap-4">
-            <SortableList />
-            <FilterForm />
-            <ContentTypeToggles />
-            <ProgressIndicators />
-          </div>
-        </div>
 
         <LicenseDialog />
       </main>

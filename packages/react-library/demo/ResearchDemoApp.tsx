@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useRef, useEffect, createContext, useContext, type ReactNode } from 'react';
-import { Container, Grid, Badge, Title, Text, Card } from '@mantine/core';
+import { useState, useRef, useEffect, createContext, useContext } from 'react';
+import { Container, Grid, Text } from '@mantine/core';
 import {
   Navigation,
   HeroCard,
@@ -9,10 +9,6 @@ import {
   DatasetTable,
   AuthorGrid,
   ArticleSection,
-  SortableList,
-  FilterForm,
-  ContentTypeToggles,
-  ProgressIndicators,
   LicenseDialog,
   Footer,
   DatasetsPage,
@@ -126,26 +122,6 @@ export function ResearchDemoApp({ activePage = 'home', onNavigate }: AppProps) {
 
               <div ref={articleRef}>
                 <ArticleSection />
-              </div>
-
-              <div style={{ marginBottom: 32 }}>
-                <Title order={3} mb="md" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  Interactive Components
-                </Title>
-                <Grid gutter="md">
-                  <Grid.Col span={{ base: 12, md: 6 }}>
-                    <SortableList />
-                  </Grid.Col>
-                  <Grid.Col span={{ base: 12, md: 6 }}>
-                    <FilterForm />
-                  </Grid.Col>
-                  <Grid.Col span={{ base: 12, md: 6 }}>
-                    <ContentTypeToggles />
-                  </Grid.Col>
-                  <Grid.Col span={{ base: 12, md: 6 }}>
-                    <ProgressIndicators />
-                  </Grid.Col>
-                </Grid>
               </div>
             </>
           )}

@@ -7,10 +7,6 @@ import {
   DatasetTable,
   AuthorGrid,
   ArticleSection,
-  SortableList,
-  FilterForm,
-  ContentToggles,
-  ProgressIndicators,
   LicenseDialog,
   AppFooter,
   DatasetsPage,
@@ -111,26 +107,7 @@ const authors = [
 
           <ArticleSection ref="articleSectionRef" class="mb-6" />
 
-          <div class="mb-6">
-            <h2 class="text-h6 font-weight-bold mb-4 d-flex align-center">
-              <v-icon color="warning" class="mr-2">mdi-chart-bar</v-icon>
-              Interactive Components
-            </h2>
-            <v-row>
-              <v-col cols="6">
-                <SortableList />
-              </v-col>
-              <v-col cols="6">
-                <FilterForm />
-              </v-col>
-              <v-col cols="6">
-                <ContentToggles />
-              </v-col>
-              <v-col cols="6">
-                <ProgressIndicators />
-              </v-col>
-            </v-row>
-          </div>
+
         </template>
 
         <template v-else-if="activePage === 'datasets'">

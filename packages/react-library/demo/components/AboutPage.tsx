@@ -16,7 +16,7 @@ export function AboutPage({}: AboutPageProps) {
       </Title>
       <Card shadow="sm" padding="xl" radius="md" withBorder>
         <Text size="sm" style={{ lineHeight: 1.8, marginBottom: 16, color: '#374151' }}>
-          ResearchDemo is a demonstration application showcasing the
+          This is a demonstration application showcasing the
           <strong> PID Component</strong> library. This component enables
           seamless detection and rendering of Persistent Identifiers (PIDs)
           including DOIs, ORCIDs, Handles, RORs, and more.

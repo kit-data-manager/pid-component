@@ -116,7 +116,8 @@ export class Parser {
     const effective = getEffectiveRenderers(orderedRendererKeys);
     const hasOrderedList = orderedRendererKeys && orderedRendererKeys.length > 0;
 
-    let bestFit: GenericIdentifierType | null = null;
+    // Collect all format-matching candidates in priority order
+    const matchedCandidates: GenericIdentifierType[] = [];
 
     if (hasOrderedList) {
       // Ordered list mode: try renderers in the specified order; first match wins
@@ -131,13 +132,13 @@ export class Parser {
 
         // If quick is true or undefined (needs async verification), run full check
         if (quick === true || (await obj.hasCorrectFormat())) {
-          bestFit = obj;
+          matchedCandidates.push(obj);
           break;
         }
       }
 
       // If no match and fallbackToAll, retry with full registry
-      if (bestFit === null && fallbackToAll) {
+      if (matchedCandidates.length === 0 && fallbackToAll) {
         return Parser.getBestFit(value, settings);
       }
     } else {
@@ -165,28 +166,43 @@ export class Parser {
         }
       }
 
-      // Phase 3: Select highest-priority match (lowest index)
+      // Phase 3: Sort by priority (lowest index = highest priority)
       if (confirmed.length > 0) {
         confirmed.sort((a, b) => a.index - b.index);
-        bestFit = confirmed[0].obj;
+        for (const c of confirmed) {
+          matchedCandidates.push(c.obj);
+        }
       }
     }
 
-    if (bestFit === null) {
+    if (matchedCandidates.length === 0) {
       return null;
     }
 
-    // Apply settings for this renderer type
-    try {
-      const settingsKey = bestFit.getSettingsKey();
-      const settingsValues = settings.find(v => v.type === settingsKey)?.values;
-      if (settingsValues) bestFit.settings = settingsValues;
-    } catch (e) {
-      console.warn('Error while adding settings to object:', e);
+    // Try each candidate in priority order. Initialize it; if init() throws,
+    // fall back to the next candidate.
+    for (const candidate of matchedCandidates) {
+      // Apply settings for this renderer type
+      try {
+        const settingsKey = candidate.getSettingsKey();
+        const settingsValues = settings.find(v => v.type === settingsKey)?.values;
+        if (settingsValues) candidate.settings = settingsValues;
+      } catch (e) {
+        console.warn('Error while adding settings to object:', e);
+      }
+
+      // Initialize the renderer
+      try {
+        await candidate.init();
+        return candidate;
+      } catch (e) {
+        console.warn(`Renderer ${candidate.getSettingsKey()} init() threw for "${value}", trying next candidate:`, e);
+        continue;
+      }
     }
 
-    // Initialize and return the object
-    await bestFit.init();
-    return bestFit;
+    // No candidate initialized successfully — return the first match
+    // (it will render with whatever fallback/error content it has)
+    return matchedCandidates[0];
   }
 }

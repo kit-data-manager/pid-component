@@ -4,8 +4,6 @@ export { DoiCardComponent } from './doi-card.component';
 export { DatasetTableComponent, type Dataset } from './dataset-table.component';
 export { AuthorCardComponent, AuthorGridComponent, type Author } from './author-card.component';
 export { ArticleSectionComponent } from './article-section.component';
-export { SortableListComponent, FilterFormComponent } from './interactive-filters.component';
-export { ContentTogglesComponent, ProgressIndicatorsComponent } from './interactive-components.component';
 export { LicenseDialogComponent } from './license-dialog.component';
 export { FooterComponent } from './footer.component';
 export { DatasetsPageComponent } from './datasets-page.component';

@@ -46,7 +46,7 @@ export function AuthorGrid({ authors }: AuthorGridProps) {
   return (
     <div style={{ marginBottom: 32 }}>
       <Text fw={600} size="md" mb="md" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        Research Team
+        Developers of the pid-component
       </Text>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
         {authors.map((author) => (

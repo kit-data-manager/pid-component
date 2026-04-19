@@ -18,7 +18,7 @@ export default function AboutPage() {
         }}>
           <h1 style={{ fontSize: 36, fontWeight: 700, marginBottom: 16 }}>About ResearchDemo</h1>
           <p style={{ fontSize: 16, color: '#6b7280', lineHeight: 1.8, marginBottom: 24 }}>
-            ResearchDemo is a demonstration application that showcases the integration of
+            This is a demonstration application that showcases the integration of
             Persistent Identifier (PID) systems in FAIR Digital Objects. Our platform showcases how
             modern web components can seamlessly integrate with existing frameworks to provide
             interactive and informative displays of research metadata.
@@ -41,7 +41,7 @@ export default function AboutPage() {
           </div>
         </div>
 
-        <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 20 }}>Core Team</h2>
+        <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 20 }}>Developers of the pid-component</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, marginBottom: 32 }}>
           <AuthorCard
             orcid="0009-0005-2800-4833"

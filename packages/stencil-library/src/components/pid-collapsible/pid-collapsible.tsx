@@ -125,6 +125,8 @@ export class PidCollapsible {
 
   // Flag to prevent recursive toggle calls
   private isToggling = false;
+  private lastClickTime = 0;
+  private pendingClickTimer: ReturnType<typeof setTimeout> | null = null;
 
   // Debounce timer for resize optimization
   private resizeDebounceTimer: number = null;
@@ -268,11 +270,7 @@ export class PidCollapsible {
   @Method()
   public async recalculateContentDimensions() {
     if (this.open) {
-      // Add a class to optimize rendering during recalculation
-      this.el.classList.add('resizing');
-
       // Use a small delay to avoid excessive recalculations
-      // when multiple events happen in quick succession
       if (this.resizeDebounceTimer !== null) {
         window.cancelAnimationFrame(this.resizeDebounceTimer);
       }
@@ -286,55 +284,21 @@ export class PidCollapsible {
         this.resizeDebounceTimer = window.requestAnimationFrame(() => {
           const dimensions = this.calculateContentDimensions();
 
-          // Batch all style changes in a single rendering frame
-          // to avoid forced reflows and optimize performance
           requestAnimationFrame(() => {
-            // Set max dimensions first - add a buffer to prevent too tight constraints
-            const maxWidth = Math.max(dimensions.maxWidth, dimensions.contentWidth + CONSTANTS.PADDING_WIDTH);
-            const maxHeight = Math.max(dimensions.maxHeight, dimensions.contentHeight + CONSTANTS.PADDING_HEIGHT + (this.showFooter ? CONSTANTS.FOOTER_HEIGHT : 0));
-
-            this.el.style.maxWidth = `${maxWidth}px`;
-            this.el.style.maxHeight = `${maxHeight}px`;
-
-            // Update current dimensions to match content exactly
-            // Ensure width is at least 75% of container if no width is explicitly provided
-            const optimalWidth = dimensions.contentWidth + CONSTANTS.PADDING_WIDTH;
-            const optimalHeight = dimensions.contentHeight + CONSTANTS.PADDING_HEIGHT + (this.showFooter ? CONSTANTS.FOOTER_HEIGHT : 0);
-
-            // If initial width/height is specified, prefer that for first calculation
+            // Width: use stored user-resized width, configured initial width, or 75%
             if (this.lastExpandedWidth) {
               this.currentWidth = this.lastExpandedWidth;
-            } else if (!this.currentWidth || this.currentWidth === 'auto') {
-              // Default to 75% width if no initial width is provided
+            } else {
               this.currentWidth = this.initialWidth || '75%';
-            } else if (!this.initialWidth) {
-              // If no initial width was specified but we have a current width,
-              // preserve the 75% width setting rather than calculating a pixel value
-              this.currentWidth = '75%';
-            } else {
-              // Otherwise use the calculated optimal width with extra space for content
-              this.currentWidth = `${Math.max(optimalWidth, dimensions.contentWidth * 1)}px`;
             }
 
-            if (!this.currentHeight || this.currentHeight === `${this.lineHeight}px`) {
-              this.currentHeight = this.initialHeight || `${optimalHeight}px`;
-            } else {
-              this.currentHeight = `${optimalHeight}px`;
-            }
-
-            // Apply the content-based dimensions
             this.el.style.width = this.currentWidth;
-            this.el.style.height = this.currentHeight;
+            // Let height be auto so content drives it naturally
+            this.el.style.height = 'auto';
 
-            // Store these as the last expanded dimensions
             this.lastExpandedWidth = this.currentWidth;
-            this.lastExpandedHeight = this.currentHeight;
 
-            // Emit event with calculated dimensions for external components
-            this.contentHeightChange.emit({ maxHeight });
-
-            // Remove optimization class
-            this.el.classList.remove('resizing');
+            this.contentHeightChange.emit({ maxHeight: dimensions.maxHeight });
             this.resizeDebounceTimer = null;
 
             resolve(dimensions);
@@ -428,17 +392,11 @@ export class PidCollapsible {
     // Only apply for Safari
     if (!this.isSafari() || this.isToggling) return;
 
-    this.isToggling = true;
     e.preventDefault();
     e.stopPropagation();
 
-    // Manually handle the toggle
-    this.toggleCollapsible(e);
-
-    // Reset toggle flag after short delay
-    setTimeout(() => {
-      this.isToggling = false;
-    }, 100);
+    // Manually handle the toggle via performToggle
+    this.performToggle(!this.open);
   };
 
   /**
@@ -540,15 +498,20 @@ export class PidCollapsible {
         this.el.classList.add('bg-white');
       }
 
-      // Calculate optimal dimensions based on content
-      const dimensions = this.calculateContentDimensions();
+      // Width: use stored user-resized width, configured initial width, or 75% default
+      if (this.lastExpandedWidth) {
+        this.currentWidth = this.lastExpandedWidth;
+      } else if (this.initialWidth) {
+        this.currentWidth = this.initialWidth;
+      } else {
+        this.currentWidth = '75%';
+      }
 
-      // Apply size constraints
-      this.el.style.maxWidth = `${dimensions.maxWidth}px`;
-      this.el.style.maxHeight = `${dimensions.maxHeight}px`;
+      this.el.style.width = this.currentWidth;
 
-      // Set dimensions - use stored dimensions if available
-      this.updateDimensions(dimensions);
+      // Height: let content drive the height naturally.
+      // Use 'auto' so the browser calculates height from actual content.
+      this.el.style.height = 'auto';
 
       // Ensure we're not adding extra padding to the summary
       const summary = this.el.querySelector('summary');
@@ -587,61 +550,6 @@ export class PidCollapsible {
     return { contentWidth, contentHeight, maxWidth, maxHeight };
   }
 
-  /**
-   * Updates dimensions based on content and constraints
-   * Optimized for better resize performance
-   */
-  private updateDimensions(dimensions: { contentWidth: number; contentHeight: number; maxWidth: number; maxHeight: number }) {
-    // Add a rendering optimization class during dimension updates
-    this.el.classList.add('resizing');
-
-    const {contentHeight, maxHeight} = dimensions;
-
-    // Calculate optimal width based on content
-    // const optimalWidth = Math.min(Math.max(contentWidth + CONSTANTS.PADDING_WIDTH, CONSTANTS.MIN_WIDTH), maxWidth);
-
-    // Determine width to apply
-    if (this.lastExpandedWidth) {
-      // Restore user's last resized width
-      this.currentWidth = this.lastExpandedWidth;
-    } else if (this.initialWidth) {
-      // Use configured initial width
-      this.currentWidth = this.initialWidth;
-    } else {
-      // Default behavior: use optimal width but don't exceed typical screen bounds
-      // If no initial width is provided, we use optimal width to satisfy "perfect dimension"
-      // BUT we should avoid filling the complete page if content is huge.
-      // Since we can't easily check screen width here against optimalWidth in pixels vs %,
-      // we'll default to 75% which is safe, unless content is small.
-
-      // However, to fix "complete page filled", 75% is safer than optimalWidth (which equals contentWidth).
-      this.currentWidth = '75%';
-    }
-
-    // Calculate optimal height including padding and footer if needed
-    const footerHeight = this.showFooter ? CONSTANTS.FOOTER_HEIGHT : 0;
-    const optimalHeight = Math.min(Math.max(contentHeight + CONSTANTS.PADDING_HEIGHT + footerHeight, CONSTANTS.MIN_HEIGHT), maxHeight);
-
-    if (this.lastExpandedHeight) {
-      this.currentHeight = this.lastExpandedHeight;
-    } else {
-      this.currentHeight = `${optimalHeight}px`;
-    }
-
-    // Store these dimensions for future reference
-    this.lastExpandedWidth = this.currentWidth;
-    this.lastExpandedHeight = this.currentHeight;
-
-    // Use direct property setting for better performance
-    // Batch dimension changes in a single rendering frame
-    requestAnimationFrame(() => {
-      this.el.style.width = this.currentWidth;
-      this.el.style.height = this.currentHeight;
-
-      // Remove the optimization class after updates are applied
-      this.el.classList.remove('resizing');
-    });
-  }
 
   /**
    * Applies styles for collapsed state
@@ -725,59 +633,92 @@ export class PidCollapsible {
   }
 
   /**
-   * Handles the toggle event
+   * Handles the toggle event from the native <details> element.
+   * We suppress native toggles entirely and drive the state ourselves
+   * from the summary click handler, which gives us double-click detection.
    */
   private handleToggle = (event: Event) => {
-    if (this.isToggling) return;
-    this.toggleCollapsible(event);
+    // Always suppress the native toggle — we drive state from handleSummaryClick
+    event.preventDefault();
+    event.stopPropagation();
+    const details = this.el.querySelector('details');
+    if (details) {
+      // Re-sync native state to our state (undo what the browser just did)
+      details.open = this.open;
+    }
   };
 
   /**
-   * Toggles the collapsible state
+   * Click handler installed on <summary>. Detects double-clicks by tracking
+   * the interval between consecutive clicks:
+   * - Single click: toggle open/closed as usual.
+   * - Double click (two clicks within 300 ms): close the collapsible.
    */
-  private toggleCollapsible(event: Event) {
-    // Set flag to prevent recursive calls
-    this.isToggling = true;
-
-    // Stop event propagation
-    event.stopPropagation();
-    event.preventDefault();
-    if (event.cancelable) {
-      event.stopImmediatePropagation();
-    }
-
-    // Get details element
-    const details = this.el.querySelector('details');
-    if (!details) {
-      this.isToggling = false;
+  private handleSummaryClick = (event: MouseEvent) => {
+    // Don't intercept clicks on interactive elements inside the summary
+    // (e.g. copy-button, links). Only handle clicks on the summary itself.
+    const target = event.target as HTMLElement;
+    if (target && target.closest('copy-button, button, a, [role="button"], pid-actions')) {
       return;
     }
 
-    // Toggle expanded state
-    this.open = !this.open;
-    details.open = this.open;
+    event.preventDefault();
+    event.stopPropagation();
 
-    // Emit event
-    this.collapsibleToggle.emit(this.open);
+    if (this.isToggling) return;
 
-    // Update appearance
-    this.updateAppearance();
+    const now = Date.now();
+    const elapsed = now - this.lastClickTime;
+    this.lastClickTime = now;
 
-    // For Safari compatibility - ensure content recalculation when expanding
-    if (this.open && this.isSafari()) {
-      setTimeout(() => {
-        this.recalculateContentDimensions();
-      }, 50);
+    // Cancel any pending single-click action
+    if (this.pendingClickTimer !== null) {
+      clearTimeout(this.pendingClickTimer);
+      this.pendingClickTimer = null;
     }
 
-    // Ensure consistent state and reset flag
+    if (elapsed < 300 && this.open) {
+      // Double-click detected while open → close immediately
+      this.performToggle(false);
+    } else {
+      // Defer single-click toggle to give double-click a window
+      this.pendingClickTimer = setTimeout(() => {
+        this.pendingClickTimer = null;
+        this.performToggle(!this.open);
+      }, 200);
+    }
+  };
+
+  /**
+   * Applies the desired open/closed state, syncs the <details> element,
+   * emits the toggle event, and updates appearance.
+   */
+  private performToggle(newOpen: boolean) {
+    this.isToggling = true;
+
+    const details = this.el.querySelector('details');
+    this.open = newOpen;
+    if (details) {
+      details.open = newOpen;
+    }
+
+    this.collapsibleToggle.emit(this.open);
+    this.updateAppearance();
+
+    // For Safari compatibility
+    if (this.open && this.isSafari()) {
+      setTimeout(() => this.recalculateContentDimensions(), 50);
+    }
+
+    // Reset toggling flag
     setTimeout(() => {
-      details.open = this.open;
-      setTimeout(() => {
-        this.isToggling = false;
-      }, 100);
-    }, 0);
+      // Final sync to ensure consistency
+      if (details) details.open = this.open;
+      this.isToggling = false;
+    }, 50);
   }
+
+  // toggleCollapsible replaced by performToggle + handleSummaryClick
 
   /**
    * Gets host classes based on current state
@@ -940,38 +881,16 @@ export class PidCollapsible {
     const footerActionsClasses = this.getFooterActionsClasses();
 
     return (
-      <Host class={hostClasses} onDblClick={e => {
-        if (this.open) {
-          e.stopPropagation();
-          e.preventDefault();
-
-          // Sync the native <details> element
-          const details = this.el.querySelector('details');
-          if (details) {
-            details.open = false;
-          }
-
-          this.open = false;
-          this.collapsibleToggle.emit(false);
-          this.updateAppearance();
-        }
-      }}>
+      <Host class={hostClasses}>
         <details
           class={detailsClasses}
           open={this.open}
           onToggle={this.handleToggle}
-          onClick={e => {
-            e.stopPropagation();
-            e.stopImmediatePropagation();
-          }}
         >
           <summary
             class={summaryClasses}
             style={{ lineHeight: `${this.lineHeight}px`, height: `${this.lineHeight}px` }}
-            onClick={e => {
-              e.stopPropagation();
-              e.stopImmediatePropagation();
-            }}
+            onClick={this.handleSummaryClick}
           >
             <span
               class={`inline-flex h-full items-center ${this.open ? 'flex-nowrap whitespace-nowrap' : 'min-w-0 flex-nowrap overflow-hidden'}`}>

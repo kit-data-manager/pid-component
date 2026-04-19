@@ -9,10 +9,6 @@ import {
   AuthorGridComponent,
   Author,
   ArticleSectionComponent,
-  SortableListComponent,
-  FilterFormComponent,
-  ContentTogglesComponent,
-  ProgressIndicatorsComponent,
   LicenseDialogComponent,
   FooterComponent,
   DatasetsPageComponent,
@@ -31,10 +27,6 @@ import { initPidDetection, type PidDetectionController } from '@kit-data-manager
     DatasetTableComponent,
     AuthorGridComponent,
     ArticleSectionComponent,
-    SortableListComponent,
-    FilterFormComponent,
-    ContentTogglesComponent,
-    ProgressIndicatorsComponent,
     LicenseDialogComponent,
     FooterComponent,
     DatasetsPageComponent,
@@ -68,16 +60,6 @@ import { initPidDetection, type PidDetectionController } from '@kit-data-manager
 
             <div #articleSection>
               <app-article-section [standalone]="false" />
-            </div>
-
-            <div class="interactive-section">
-              <h2 class="section-title">Interactive Components</h2>
-              <div class="interactive-grid">
-                <app-sortable-list />
-                <app-filter-form />
-                <app-content-toggles />
-                <app-progress-indicators />
-              </div>
             </div>
           }
 
@@ -116,26 +98,6 @@ import { initPidDetection, type PidDetectionController } from '@kit-data-manager
       grid-template-columns: 2fr 1fr;
       gap: 24px;
       margin-bottom: 32px;
-    }
-
-    .interactive-section {
-      margin-bottom: 32px;
-    }
-
-    .section-title {
-      font-size: 18px;
-      font-weight: 600;
-      color: #212121;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .interactive-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
     }
   `],
 })

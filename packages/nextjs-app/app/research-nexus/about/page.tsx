@@ -11,7 +11,7 @@ export default function AboutPage() {
         <div className="rounded-xl border border-slate-200 bg-white p-8 shadow-sm mb-8">
           <h1 className="text-3xl font-bold text-slate-900 mb-4">About ResearchDemo</h1>
           <p className="text-slate-700 leading-relaxed mb-4">
-            ResearchDemo is a demonstration application that showcases the integration of
+            This is a demonstration application that showcases the integration of
             Persistent Identifier (PID) systems in FAIR Digital Objects. Our platform showcases how
             modern web components can seamlessly integrate with existing frameworks to provide
             interactive and informative displays of research metadata.
