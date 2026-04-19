@@ -63,7 +63,7 @@ export default function DatasetsPage() {
         <div style={{ marginBottom: 32 }}>
           <h1 style={{ fontSize: 32, fontWeight: 700, marginBottom: 8 }}>Research Datasets</h1>
           <p style={{ fontSize: 16, color: '#6b7280' }}>
-            Browse and explore the research datasets available in the ResearchNexus portal.
+            Browse and explore the research datasets available in the ResearchDemo portal.
           </p>
         </div>
 

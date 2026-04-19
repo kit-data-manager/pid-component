@@ -24,7 +24,8 @@ import { PidComponent } from '@kit-data-manager/angular-pid-component';
           <button mat-mini-fab color="primary" disabled>
             <mat-icon>storage</mat-icon>
           </button>
-          <span class="brand-text">ResearchNexus</span>
+          <span class="brand-text">ResearchDemo</span>
+          <mat-chip color="warn" size="small">Demo</mat-chip>
         </div>
 
         <div class="nav-links">
@@ -42,7 +43,7 @@ import { PidComponent } from '@kit-data-manager/angular-pid-component';
 
           <div class="powered-by">
             <span class="powered-text">Powered by</span>
-            <pid-component value="https://ror.org/04t3en479" [emphasizeComponent]="false" />
+            <pid-component value="https://ror.org/04t3en479" [emphasizeComponent]="false" [hideSubcomponents]="true" />
           </div>
         </div>
       </div>

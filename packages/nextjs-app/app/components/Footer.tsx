@@ -19,7 +19,7 @@ export default function Footer() {
               <path d="M2 12l10 5 10-5" />
             </svg>
           </div>
-          <span style={{ color: 'white', fontSize: 14, fontWeight: 700 }}>ResearchNexus</span>
+          <span style={{ color: 'white', fontSize: 14, fontWeight: 700 }}>ResearchDemo</span>
         </div>
         <p style={{ color: '#9ca3af', fontSize: 14 }}>
           Research Data Portal powered by KIT Data Manager

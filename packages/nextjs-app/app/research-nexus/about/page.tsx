@@ -9,9 +9,9 @@ export default function AboutPage() {
 
       <main className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
         <div className="rounded-xl border border-slate-200 bg-white p-8 shadow-sm mb-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-4">About ResearchNexus</h1>
+          <h1 className="text-3xl font-bold text-slate-900 mb-4">About ResearchDemo</h1>
           <p className="text-slate-700 leading-relaxed mb-4">
-            ResearchNexus is a comprehensive research data portal that demonstrates the integration of
+            ResearchDemo is a demonstration application that showcases the integration of
             Persistent Identifier (PID) systems in FAIR Digital Objects. Our platform showcases how
             modern web components can seamlessly integrate with existing frameworks to provide
             interactive and informative displays of research metadata.

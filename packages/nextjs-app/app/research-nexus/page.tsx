@@ -35,7 +35,7 @@ const authors = [
   { orcid: '0000-0001-6575-1022', name: 'Andreas Pfeil', institution: 'Karlsruhe Institute of Technology' },
 ];
 
-export default function ResearchNexusPage() {
+export default function ResearchDemoPage() {
   return (
     <div className="min-h-screen bg-slate-50">
       <Navigation />

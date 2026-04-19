@@ -45,7 +45,7 @@ definePidTooltip();
 defineColorHighlight();
 defineLocaleVisualization();
 
-// Import Mantine styles for ResearchNexus demo
+// Import Mantine styles for ResearchDemo
 import '@mantine/core/styles.css';
 
 export default {

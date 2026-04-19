@@ -17,7 +17,7 @@ export default function DatasetsPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-slate-900 mb-2">Research Datasets</h1>
           <p className="text-slate-600">
-            Browse and explore the research datasets available in the ResearchNexus portal.
+            Browse and explore the research datasets available in the ResearchDemo portal.
           </p>
         </div>
 

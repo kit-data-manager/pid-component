@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/angular';
-import { ResearchNexusComponent } from '../src/app/research-nexus.component';
+import { ResearchDemoComponent } from '../src/app/research-demo.component';
 import { moduleMetadata, applicationConfig } from '@storybook/angular';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 
@@ -33,7 +33,7 @@ event bindings or state.
 **Folder structure:**
 \`\`\`
 src/app/
-├── research-nexus.component.ts  # Main application component
+├── research-demo.component.ts  # Main application component
 ├── index.ts                     # Exports
 └── components/
     ├── navigation.component.ts
@@ -55,7 +55,7 @@ src/app/
       providers: [provideNoopAnimations()],
     }),
     moduleMetadata({
-      imports: [ResearchNexusComponent],
+      imports: [ResearchDemoComponent],
     }),
   ],
 };
@@ -66,6 +66,6 @@ type Story = StoryObj;
 export const ResearchDemo: Story = {
   name: 'Research Data Portal',
   render: () => ({
-    template: '<app-research-nexus />',
+    template: '<app-research-demo />',
   }),
 };

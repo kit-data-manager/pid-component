@@ -943,7 +943,16 @@ export class PidCollapsible {
       <Host class={hostClasses} onDblClick={e => {
         if (this.open) {
           e.stopPropagation();
+          e.preventDefault();
+
+          // Sync the native <details> element
+          const details = this.el.querySelector('details');
+          if (details) {
+            details.open = false;
+          }
+
           this.open = false;
+          this.collapsibleToggle.emit(false);
           this.updateAppearance();
         }
       }}>

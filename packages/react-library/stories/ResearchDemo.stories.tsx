@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { ResearchNexusApp } from '../demo';
+import { ResearchDemoApp } from '../demo';
 import React from 'react';
 import { DemoProvider } from '../demo/DemoProvider';
 
@@ -33,7 +33,7 @@ handlers or React state.
 **Folder structure:**
 \`\`\`
 demo/
-├── ResearchNexusApp.tsx  # Main application component
+├── ResearchDemoApp.tsx  # Main application component
 ├── DemoProvider.tsx      # Mantine provider wrapper
 ├── index.ts              # Exports
 └── components/
@@ -66,5 +66,5 @@ export const ResearchDemo: Story = {
       </DemoProvider>
     ),
   ],
-  render: () => <ResearchNexusApp />,
+  render: () => <ResearchDemoApp />,
 };

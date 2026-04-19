@@ -20,7 +20,7 @@ export function Footer() {
               leftSection={<IconDatabase size={14} />}
               radius="md"
             >
-              ResearchNexus
+              ResearchDemo
             </Button>
           </Group>
           <Text size="sm" c="dimmed">

@@ -16,9 +16,9 @@ export default function AboutPage() {
           boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
           marginBottom: 32,
         }}>
-          <h1 style={{ fontSize: 36, fontWeight: 700, marginBottom: 16 }}>About ResearchNexus</h1>
+          <h1 style={{ fontSize: 36, fontWeight: 700, marginBottom: 16 }}>About ResearchDemo</h1>
           <p style={{ fontSize: 16, color: '#6b7280', lineHeight: 1.8, marginBottom: 24 }}>
-            ResearchNexus is a comprehensive research data portal that demonstrates the integration of
+            ResearchDemo is a demonstration application that showcases the integration of
             Persistent Identifier (PID) systems in FAIR Digital Objects. Our platform showcases how
             modern web components can seamlessly integrate with existing frameworks to provide
             interactive and informative displays of research metadata.

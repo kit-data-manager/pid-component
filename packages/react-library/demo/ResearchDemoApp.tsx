@@ -66,7 +66,7 @@ interface AppProps {
   onNavigate?: (page: string) => void;
 }
 
-export function ResearchNexusApp({ activePage = 'home', onNavigate }: AppProps) {
+export function ResearchDemoApp({ activePage = 'home', onNavigate }: AppProps) {
   const [currentPage, setCurrentPage] = useState(activePage);
   const [isActive, setIsActive] = useState(false);
   const articleRef = useRef<HTMLDivElement>(null);

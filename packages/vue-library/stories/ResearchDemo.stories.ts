@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import ResearchNexusApp from '../demo/ResearchNexusApp.vue';
+import ResearchDemoApp from '../demo/ResearchDemoApp.vue';
 
 const meta: Meta = {
   title: 'ResearchDemo',
@@ -28,7 +28,7 @@ autodetection runs above them, proving the DOM tree traversal does not block.
 **Folder structure:**
 \`\`\`
 demo/
-├── ResearchNexusApp.vue  # Main application component
+├── ResearchDemoApp.vue  # Main application component
 ├── index.ts              # Exports
 └── components/
     ├── AppNavigation.vue
@@ -57,7 +57,7 @@ type Story = StoryObj;
 export const ResearchDemo: Story = {
   name: 'Research Data Portal',
   render: () => ({
-    components: { ResearchNexusApp },
-    template: '<ResearchNexusApp />',
+    components: { ResearchDemoApp },
+    template: '<ResearchDemoApp />',
   }),
 };

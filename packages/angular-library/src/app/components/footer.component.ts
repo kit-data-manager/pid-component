@@ -20,7 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
           <button mat-mini-fab color="accent" disabled>
             <mat-icon>storage</mat-icon>
           </button>
-          <span class="brand-text">ResearchNexus</span>
+          <span class="brand-text">ResearchDemo</span>
         </div>
         <p class="footer-text">Research Data Portal powered by KIT Data Manager</p>
       </div>

@@ -22,8 +22,16 @@ export default function Navbar() {
             </svg>
           </div>
           <Link href="/" style={{ color: 'white', fontSize: 20, fontWeight: 700, textDecoration: 'none' }}>
-            ResearchNexus
+            ResearchDemo
           </Link>
+          <span style={{
+            background: '#fbbf24',
+            color: '#78350f',
+            fontSize: 11,
+            fontWeight: 600,
+            padding: '2px 8px',
+            borderRadius: 12,
+          }}>Demo</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
           <Link href="/datasets"
@@ -35,7 +43,7 @@ export default function Navbar() {
           </Link>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <span style={{ color: '#a0a0a0', fontSize: 14 }}>Powered by</span>
-            <PidComponent value="https://ror.org/04t3en479" />
+            <PidComponent value="https://ror.org/04t3en479" hideSubcomponents={true} />
           </div>
         </div>
       </div>

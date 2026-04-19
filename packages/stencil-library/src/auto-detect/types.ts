@@ -36,7 +36,8 @@ export interface PidDetectionConfig {
   amountOfItems?: number;
 
   /**
-   * Whether to emphasize detected components with border and shadow. Default: true.
+   * Whether to emphasize detected components with border and shadow. Default: false.
+   * Non-emphasized components blend seamlessly into surrounding text.
    */
   emphasizeComponent?: boolean;
 

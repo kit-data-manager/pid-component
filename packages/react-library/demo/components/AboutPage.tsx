@@ -11,12 +11,12 @@ export function AboutPage({}: AboutPageProps) {
   return (
     <div style={{ marginBottom: 32 }}>
       <Title order={2} mb="md" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        About ResearchNexus
+        About ResearchDemo
         <Badge color="blue" variant="light" size="sm">Demo Application</Badge>
       </Title>
       <Card shadow="sm" padding="xl" radius="md" withBorder>
         <Text size="sm" style={{ lineHeight: 1.8, marginBottom: 16, color: '#374151' }}>
-          ResearchNexus is a demonstration application showcasing the
+          ResearchDemo is a demonstration application showcasing the
           <strong> PID Component</strong> library. This component enables
           seamless detection and rendering of Persistent Identifiers (PIDs)
           including DOIs, ORCIDs, Handles, RORs, and more.

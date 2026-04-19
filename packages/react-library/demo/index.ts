@@ -1,2 +1,2 @@
-export { ResearchNexusApp } from './ResearchNexusApp';
+export { ResearchDemoApp } from './ResearchDemoApp';
 export * from './components';

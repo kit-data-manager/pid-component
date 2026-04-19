@@ -13,14 +13,14 @@ const articleRef = inject<{
   <div class="mb-8">
     <h2 class="text-h6 font-weight-bold mb-4 d-flex align-center">
       <v-icon color="info" class="mr-2">mdi-information</v-icon>
-      About ResearchNexus
+      About ResearchDemo
       <v-chip color="info-lighten-5" text-color="info-darken-2" size="small" class="ml-3">
         {{ articleRef?.isActive ? 'Scanning Active' : 'Scanning Inactive' }}
       </v-chip>
     </h2>
     <v-card class="pa-6" elevation="1">
       <p class="text-body-2 text-grey-darken-1 mb-4" style="line-height: 1.8;">
-        ResearchNexus is a demonstration application showcasing the
+        ResearchDemo is a demonstration application showcasing the
         <strong>PID Component</strong> library. This component enables
         seamless detection and rendering of Persistent Identifiers (PIDs)
         including DOIs, ORCIDs, Handles, RORs, and more.

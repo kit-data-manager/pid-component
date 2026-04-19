@@ -21,12 +21,12 @@ import { PidComponent } from '@kit-data-manager/angular-pid-component';
     <div class="mb-8">
       <h2 class="section-title">
         <mat-icon color="info">information</mat-icon>
-        About ResearchNexus
+        About ResearchDemo
         <mat-chip color="info" highlighted>Demo Application</mat-chip>
       </h2>
       <mat-card class="article-card">
         <p class="article-paragraph">
-          ResearchNexus is a demonstration application showcasing the
+          ResearchDemo is a demonstration application showcasing the
           <strong>PID Component</strong> library. This component enables
           seamless detection and rendering of Persistent Identifiers (PIDs)
           including DOIs, ORCIDs, Handles, RORs, and more.

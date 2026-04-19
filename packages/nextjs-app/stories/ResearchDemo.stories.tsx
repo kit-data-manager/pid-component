@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import ResearchNexusPage from '../app/research-nexus/page';
+import ResearchDemoPage from '../app/research-nexus/page';
 
 const meta: Meta = {
   title: 'ResearchDemo',
@@ -56,5 +56,5 @@ type Story = StoryObj;
 
 export const ResearchDemo: Story = {
   name: 'Research Data Portal',
-  render: () => <ResearchNexusPage />,
+  render: () => <ResearchDemoPage />,
 };

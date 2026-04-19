@@ -1,6 +1,6 @@
 'use client';
 
-import { Container, Group, Text, Button, Anchor } from '@mantine/core';
+import { Container, Group, Text, Button, Anchor, Badge } from '@mantine/core';
 import { IconDatabase } from '@tabler/icons-react';
 import { PidComponent } from '../../lib';
 
@@ -28,8 +28,9 @@ export function Navigation({ activePage = 'home', onNavigate }: NavigationProps)
               leftSection={<IconDatabase size={18} />}
               radius="md"
             >
-              ResearchNexus
+              ResearchDemo
             </Button>
+            <Badge color="orange" variant="light" size="sm">Demo</Badge>
           </Group>
           <Group gap="md">
             <Anchor
@@ -65,7 +66,7 @@ export function Navigation({ activePage = 'home', onNavigate }: NavigationProps)
             <Text size="sm" c="dimmed">|</Text>
             <Group gap={4}>
               <Text size="sm" c="dimmed">Powered by</Text>
-              <PidComponent value="https://ror.org/04t3en479" emphasizeComponent={false} />
+              <PidComponent value="https://ror.org/04t3en479" emphasizeComponent={false} hideSubcomponents={true} />
             </Group>
           </Group>
         </Group>

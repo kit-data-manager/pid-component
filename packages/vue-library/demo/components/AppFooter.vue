@@ -10,7 +10,7 @@
           <v-btn icon variant="text" size="small">
             <v-icon color="white">mdi-database</v-icon>
           </v-btn>
-          <span class="text-body-1 font-weight-bold text-white">ResearchNexus</span>
+          <span class="text-body-1 font-weight-bold text-white">ResearchDemo</span>
         </div>
         <span class="text-body-2 text-grey">Research Data Portal powered by KIT Data Manager</span>
       </div>

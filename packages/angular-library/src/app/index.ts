@@ -1,2 +1,2 @@
-export { ResearchNexusComponent } from './research-nexus.component';
+export { ResearchDemoComponent } from './research-demo.component';
 export * from './components';

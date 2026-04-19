@@ -1,7 +1,7 @@
 import '../globals.css';
 
 export const metadata = {
-  title: 'ResearchNexus - PID Component Demo',
+  title: 'ResearchDemo - PID Component Demo',
   description: 'A comprehensive demonstration of @kit-data-manager/pid-component in a research data portal',
 };
 

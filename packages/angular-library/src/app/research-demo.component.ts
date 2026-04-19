@@ -21,7 +21,7 @@ import {
 import { initPidDetection, type PidDetectionController } from '@kit-data-manager/pid-component';
 
 @Component({
-  selector: 'app-research-nexus',
+  selector: 'app-research-demo',
   standalone: true,
   imports: [
     CommonModule,
@@ -41,7 +41,7 @@ import { initPidDetection, type PidDetectionController } from '@kit-data-manager
     AboutPageComponent,
   ],
   template: `
-    <div class="research-nexus-app">
+    <div class="research-demo-app">
       <app-navigation [activePage]="activePage()" (navigate)="onNavigate($event)" />
 
       <main class="main-content">
@@ -97,7 +97,7 @@ import { initPidDetection, type PidDetectionController } from '@kit-data-manager
     </div>
   `,
   styles: [`
-    .research-nexus-app {
+    .research-demo-app {
       min-height: 100vh;
       background: #fafafa;
     }
@@ -139,7 +139,7 @@ import { initPidDetection, type PidDetectionController } from '@kit-data-manager
     }
   `],
 })
-export class ResearchNexusComponent implements AfterViewInit, OnDestroy {
+export class ResearchDemoComponent implements AfterViewInit, OnDestroy {
   @ViewChild('articleSection') articleSection!: ElementRef<HTMLElement>;
 
   activePage = signal('home');

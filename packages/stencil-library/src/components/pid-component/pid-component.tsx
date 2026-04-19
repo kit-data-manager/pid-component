@@ -209,7 +209,9 @@ export class PidComponent {
   @State() isExpanded: boolean = false;
 
   constructor() {
-    this.temporarilyEmphasized = this.emphasizeComponent;
+    // Note: @Prop values may not be set yet in the constructor.
+    // temporarilyEmphasized is properly initialized in componentWillLoad()
+    // to ensure it reflects the actual prop value.
   }
 
   componentDidLoad() {
@@ -381,6 +383,12 @@ export class PidComponent {
 
     // Validate amountOfItems to prevent division by zero
     this.validateAmountOfItems(this.amountOfItems);
+
+    // Initialize temporarilyEmphasized from the actual prop value.
+    // This cannot be done in the constructor because @Prop values
+    // are not yet bound when the constructor runs, causing
+    // emphasizeComponent=false to be ignored on initial load.
+    this.temporarilyEmphasized = this.emphasizeComponent || this.loadSubcomponents;
 
     // Initialize dark mode
     this.initializeDarkMode();
