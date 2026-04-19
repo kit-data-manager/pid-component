@@ -1,5 +1,7 @@
 import { render, h } from '@stencil/vitest';
 import { describe, it, expect } from 'vitest';
+// h is the JSX factory required at runtime by TSX – do not remove
+void h;
 import { FoldableAction } from '../../../utils/FoldableAction';
 import { checkA11y } from '../../axe-helper';
 

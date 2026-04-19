@@ -1,6 +1,7 @@
-// noinspection JSUnusedLocalSymbols – h is the JSX factory used implicitly by TSX
-import { render } from '@stencil/vitest';
+import { render, h } from '@stencil/vitest';
 import { describe, expect, it } from 'vitest';
+// h is the JSX factory required at runtime by TSX – do not remove
+void h;
 
 /**
  * NOTE: In Stencil's mock-doc lazy-loaded environment, non-shadow components

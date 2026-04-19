@@ -1,6 +1,7 @@
-// noinspection JSUnusedLocalSymbols – h is the JSX factory used implicitly by TSX
-import { render } from '@stencil/vitest';
+import { render, h } from '@stencil/vitest';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+// h is the JSX factory required at runtime by TSX – do not remove
+void h;
 
 /**
  * Helper: mock navigator.clipboard.writeText and return the mock function.

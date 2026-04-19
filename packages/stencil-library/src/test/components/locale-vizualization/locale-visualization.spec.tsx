@@ -1,6 +1,7 @@
-// noinspection JSUnusedLocalSymbols – h is the JSX factory used implicitly by TSX
-import { render } from '@stencil/vitest';
+import { render, h } from '@stencil/vitest';
 import { beforeEach, describe, expect, it } from 'vitest';
+// h is the JSX factory required at runtime by TSX – do not remove
+void h;
 
 // The locale-visualization component calls navigator.language.split('-')
 // in its render method. In mock-doc, navigator.language is undefined.
