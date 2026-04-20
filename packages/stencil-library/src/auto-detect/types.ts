@@ -59,15 +59,21 @@ export interface PidDetectionConfig {
   exclude?: string;
 
   /**
-   * Ordered list of renderer keys to try first during auto-detection
-   * (non-binding preselection). These renderers are tried in order; if
-   * one matches, it is used. If none match, the full default registry
-   * is tried (unless fallbackToAll is explicitly set to false).
+   * Ordered list of renderer keys to activate for auto-detection.
    *
-   * Example: ["DOIType", "ORCIDType", "HandleType"]
+   * If set, only these renderers are used during scanning, in the specified
+   * order. This allows activating renderers that are not auto-discoverable
+   * by default (e.g. `EmailType`, `URLType`, `LocaleType`, `JSONType`),
+   * or restricting detection to a specific subset.
    *
-   * If not set, all renderers are tried in default priority order
-   * (excluding FallbackType for auto-detection).
+   * If not set, only renderers with `autoDiscoverableByDefault: true` in the
+   * renderer registry participate (currently: `DateType`, `ORCIDType`,
+   * `DOIType`, `HandleType`, `RORType`, `SPDXType`).
+   *
+   * Available keys: `DateType`, `ORCIDType`, `DOIType`, `HandleType`,
+   * `RORType`, `SPDXType`, `EmailType`, `URLType`, `LocaleType`, `JSONType`.
+   *
+   * Example: ["DOIType", "ORCIDType", "HandleType", "EmailType"]
    */
   renderers?: string[];
 

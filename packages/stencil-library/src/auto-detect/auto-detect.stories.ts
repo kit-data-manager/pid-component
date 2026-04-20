@@ -19,13 +19,26 @@ import { expect, userEvent } from 'storybook/test';
  * - Controller API with `stop()`, `rescan()`, and `destroy()` methods
  * - Screen-reader accessible (aria-hidden toggling)
  *
+ * Not all renderers participate in auto-detection by default. Each renderer
+ * has an `autoDiscoverableByDefault` flag in the registry. When no explicit
+ * `renderers` list is provided, only renderers with this flag set to `true`
+ * are used (currently: `DateType`, `ORCIDType`, `DOIType`, `HandleType`,
+ * `RORType`, `SPDXType`). To activate additional renderers like `EmailType`,
+ * `URLType`, `LocaleType`, or `JSONType`, pass them explicitly.
+ *
  * **Import and use:**
  * ```typescript
  * import { initPidDetection } from '@kit-data-manager/pid-component';
  *
+ * // Uses only auto-discoverable renderers by default
  * const controller = initPidDetection({
  *   root: document.getElementById('my-content'),
- *   renderers: ['DOIType', 'ORCIDType', 'HandleType'],
+ * });
+ *
+ * // Explicitly activate additional renderers
+ * const controller = initPidDetection({
+ *   root: document.getElementById('my-content'),
+ *   renderers: ['DOIType', 'ORCIDType', 'HandleType', 'EmailType', 'URLType'],
  *   darkMode: 'system',
  *   observe: true,
  * });
@@ -52,12 +65,12 @@ const meta: Meta = {
     },
     renderers: {
       description:
-        'Ordered list of renderer keys to try first (comma-separated for this demo). These serve as a non-binding preselection: if none match, the full registry is tried (unless `fallbackToAll` is `false`). Available keys: `DateType`, `ORCIDType`, `DOIType`, `HandleType`, `RORType`, `SPDXType`, `EmailType`, `URLType`, `LocaleType`, `JSONType`.',
+        'Ordered list of renderer keys to activate (comma-separated for this demo). If empty, only renderers with `autoDiscoverableByDefault: true` are used. Set explicitly to activate non-default renderers like `EmailType`, `URLType`, `LocaleType`. Available keys: `DateType`, `ORCIDType`, `DOIType`, `HandleType`, `RORType`, `SPDXType`, `EmailType`, `URLType`, `LocaleType`, `JSONType`.',
       control: { type: 'text' },
       table: {
         category: 'Detection',
         type: { summary: 'string[]' },
-        defaultValue: { summary: 'all renderers' },
+        defaultValue: { summary: 'auto-discoverable renderers only' },
       },
     },
     fallbackToAll: {
@@ -233,6 +246,8 @@ export const MixedPidsInText: Story = {
         code: `
 import { initPidDetection } from '@kit-data-manager/pid-component';
 
+// Without a renderers list, only auto-discoverable renderers are used
+// (DOI, ORCiD, Handle, ROR, SPDX, Date). Email and URL require explicit opt-in.
 const controller = initPidDetection({
   root: document.getElementById('my-content'),
   darkMode: 'light',
@@ -253,8 +268,9 @@ const controller = initPidDetection({
 };
 
 /**
- * Auto-detection restricted to only DOIs and ORCiDs.
- * Other PID types (URLs, emails, Handle PIDs, etc.) in the text are left as plain text.
+ * Auto-detection restricted to only DOIs and ORCiDs via the explicit `renderers` config.
+ * Other PID types (including auto-discoverable ones like Handle PIDs, ROR, SPDX)
+ * are left as plain text because an explicit list overrides the defaults.
  */
 export const FilteredRenderers: Story = {
   render: (args) => {
@@ -851,7 +867,7 @@ export const Showcase: Story = {
     import { initPidDetection }
       from 'https://unpkg.com/@kit-data-manager/pid-component/dist/esm/index.js';
 
-    // Auto-detected PIDs are non-emphasized by default
+    // Auto-detected PIDs use only auto-discoverable renderers by default
     initPidDetection({
       root: document.getElementById('catalog'),
       darkMode: 'system',

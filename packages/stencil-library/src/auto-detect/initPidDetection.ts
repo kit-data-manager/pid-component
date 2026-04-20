@@ -1,14 +1,23 @@
 /**
  * Main entry point for automatic PID detection on webpages.
  *
+ * Not all renderers participate in auto-detection by default. Each renderer
+ * has an `autoDiscoverableByDefault` flag in the registry (`utils.ts`). When
+ * no explicit `renderers` list is provided, only renderers with this flag set
+ * to `true` are used. To activate additional renderers (or restrict to a
+ * subset), pass them in the `renderers` config option.
+ *
  * Usage:
  * ```typescript
  * import { initPidDetection } from '@kit-data-manager/pid-component';
  *
+ * // Uses only auto-discoverable renderers (DOI, ORCiD, Handle, etc.)
+ * const controller = initPidDetection({ root: document.body });
+ *
+ * // Explicitly activate specific renderers (including non-default ones)
  * const controller = initPidDetection({
  *   root: document.body,
- *   renderers: ['DOIType', 'ORCIDType', 'HandleType'],
- *   settings: [...],
+ *   renderers: ['DOIType', 'ORCIDType', 'HandleType', 'EmailType'],
  *   darkMode: 'system',
  *   observe: true,
  * });
@@ -41,6 +50,11 @@ const INSERT_BATCH_SIZE = 10;
  * matching text with <pid-component> elements. Detection runs in a
  * Web Worker for performance; DOM manipulation happens on the main thread.
  * Original text stays visible until the component has fully loaded.
+ *
+ * When no `renderers` list is provided, only renderers whose
+ * `autoDiscoverableByDefault` flag is `true` in the registry participate.
+ * Pass an explicit `renderers` array to activate specific renderers
+ * (including those that are not auto-discoverable by default).
  *
  * @param config Configuration options
  * @returns Controller for lifecycle management

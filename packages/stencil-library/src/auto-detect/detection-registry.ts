@@ -3,6 +3,8 @@ import { renderers } from '../utils/utils';
 export interface DetectionEntry {
   key: string;
   check: (value: string) => boolean;
+  /** Whether this renderer participates in auto-detection when no explicit renderer list is given. */
+  autoDiscoverableByDefault: boolean;
 }
 
 function buildDetectionRegistry(): DetectionEntry[] {
@@ -10,6 +12,7 @@ function buildDetectionRegistry(): DetectionEntry[] {
     .filter(r => r.key !== 'FallbackType')
     .map(renderer => ({
       key: renderer.key,
+      autoDiscoverableByDefault: renderer.autoDiscoverableByDefault,
       check: (value: string) => {
         const instance = new renderer.constructor(value);
         return renderer.constructor.prototype.hasCorrectFormatQuick.call(instance) ?? false;
@@ -75,6 +78,7 @@ export function sanitizeToken(token: string): { sanitized: string; leadingStripp
  * @param value The string to check
  * @param orderedRendererKeys Optional ordered list of renderer keys to try.
  *        If set, only these renderers are checked, in this order. First match wins.
+ *        If not set, only renderers with `autoDiscoverableByDefault: true` are tried.
  * @returns The renderer key of the best-fit, or null if nothing matches.
  */
 export function detectBestFit(value: string, orderedRendererKeys?: string[]): string | null {
@@ -89,8 +93,9 @@ export function detectBestFit(value: string, orderedRendererKeys?: string[]): st
     return null;
   }
 
+  // No explicit list: only try renderers that are auto-discoverable by default
   for (const entry of registry) {
-    if (entry.check(value)) {
+    if (entry.autoDiscoverableByDefault && entry.check(value)) {
       return entry.key;
     }
   }

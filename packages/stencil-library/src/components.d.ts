@@ -121,7 +121,7 @@ export namespace Components {
          * @default false
          */
         'expanded': boolean;
-      /**
+        /**
           * Initial height when expanded
          */
         "initialHeight"?: string;
@@ -144,10 +144,10 @@ export namespace Components {
           * Public method to recalculate content dimensions Can be called externally, for example when pagination changes Optimized for better performance
          */
         'recalculateContentDimensions': () => Promise<{
-          contentWidth: number;
-          contentHeight: number;
-          maxWidth: number;
-          maxHeight: number;
+            contentWidth: number;
+            contentHeight: number;
+            maxWidth: number;
+            maxHeight: number;
         }>;
         /**
           * Whether to show the footer section
@@ -599,7 +599,7 @@ declare namespace LocalJSX {
          * @default false
          */
         'expanded'?: boolean;
-      /**
+        /**
           * Initial height when expanded
          */
         "initialHeight"?: string;
@@ -880,7 +880,7 @@ declare namespace LocalJSX {
         "initialHeight": string;
         "lineHeight": number;
         "showFooter": boolean;
-      'expanded': boolean;
+        'expanded': boolean;
     }
     interface PidComponentAttributes {
         "value": string;
