@@ -29,7 +29,7 @@ export class EmailType extends GenericIdentifierType {
   renderPreview(): FunctionalComponent {
     // mail icon from: https://heroicons.com/ (MIT license)
     return (
-      <span class={`inline-flex items-center gap-2 font-mono text-sm text-blue-500`}>
+      <span class={`inline-flex gap-2 font-mono text-sm text-blue-500`}>
         {this.value
           .split(new RegExp(/\s*,\s*/))
           .filter(email => email.length > 0)
@@ -39,7 +39,7 @@ export class EmailType extends GenericIdentifierType {
                 href={'mailto:' + email}
                 rel={'noopener noreferrer'}
                 target="_blank"
-                class={`inline-flex items-center rounded-md border border-slate-500 px-1 py-0.5 font-mono text-sm text-blue-500`}
+                class={`inline-flex items-center rounded-md border border-slate-500 py-0.5 font-mono text-sm text-blue-500`}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" aria-hidden="true" viewBox="0 0 24 24"
                      stroke="currentColor" stroke-width="1" height="20px">

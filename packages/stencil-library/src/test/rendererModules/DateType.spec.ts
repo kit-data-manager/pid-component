@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { DateType } from '../../rendererModules/DateType';
+import { DATE_examples } from '../../../../../examples/date/values.ts';
 
 describe('DateType', () => {
   describe('hasCorrectFormatQuick()', () => {
@@ -19,22 +20,22 @@ describe('DateType', () => {
     });
 
     it('returns false for plain date without time', () => {
-      const dt = new DateType('2024-06-15');
+      const dt = new DateType(DATE_examples.INVALID_DATE_ONLY);
       expect(dt.hasCorrectFormatQuick()).toBe(false);
     });
 
     it('returns false for random text', () => {
-      const dt = new DateType('hello');
+      const dt = new DateType(DATE_examples.INVALID_NOT_A_DATE);
       expect(dt.hasCorrectFormatQuick()).toBe(false);
     });
 
     it('returns false for date with time but no timezone', () => {
-      const dt = new DateType('2024-06-15T09:30:00');
+      const dt = new DateType(DATE_examples.INVALID_NO_TIMEZONE);
       expect(dt.hasCorrectFormatQuick()).toBe(false);
     });
 
     it('returns false for empty string', () => {
-      const dt = new DateType('');
+      const dt = new DateType(DATE_examples.INVALID_EMPTY);
       expect(dt.hasCorrectFormatQuick()).toBe(false);
     });
   });
@@ -48,7 +49,7 @@ describe('DateType', () => {
     });
 
     it('matches hasCorrectFormatQuick() result for an invalid date', async () => {
-      const dt = new DateType('not-a-date');
+      const dt = new DateType(DATE_examples.INVALID_NOT_A_DATE);
       const quick = dt.hasCorrectFormatQuick();
       const full = await dt.hasCorrectFormat();
       expect(full).toBe(quick);

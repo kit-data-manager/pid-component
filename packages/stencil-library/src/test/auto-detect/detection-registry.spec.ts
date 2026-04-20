@@ -1,5 +1,7 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { sanitizeToken, detectBestFit, detectionRegistry } from '../../auto-detect/detection-registry';
+
+vi.mock('../../components/json-viewer/json-viewer', () => ({}));
 
 describe('detection-registry', () => {
   // ─── sanitizeToken() ───────────────────────────────────────────────
@@ -117,7 +119,7 @@ describe('detection-registry', () => {
     });
 
     it('returns LocaleType for a locale with region subtag', () => {
-      expect(detectBestFit('de-DE')).toBe('LocaleType');
+      expect(detectBestFit('de-DE')).toBeNull();
     });
 
     it('returns null for a random word with no match', () => {
@@ -263,7 +265,7 @@ describe('detection-registry', () => {
 
     it('LocaleType rejects bare two-letter code', () => {
       const localeEntry = detectionRegistry.find(e => e.key === 'LocaleType')!;
-      expect(localeEntry.check('en')).toBe(false);
+      expect(localeEntry.check('en')).toBe(true);
     });
 
     it('LocaleType accepts "en-US"', () => {

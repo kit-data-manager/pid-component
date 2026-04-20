@@ -4,6 +4,8 @@ import * as DomScanner from '../../auto-detect/DomScanner';
 import * as TextReplacer from '../../auto-detect/TextReplacer';
 import * as DetectionRegistry from '../../auto-detect/detection-registry';
 
+vi.mock('../../components/json-viewer/json-viewer', () => ({}));
+
 // ─── Spies ───────────────────────────────────────────────────────────
 
 let spyScanDom: any;

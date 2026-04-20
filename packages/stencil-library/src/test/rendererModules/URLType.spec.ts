@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { URLType } from '../../rendererModules/URLType';
+import { URL_examples } from '../../../../../examples/url/values.ts';
 
 describe('URLType', () => {
   describe('hasCorrectFormatQuick()', () => {
@@ -19,17 +20,17 @@ describe('URLType', () => {
     });
 
     it('returns false for string without scheme', () => {
-      const ut = new URLType('not-a-url');
+      const ut = new URLType(URL_examples.INVALID_NOT_A_URL);
       expect(ut.hasCorrectFormatQuick()).toBe(false);
     });
 
     it('returns false for ftp URL', () => {
-      const ut = new URLType('ftp://example.com');
+      const ut = new URLType(URL_examples.INVALID_WRONG_PROTOCOL);
       expect(ut.hasCorrectFormatQuick()).toBe(false);
     });
 
     it('returns false for empty string', () => {
-      const ut = new URLType('');
+      const ut = new URLType(URL_examples.INVALID_EMPTY);
       expect(ut.hasCorrectFormatQuick()).toBe(false);
     });
   });

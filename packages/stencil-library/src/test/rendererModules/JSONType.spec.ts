@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { JSONType } from '../../rendererModules/JSONType';
+import { JSON_examples } from '../../../../../examples/json/values.ts';
 
 // Mock the json-viewer Stencil component to prevent decorator evaluation
 // (Stencil's @Prop/@State decorators are not available in the spec environment)
@@ -23,22 +24,22 @@ describe('JSONType', () => {
     });
 
     it('returns false for plain text', () => {
-      const jt = new JSONType('not json');
+      const jt = new JSONType(JSON_examples.INVALID_NOT_JSON);
       expect(jt.hasCorrectFormatQuick()).toBe(false);
     });
 
     it('returns false for a JSON primitive string "42"', () => {
-      const jt = new JSONType('42');
+      const jt = new JSONType(JSON_examples.INVALID_PRIMITIVE);
       expect(jt.hasCorrectFormatQuick()).toBe(false);
     });
 
     it('returns false for a JSON primitive string "true"', () => {
-      const jt = new JSONType('true');
+      const jt = new JSONType(JSON_examples.INVALID_PRIMITIVE);
       expect(jt.hasCorrectFormatQuick()).toBe(false);
     });
 
     it('returns false for empty string', () => {
-      const jt = new JSONType('');
+      const jt = new JSONType(JSON_examples.INVALID_EMPTY);
       expect(jt.hasCorrectFormatQuick()).toBe(false);
     });
 
@@ -115,7 +116,7 @@ describe('JSONType', () => {
     });
 
     it('returns defined output for invalid JSON', () => {
-      const jt = new JSONType('not json');
+      const jt = new JSONType(JSON_examples.INVALID_NOT_JSON);
       const preview = jt.renderPreview();
       expect(preview).toBeDefined();
     });
@@ -129,7 +130,7 @@ describe('JSONType', () => {
     });
 
     it('returns defined output for invalid JSON', () => {
-      const jt = new JSONType('not json');
+      const jt = new JSONType(JSON_examples.INVALID_NOT_JSON);
       const body = jt.renderBody();
       expect(body).toBeDefined();
     });

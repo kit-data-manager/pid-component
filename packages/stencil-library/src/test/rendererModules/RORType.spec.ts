@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { RORType } from '../../rendererModules/RORType';
+import { ROR_examples } from '../../../../../examples/ror/values.ts';
 
 describe('RORType', () => {
   describe('hasCorrectFormatQuick()', () => {
@@ -14,22 +15,22 @@ describe('RORType', () => {
     });
 
     it('returns false for a non-ROR URL', () => {
-      const rt = new RORType('https://example.com');
+      const rt = new RORType(ROR_examples.INVALID_WRONG_DOMAIN);
       expect(rt.hasCorrectFormatQuick()).toBe(false);
     });
 
     it('returns false for ROR without scheme', () => {
-      const rt = new RORType('ror.org/04t3en479');
+      const rt = new RORType(ROR_examples.INVALID_NO_SCHEME);
       expect(rt.hasCorrectFormatQuick()).toBe(false);
     });
 
     it('returns false for empty string', () => {
-      const rt = new RORType('');
+      const rt = new RORType(ROR_examples.INVALID_EMPTY);
       expect(rt.hasCorrectFormatQuick()).toBe(false);
     });
 
     it('returns false for ROR ID with wrong suffix length', () => {
-      const rt = new RORType('https://ror.org/04t3en47');
+      const rt = new RORType(ROR_examples.INVALID_WRONG_LENGTH);
       expect(rt.hasCorrectFormatQuick()).toBe(false);
     });
   });

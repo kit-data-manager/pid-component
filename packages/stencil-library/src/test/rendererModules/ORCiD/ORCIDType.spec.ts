@@ -4,6 +4,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ORCIDType } from '../../../rendererModules/ORCiD/ORCIDType';
 import * as DataCache from '../../../utils/DataCache';
+import { ORCID_examples } from '../../../../../../examples/orcid/values.ts';
 
 let cachedFetchSpy: any;
 beforeEach(() => {
@@ -26,12 +27,12 @@ describe('ORCIDType', () => {
     });
 
     it('returns false for non-ORCiD string', () => {
-      const ot = new ORCIDType('not-an-orcid');
+      const ot = new ORCIDType(ORCID_examples.INVALID_NOT_AN_ORCID);
       expect(ot.hasCorrectFormatQuick()).toBe(false);
     });
 
     it('returns false for empty string', () => {
-      const ot = new ORCIDType('');
+      const ot = new ORCIDType(ORCID_examples.INVALID_EMPTY);
       expect(ot.hasCorrectFormatQuick()).toBe(false);
     });
   });

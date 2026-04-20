@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { HandleType } from '../../../rendererModules/Handle/HandleType';
+import { HANDLE_examples } from '../../../../../../examples/handle/values.ts';
 
 // Mock PID module dependencies
 vi.mock('../../../utils/utils', () => ({
@@ -23,12 +24,12 @@ describe('HandleType', () => {
     });
 
     it('returns false for a non-PID string', () => {
-      const ht = new HandleType('not-a-pid');
+      const ht = new HandleType(HANDLE_examples.INVALID_NOT_A_PID);
       expect(ht.hasCorrectFormatQuick()).toBe(false);
     });
 
     it('returns false for empty string', () => {
-      const ht = new HandleType('');
+      const ht = new HandleType(HANDLE_examples.INVALID_EMPTY);
       expect(ht.hasCorrectFormatQuick()).toBe(false);
     });
   });

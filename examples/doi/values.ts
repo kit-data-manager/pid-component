@@ -8,6 +8,8 @@ export const DOI_examples = {
   CROSSREF_BOOK: '10.1007/978-1-4419-8598-9',
   DATACITE_SLIDES: '10.5445/IR/1000178054',
   DATACITE_PREPRINT: '10.48550/ARXIV.2505.16550',
+  INVALID_NOT_A_DOI: 'not-a-doi',
+  INVALID_EMPTY: '',
 } as const;
 
 export type DOI_example = typeof DOI_examples[keyof typeof DOI_examples];

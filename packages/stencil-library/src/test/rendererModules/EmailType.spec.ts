@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { EmailType } from '../../rendererModules/EmailType';
+import { EMAIL_examples } from '../../../../../examples/email/values.ts';
 
 describe('EmailType', () => {
   describe('hasCorrectFormatQuick()', () => {
@@ -19,17 +20,17 @@ describe('EmailType', () => {
     });
 
     it('returns false for empty string', () => {
-      const et = new EmailType('');
+      const et = new EmailType(EMAIL_examples.INVALID_EMPTY);
       expect(et.hasCorrectFormatQuick()).toBe(false);
     });
 
     it('returns false for string without @ sign', () => {
-      const et = new EmailType('not-an-email');
+      const et = new EmailType(EMAIL_examples.INVALID_NOT_AN_EMAIL);
       expect(et.hasCorrectFormatQuick()).toBe(false);
     });
 
     it('returns false for string with @ but missing domain', () => {
-      const et = new EmailType('user@');
+      const et = new EmailType(EMAIL_examples.INVALID_MISSING_DOMAIN);
       expect(et.hasCorrectFormatQuick()).toBe(false);
     });
 

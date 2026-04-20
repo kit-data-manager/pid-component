@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { DOIType } from '../../../rendererModules/DOI/DOIType';
 import { DOISource } from '../../../rendererModules/DOI/DOIInfo';
 import * as DataCache from '../../../utils/DataCache';
+import { DOI_examples } from '../../../../../../examples/doi/values.ts';
 
 // Spy on cachedFetch to intercept all network calls
 let cachedFetchSpy: any;
@@ -25,12 +26,12 @@ describe('DOIType', () => {
     });
 
     it('returns false for non-DOI string', () => {
-      const dt = new DOIType('not-a-doi');
+      const dt = new DOIType(DOI_examples.INVALID_NOT_A_DOI);
       expect(dt.hasCorrectFormatQuick()).toBe(false);
     });
 
     it('returns false for empty string', () => {
-      const dt = new DOIType('');
+      const dt = new DOIType(DOI_examples.INVALID_EMPTY);
       expect(dt.hasCorrectFormatQuick()).toBe(false);
     });
   });

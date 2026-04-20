@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { LocaleType } from '../../rendererModules/LocaleType';
+import { LOCALE_examples } from '../../../../../examples/locale/values.ts';
 
 describe('LocaleType', () => {
   describe('hasCorrectFormatQuick()', () => {
@@ -19,17 +20,17 @@ describe('LocaleType', () => {
     });
 
     it('returns false for full word "english"', () => {
-      const lt = new LocaleType('english');
+      const lt = new LocaleType(LOCALE_examples.INVALID_FREE_TEXT);
       expect(lt.hasCorrectFormatQuick()).toBe(false);
     });
 
     it('returns false for empty string', () => {
-      const lt = new LocaleType('');
+      const lt = new LocaleType(LOCALE_examples.INVALID_EMPTY);
       expect(lt.hasCorrectFormatQuick()).toBe(false);
     });
 
     it('returns false for numeric string', () => {
-      const lt = new LocaleType('123');
+      const lt = new LocaleType(LOCALE_examples.INVALID_NUMERIC);
       expect(lt.hasCorrectFormatQuick()).toBe(false);
     });
   });

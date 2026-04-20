@@ -1,14 +1,17 @@
-import { render, h } from '@stencil/vitest';
 import { describe, expect, it, vi } from 'vitest';
+import { render, h } from '@stencil/vitest';
 // h is the JSX factory required at runtime by TSX – do not remove
 void h;
 import { initPidDetection } from '../../auto-detect/initPidDetection';
+import { DOI_examples } from '../../../../../examples';
+
+vi.mock('../../components/json-viewer/json-viewer', () => ({}));
 
 describe('auto-detect e2e', () => {
   it('creates pid-components for detected PIDs in text', async () => {
     const { root } = await render(
       <div id="content">
-        <p>See 10.5281/zenodo.1234567 for details</p>
+        <p>See {DOI_examples.DATACITE_JOURNAL_PAPER} for details</p>
       </div>,
     );
 

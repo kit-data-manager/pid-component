@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { SPDXType } from '../../rendererModules/SPDXType';
+import { SPDX_examples } from '../../../../../examples/spdx/values.ts';
 
 describe('SPDXType', () => {
   describe('hasCorrectFormatQuick()', () => {
@@ -29,17 +30,17 @@ describe('SPDXType', () => {
     });
 
     it('returns false for empty string', () => {
-      const st = new SPDXType('');
+      const st = new SPDXType(SPDX_examples.INVALID_EMPTY);
       expect(st.hasCorrectFormatQuick()).toBe(false);
     });
 
     it('returns false for string with spaces', () => {
-      const st = new SPDXType('Apache License 2.0');
+      const st = new SPDXType(SPDX_examples.INVALID_LICENSE_NAME);
       expect(st.hasCorrectFormatQuick()).toBe(false);
     });
 
     it('returns false for unrelated URL', () => {
-      const st = new SPDXType('https://example.com/licenses/MIT');
+      const st = new SPDXType(SPDX_examples.INVALID_NOT_SPdx);
       expect(st.hasCorrectFormatQuick()).toBe(false);
     });
   });
@@ -90,12 +91,7 @@ describe('SPDXType', () => {
     });
 
     it('returns false when API returns 404', async () => {
-      (global.fetch as any).mockResolvedValue({
-        ok: false,
-        status: 404,
-      });
-
-      const st = new SPDXType('INVALID-LICENSE');
+      const st = new SPDXType(SPDX_examples.INVALID_LICENSE);
       const result = await st.hasCorrectFormat();
 
       expect(result).toBe(false);
