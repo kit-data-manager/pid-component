@@ -63,6 +63,7 @@ type Story = StoryObj;
 
 /** Multiple PID types embedded in a research-paper-style paragraph. */
 export const MixedPIDsInText: Story = {
+  id: 'react-auto-detect-mixed-pids',
   render: () => (
     <AutoDetectContainer config={{ darkMode: 'light' }}>
       <div style={{ maxWidth: 800, fontFamily: 'sans-serif', lineHeight: 1.8 }}>
@@ -86,6 +87,7 @@ export const MixedPIDsInText: Story = {
 
 /** Only DOI and ORCiD renderers are active; other PID types stay as plain text. */
 export const FilteredRenderers: Story = {
+  id: 'react-auto-detect-filtered-renderers',
   render: () => (
     <AutoDetectContainer
       config={{ renderers: ['DOIType', 'ORCIDType'], darkMode: 'light' }}
@@ -107,6 +109,7 @@ export const FilteredRenderers: Story = {
 
 /** Dark mode auto-detection on a dark background. */
 export const DarkMode: Story = {
+  id: 'react-auto-detect-dark-mode',
   render: () => (
     <AutoDetectContainer config={{ darkMode: 'dark' }}>
       <div
@@ -136,6 +139,7 @@ export const DarkMode: Story = {
  * PIDs inside the code block stay as plain text.
  */
 export const ExcludeElements: Story = {
+  id: 'react-auto-detect-exclude-elements',
   render: () => (
     <AutoDetectContainer config={{ exclude: '.no-detect', darkMode: 'light' }}>
       <div style={{ maxWidth: 800, fontFamily: 'sans-serif', lineHeight: 1.8 }}>
@@ -170,6 +174,7 @@ export const ExcludeElements: Story = {
 
 /** Auto-detection inside an HTML table. */
 export const TableWithPIDs: Story = {
+  id: 'react-auto-detect-table',
   render: () => (
     <AutoDetectContainer config={{ darkMode: 'light' }}>
       <div style={{ maxWidth: 800, fontFamily: 'sans-serif' }}>
@@ -205,6 +210,7 @@ export const TableWithPIDs: Story = {
 
 /** Controller lifecycle: destroy and rescan buttons. */
 export const ControllerLifecycle: Story = {
+  id: 'react-auto-detect-controller-lifecycle',
   render: () => {
     const ref = useRef<HTMLDivElement>(null);
     const ctrlRef = useRef<PidDetectionController | null>(null);
@@ -266,6 +272,7 @@ export const ControllerLifecycle: Story = {
 
 /** Punctuation around PIDs is correctly sanitized. */
 export const PunctuationHandling: Story = {
+  id: 'react-auto-detect-punctuation',
   render: () => (
     <AutoDetectContainer config={{ darkMode: 'light' }}>
       <div style={{ maxWidth: 800, fontFamily: 'sans-serif', lineHeight: 1.8 }}>

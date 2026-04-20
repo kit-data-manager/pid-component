@@ -82,6 +82,7 @@ type Story = StoryObj;
  * Default collapsible component in closed state
  */
 export const Default: Story = {
+  id: 'collapsible-default',
   args: {
     open: false,
     emphasize: true,
@@ -130,6 +131,7 @@ export const Default: Story = {
  * Collapsible component that starts in the open state
  */
 export const OpenByDefault: Story = {
+  id: 'collapsible-open-by-default',
   args: {
     open: true,
     emphasize: true,
@@ -178,6 +180,7 @@ export const OpenByDefault: Story = {
  * Collapsible component with footer and resize capability
  */
 export const WithFooterAndResize: Story = {
+  id: 'collapsible-footer-and-resize',
   args: {
     open: true,
     emphasize: true,
@@ -249,6 +252,7 @@ export const WithFooterAndResize: Story = {
  * Demonstrates the dark mode appearance
  */
 export const DarkMode: Story = {
+  id: 'collapsible-dark-mode',
   args: {
     open: true,
     emphasize: true,
@@ -303,6 +307,7 @@ export const DarkMode: Story = {
  * Demonstrates the light mode appearance
  */
 export const LightMode: Story = {
+  id: 'collapsible-light-mode',
   args: {
     open: true,
     emphasize: true,
@@ -357,6 +362,7 @@ export const LightMode: Story = {
  * Showcase of different collapsible states
  */
 export const CollapsibleStates: Story = {
+  id: 'collapsible-states',
   render: () => {
     // Define the different states to showcase
     const states = [

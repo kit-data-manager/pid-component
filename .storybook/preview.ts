@@ -55,6 +55,13 @@ export default {
         date: /Date$/,
       },
     },
+    options: {
+      storySort: {
+        order: [
+          'intro', 'pid-component', 'auto-detect', 'react-vite', 'react-nextjs', 'vue', 'angular', 'Internal', '*',
+        ],
+      },
+    },
   },
   tags: ['autodocs'],
 };

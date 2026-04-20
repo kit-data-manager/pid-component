@@ -721,7 +721,7 @@ export class PidComponent {
             >
               <span
                 slot="summary"
-                class={`inline-flex max-w-full flex-nowrap overflow-x-auto font-mono font-medium text-ellipsis whitespace-nowrap select-all ${this.isExpanded ? 'text-xs' : 'text-sm'}`}
+                class={`inline-flex max-w-full flex-nowrap overflow-x-auto font-mono font-medium text-ellipsis whitespace-nowrap select-all pr-2 text-sm`}
                 aria-label={`Preview of ${this.value}`}
               >
                 {this.identifierObject?.renderPreview()}

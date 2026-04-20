@@ -78,6 +78,7 @@ type Story = StoryObj<typeof meta>;
 
 /** Renders the component with a default DOI value. */
 export const Default: Story = {
+  id: 'react-pid-component-default',
   args: {
     value: '10.5445/ir/1000185135',
   },
@@ -85,6 +86,7 @@ export const Default: Story = {
 
 /** Resolves a Handle System identifier. */
 export const HandleResolution: Story = {
+  id: 'react-pid-component-handle-resolution',
   args: {
     value: '21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6',
   },
@@ -92,6 +94,7 @@ export const HandleResolution: Story = {
 
 /** Resolves a DOI registered with DataCite. */
 export const DOI_DataCite: Story = {
+  id: 'react-pid-component-doi-datacite',
   args: {
     value: '10.5445/ir/1000185135',
   },
@@ -99,6 +102,7 @@ export const DOI_DataCite: Story = {
 
 /** Resolves a DOI registered with CrossRef. */
 export const DOI_CrossRef: Story = {
+  id: 'react-pid-component-doi-crossref',
   args: {
     value: '10.1109/eScience65000.2025.00022',
   },
@@ -106,6 +110,7 @@ export const DOI_CrossRef: Story = {
 
 /** Resolves an ORCID identifier. */
 export const ORCID: Story = {
+  id: 'react-pid-component-orcid',
   args: {
     value: '0009-0005-2800-4833',
   },
@@ -113,6 +118,7 @@ export const ORCID: Story = {
 
 /** Forces the dark color scheme. */
 export const DarkMode: Story = {
+  id: 'react-pid-component-dark-mode',
   args: {
     value: '10.5445/ir/1000185135',
     darkMode: 'dark',
@@ -121,6 +127,7 @@ export const DarkMode: Story = {
 
 /** Forces the light color scheme. */
 export const LightMode: Story = {
+  id: 'react-pid-component-light-mode',
   args: {
     value: '10.5445/ir/1000185135',
     darkMode: 'light',
@@ -129,6 +136,7 @@ export const LightMode: Story = {
 
 /** Follows the operating system color scheme. */
 export const SystemMode: Story = {
+  id: 'react-pid-component-system-mode',
   args: {
     value: '10.5445/ir/1000185135',
     darkMode: 'system',
@@ -137,6 +145,7 @@ export const SystemMode: Story = {
 
 /** Only uses the specified renderers (here: DOIType). */
 export const WithRendererSelection: Story = {
+  id: 'react-pid-component-renderer-selection',
   args: {
     value: '10.5445/ir/1000185135',
     renderers: '["DOIType"]',
@@ -145,6 +154,7 @@ export const WithRendererSelection: Story = {
 
 /** Component starts in the expanded state. */
 export const OpenByDefault: Story = {
+  id: 'react-pid-component-open-by-default',
   args: {
     value: '10.5445/ir/1000185135',
     openByDefault: true,

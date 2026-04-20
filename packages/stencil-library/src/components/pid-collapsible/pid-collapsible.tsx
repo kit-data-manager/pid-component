@@ -891,7 +891,6 @@ export class PidCollapsible {
       '[&::-webkit-details-marker]:hidden',
       'select-none',
       'box-border',
-      // 'pl-1',
       'py-0',
     ];
 

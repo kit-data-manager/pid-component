@@ -61,8 +61,12 @@ import {
  * ```
  */
 const meta: Meta = {
-  title: 'Auto-Detection',
+  title: 'auto-detection',
   tags: ['autodocs', '!test'],
+  id: '02-pid-component-auto-detection',
+  docs: {
+    toc: true,
+  },
   argTypes: {
     darkMode: {
       description: 'Dark mode setting for all auto-detected components.',
@@ -220,6 +224,7 @@ function buildConfig(args: Record<string, unknown>, root: HTMLElement) {
  * a DOI, an email address, and a URL.
  */
 export const MixedPidsInText: Story = {
+  id: 'auto-detect-mixed-pids',
   render: (args) => {
     const container = document.createElement('div');
     container.innerHTML = `
@@ -284,6 +289,7 @@ const controller = initPidDetection({
  * are left as plain text because an explicit list overrides the defaults.
  */
 export const FilteredRenderers: Story = {
+  id: 'auto-detect-filtered-renderers',
   render: (args) => {
     const container = document.createElement('div');
     container.innerHTML = `
@@ -339,6 +345,7 @@ const controller = initPidDetection({
  * components and restore the original text.
  */
 export const ControllerLifecycle: Story = {
+  id: 'auto-detect-controller-lifecycle',
   render: (args) => {
     const container = document.createElement('div');
     container.innerHTML = `
@@ -423,6 +430,7 @@ controller.stop();     // pause MutationObserver (if enabled)
  * Demonstrates auto-detection in dark mode on a dark background.
  */
 export const DarkMode: Story = {
+  id: 'auto-detect-dark-mode',
   render: (args) => {
     const container = document.createElement('div');
     container.innerHTML = `
@@ -476,6 +484,7 @@ const controller = initPidDetection({
  * The code block is excluded from scanning, so PIDs inside it stay as plain text.
  */
 export const ExcludeElements: Story = {
+  id: 'auto-detect-exclude-elements',
   render: (args) => {
     const container = document.createElement('div');
     container.innerHTML = `
@@ -537,7 +546,8 @@ const controller = initPidDetection({
  * This shows that auto-detection works across different HTML structures,
  * not just paragraphs.
  */
-export const TableWithPIDs: Story = {
+export const TableWithPids: Story = {
+  id: 'auto-detect-table',
   render: (args) => {
     const container = document.createElement('div');
     container.innerHTML = `
@@ -605,6 +615,7 @@ const controller = initPidDetection({
  * and rendered.
  */
 export const PunctuationHandling: Story = {
+  id: 'auto-detect-punctuation',
   render: (args) => {
     const container = document.createElement('div');
     container.innerHTML = `
@@ -655,6 +666,7 @@ const controller = initPidDetection({
  * In this example, the DOI citation style is set to IEEE.
  */
 export const WithSettings: Story = {
+  id: 'auto-detect-with-settings',
   render: (args) => {
     const container = document.createElement('div');
     container.innerHTML = `
@@ -813,6 +825,7 @@ const SHOWCASE_HTML = `
  * one function call.
  */
 export const Showcase: Story = {
+  id: 'auto-detect-showcase',
   render: () => {
     const container = document.createElement('div');
     container.innerHTML = `<div id="showcase-vanilla">${SHOWCASE_HTML}</div>`;
@@ -905,6 +918,7 @@ export const Showcase: Story = {
  * Date, Locale, and JSON. Double-click any expanded component to collapse it.
  */
 export const ResearchDemo: Story = {
+  id: 'auto-detect-research-demo',
   render: (args) => {
     const container = document.createElement('div');
     container.innerHTML = `

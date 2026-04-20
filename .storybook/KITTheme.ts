@@ -4,17 +4,17 @@ export default create({
   base: 'dark',
   fontBase: '"Arial", sans-serif',
   brandTitle: 'Karlsruhe Institute of Technology',
-  brandUrl: 'https://www.kit.edu/',
+  brandUrl: 'https://kit-data-manager.github.io/pid-component',
   brandImage: 'https://kit-data-manager.github.io/metadata-management-cookbook/kit_logo_en_white.svg',
   brandTarget: '_self',
 
-  colorPrimary: '#00876C',
-  colorSecondary: '#4664AA',
+  colorPrimary: '#4664AA',
+  colorSecondary: '#00876C',
 
   appBg: '#2b2b2b',
   appContentBg: '#323232',
   appPreviewBg: '#383838',
-  appBorderColor: '#4a4a4a',
+  appBorderColor: '#00876C',
   appBorderRadius: 4,
 
   textColor: '#f0f0f0',
@@ -25,8 +25,8 @@ export default create({
   barHoverColor: '#00876C',
   barBg: '#262626',
 
-  inputBg: '#383838',
-  inputBorder: '#505050',
+  inputBg: '#00876C',
+  inputBorder: '#00876C',
   inputTextColor: '#f0f0f0',
   inputBorderRadius: 2,
 });

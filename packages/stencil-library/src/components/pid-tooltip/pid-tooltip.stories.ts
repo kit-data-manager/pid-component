@@ -66,6 +66,7 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
+  id: 'tooltip-default',
   args: {
     text: 'This is a tooltip',
     position: 'top',
@@ -91,6 +92,7 @@ export const Default: Story = {
 };
 
 export const BottomPosition: Story = {
+  id: 'tooltip-bottom-position',
   args: {
     text: 'This tooltip appears at the bottom',
     position: 'bottom',
@@ -116,6 +118,7 @@ export const BottomPosition: Story = {
 };
 
 export const LeftPosition: Story = {
+  id: 'tooltip-left-position',
   args: {
     text: 'This tooltip appears on the left',
     position: 'left',
@@ -141,6 +144,7 @@ export const LeftPosition: Story = {
 };
 
 export const RightPosition: Story = {
+  id: 'tooltip-right-position',
   args: {
     text: 'This tooltip appears on the right',
     position: 'right',
@@ -166,6 +170,7 @@ export const RightPosition: Story = {
 };
 
 export const LongText: Story = {
+  id: 'tooltip-long-text',
   args: {
     text: 'This is a tooltip with a very long text. It should wrap and be limited by the maxWidth and maxHeight properties. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, quis aliquam nisl nunc quis nisl. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, quis aliquam nisl nunc quis nisl.',
     position: 'top',
@@ -191,6 +196,7 @@ export const LongText: Story = {
 };
 
 export const CustomSizes: Story = {
+  id: 'tooltip-custom-sizes',
   args: {
     text: 'This tooltip has custom maxWidth and maxHeight',
     position: 'top',

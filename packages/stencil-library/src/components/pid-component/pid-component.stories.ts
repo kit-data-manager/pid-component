@@ -21,7 +21,8 @@ import {
  * management, and adaptive pagination.
  */
 const meta: Meta = {
-  title: 'PID-Component',
+  title: 'pid-component',
+  id: '01-pid-component',
   component: 'pid-component',
   tags: ['autodocs'],
   argTypes: {
@@ -159,6 +160,7 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
+  id: 'pid-component-default',
   args: {
     value: HANDLE_examples.FDO_BARE,
   },
@@ -174,6 +176,7 @@ export const Default: Story = {
 };
 
 export const Handle: Story = {
+  id: 'pid-component-handle',
   // Exclude from vitest: this test requires network access to resolve PIDs
   // from handle.net and can time out in CI environments.
   tags: ['!test'],
@@ -200,6 +203,7 @@ export const Handle: Story = {
 };
 
 export const HandleWithoutSubcomponent: Story = {
+  id: 'pid-component-handle-without-subcomponent',
   args: {
     value: HANDLE_examples.FDO_BARE,
     hideSubcomponents: true,
@@ -216,6 +220,7 @@ export const HandleWithoutSubcomponent: Story = {
 };
 
 export const ORCID: Story = {
+  id: 'pid-component-orcid',
   args: {
     value: ORCID_examples.VALID,
     openByDefault: true,
@@ -232,6 +237,7 @@ export const ORCID: Story = {
 };
 
 export const ROR: Story = {
+  id: 'pid-component-ror',
   args: {
     value: ROR_examples.VALID,
   },
@@ -245,6 +251,7 @@ export const ROR: Story = {
 };
 
 export const SPDXLong: Story = {
+  id: 'pid-component-spdx-long',
   args: {
     value: SPDX_examples.APACHE_2_0,
   },
@@ -258,6 +265,7 @@ export const SPDXLong: Story = {
 };
 
 export const SPDXShort: Story = {
+  id: 'pid-component-spdx-short',
   args: {
     value: SPDX_examples.APACHE_2_0_BARE,
   },
@@ -271,6 +279,7 @@ export const SPDXShort: Story = {
 };
 
 export const Date: Story = {
+  id: 'pid-component-date',
   args: {
     value: DATE_examples.ISO_8601,
   },
@@ -284,6 +293,7 @@ export const Date: Story = {
 };
 
 export const URL: Story = {
+  id: 'pid-component-url',
   args: {
     value: URL_examples.KIT_WEBSITE,
   },
@@ -297,6 +307,7 @@ export const URL: Story = {
 };
 
 export const Email: Story = {
+  id: 'pid-component-email',
   args: {
     value: EMAIL_examples.VALID,
   },
@@ -310,6 +321,7 @@ export const Email: Story = {
 };
 
 export const CommaSeperatedMails: Story = {
+  id: 'pid-component-comma-separated-mails',
   args: {
     value: `${EMAIL_examples.VALID}, ${EMAIL_examples.VALID_ALT}`,
   },
@@ -323,6 +335,7 @@ export const CommaSeperatedMails: Story = {
 };
 
 export const Fallback: Story = {
+  id: 'pid-component-fallback',
   args: {
     value: 'This is a fallback test',
   },
@@ -336,6 +349,7 @@ export const Fallback: Story = {
 };
 
 export const ORCIDInRecord = {
+  id: 'pid-component-orcid-in-record',
   args: {
     value: HANDLE_examples.FDO_TYPED,
     openStatus: true,
@@ -350,6 +364,7 @@ export const ORCIDInRecord = {
 };
 
 export const ORCIDInRecordWithoutLimit = {
+  id: 'pid-component-orcid-in-record-without-limit',
   args: {
     value: HANDLE_examples.FDO_TYPED,
     amountOfItems: 100,
@@ -365,6 +380,7 @@ export const ORCIDInRecordWithoutLimit = {
 };
 
 export const ORCIDInRecordWithSettings = {
+  id: 'pid-component-orcid-in-record-with-settings',
   args: {
     value: HANDLE_examples.FDO_TYPED,
     settings: '[{"type":"ORCIDType","values":[{"name":"affiliationAt","value":949363200000},{"name":"showAffiliation","value":true}]}]',
@@ -381,6 +397,7 @@ export const ORCIDInRecordWithSettings = {
 };
 
 export const HandleInText: Story = {
+  id: 'pid-component-handle-in-text',
   args: {
     value: HANDLE_examples.FDO_TYPED,
   },
@@ -399,6 +416,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 };
 
 export const HandleInTextNotEmphasized: Story = {
+  id: 'pid-component-handle-in-text-not-emphasized',
   args: {
     value: HANDLE_examples.FDO_TYPED,
     emphasizeComponent: false,
@@ -418,6 +436,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 };
 
 export const ORCIDInText: Story = {
+  id: 'pid-component-orcid-in-text',
   args: {
     value: ORCID_examples.VALID,
   },
@@ -436,6 +455,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 };
 
 export const HandleWithoutSubcomponentInText: Story = {
+  id: 'pid-component-handle-without-subcomponent-in-text',
   args: {
     value: HANDLE_examples.FDO_BARE,
     hideSubcomponents: true,
@@ -457,6 +477,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 };
 
 export const TypedPIDMakerExampleText: Story = {
+  id: 'pid-component-typed-pid-maker-text',
   args: {
     value: HANDLE_examples.FDO_TYPED,
   },
@@ -476,6 +497,7 @@ export const TypedPIDMakerExampleText: Story = {
  * Demonstrates the component in dark mode
  */
 export const DarkMode: Story = {
+  id: 'pid-component-dark-mode',
   args: {
     value: HANDLE_examples.FDO_BARE,
     darkMode: 'dark',
@@ -498,6 +520,7 @@ export const DarkMode: Story = {
  * Demonstrates the component in light mode
  */
 export const LightMode: Story = {
+  id: 'pid-component-light-mode',
   args: {
     value: HANDLE_examples.FDO_BARE,
     darkMode: 'light',
@@ -520,6 +543,7 @@ export const LightMode: Story = {
  * Demonstrates the component with system preference for dark mode
  */
 export const SystemMode: Story = {
+  id: 'pid-component-system-mode',
   args: {
     value: HANDLE_examples.FDO_BARE,
     darkMode: 'system',
@@ -539,6 +563,7 @@ export const SystemMode: Story = {
  * Demonstrates DOI rendering with DataCite metadata - Journal Paper
  */
 export const DOI_DataCite_JournalPaper: Story = {
+  id: 'pid-component-doi-datacite-journal-paper',
   args: {
     value: DOI_examples.DATACITE_JOURNAL_PAPER,
     openByDefault: true,
@@ -561,6 +586,7 @@ export const DOI_DataCite_JournalPaper: Story = {
  * Demonstrates DOI rendering with CrossRef metadata - Journal Paper
  */
 export const DOI_CrossRef_JournalPaper: Story = {
+  id: 'pid-component-doi-crossref-journal-paper',
   args: {
     value: DOI_examples.CROSSREF_JOURNAL_PAPER,
     openByDefault: true,
@@ -583,6 +609,7 @@ export const DOI_CrossRef_JournalPaper: Story = {
  * Demonstrates DOI rendering with DataCite metadata - Software on Zenodo
  */
 export const DOI_DataCite_Software: Story = {
+  id: 'pid-component-doi-datacite-software',
   args: {
     value: DOI_examples.DATACITE_SOFTWARE,
     openByDefault: true,
@@ -605,6 +632,7 @@ export const DOI_DataCite_Software: Story = {
  * Demonstrates DOI rendering with DataCite metadata - RFC Document
  */
 export const DOI_DataCite_RFC: Story = {
+  id: 'pid-component-doi-datacite-rfc',
   args: {
     value: DOI_examples.DATACITE_RFC,
     openByDefault: true,
@@ -627,6 +655,7 @@ export const DOI_DataCite_RFC: Story = {
  * Demonstrates DOI rendering with CrossRef metadata - Book
  */
 export const DOI_CrossRef_Book: Story = {
+  id: 'pid-component-doi-crossref-book',
   args: {
     value: DOI_examples.CROSSREF_BOOK,
     openByDefault: true,
@@ -649,6 +678,7 @@ export const DOI_CrossRef_Book: Story = {
  * Demonstrates DOI rendering with DataCite metadata - Slides/Presentation
  */
 export const DOI_DataCite_Slides: Story = {
+  id: 'pid-component-doi-datacite-slides',
   args: {
     value: DOI_examples.DATACITE_SLIDES,
     openByDefault: true,
@@ -671,6 +701,7 @@ export const DOI_DataCite_Slides: Story = {
  * Demonstrates DOI rendering with DataCite metadata - arXiv Preprint
  */
 export const DOI_DataCite_Preprint: Story = {
+  id: 'pid-component-doi-datacite-preprint',
   args: {
     value: DOI_examples.DATACITE_PREPRINT,
     openByDefault: true,
@@ -693,6 +724,7 @@ export const DOI_DataCite_Preprint: Story = {
  * Demonstrates DOI rendering with different citation styles
  */
 export const DOI_CitationStyles: Story = {
+  id: 'pid-component-doi-citation-styles',
   args: {
     value: DOI_examples.DATACITE_JOURNAL_PAPER,
     openByDefault: false,
@@ -726,6 +758,7 @@ export const DOI_CitationStyles: Story = {
  * Demonstrates rendering of a JSON object
  */
 export const JSON_Object: Story = {
+  id: 'pid-component-json-object',
   args: {
     value: JSON.stringify(JSON_examples.NESTED),
     openByDefault: true,
@@ -748,6 +781,7 @@ export const JSON_Object: Story = {
  * Demonstrates rendering of a Locale
  */
 export const Locale: Story = {
+  id: 'pid-component-locale',
   args: {
     value: LOCALE_examples.DE_DE,
   },
@@ -774,6 +808,7 @@ export const Locale: Story = {
  * Since the value is a DOI, it matches and renders normally.
  */
 export const RenderersMatchingDOI: Story = {
+  id: 'pid-component-renderers-matching-doi',
   args: {
     value: DOI_examples.DATACITE_JOURNAL_PAPER,
     renderers: '["DOIType"]',
@@ -807,6 +842,7 @@ export const RenderersMatchingDOI: Story = {
  * and correctly renders it as a DOI.
  */
 export const RenderersPreselectionFallback: Story = {
+  id: 'pid-component-renderers-preselection-fallback',
   args: {
     value: DOI_examples.DATACITE_JOURNAL_PAPER,
     renderers: '["ORCIDType"]',
@@ -832,6 +868,7 @@ export const RenderersPreselectionFallback: Story = {
  * the component renders nothing (unmatched state).
  */
 export const RenderersStrictRestriction: Story = {
+  id: 'pid-component-renderers-strict-restriction',
   args: {
     value: DOI_examples.DATACITE_JOURNAL_PAPER,
     renderers: '["ORCIDType"]',
@@ -865,6 +902,7 @@ export const RenderersStrictRestriction: Story = {
  * instead of the DOI renderer because it appears first in the ordered list.
  */
 export const RenderersOrderPriority: Story = {
+  id: 'pid-component-renderers-order-priority',
   args: {
     value: DOI_examples.DATACITE_JOURNAL_PAPER,
     renderers: '["HandleType", "DOIType"]',
@@ -889,6 +927,7 @@ export const RenderersOrderPriority: Story = {
  * The DOI value matches DOIType first, so the DOI renderer is used.
  */
 export const RenderersCorrectOrder: Story = {
+  id: 'pid-component-renderers-correct-order',
   args: {
     value: DOI_examples.DATACITE_JOURNAL_PAPER,
     renderers: '["DOIType", "HandleType"]',

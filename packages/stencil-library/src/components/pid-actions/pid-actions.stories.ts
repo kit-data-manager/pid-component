@@ -106,6 +106,7 @@ const createStory = (actions: FoldableAction[], darkMode: 'light' | 'dark' | 'sy
  * Default story showing all action types
  */
 export const Default: Story = {
+  id: 'actions-default',
   args: {
     actions: mockActions,
     darkMode: 'system',
@@ -117,6 +118,7 @@ export const Default: Story = {
  * Story showing only primary actions
  */
 export const PrimaryOnly: Story = {
+  id: 'actions-primary-only',
   args: {
     actions: [mockActions[0], mockActions[3]],
     darkMode: 'system',
@@ -128,6 +130,7 @@ export const PrimaryOnly: Story = {
  * Story showing only secondary actions
  */
 export const SecondaryOnly: Story = {
+  id: 'actions-secondary-only',
   args: {
     actions: [mockActions[1], mockActions[4]],
     darkMode: 'system',
@@ -139,6 +142,7 @@ export const SecondaryOnly: Story = {
  * Story showing only danger actions
  */
 export const DangerOnly: Story = {
+  id: 'actions-danger-only',
   args: {
     actions: [mockActions[2]],
     darkMode: 'system',
@@ -150,6 +154,7 @@ export const DangerOnly: Story = {
  * Story showing actions with custom priority order
  */
 export const CustomPriorityOrder: Story = {
+  id: 'actions-custom-priority-order',
   args: {
     actions: [
       new FoldableAction(3, 'Third Priority', 'https://example.com/3', 'secondary'),
@@ -172,6 +177,7 @@ export const CustomPriorityOrder: Story = {
  * Story showing actions in light mode
  */
 export const LightMode: Story = {
+  id: 'actions-light-mode',
   args: {
     actions: mockActions,
     darkMode: 'light',
@@ -183,6 +189,7 @@ export const LightMode: Story = {
  * Story showing actions in dark mode
  */
 export const DarkMode: Story = {
+  id: 'actions-dark-mode',
   args: {
     actions: mockActions,
     darkMode: 'dark',
@@ -194,6 +201,7 @@ export const DarkMode: Story = {
  * Story showing many actions that will wrap to multiple lines
  */
 export const ManyActions: Story = {
+  id: 'actions-many-actions',
   args: {
     actions: [
       ...mockActions,

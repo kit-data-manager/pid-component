@@ -2,7 +2,7 @@ import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 
 const meta: Meta = {
-  title: 'Renderer/Color Highlight',
+  title: 'Internal/Color Highlight',
   component: 'color-highlight',
   argTypes: {
     text: {
@@ -30,6 +30,7 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
+  id: 'color-highlight-default',
   args: {
     text: 'B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
   },
@@ -45,6 +46,7 @@ export const Default: Story = {
 };
 
 export const HighlightedTextInText: Story = {
+  id: 'color-highlight-in-text',
   args: {
     text: '21.11152',
   },

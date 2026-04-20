@@ -100,6 +100,7 @@ const PaginationContainer = (args, width = '500px', styles = {}) => {
  * Default pagination with standard settings.
  */
 export const Default: Story = {
+  id: 'pagination-default',
   args: {
     currentPage: 0,
     totalItems: 100,
@@ -126,6 +127,7 @@ export const Default: Story = {
  * Pagination with more items per page.
  */
 export const WithMoreItemsPerPage: Story = {
+  id: 'pagination-more-items-per-page',
   args: {
     currentPage: 0,
     totalItems: 100,
@@ -151,6 +153,7 @@ export const WithMoreItemsPerPage: Story = {
  * Pagination starting on the second page.
  */
 export const OnSecondPage: Story = {
+  id: 'pagination-on-second-page',
   args: {
     currentPage: 1,
     totalItems: 100,
@@ -176,6 +179,7 @@ export const OnSecondPage: Story = {
  * Pagination with few items that fit on a single page.
  */
 export const WithFewItems: Story = {
+  id: 'pagination-with-few-items',
   args: {
     currentPage: 0,
     totalItems: 5,

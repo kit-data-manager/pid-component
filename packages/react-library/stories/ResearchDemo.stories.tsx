@@ -50,6 +50,7 @@ export default meta;
 type Story = StoryObj;
 
 export const ResearchDemo: Story = {
+  id: 'react-research-demo',
   name: 'Research Data Portal',
   decorators: [
     (Story) => (

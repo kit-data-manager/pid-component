@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 
 const meta: Meta = {
-  title: 'Renderer/Locale Visualization',
+  title: 'Internal/Locale Visualization',
   component: 'locale-visualization',
   argTypes: {
     locale: {
@@ -29,6 +29,7 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
+  id: 'locale-visualization-default',
   args: {
     locale: 'de-DE',
   },
@@ -44,6 +45,7 @@ export const Default: Story = {
 };
 
 export const WithoutFlag: Story = {
+  id: 'locale-visualization-without-flag',
   args: {
     locale: 'en-US',
     showFlag: false,

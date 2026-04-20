@@ -20,6 +20,7 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
+  id: 'copy-button-default',
   args: {
     value: 'This is an example.',
   },

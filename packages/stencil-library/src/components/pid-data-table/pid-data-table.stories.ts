@@ -205,41 +205,62 @@ const createDataTableStory = (props: Record<string, unknown>) => {
   };
 };
 
-export const Default: Story = createDataTableStory({
-  items: createMockItems(25),
-  itemsPerPage: 10,
-});
+export const Default: Story = {
+  id: 'data-table-default',
+  ...createDataTableStory({
+    items: createMockItems(25),
+    itemsPerPage: 10,
+  }),
+};
 
-export const SmallPageSize: Story = createDataTableStory({
-  items: createMockItems(25),
-  itemsPerPage: 5,
-});
+export const SmallPageSize: Story = {
+  id: 'data-table-small-page-size',
+  ...createDataTableStory({
+    items: createMockItems(25),
+    itemsPerPage: 5,
+  }),
+};
 
-export const LargePageSize: Story = createDataTableStory({
-  items: createMockItems(25),
-  itemsPerPage: 25,
-});
+export const LargePageSize: Story = {
+  id: 'data-table-large-page-size',
+  ...createDataTableStory({
+    items: createMockItems(25),
+    itemsPerPage: 25,
+  }),
+};
 
-export const WithSubcomponents: Story = createDataTableStory({
-  items: createMockItems(15),
-  itemsPerPage: 10,
-  loadSubcomponents: true,
-});
+export const WithSubcomponents: Story = {
+  id: 'data-table-with-subcomponents',
+  ...createDataTableStory({
+    items: createMockItems(15),
+    itemsPerPage: 10,
+    loadSubcomponents: true,
+  }),
+};
 
-export const DarkMode: Story = createDataTableStory({
-  items: createMockItems(25),
-  itemsPerPage: 10,
-  darkMode: 'dark',
-});
+export const DarkMode: Story = {
+  id: 'data-table-dark-mode',
+  ...createDataTableStory({
+    items: createMockItems(25),
+    itemsPerPage: 10,
+    darkMode: 'dark',
+  }),
+};
 
-export const LightMode: Story = createDataTableStory({
-  items: createMockItems(25),
-  itemsPerPage: 10,
-  darkMode: 'light',
-});
+export const LightMode: Story = {
+  id: 'data-table-light-mode',
+  ...createDataTableStory({
+    items: createMockItems(25),
+    itemsPerPage: 10,
+    darkMode: 'light',
+  }),
+};
 
-export const SystemMode: Story = createDataTableStory({
-  items: createMockItems(25),
-  itemsPerPage: 10,
-  darkMode: 'system',
-});
+export const SystemMode: Story = {
+  id: 'data-table-system-mode',
+  ...createDataTableStory({
+    items: createMockItems(25),
+    itemsPerPage: 10,
+    darkMode: 'system',
+  }),
+};

@@ -5,7 +5,7 @@ import { Meta, StoryObj } from '@storybook/web-components-vite';
  * collapsible tree view or formatted code view.
  */
 const meta: Meta = {
-  title: 'Renderer/JSON Viewer',
+  title: 'Internal/JSON Viewer',
   component: 'json-viewer',
   tags: ['autodocs'],
   argTypes: {
@@ -121,6 +121,7 @@ type Story = StoryObj;
  * Default JSON viewer with tree view
  */
 export const Default: Story = {
+  id: 'json-viewer-default',
   render: args => {
     // Convert object to string if needed
     const jsonData = typeof args.data === 'object' ? JSON.stringify(args.data) : args.data;
@@ -188,6 +189,7 @@ export const Default: Story = {
  * JSON viewer with all nodes expanded by default
  */
 export const ExpandedByDefault: Story = {
+  id: 'json-viewer-expanded-by-default',
   args: {
     expanded: true,
   },
@@ -211,6 +213,7 @@ export const ExpandedByDefault: Story = {
  * JSON viewer with a custom root name
  */
 export const CustomRootName: Story = {
+  id: 'json-viewer-custom-root-name',
   args: {
     rootName: 'config',
   },
@@ -233,6 +236,7 @@ export const CustomRootName: Story = {
  * JSON viewer with keys sorted alphabetically
  */
 export const SortedKeys: Story = {
+  id: 'json-viewer-sorted-keys',
   args: {
     sortKeys: true,
   },
@@ -256,6 +260,7 @@ export const SortedKeys: Story = {
  * JSON viewer with dark theme
  */
 export const DarkTheme: Story = {
+  id: 'json-viewer-dark-theme',
   args: {
     theme: 'dark',
   },
@@ -278,6 +283,7 @@ export const DarkTheme: Story = {
  * JSON viewer in code view mode
  */
 export const CodeView: Story = {
+  id: 'json-viewer-code-view',
   args: {
     viewMode: 'code',
   },
@@ -301,6 +307,7 @@ export const CodeView: Story = {
  * JSON viewer with no line numbers in code view
  */
 export const NoLineNumbers: Story = {
+  id: 'json-viewer-no-line-numbers',
   args: {
     viewMode: 'code',
     showLineNumbers: false,
@@ -326,6 +333,7 @@ export const NoLineNumbers: Story = {
  * JSON viewer with complex nested data
  */
 export const ComplexData: Story = {
+  id: 'json-viewer-complex-data',
   args: {
     data: {
       id: '12345',
