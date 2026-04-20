@@ -55,6 +55,7 @@ export class CopyButton {
     let copied = false;
     try {
       copied = document.execCommand('copy');
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_) {
       // Silently ignore
     }
