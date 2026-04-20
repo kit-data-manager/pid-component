@@ -218,10 +218,11 @@ export class PidComponent {
     // Initialize component ID for references
     this.ensureComponentId();
 
-    // Ensure collapsible gets proper initial width and open state after load
-    // Use a longer delay to ensure DOM is fully rendered before recalculating
+    // Ensure collapsible gets proper initial width and open state after load.
+    // Use shadowRoot.querySelector because pid-collapsible is rendered inside
+    // this component's shadow DOM.
     setTimeout(() => {
-      const collapsible = this.el.querySelector('pid-collapsible');
+      const collapsible = this.el.shadowRoot?.querySelector('pid-collapsible');
       if (collapsible && typeof (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions === 'function') {
         (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions();
       }
@@ -249,7 +250,7 @@ export class PidComponent {
 
     // After value updates, ensure dimensions are properly recalculated
     setTimeout(() => {
-      const collapsible = this.el.querySelector('pid-collapsible');
+      const collapsible = this.el.shadowRoot?.querySelector('pid-collapsible');
       if (collapsible && typeof (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions === 'function') {
         (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions();
       }
@@ -314,7 +315,7 @@ export class PidComponent {
 
           // After loading subcomponents, ensure dimensions are recalculated
           setTimeout(() => {
-            const collapsible = this.el.querySelector('pid-collapsible');
+            const collapsible = this.el.shadowRoot?.querySelector('pid-collapsible');
             if (collapsible && typeof (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions === 'function') {
               (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions();
             }
@@ -389,6 +390,17 @@ export class PidComponent {
     // are not yet bound when the constructor runs, causing
     // emphasizeComponent=false to be ignored on initial load.
     this.temporarilyEmphasized = this.emphasizeComponent || this.loadSubcomponents;
+
+    // Set initial expanded state based on openByDefault.
+    // This must happen here (once) rather than in render(), because setting
+    // @State in render() triggers re-renders and prevents the user from
+    // ever collapsing the component.
+    if (this.openByDefault) {
+      if (!this.hideSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) {
+        this.isExpanded = true;
+        this.loadSubcomponents = true;
+      }
+    }
 
     // Initialize dark mode
     this.initializeDarkMode();
@@ -625,25 +637,6 @@ export class PidComponent {
    * Renders the component.
    */
   render() {
-    // Set initial expanded state based on openByDefault
-    if (this.openByDefault) {
-      if (!this.hideSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) {
-        this.isExpanded = this.openByDefault;
-        this.loadSubcomponents = true;
-
-        // After loading subcomponents, ensure dimensions are recalculated
-        setTimeout(() => {
-          const collapsible = this.el.querySelector('pid-collapsible');
-          if (collapsible && typeof (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions === 'function') {
-            (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions();
-          }
-          console.log(
-            `Loaded subcomponents and recalculated dimensions. expanded: ${this.isExpanded}, loadSubcomponents: ${this.loadSubcomponents}, currentLevel: ${this.currentLevelOfSubcomponents}, totalLevels: ${this.levelOfSubcomponents}`,
-          );
-        }, 50); // Give it a bit more time for the DOM to update with new content
-      }
-    }
-
     // If unmatched (renderers prop was set but no listed renderer matched), render nothing
     if (this.displayStatus === 'unmatched') {
       return <Host class={`relative font-sans`} style={{ display: 'none' }}></Host>;

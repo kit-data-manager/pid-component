@@ -393,11 +393,20 @@ export class PidCollapsible {
   }
 
   /**
-   * Handles Safari-specific compatibility issues
+   * Handles Safari-specific compatibility issues.
+   * Skips if the click originated from an interactive element (e.g. copy-button)
+   * to avoid stealing the click from the intended target.
    */
   private handleSafariCompatibility = (e: Event) => {
     // Only apply for Safari
     if (!this.isSafari() || this.isToggling) return;
+
+    // Don't intercept clicks on interactive elements inside the summary
+    const target = e.target as HTMLElement;
+    if (target?.closest('copy-button') || target?.closest('[slot="summary-actions"]') ||
+      target?.closest('button') || target?.closest('a')) {
+      return;
+    }
 
     e.preventDefault();
     e.stopPropagation();
