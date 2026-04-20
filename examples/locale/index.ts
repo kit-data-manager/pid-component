@@ -1,0 +1,1 @@
+export { LOCALE_examples, type LOCALE_example } from './values';

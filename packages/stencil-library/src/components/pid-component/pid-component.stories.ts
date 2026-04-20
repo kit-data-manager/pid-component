@@ -1,6 +1,18 @@
 import { html } from 'lit';
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { expect, waitFor } from 'storybook/test';
+import {
+  DOI_examples,
+  HANDLE_examples,
+  ORCID_examples,
+  ROR_examples,
+  SPDX_examples,
+  URL_examples,
+  EMAIL_examples,
+  DATE_examples,
+  JSON_examples,
+  LOCALE_examples,
+} from '../../../../../examples';
 
 
 /**
@@ -120,7 +132,7 @@ const meta: Meta = {
     },
   },
   args: {
-    value: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
+    value: HANDLE_examples.FDO_BARE,
     settings: '[]',
     openByDefault: true,
     amountOfItems: 10,
@@ -148,13 +160,13 @@ type Story = StoryObj;
 
 export const Default: Story = {
   args: {
-    value: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
+    value: HANDLE_examples.FDO_BARE,
   },
   parameters: {
     docs: {
       source: {
         code: `
-<pid-component value='21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343'></pid-component>
+<pid-component value='${HANDLE_examples.FDO_BARE}'></pid-component>
         `,
       },
     },
@@ -166,13 +178,13 @@ export const Handle: Story = {
   // from handle.net and can time out in CI environments.
   tags: ['!test'],
   args: {
-    value: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
+    value: HANDLE_examples.FDO_BARE,
   },
   parameters: {
     docs: {
       source: {
         code: `
-<pid-component value='21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343'></pid-component>
+<pid-component value='${HANDLE_examples.FDO_BARE}'></pid-component>
         `,
       },
     },
@@ -189,14 +201,14 @@ export const Handle: Story = {
 
 export const HandleWithoutSubcomponent: Story = {
   args: {
-    value: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
+    value: HANDLE_examples.FDO_BARE,
     hideSubcomponents: true,
   },
   parameters: {
     docs: {
       source: {
         code: `
-<pid-component value='21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343' hide-subcomponents='true'></pid-component>
+<pid-component value='${HANDLE_examples.FDO_BARE}' hide-subcomponents='true'></pid-component>
         `,
       },
     },
@@ -205,14 +217,14 @@ export const HandleWithoutSubcomponent: Story = {
 
 export const ORCID: Story = {
   args: {
-    value: '0009-0005-2800-4833',
+    value: ORCID_examples.VALID,
     openByDefault: true,
   },
   parameters: {
     docs: {
       source: {
         code: `
-<pid-component value='0009-0005-2800-4833'></pid-component>
+<pid-component value='${ORCID_examples.VALID}'></pid-component>
         `,
       },
     },
@@ -221,12 +233,12 @@ export const ORCID: Story = {
 
 export const ROR: Story = {
   args: {
-    value: 'https://ror.org/04t3en479',
+    value: ROR_examples.VALID,
   },
   parameters: {
     docs: {
       source: {
-        code: `<pid-component value='https://ror.org/04t3en479'></pid-component>`,
+        code: `<pid-component value='${ROR_examples.VALID}'></pid-component>`,
       },
     },
   },
@@ -234,12 +246,12 @@ export const ROR: Story = {
 
 export const SPDXLong: Story = {
   args: {
-    value: 'https://spdx.org/licenses/Apache-2.0',
+    value: SPDX_examples.APACHE_2_0,
   },
   parameters: {
     docs: {
       source: {
-        code: `<pid-component value='https://spdx.org/licenses/Apache-2.0'></pid-component>`,
+        code: `<pid-component value='${SPDX_examples.APACHE_2_0}'></pid-component>`,
       },
     },
   },
@@ -247,12 +259,12 @@ export const SPDXLong: Story = {
 
 export const SPDXShort: Story = {
   args: {
-    value: 'Apache-2.0',
+    value: SPDX_examples.APACHE_2_0_BARE,
   },
   parameters: {
     docs: {
       source: {
-        code: `<pid-component value='Apache-2.0'></pid-component>`,
+        code: `<pid-component value='${SPDX_examples.APACHE_2_0_BARE}'></pid-component>`,
       },
     },
   },
@@ -260,12 +272,12 @@ export const SPDXShort: Story = {
 
 export const Date: Story = {
   args: {
-    value: '2022-11-11T08:01:20.557+00:00',
+    value: DATE_examples.ISO_8601,
   },
   parameters: {
     docs: {
       source: {
-        code: `<pid-component value='2022-11-11T08:01:20.557+00:00'></pid-component>`,
+        code: `<pid-component value='${DATE_examples.ISO_8601}'></pid-component>`,
       },
     },
   },
@@ -273,12 +285,12 @@ export const Date: Story = {
 
 export const URL: Story = {
   args: {
-    value: 'https://scc.kit.edu',
+    value: URL_examples.KIT_WEBSITE,
   },
   parameters: {
     docs: {
       source: {
-        code: `<pid-component value='https://scc.kit.edu'></pid-component>`,
+        code: `<pid-component value='${URL_examples.KIT_WEBSITE}'></pid-component>`,
       },
     },
   },
@@ -286,12 +298,12 @@ export const URL: Story = {
 
 export const Email: Story = {
   args: {
-    value: 'someone@example.com',
+    value: EMAIL_examples.VALID,
   },
   parameters: {
     docs: {
       source: {
-        code: `<pid-component value='someone@example.com'></pid-component>`,
+        code: `<pid-component value='${EMAIL_examples.VALID}'></pid-component>`,
       },
     },
   },
@@ -299,12 +311,12 @@ export const Email: Story = {
 
 export const CommaSeperatedMails: Story = {
   args: {
-    value: 'someone@example.com, john.doe@demo.example',
+    value: `${EMAIL_examples.VALID}, ${EMAIL_examples.VALID_ALT}`,
   },
   parameters: {
     docs: {
       source: {
-        code: `<pid-component value='someone@example.com, john.doe@demo.example'></pid-component>`,
+        code: `<pid-component value='${EMAIL_examples.VALID}, ${EMAIL_examples.VALID_ALT}'></pid-component>`,
       },
     },
   },
@@ -325,7 +337,7 @@ export const Fallback: Story = {
 
 export const ORCIDInRecord = {
   args: {
-    value: '21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6',
+    value: HANDLE_examples.FDO_TYPED,
     openStatus: true,
   },
   parameters: {
@@ -339,14 +351,14 @@ export const ORCIDInRecord = {
 
 export const ORCIDInRecordWithoutLimit = {
   args: {
-    value: '21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6',
+    value: HANDLE_examples.FDO_TYPED,
     amountOfItems: 100,
     openStatus: true,
   },
   parameters: {
     docs: {
       source: {
-        code: `<pid-component value='21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6' amount-of-items='100' open-by-default='true'></pid-component>`,
+        code: `<pid-component value='${HANDLE_examples.FDO_TYPED}' amount-of-items='100' open-by-default='true'></pid-component>`,
       },
     },
   },
@@ -354,14 +366,14 @@ export const ORCIDInRecordWithoutLimit = {
 
 export const ORCIDInRecordWithSettings = {
   args: {
-    value: '21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6',
+    value: HANDLE_examples.FDO_TYPED,
     settings: '[{"type":"ORCIDType","values":[{"name":"affiliationAt","value":949363200000},{"name":"showAffiliation","value":true}]}]',
   },
   parameters: {
     docs: {
       source: {
         code: `
-<pid-component value='21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343' settings='[{"type":"ORCIDConfig","values":[{"name":"affiliationAt","value":949363200000},{"name":"showAffiliation","value":true}]}]'></pid-component>
+<pid-component value='${HANDLE_examples.FDO_BARE}' settings='[{"type":"ORCIDConfig","values":[{"name":"affiliationAt","value":949363200000},{"name":"showAffiliation","value":true}]}]'></pid-component>
         `,
       },
     },
@@ -370,7 +382,7 @@ export const ORCIDInRecordWithSettings = {
 
 export const HandleInText: Story = {
   args: {
-    value: '21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6',
+    value: HANDLE_examples.FDO_TYPED,
   },
   decorators: [textDecorator],
   parameters: {
@@ -378,8 +390,8 @@ export const HandleInText: Story = {
       source: {
         code: `
 <p class='align-middle items-center'>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <pid-component value='21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6'></pid-component>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute <pid-component value='21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6'></pid-component> irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <pid-component value='${HANDLE_examples.FDO_TYPED}'></pid-component>
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute <pid-component value='${HANDLE_examples.FDO_TYPED}'></pid-component> irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 </p>`,
       },
     },
@@ -388,7 +400,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 export const HandleInTextNotEmphasized: Story = {
   args: {
-    value: '21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6',
+    value: HANDLE_examples.FDO_TYPED,
     emphasizeComponent: false,
   },
   decorators: [textDecorator],
@@ -397,8 +409,8 @@ export const HandleInTextNotEmphasized: Story = {
       source: {
         code: `
 <p class='align-middle items-center'>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <pid-component value='21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6' emphasize-component="false"></pid-component>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute <pid-component value='21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6' emphasize-component="false"></pid-component> irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <pid-component value='${HANDLE_examples.FDO_TYPED}' emphasize-component="false"></pid-component>
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute <pid-component value='${HANDLE_examples.FDO_TYPED}' emphasize-component="false"></pid-component> irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 </p>`,
       },
     },
@@ -407,7 +419,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 export const ORCIDInText: Story = {
   args: {
-    value: '0009-0005-2800-4833',
+    value: ORCID_examples.VALID,
   },
   decorators: [textDecorator],
   parameters: {
@@ -415,8 +427,8 @@ export const ORCIDInText: Story = {
       source: {
         code: `
 <p class='align-middle items-center'>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <pid-component value='0009-0005-2800-4833'></pid-component>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute <pid-component value='0009-0005-2800-4833'></pid-component> irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <pid-component value='${ORCID_examples.VALID}'></pid-component>
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute <pid-component value='${ORCID_examples.VALID}'></pid-component> irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 </p>`,
       },
     },
@@ -425,7 +437,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 export const HandleWithoutSubcomponentInText: Story = {
   args: {
-    value: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
+    value: HANDLE_examples.FDO_BARE,
     hideSubcomponents: true,
     emphasizeComponent: false,
   },
@@ -435,8 +447,8 @@ export const HandleWithoutSubcomponentInText: Story = {
       source: {
         code: `
 <p class='align-middle items-center'>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<pid-component value='21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343' hide-subcomponents='true'  emphasize-component='false'></pid-component>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute <pid-component value='21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343' hide-subcomponents='true' emphasize-component='false'></pid-component> irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<pid-component value='${HANDLE_examples.FDO_BARE}' hide-subcomponents='true'  emphasize-component='false'></pid-component>
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute <pid-component value='${HANDLE_examples.FDO_BARE}' hide-subcomponents='true' emphasize-component='false'></pid-component> irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 </p>
         `,
       },
@@ -446,7 +458,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 export const TypedPIDMakerExampleText: Story = {
   args: {
-    value: '21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6',
+    value: HANDLE_examples.FDO_TYPED,
   },
   decorators: [
     (story: () => unknown) => html`
@@ -465,7 +477,7 @@ export const TypedPIDMakerExampleText: Story = {
  */
 export const DarkMode: Story = {
   args: {
-    value: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
+    value: HANDLE_examples.FDO_BARE,
     darkMode: 'dark',
   },
   globals: {
@@ -475,7 +487,7 @@ export const DarkMode: Story = {
     docs: {
       source: {
         code: `
-<pid-component value="21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343" dark-mode="dark" open-by-default="true"></pid-component>
+<pid-component value="${HANDLE_examples.FDO_BARE}" dark-mode="dark" open-by-default="true"></pid-component>
         `,
       },
     },
@@ -487,7 +499,7 @@ export const DarkMode: Story = {
  */
 export const LightMode: Story = {
   args: {
-    value: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
+    value: HANDLE_examples.FDO_BARE,
     darkMode: 'light',
   },
   globals: {
@@ -497,7 +509,7 @@ export const LightMode: Story = {
     docs: {
       source: {
         code: `
-<pid-component value="21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343" dark-mode="light" open-by-default="true"></pid-component>
+<pid-component value="${HANDLE_examples.FDO_BARE}" dark-mode="light" open-by-default="true"></pid-component>
         `,
       },
     },
@@ -509,14 +521,14 @@ export const LightMode: Story = {
  */
 export const SystemMode: Story = {
   args: {
-    value: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
+    value: HANDLE_examples.FDO_BARE,
     darkMode: 'system',
   },
   parameters: {
     docs: {
       source: {
         code: `
-<pid-component value="21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343" dark-mode="system" open-by-default="true"></pid-component>
+<pid-component value="${HANDLE_examples.FDO_BARE}" dark-mode="system" open-by-default="true"></pid-component>
         `,
       },
     },
@@ -528,7 +540,7 @@ export const SystemMode: Story = {
  */
 export const DOI_DataCite_JournalPaper: Story = {
   args: {
-    value: '10.5445/IR/1000185135',
+    value: DOI_examples.DATACITE_JOURNAL_PAPER,
     openByDefault: true,
   },
   parameters: {
@@ -538,7 +550,7 @@ export const DOI_DataCite_JournalPaper: Story = {
       },
       source: {
         code: `
-<pid-component value="10.5445/IR/1000185135" open-by-default="true"></pid-component>
+<pid-component value="${DOI_examples.DATACITE_JOURNAL_PAPER}" open-by-default="true"></pid-component>
         `,
       },
     },
@@ -550,7 +562,7 @@ export const DOI_DataCite_JournalPaper: Story = {
  */
 export const DOI_CrossRef_JournalPaper: Story = {
   args: {
-    value: '10.1109/eScience65000.2025.00022',
+    value: DOI_examples.CROSSREF_JOURNAL_PAPER,
     openByDefault: true,
   },
   parameters: {
@@ -560,7 +572,7 @@ export const DOI_CrossRef_JournalPaper: Story = {
       },
       source: {
         code: `
-<pid-component value="10.1109/eScience65000.2025.00022" open-by-default="true"></pid-component>
+<pid-component value="${DOI_examples.CROSSREF_JOURNAL_PAPER}" open-by-default="true"></pid-component>
         `,
       },
     },
@@ -572,7 +584,7 @@ export const DOI_CrossRef_JournalPaper: Story = {
  */
 export const DOI_DataCite_Software: Story = {
   args: {
-    value: 'https://doi.org/10.5281/zenodo.13629109',
+    value: DOI_examples.DATACITE_SOFTWARE,
     openByDefault: true,
   },
   parameters: {
@@ -582,7 +594,7 @@ export const DOI_DataCite_Software: Story = {
       },
       source: {
         code: `
-<pid-component value="https://doi.org/10.5281/zenodo.13629109" open-by-default="true"></pid-component>
+<pid-component value="${DOI_examples.DATACITE_SOFTWARE}" open-by-default="true"></pid-component>
         `,
       },
     },
@@ -594,7 +606,7 @@ export const DOI_DataCite_Software: Story = {
  */
 export const DOI_DataCite_RFC: Story = {
   args: {
-    value: 'doi:10.17487/rfc3650',
+    value: DOI_examples.DATACITE_RFC,
     openByDefault: true,
   },
   parameters: {
@@ -604,7 +616,7 @@ export const DOI_DataCite_RFC: Story = {
       },
       source: {
         code: `
-<pid-component value="doi:10.17487/rfc3650" open-by-default="true"></pid-component>
+<pid-component value="${DOI_examples.DATACITE_RFC}" open-by-default="true"></pid-component>
         `,
       },
     },
@@ -616,7 +628,7 @@ export const DOI_DataCite_RFC: Story = {
  */
 export const DOI_CrossRef_Book: Story = {
   args: {
-    value: '10.1007/978-1-4419-8598-9',
+    value: DOI_examples.CROSSREF_BOOK,
     openByDefault: true,
   },
   parameters: {
@@ -626,7 +638,7 @@ export const DOI_CrossRef_Book: Story = {
       },
       source: {
         code: `
-<pid-component value="10.1007/978-1-4419-8598-9" open-by-default="true"></pid-component>
+<pid-component value="${DOI_examples.CROSSREF_BOOK}" open-by-default="true"></pid-component>
         `,
       },
     },
@@ -638,7 +650,7 @@ export const DOI_CrossRef_Book: Story = {
  */
 export const DOI_DataCite_Slides: Story = {
   args: {
-    value: '10.5445/IR/1000178054',
+    value: DOI_examples.DATACITE_SLIDES,
     openByDefault: true,
   },
   parameters: {
@@ -648,7 +660,7 @@ export const DOI_DataCite_Slides: Story = {
       },
       source: {
         code: `
-<pid-component value="10.5445/IR/1000178054" open-by-default="true"></pid-component>
+<pid-component value="${DOI_examples.DATACITE_SLIDES}" open-by-default="true"></pid-component>
         `,
       },
     },
@@ -660,7 +672,7 @@ export const DOI_DataCite_Slides: Story = {
  */
 export const DOI_DataCite_Preprint: Story = {
   args: {
-    value: '10.48550/ARXIV.2505.16550',
+    value: DOI_examples.DATACITE_PREPRINT,
     openByDefault: true,
   },
   parameters: {
@@ -670,7 +682,7 @@ export const DOI_DataCite_Preprint: Story = {
       },
       source: {
         code: `
-<pid-component value="10.48550/ARXIV.2505.16550" open-by-default="true"></pid-component>
+<pid-component value="${DOI_examples.DATACITE_PREPRINT}" open-by-default="true"></pid-component>
         `,
       },
     },
@@ -682,7 +694,7 @@ export const DOI_DataCite_Preprint: Story = {
  */
 export const DOI_CitationStyles: Story = {
   args: {
-    value: '10.5445/IR/1000185135',
+    value: DOI_examples.DATACITE_JOURNAL_PAPER,
     openByDefault: false,
     settings: JSON.stringify([
       {
@@ -701,7 +713,7 @@ export const DOI_CitationStyles: Story = {
       source: {
         code: `
 <pid-component
-  value="10.5445/IR/1000185135"
+  value="${DOI_examples.DATACITE_JOURNAL_PAPER}"
   settings='[{"type":"DOIType","values":[{"name":"citationStyle","value":"APA"}]}]'
 ></pid-component>
         `,
@@ -715,7 +727,7 @@ export const DOI_CitationStyles: Story = {
  */
 export const JSON_Object: Story = {
   args: {
-    value: '{"name": "pid-component", "version": "1.0.0", "features": ["PIDs", "ORCiDs", "DOIs"]}',
+    value: JSON.stringify(JSON_examples.NESTED),
     openByDefault: true,
   },
   parameters: {
@@ -725,7 +737,7 @@ export const JSON_Object: Story = {
       },
       source: {
         code: `
-<pid-component value='{"name": "pid-component", "version": "1.0.0", "features": ["PIDs", "ORCiDs", "DOIs"]}'></pid-component>
+<pid-component value='${JSON.stringify(JSON_examples.NESTED)}'></pid-component>
         `,
       },
     },
@@ -737,7 +749,7 @@ export const JSON_Object: Story = {
  */
 export const Locale: Story = {
   args: {
-    value: 'de-DE',
+    value: LOCALE_examples.DE_DE,
   },
   parameters: {
     docs: {
@@ -746,7 +758,7 @@ export const Locale: Story = {
       },
       source: {
         code: `
-<pid-component value='de-DE'></pid-component>
+<pid-component value='${LOCALE_examples.DE_DE}'></pid-component>
         `,
       },
     },
@@ -763,7 +775,7 @@ export const Locale: Story = {
  */
 export const RenderersMatchingDOI: Story = {
   args: {
-    value: '10.5445/IR/1000185135',
+    value: DOI_examples.DATACITE_JOURNAL_PAPER,
     renderers: '["DOIType"]',
   },
   parameters: {
@@ -774,7 +786,7 @@ export const RenderersMatchingDOI: Story = {
       },
       source: {
         code: `
-<pid-component value='10.5445/IR/1000185135' renderers='["DOIType"]'></pid-component>
+<pid-component value='${DOI_examples.DATACITE_JOURNAL_PAPER}' renderers='["DOIType"]'></pid-component>
         `,
       },
     },
@@ -796,7 +808,7 @@ export const RenderersMatchingDOI: Story = {
  */
 export const RenderersPreselectionFallback: Story = {
   args: {
-    value: '10.5445/IR/1000185135',
+    value: DOI_examples.DATACITE_JOURNAL_PAPER,
     renderers: '["ORCIDType"]',
   },
   parameters: {
@@ -807,7 +819,7 @@ export const RenderersPreselectionFallback: Story = {
       },
       source: {
         code: `
-<pid-component value='10.5445/IR/1000185135' renderers='["ORCIDType"]'></pid-component>
+<pid-component value='${DOI_examples.DATACITE_JOURNAL_PAPER}' renderers='["ORCIDType"]'></pid-component>
         `,
       },
     },
@@ -821,7 +833,7 @@ export const RenderersPreselectionFallback: Story = {
  */
 export const RenderersStrictRestriction: Story = {
   args: {
-    value: '10.5445/IR/1000185135',
+    value: DOI_examples.DATACITE_JOURNAL_PAPER,
     renderers: '["ORCIDType"]',
     fallbackToAll: false,
   },
@@ -833,7 +845,7 @@ export const RenderersStrictRestriction: Story = {
       },
       source: {
         code: `
-<pid-component value='10.5445/IR/1000185135' renderers='["ORCIDType"]' fallback-to-all='false'></pid-component>
+<pid-component value='${DOI_examples.DATACITE_JOURNAL_PAPER}' renderers='["ORCIDType"]' fallback-to-all='false'></pid-component>
         `,
       },
     },
@@ -854,7 +866,7 @@ export const RenderersStrictRestriction: Story = {
  */
 export const RenderersOrderPriority: Story = {
   args: {
-    value: '10.5445/IR/1000185135',
+    value: DOI_examples.DATACITE_JOURNAL_PAPER,
     renderers: '["HandleType", "DOIType"]',
   },
   parameters: {
@@ -865,7 +877,7 @@ export const RenderersOrderPriority: Story = {
       },
       source: {
         code: `
-<pid-component value='110.5445/IR/1000185135' renderers='["HandleType", "DOIType"]'></pid-component>
+<pid-component value='${DOI_examples.DATACITE_JOURNAL_PAPER}' renderers='["HandleType", "DOIType"]'></pid-component>
         `,
       },
     },
@@ -878,7 +890,7 @@ export const RenderersOrderPriority: Story = {
  */
 export const RenderersCorrectOrder: Story = {
   args: {
-    value: '10.5445/IR/1000185135',
+    value: DOI_examples.DATACITE_JOURNAL_PAPER,
     renderers: '["DOIType", "HandleType"]',
   },
   parameters: {
@@ -889,7 +901,7 @@ export const RenderersCorrectOrder: Story = {
       },
       source: {
         code: `
-<pid-component value='10.5445/IR/1000185135' renderers='["DOIType", "HandleType"]'></pid-component>
+<pid-component value='${DOI_examples.DATACITE_JOURNAL_PAPER}' renderers='["DOIType", "HandleType"]'></pid-component>
         `,
       },
     },

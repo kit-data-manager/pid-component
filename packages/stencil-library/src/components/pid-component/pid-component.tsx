@@ -8,7 +8,7 @@ import { clearCache } from '../../utils/DataCache';
 @Component({
   tag: 'pid-component',
   styleUrl: 'pid-component.css',
-  shadow: true
+  shadow: true,
 })
 export class PidComponent {
   /**
@@ -622,7 +622,7 @@ export class PidComponent {
 
   private blockEventPropagation = (e: Event) => {
     e.stopPropagation();
-  }
+  };
 
   /**
    * Determines if footer should be shown based on whether there are actions or items with pagination
@@ -657,15 +657,15 @@ export class PidComponent {
                 class={
                   this.currentLevelOfSubcomponents === 0
                     ? //(w/o sub components)
-                      (this.emphasizeComponent || this.temporarilyEmphasized
-                        ? 'group rounded-md border px-2 py-0 shadow-sm ' +
-                        (this.isDarkMode
-                          ? 'border-gray-600 bg-gray-800'
-                          : 'border-gray-300 bg-white') +
-                        ' inline-flex cursor-pointer list-none flex-nowrap items-center overflow-hidden font-mono font-bold text-clip'
-                        : (this.isDarkMode ? 'bg-gray-800/60' : '') +
-                        ' inline-flex cursor-pointer list-none flex-nowrap items-center font-mono font-bold') +
-                      (!this.isExpanded ? ` h-[${this._lineHeight || 24}px] leading-[${this._lineHeight || 24}px]` : '')
+                    (
+                      this.emphasizeComponent || this.temporarilyEmphasized
+                        ? 'group rounded-md border px-2 py-0 shadow-sm '
+                        + (this.isDarkMode
+                            ? 'border-gray-600 bg-gray-800'
+                            : 'border-gray-300 bg-white'
+                        ) + ' inline-flex cursor-pointer list-none flex-nowrap items-center overflow-hidden font-mono font-bold text-clip'
+                        : (this.isDarkMode ? 'bg-gray-800/60' : '') + ' inline-flex cursor-pointer list-none flex-nowrap items-center font-mono font-bold'
+                    ) + (!this.isExpanded ? ` h-[${this._lineHeight || 24}px] leading-[${this._lineHeight || 24}px]` : '')
                     : ''
                 }
                 tabIndex={0}
@@ -694,11 +694,13 @@ export class PidComponent {
                 }
               </span>
             ) : this.displayStatus === 'error' ? (
-              <span class={'inline-flex items-center font-mono text-sm text-gray-600 dark:text-gray-300'} role="status">
+              <span class={'inline-flex items-center font-mono text-sm text-gray-600 dark:text-gray-300'}
+                    role="status">
                 {this.value}
               </span>
             ) : (
-              <span class={'inline-flex items-center font-mono text-sm text-gray-500'} role="status" aria-live="polite">
+              <span class={'inline-flex items-center font-mono text-sm text-gray-500'} role="status"
+                    aria-live="polite">
                 {this.value}
               </span>
             )
@@ -766,7 +768,8 @@ export class PidComponent {
 
               {/* Pagination in a separate line above actions */}
               {this.items.length > 0 && (
-                <div slot="footer" class={`relative z-50 w-full overflow-visible ${this.isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+                <div slot="footer"
+                     class={`relative z-50 w-full overflow-visible ${this.isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
                   <pid-pagination
                     currentPage={this.tablePage}
                     totalItems={this.items.length}
@@ -782,7 +785,9 @@ export class PidComponent {
 
               {/* Footer Actions - in a separate line below pagination */}
               {this.actions.length > 0 && (
-                <pid-actions slot="footer-actions" actions={this.actions} darkMode={this.darkMode} class="my-0 shrink-0" aria-label={`Available actions for ${this.value}`} />
+                <pid-actions slot="footer-actions" actions={this.actions} darkMode={this.darkMode}
+                             class="my-0 shrink-0 overflow-x-auto"
+                             aria-label={`Available actions for ${this.value}`} />
               )}
             </pid-collapsible>
           )

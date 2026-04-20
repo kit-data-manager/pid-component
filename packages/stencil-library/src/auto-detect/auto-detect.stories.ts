@@ -1,5 +1,16 @@
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { expect, userEvent } from 'storybook/test';
+import {
+  DOI_examples,
+  HANDLE_examples,
+  ORCID_examples,
+  ROR_examples,
+  SPDX_examples,
+  URL_examples,
+  EMAIL_examples,
+  DATE_examples,
+  LOCALE_examples,
+} from '../../../../examples';
 
 /**
  * The `initPidDetection()` function enables automatic detection and rendering
@@ -215,15 +226,15 @@ export const MixedPidsInText: Story = {
       <div id="auto-detect-demo-mixed" style="max-width: 800px; font-family: sans-serif; line-height: 1.8;">
         <h3 style="margin-bottom: 12px;">Research Paper Metadata</h3>
         <p>
-          This dataset is published as an FDO at 21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6 and was created
-          by researcher 0009-0005-2800-4833. The work was conducted at
-          https://ror.org/04t3en479 and is available under the
-          https://spdx.org/licenses/Apache-2.0 license.
-          Please also have a look at DOI 10.1109/eScience65000.2025.00022.
+          This dataset is published as an FDO at ${HANDLE_examples.FDO_TYPED} and was created
+          by researcher ${ORCID_examples.VALID}. The work was conducted at
+          ${ROR_examples.VALID} and is available under the
+          ${SPDX_examples.APACHE_2_0} license.
+          Please also have a look at DOI ${DOI_examples.CROSSREF_JOURNAL_PAPER}.
         </p>
         <p style="margin-top: 12px;">
-          For questions, contact the author at someone@example.com or visit
-          https://scc.kit.edu for more information.
+          For questions, contact the author at ${EMAIL_examples.VALID} or visit
+          ${URL_examples.KIT_WEBSITE} for more information.
         </p>
       </div>
     `;
@@ -279,11 +290,11 @@ export const FilteredRenderers: Story = {
       <div id="auto-detect-demo-filtered" style="max-width: 800px; font-family: sans-serif; line-height: 1.8;">
         <h3 style="margin-bottom: 12px;">Filtered Detection (DOI + ORCiD only)</h3>
         <p>
-          This dataset is published as an FDO at 21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6 and was created
-          by researcher 0009-0005-2800-4833. The work was conducted at
-          https://ror.org/04t3en479 and is available under the
-          https://spdx.org/licenses/MIT license.
-          Please have a look at DOI 10.1109/eScience65000.2025.00022.
+          This dataset is published as an FDO at ${HANDLE_examples.FDO_TYPED} and was created
+          by researcher ${ORCID_examples.VALID}. The work was conducted at
+          ${ROR_examples.VALID} and is available under the
+          ${SPDX_examples.MIT} license.
+          Please have a look at DOI ${DOI_examples.CROSSREF_JOURNAL_PAPER}.
           Only the DOI and ORCiD in this text will be detected and rendered as components.
         </p>
       </div>
@@ -342,8 +353,8 @@ export const ControllerLifecycle: Story = {
         </div>
         <div id="auto-detect-demo-lifecycle" style="line-height: 1.8;">
           <p>
-            This dataset (DOI: 10.1109/eScience65000.2025.00022) was created by researcher
-            0009-0005-2800-4833. Click "Destroy" to restore the original text,
+            This dataset (DOI: ${DOI_examples.CROSSREF_JOURNAL_PAPER}) was created by researcher
+            ${ORCID_examples.VALID}. Click "Destroy" to restore the original text,
             or "Rescan" to re-detect PIDs after destroying.
           </p>
         </div>
@@ -418,9 +429,9 @@ export const DarkMode: Story = {
       <div id="auto-detect-demo-dark" style="max-width: 800px; font-family: sans-serif; line-height: 1.8; background: #1a1a2e; color: #eee; padding: 24px; border-radius: 8px;">
         <h3 style="margin-bottom: 12px; color: #eee;">Dark Mode Auto-Detection</h3>
         <p>
-          The dataset 10.1109/eScience65000.2025.00022 by researcher 0009-0005-2800-4833
-          is available at https://scc.kit.edu under the
-          https://spdx.org/licenses/Apache-2.0 license.
+          The dataset ${DOI_examples.CROSSREF_JOURNAL_PAPER} by researcher ${ORCID_examples.VALID}
+          is available at ${URL_examples.KIT_WEBSITE} under the
+          ${SPDX_examples.APACHE_2_0} license.
         </p>
       </div>
     `;
@@ -471,16 +482,16 @@ export const ExcludeElements: Story = {
       <div id="auto-detect-demo-exclude" style="max-width: 800px; font-family: sans-serif; line-height: 1.8;">
         <h3 style="margin-bottom: 12px;">Auto-Detection with Excluded Elements</h3>
         <p>
-          This Handle PID should be detected: 21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6
+          This Handle PID should be detected: ${HANDLE_examples.FDO_TYPED}
         </p>
         <div class="no-detect" style="background: #f0f0f0; padding: 12px; border-radius: 4px; font-family: monospace; margin-top: 12px;">
           <strong>Excluded zone (code example):</strong><br>
-          curl https://doi.org/10.1109/eScience65000.2025.00022<br>
-          curl https://ror.org/04t3en479<br>
-          curl https://hdl.handle.net/21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6
+          curl ${DOI_examples.CROSSREF_JOURNAL_PAPER}<br>
+          curl ${ROR_examples.VALID}<br>
+          curl https://hdl.handle.net/${HANDLE_examples.FDO_TYPED}
         </div>
         <p style="margin-top: 12px;">
-          This ORCiD should also be detected: 0009-0005-2800-4833
+          This ORCiD should also be detected: ${ORCID_examples.VALID}
         </p>
       </div>
     `;
@@ -544,15 +555,15 @@ export const TableWithPIDs: Story = {
           <tbody>
             <tr style="border-bottom: 1px solid #eee;">
               <td style="padding: 8px;">Dataset A</td>
-              <td style="padding: 8px;">10.5445/IR/1000185135</td>
-              <td style="padding: 8px;">0009-0005-2800-4833</td>
-              <td style="padding: 8px;">https://spdx.org/licenses/Apache-2.0</td>
+              <td style="padding: 8px;">${DOI_examples.DATACITE_JOURNAL_PAPER}</td>
+              <td style="padding: 8px;">${ORCID_examples.VALID}</td>
+              <td style="padding: 8px;">${SPDX_examples.APACHE_2_0}</td>
             </tr>
             <tr style="border-bottom: 1px solid #eee;">
               <td style="padding: 8px;">Dataset B</td>
-              <td style="padding: 8px;">10.5445/IR/1000178054</td>
-              <td style="padding: 8px;">0009-0005-2800-4833</td>
-              <td style="padding: 8px;">https://spdx.org/licenses/MIT</td>
+              <td style="padding: 8px;">${DOI_examples.DATACITE_SLIDES}</td>
+              <td style="padding: 8px;">${ORCID_examples.VALID}</td>
+              <td style="padding: 8px;">${SPDX_examples.MIT}</td>
             </tr>
           </tbody>
         </table>
@@ -600,9 +611,9 @@ export const PunctuationHandling: Story = {
       <div id="auto-detect-demo-punctuation" style="max-width: 800px; font-family: sans-serif; line-height: 1.8;">
         <h3 style="margin-bottom: 12px;">Punctuation Sanitization</h3>
         <p>
-          The dataset (10.1109/eScience65000.2025.00022) was created by "0009-0005-2800-4833".
-          See also: 21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6, which is related.
-          Licensed under https://spdx.org/licenses/Apache-2.0.
+          The dataset (${DOI_examples.CROSSREF_JOURNAL_PAPER}) was created by "${ORCID_examples.VALID}".
+          See also: ${HANDLE_examples.FDO_TYPED}, which is related.
+          Licensed under ${SPDX_examples.APACHE_2_0}.
         </p>
       </div>
     `;
@@ -650,8 +661,8 @@ export const WithSettings: Story = {
       <div id="auto-detect-demo-settings" style="max-width: 800px; font-family: sans-serif; line-height: 1.8;">
         <h3 style="margin-bottom: 12px;">Custom Settings (IEEE Citation Style)</h3>
         <p>
-          This paper has DOI 10.1109/eScience65000.2025.00022 and was authored by
-          0009-0005-2800-4833.
+          This paper has DOI ${DOI_examples.CROSSREF_JOURNAL_PAPER} and was authored by
+          ${ORCID_examples.VALID}.
         </p>
       </div>
     `;
@@ -707,27 +718,27 @@ const SHOWCASE_HTML = `
       <tbody>
         <tr style="border-bottom: 1px solid #f0f0f0;">
           <td style="padding: 10px 12px; font-weight: 600; width: 180px; color: #555;">FDO PID</td>
-          <td style="padding: 10px 12px;">21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6</td>
+          <td style="padding: 10px 12px;">${HANDLE_examples.FDO_TYPED}</td>
         </tr>
         <tr style="border-bottom: 1px solid #f0f0f0;">
           <td style="padding: 10px 12px; font-weight: 600; color: #555;">DOI</td>
-          <td style="padding: 10px 12px;">10.1109/eScience65000.2025.00022</td>
+          <td style="padding: 10px 12px;">${DOI_examples.CROSSREF_JOURNAL_PAPER}</td>
         </tr>
         <tr style="border-bottom: 1px solid #f0f0f0;">
           <td style="padding: 10px 12px; font-weight: 600; color: #555;">Created</td>
-          <td style="padding: 10px 12px;">2024-06-15T09:30:00.000+02:00</td>
+          <td style="padding: 10px 12px;">${DATE_examples.ISO_8601_ALT}</td>
         </tr>
         <tr style="border-bottom: 1px solid #f0f0f0;">
           <td style="padding: 10px 12px; font-weight: 600; color: #555;">Language</td>
-          <td style="padding: 10px 12px;">en-US</td>
+          <td style="padding: 10px 12px;">${LOCALE_examples.EN_US}</td>
         </tr>
         <tr style="border-bottom: 1px solid #f0f0f0;">
           <td style="padding: 10px 12px; font-weight: 600; color: #555;">License</td>
-          <td style="padding: 10px 12px;">https://spdx.org/licenses/Apache-2.0</td>
+          <td style="padding: 10px 12px;">${SPDX_examples.APACHE_2_0}</td>
         </tr>
         <tr style="border-bottom: 1px solid #f0f0f0;">
           <td style="padding: 10px 12px; font-weight: 600; color: #555;">Landing Page</td>
-          <td style="padding: 10px 12px;">https://scc.kit.edu</td>
+          <td style="padding: 10px 12px;">${URL_examples.KIT_WEBSITE}</td>
         </tr>
       </tbody>
     </table>
@@ -739,15 +750,15 @@ const SHOWCASE_HTML = `
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
       <div style="background: #f8fafc; border-radius: 8px; padding: 16px; border: 1px solid #e5e7eb;">
         <div style="font-weight: 600;">Author 1</div>
-        <div style="margin-top: 4px;">ORCiD: 0009-0005-2800-4833</div>
-        <div style="margin-top: 2px;">Email: maximilian.inckmann@kit.edu</div>
-        <div style="margin-top: 2px;">Affiliation: https://ror.org/04t3en479</div>
+        <div style="margin-top: 4px;">ORCiD: ${ORCID_examples.VALID}</div>
+        <div style="margin-top: 2px;">Email: ${EMAIL_examples.KIT_EMAIL}</div>
+        <div style="margin-top: 2px;">Affiliation: ${ROR_examples.VALID}</div>
       </div>
       <div style="background: #f8fafc; border-radius: 8px; padding: 16px; border: 1px solid #e5e7eb;">
         <div style="font-weight: 600;">Author 2</div>
-        <div style="margin-top: 4px;">ORCiD: 0000-0001-6575-1022</div>
-        <div style="margin-top: 2px;">Email: andreas.pfeil@kit.edu</div>
-        <div style="margin-top: 2px;">Affiliation: https://ror.org/04t3en479</div>
+        <div style="margin-top: 4px;">ORCiD: ${ORCID_examples.VALID_SECOND}</div>
+        <div style="margin-top: 2px;">Email: ${EMAIL_examples.KIT_EMAIL_ALT}</div>
+        <div style="margin-top: 2px;">Affiliation: ${ROR_examples.VALID}</div>
       </div>
     </div>
   </section>
@@ -757,11 +768,11 @@ const SHOWCASE_HTML = `
     <h2 style="font-size: 1.25em; color: #2563eb; border-bottom: 1px solid #e5e7eb; padding-bottom: 6px;">Related Publications</h2>
     <ul style="padding-left: 20px;">
       <li style="margin-bottom: 8px;">
-        M. Inckmann et al., "The PID Component," DOI: 10.5445/IR/1000185135
+        M. Inckmann et al., "The PID Component," DOI: ${DOI_examples.DATACITE_JOURNAL_PAPER}
       </li>
       <li style="margin-bottom: 8px;">
-        A. Pfeil et al., "FAIR Digital Objects in Practice," DOI: 10.5445/IR/1000178054.
-        Published 2023-11-20T00:00:00.000+01:00.
+        A. Pfeil et al., "FAIR Digital Objects in Practice," DOI: ${DOI_examples.DATACITE_SLIDES}.
+        Published ${DATE_examples.DATETIME_SHORT}.
       </li>
     </ul>
   </section>
@@ -770,16 +781,16 @@ const SHOWCASE_HTML = `
   <section style="margin-bottom: 32px;">
     <h2 style="font-size: 1.25em; color: #2563eb; border-bottom: 1px solid #e5e7eb; padding-bottom: 6px;">Abstract</h2>
     <p>
-      This dataset (21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6) presents the results of
-      a study conducted at the Karlsruhe Institute of Technology (https://ror.org/04t3en479).
-      The corresponding software is available under the https://spdx.org/licenses/MIT license
-      and can be accessed at https://scc.kit.edu. For questions, please contact the lead
-      author at maximilian.inckmann@kit.edu or visit the project page.
+      This dataset (${HANDLE_examples.FDO_TYPED}) presents the results of
+      a study conducted at the Karlsruhe Institute of Technology (${ROR_examples.VALID}).
+      The corresponding software is available under the ${SPDX_examples.MIT} license
+      and can be accessed at ${URL_examples.KIT_WEBSITE}. For questions, please contact the lead
+      author at ${EMAIL_examples.KIT_EMAIL} or visit the project page.
     </p>
     <p style="margin-top: 12px;">
-      The research builds upon earlier work published as 10.1109/eScience65000.2025.00022 and extends it
-      with FAIR Digital Object capabilities. The primary language of this publication is en-US,
-      with supplementary materials available in de-DE.
+      The research builds upon earlier work published as ${DOI_examples.CROSSREF_JOURNAL_PAPER} and extends it
+      with FAIR Digital Object capabilities. The primary language of this publication is ${LOCALE_examples.EN_US},
+      with supplementary materials available in ${LOCALE_examples.DE_DE}.
     </p>
   </section>
 
@@ -911,14 +922,14 @@ export const ResearchDemo: Story = {
     </h2>
     <div id="auto-detect-zone" style="line-height: 1.8;">
       <p>
-        This dataset is published as a FAIR Digital Object at 21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6
-        and was created by researcher 0009-0005-2800-4833. The work was conducted at
-        https://ror.org/04t3en479 and is available under the https://spdx.org/licenses/Apache-2.0 license.
-        The corresponding paper has DOI 10.1109/eScience65000.2025.00022.
+        This dataset is published as a FAIR Digital Object at ${HANDLE_examples.FDO_TYPED}
+        and was created by researcher ${ORCID_examples.VALID}. The work was conducted at
+        ${ROR_examples.VALID} and is available under the ${SPDX_examples.APACHE_2_0} license.
+        The corresponding paper has DOI ${DOI_examples.CROSSREF_JOURNAL_PAPER}.
       </p>
       <p style="margin-top: 12px;">
-        For questions, contact maximilian.inckmann@kit.edu or visit https://scc.kit.edu.
-        The publication date is 2024-06-15T09:30:00.000+02:00 and the primary language is en-US.
+        For questions, contact ${EMAIL_examples.KIT_EMAIL} or visit ${URL_examples.KIT_WEBSITE}.
+        The publication date is ${DATE_examples.ISO_8601_ALT} and the primary language is ${LOCALE_examples.EN_US}.
       </p>
     </div>
   </section>
@@ -930,10 +941,10 @@ export const ResearchDemo: Story = {
     </h2>
     <p style="margin-bottom: 12px;">These components stand out from surrounding text with a visible border, shadow, and a chevron toggle indicator. Click to expand, double-click to collapse.</p>
     <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start;">
-      <pid-component value="10.5445/IR/1000185135" emphasize-component="true"></pid-component>
-      <pid-component value="0009-0005-2800-4833" emphasize-component="true"></pid-component>
-      <pid-component value="https://ror.org/04t3en479" emphasize-component="true"></pid-component>
-      <pid-component value="https://spdx.org/licenses/MIT" emphasize-component="true"></pid-component>
+      <pid-component value="${DOI_examples.DATACITE_JOURNAL_PAPER}" emphasize-component="true"></pid-component>
+      <pid-component value="${ORCID_examples.VALID}" emphasize-component="true"></pid-component>
+      <pid-component value="${ROR_examples.VALID}" emphasize-component="true"></pid-component>
+      <pid-component value="${SPDX_examples.MIT}" emphasize-component="true"></pid-component>
     </div>
   </section>
 
@@ -944,10 +955,10 @@ export const ResearchDemo: Story = {
     </h2>
     <p>
       The following identifiers are embedded inline and blend seamlessly into this paragraph:
-      DOI <pid-component value="10.1109/eScience65000.2025.00022" emphasize-component="false"></pid-component>,
-      ORCiD <pid-component value="0009-0005-2800-4833" emphasize-component="false"></pid-component>,
-      ROR <pid-component value="https://ror.org/04t3en479" emphasize-component="false"></pid-component>,
-      and license <pid-component value="Apache-2.0" emphasize-component="false"></pid-component>.
+      DOI <pid-component value="${DOI_examples.CROSSREF_JOURNAL_PAPER}" emphasize-component="false"></pid-component>,
+      ORCiD <pid-component value="${ORCID_examples.VALID}" emphasize-component="false"></pid-component>,
+      ROR <pid-component value="${ROR_examples.VALID}" emphasize-component="false"></pid-component>,
+      and license <pid-component value="${SPDX_examples.MIT_BARE}" emphasize-component="false"></pid-component>.
       Click any identifier to expand it; emphasis is temporarily applied when expanded.
     </p>
   </section>
@@ -968,35 +979,35 @@ export const ResearchDemo: Story = {
       <tbody>
         <tr style="border-bottom: 1px solid #eee;">
           <td style="padding: 8px; font-weight: 600; color: #555;">Handle PID</td>
-          <td style="padding: 8px;"><pid-component value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6" hide-subcomponents="true" emphasize-component="false"></pid-component></td>
+          <td style="padding: 8px;"><pid-component value="${HANDLE_examples.FDO_TYPED}" hide-subcomponents="true" emphasize-component="false"></pid-component></td>
         </tr>
         <tr style="border-bottom: 1px solid #eee;">
           <td style="padding: 8px; font-weight: 600; color: #555;">DOI</td>
-          <td style="padding: 8px;"><pid-component value="10.5445/IR/1000185135" hide-subcomponents="true" emphasize-component="true"></pid-component></td>
+          <td style="padding: 8px;"><pid-component value="${DOI_examples.DATACITE_JOURNAL_PAPER}" hide-subcomponents="true" emphasize-component="true"></pid-component></td>
         </tr>
         <tr style="border-bottom: 1px solid #eee;">
           <td style="padding: 8px; font-weight: 600; color: #555;">ORCiD</td>
-          <td style="padding: 8px;"><pid-component value="0009-0005-2800-4833" hide-subcomponents="true" emphasize-component="false"></pid-component></td>
+          <td style="padding: 8px;"><pid-component value="${ORCID_examples.VALID}" hide-subcomponents="true" emphasize-component="false"></pid-component></td>
         </tr>
         <tr style="border-bottom: 1px solid #eee;">
           <td style="padding: 8px; font-weight: 600; color: #555;">URL</td>
-          <td style="padding: 8px;"><pid-component value="https://scc.kit.edu" hide-subcomponents="true"></pid-component></td>
+          <td style="padding: 8px;"><pid-component value="${URL_examples.KIT_WEBSITE}" hide-subcomponents="true"></pid-component></td>
         </tr>
         <tr style="border-bottom: 1px solid #eee;">
           <td style="padding: 8px; font-weight: 600; color: #555;">Email</td>
-          <td style="padding: 8px;"><pid-component value="maximilian.inckmann@kit.edu" hide-subcomponents="true"></pid-component></td>
+          <td style="padding: 8px;"><pid-component value="${EMAIL_examples.KIT_EMAIL}" hide-subcomponents="true"></pid-component></td>
         </tr>
         <tr style="border-bottom: 1px solid #eee;">
           <td style="padding: 8px; font-weight: 600; color: #555;">Date</td>
-          <td style="padding: 8px;"><pid-component value="2024-06-15T09:30:00.000+02:00" hide-subcomponents="true"></pid-component></td>
+          <td style="padding: 8px;"><pid-component value="${DATE_examples.ISO_8601_ALT}" hide-subcomponents="true"></pid-component></td>
         </tr>
         <tr style="border-bottom: 1px solid #eee;">
           <td style="padding: 8px; font-weight: 600; color: #555;">Locale</td>
-          <td style="padding: 8px;"><pid-component value="de-DE" hide-subcomponents="true"></pid-component></td>
+          <td style="padding: 8px;"><pid-component value="${LOCALE_examples.DE_DE}" hide-subcomponents="true"></pid-component></td>
         </tr>
         <tr style="border-bottom: 1px solid #eee;">
           <td style="padding: 8px; font-weight: 600; color: #555;">SPDX</td>
-          <td style="padding: 8px;"><pid-component value="https://spdx.org/licenses/Apache-2.0" hide-subcomponents="true"></pid-component></td>
+          <td style="padding: 8px;"><pid-component value="${SPDX_examples.APACHE_2_0}" hide-subcomponents="true"></pid-component></td>
         </tr>
       </tbody>
     </table>
@@ -1011,12 +1022,12 @@ export const ResearchDemo: Story = {
 
     <div style="margin-bottom: 16px;">
       <h3 style="font-size: 1em; color: #555; margin-bottom: 8px;">DOI (DataCite - Journal Paper)</h3>
-      <pid-component value="10.5445/IR/1000185135" open-by-default="true" emphasize-component="true"></pid-component>
+      <pid-component value="${DOI_examples.DATACITE_JOURNAL_PAPER}" open-by-default="true" emphasize-component="true"></pid-component>
     </div>
 
     <div style="margin-bottom: 16px;">
       <h3 style="font-size: 1em; color: #555; margin-bottom: 8px;">ORCiD (Researcher Profile)</h3>
-      <pid-component value="0009-0005-2800-4833" open-by-default="true" emphasize-component="true"></pid-component>
+      <pid-component value="${ORCID_examples.VALID}" open-by-default="true" emphasize-component="true"></pid-component>
     </div>
 
     <div style="margin-bottom: 16px;">
@@ -1033,14 +1044,14 @@ export const ResearchDemo: Story = {
     <p style="line-height: 1.9;">
       The Typed PID Maker is an entry point to integrate digital resources into the FAIR Digital Object ecosystem.
       It allows creating PIDs for resources such as
-      <pid-component value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6" emphasize-component="false"></pid-component>
+      <pid-component value="${HANDLE_examples.FDO_TYPED}" emphasize-component="false"></pid-component>
       and provides them with the necessary metadata to ensure discoverability. The lead author
-      <pid-component value="0009-0005-2800-4833" emphasize-component="true"></pid-component>
-      published the work at <pid-component value="10.1109/eScience65000.2025.00022" emphasize-component="false"></pid-component>
-      under the <pid-component value="Apache-2.0" hide-subcomponents="true" emphasize-component="false"></pid-component> license.
-      The software is available in <pid-component value="en-US" hide-subcomponents="true" emphasize-component="false"></pid-component>
-      and <pid-component value="de-DE" hide-subcomponents="true" emphasize-component="false"></pid-component>,
-      hosted at <pid-component value="https://ror.org/04t3en479" emphasize-component="true"></pid-component>.
+      <pid-component value="${ORCID_examples.VALID}" emphasize-component="true"></pid-component>
+      published the work at <pid-component value="${DOI_examples.CROSSREF_JOURNAL_PAPER}" emphasize-component="false"></pid-component>
+      under the <pid-component value="${SPDX_examples.MIT_BARE}" hide-subcomponents="true" emphasize-component="false"></pid-component> license.
+      The software is available in <pid-component value="${LOCALE_examples.EN_US}" hide-subcomponents="true" emphasize-component="false"></pid-component>
+      and <pid-component value="${LOCALE_examples.DE_DE}" hide-subcomponents="true" emphasize-component="false"></pid-component>,
+      hosted at <pid-component value="${ROR_examples.VALID}" emphasize-component="true"></pid-component>.
     </p>
   </section>
 
@@ -1051,8 +1062,8 @@ export const ResearchDemo: Story = {
     </h2>
     <p style="margin-bottom: 12px;">The <code>renderers</code> prop controls which types are tried. The first component restricts to DOI only; the second uses Handle before DOI (changing priority).</p>
     <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start;">
-      <pid-component value="10.5445/IR/1000185135" renderers='["DOIType"]' emphasize-component="true"></pid-component>
-      <pid-component value="10.5445/IR/1000185135" renderers='["HandleType", "DOIType"]' emphasize-component="true"></pid-component>
+      <pid-component value="${DOI_examples.DATACITE_JOURNAL_PAPER}" renderers='["DOIType"]' emphasize-component="true"></pid-component>
+      <pid-component value="${DOI_examples.DATACITE_JOURNAL_PAPER}" renderers='["HandleType", "DOIType"]' emphasize-component="true"></pid-component>
     </div>
   </section>
 

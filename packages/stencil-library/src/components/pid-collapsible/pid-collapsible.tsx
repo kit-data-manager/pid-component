@@ -608,9 +608,9 @@ export class PidCollapsible {
       return '100%';
     }
     if (availableWidth <= 1024) {
-      return '50%';
+      return '70%';
     }
-    return '30%';
+    return '50%';
   }
 
   /**
@@ -985,7 +985,7 @@ export class PidCollapsible {
             <span
               class={`inline-flex h-full items-center ${this.open ? 'flex-nowrap whitespace-nowrap' : 'min-w-0 flex-nowrap overflow-hidden'}`}>
               {this.emphasize && (
-                <span class="flex h-full shrink-0 items-center">
+                <span class="flex h-full shrink-0 items-center pr-2">
                   <svg
                     class={`${this.isDarkMode ? 'text-gray-300' : 'text-gray-600'} transition-transform duration-200 group-open:rotate-180`}
                     fill="none"
@@ -1002,11 +1002,11 @@ export class PidCollapsible {
                   </svg>
                 </span>
               )}
-              <span class={`${this.open ? 'overflow-visible' : 'min-w-0 truncate'} flex h-full items-center pl-2`}>
+              <span class={`${this.open ? 'overflow-visible' : 'min-w-0 truncate'} flex h-full items-center`}>
                 <slot name="summary"></slot>
               </span>
             </span>
-            <div class="ml-auto flex h-full shrink-0 items-center">
+            <div class="ml-auto flex h-full shrink-0 items-center overflow-x-auto">
               <slot name="summary-actions"></slot>
             </div>
           </summary>
