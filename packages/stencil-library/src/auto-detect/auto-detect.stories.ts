@@ -206,7 +206,7 @@ export const MixedPidsInText: Story = {
           by researcher 0009-0005-2800-4833. The work was conducted at
           https://ror.org/04t3en479 and is available under the
           https://spdx.org/licenses/Apache-2.0 license.
-          Please have a look at DOI 10.1109/eScience65000.2025.00022.
+          Please also have a look at DOI 10.1109/eScience65000.2025.00022.
         </p>
         <p style="margin-top: 12px;">
           For questions, contact the author at someone@example.com or visit

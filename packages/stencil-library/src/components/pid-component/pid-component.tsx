@@ -674,8 +674,7 @@ export class PidComponent {
                 aria-expanded={this.isExpanded}
               >
                 <span
-                  class={`inline-flex flex-nowrap font-mono font-medium select-all min-w-0 overflow-x-auto ${this.isExpanded ? 'text-xs' : 'text-sm'}`}
-                  style={{ maxWidth: '50vw' }}
+                  class={`inline-flex max-w-full flex-nowrap overflow-x-auto font-mono font-medium text-ellipsis whitespace-nowrap select-all ${this.isExpanded ? 'text-xs' : 'text-sm'}`}
                 >
                   { // Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
                     this.identifierObject?.renderPreview()
@@ -720,10 +719,7 @@ export class PidComponent {
             >
               <span
                 slot="summary"
-                class={`inline-flex items-center font-mono text-sm font-medium select-all mr-2 ${
-                  this.isExpanded ? 'flex-wrap overflow-visible wrap-break-word' : 'flex-nowrap overflow-x-auto'
-                }`}
-                style={{ maxWidth: '50vw' }}
+                class={`inline-flex max-w-full flex-nowrap overflow-x-auto font-mono font-medium text-ellipsis whitespace-nowrap select-all ${this.isExpanded ? 'text-xs' : 'text-sm'}`}
                 aria-label={`Preview of ${this.value}`}
               >
                 {this.identifierObject?.renderPreview()}
