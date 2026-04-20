@@ -293,6 +293,7 @@ export class PidCollapsible {
 
           // Set height to auto to let content drive it, then measure
           this.el.style.height = 'auto';
+          this.el.style.maxHeight = 'max-content';
 
           requestAnimationFrame(() => {
             // Capture the actual content height and set as concrete pixels
@@ -300,6 +301,7 @@ export class PidCollapsible {
             if (this.open) {
               const actualHeight = this.el.scrollHeight;
               this.el.style.height = `${actualHeight}px`;
+              this.el.style.maxHeight = `${actualHeight}px`;
             }
 
             this.lastExpandedWidth = this.currentWidth;
@@ -534,6 +536,7 @@ export class PidCollapsible {
       // concrete pixel value. Safari requires a concrete height for
       // resize:both to work; auto alone makes the resize handle inert.
       this.el.style.height = 'auto';
+      this.el.style.maxHeight = 'max-content';
 
       // Ensure we're not adding extra padding to the summary
       const summary = this.el.querySelector('summary');
@@ -555,6 +558,7 @@ export class PidCollapsible {
         if (this.open) {
           const actualHeight = this.el.scrollHeight;
           this.el.style.height = `${actualHeight}px`;
+          this.el.style.maxHeight = `${actualHeight}px`;
         }
       });
 
