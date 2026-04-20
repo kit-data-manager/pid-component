@@ -509,7 +509,11 @@ export class PidCollapsible {
   private applyExpandedStyles() {
     try {
       // Apply Tailwind classes for expanded state
-      this.el.classList.add('resize-both', 'overflow-auto', 'relative', 'block');
+      this.el.classList.add(
+        'resize-both',
+        // 'overflow-auto',
+        'relative',
+        'block');
       if (this.emphasize) {
         this.el.classList.add('bg-white');
       }
@@ -883,7 +887,7 @@ export class PidCollapsible {
       '[&::-webkit-details-marker]:hidden',
       'select-none',
       'box-border',
-      'pl-1',
+      // 'pl-1',
       'py-0',
     ];
 
@@ -917,7 +921,7 @@ export class PidCollapsible {
     const baseClasses = ['grow', 'flex', 'flex-col', 'min-h-0'];
 
     if (this.open) {
-      baseClasses.push('overflow-auto', 'p-2');
+      // baseClasses.push('overflow-auto', 'p-2');
     } else {
       baseClasses.push('overflow-hidden', 'p-0');
     }

@@ -469,11 +469,9 @@ export class SPDXType extends GenericIdentifierType {
 
     // If data is loaded, show license name and ID with badges
     return (
-      <span class={`flex flex-nowrap items-center align-top font-mono`}>
-        <span class={'items-center px-1'}>
+      <span class={`flex flex-nowrap align-top font-mono`}>
           <span class={`font-medium`}>{this.licenseData.name || this.licenseId}</span>
-          {this.licenseData.licenseId && <span class={`text-gray-500`}>({this.licenseData.licenseId})</span>}
-        </span>
+        {this.licenseData.licenseId && <span class={`pl-1 text-gray-500`}>({this.licenseData.licenseId})</span>}
       </span>
     );
   }

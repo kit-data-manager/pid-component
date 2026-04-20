@@ -89,7 +89,7 @@ export class JSONType extends GenericIdentifierType {
       const entryCount = Object.keys(jsonObj).length;
       return (
         <div class="w-full">
-          <div class={`flex items-center rounded-md font-mono text-xs`}>
+          <div class={`flex rounded-md font-mono text-xs`}>
             <span class={`mr-1 font-medium`}>{isArray ? 'Array' : 'Object'}</span>
             <span class={'text-gray-500'}>{isArray ? '[' : '{'}</span>
             <span class={`text-xs text-gray-500`}>

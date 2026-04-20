@@ -155,9 +155,9 @@ export class DOIType extends GenericIdentifierType {
     const logoNode = this._doiInfo.source === DOISource.DATACITE ? DataCiteLogo() : CrossRefLogo();
 
     return (
-      <span class={`inline-flex flex-nowrap items-center align-top font-mono ${this.isDarkMode ? 'text-gray-200' : ''}`}>
-        <span class={'flex-none items-center p-0.5 mr-1'}>{logoNode}</span>
-        <span class={'flex-none items-center pr-1 truncate'} title={tooltip}>
+      <span class={`inline-flex flex-nowrap align-top font-mono ${this.isDarkMode ? 'text-gray-200' : ''}`}>
+        <span class={'flex-none p-0.5 mr-1'}>{logoNode}</span>
+        <span class={'flex-none pr-1'} title={tooltip}>
           {citation}
         </span>
       </span>
