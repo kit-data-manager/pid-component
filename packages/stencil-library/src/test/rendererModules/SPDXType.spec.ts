@@ -5,22 +5,22 @@ import { SPDX_examples } from '../../../../../examples/spdx/values.ts';
 describe('SPDXType', () => {
   describe('hasCorrectFormatQuick()', () => {
     it('returns true for SPDX license URL', () => {
-      const st = new SPDXType('https://spdx.org/licenses/Apache-2.0');
+      const st = new SPDXType(SPDX_examples.APACHE_2_0);
       expect(st.hasCorrectFormatQuick()).toBe(true);
     });
 
     it('returns true for SPDX license URL with trailing slash', () => {
-      const st = new SPDXType('https://spdx.org/licenses/MIT/');
+      const st = new SPDXType(SPDX_examples.MIT);
       expect(st.hasCorrectFormatQuick()).toBe(true);
     });
 
     it('returns undefined for bare license ID "MIT"', () => {
-      const st = new SPDXType('MIT');
+      const st = new SPDXType(SPDX_examples.MIT_BARE);
       expect(st.hasCorrectFormatQuick()).toBeUndefined();
     });
 
     it('returns undefined for bare license ID "Apache-2.0"', () => {
-      const st = new SPDXType('Apache-2.0');
+      const st = new SPDXType(SPDX_examples.APACHE_2_0_BARE);
       expect(st.hasCorrectFormatQuick()).toBeUndefined();
     });
 
@@ -47,14 +47,14 @@ describe('SPDXType', () => {
 
   describe('getSettingsKey()', () => {
     it('returns "SPDXType"', () => {
-      const st = new SPDXType('MIT');
+      const st = new SPDXType(SPDX_examples.MIT_BARE);
       expect(st.getSettingsKey()).toBe('SPDXType');
     });
   });
 
   describe('constructor', () => {
     it('stores the value', () => {
-      const st = new SPDXType('MIT');
+      const st = new SPDXType(SPDX_examples.MIT_BARE);
       expect(st.value).toBe('MIT');
     });
   });
@@ -84,7 +84,7 @@ describe('SPDXType', () => {
         json: vi.fn().mockResolvedValue(spdxLicenseResponse),
       });
 
-      const st = new SPDXType('Apache-2.0');
+      const st = new SPDXType(SPDX_examples.APACHE_2_0_BARE);
       const result = await st.hasCorrectFormat();
 
       expect(result).toBe(true);
@@ -103,7 +103,7 @@ describe('SPDXType', () => {
         json: vi.fn().mockResolvedValue({}),
       });
 
-      const st = new SPDXType('Apache-2.0');
+      const st = new SPDXType(SPDX_examples.APACHE_2_0_BARE);
       const result = await st.hasCorrectFormat();
 
       expect(result).toBe(false);
@@ -115,7 +115,7 @@ describe('SPDXType', () => {
         json: vi.fn().mockResolvedValue(spdxLicenseResponse),
       });
 
-      const st = new SPDXType('https://spdx.org/licenses/Apache-2.0');
+      const st = new SPDXType(SPDX_examples.APACHE_2_0);
       const result = await st.hasCorrectFormat();
 
       expect(result).toBe(true);

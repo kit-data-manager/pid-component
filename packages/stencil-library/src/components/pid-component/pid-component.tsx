@@ -659,7 +659,7 @@ export class PidComponent {
                     ? //(w/o sub components)
                     (
                       this.emphasizeComponent || this.temporarilyEmphasized
-                        ? 'group rounded-md border px-2 py-0 shadow-sm '
+                        ? 'group rounded-md border py-0 shadow-sm '
                         + (this.isDarkMode
                             ? 'border-gray-600 bg-gray-800'
                             : 'border-gray-300 bg-white'

@@ -5,7 +5,7 @@ import { ROR_examples } from '../../../../../examples/ror/values.ts';
 describe('RORType', () => {
   describe('hasCorrectFormatQuick()', () => {
     it('returns true for a valid ROR ID with https', () => {
-      const rt = new RORType('https://ror.org/04t3en479');
+      const rt = new RORType(ROR_examples.VALID);
       expect(rt.hasCorrectFormatQuick()).toBe(true);
     });
 
@@ -37,28 +37,28 @@ describe('RORType', () => {
 
   describe('hasCorrectFormat()', () => {
     it('matches hasCorrectFormatQuick() result', async () => {
-      const rt = new RORType('https://ror.org/04t3en479');
+      const rt = new RORType(ROR_examples.VALID);
       expect(await rt.hasCorrectFormat()).toBe(rt.hasCorrectFormatQuick());
     });
   });
 
   describe('getSettingsKey()', () => {
     it('returns "RORType"', () => {
-      const rt = new RORType('https://ror.org/04t3en479');
+      const rt = new RORType(ROR_examples.VALID);
       expect(rt.getSettingsKey()).toBe('RORType');
     });
   });
 
   describe('constructor', () => {
     it('stores the value', () => {
-      const rt = new RORType('https://ror.org/04t3en479');
-      expect(rt.value).toBe('https://ror.org/04t3en479');
+      const rt = new RORType(ROR_examples.VALID);
+      expect(rt.value).toBe(ROR_examples.VALID);
     });
   });
 
   describe('init()', () => {
     const rorApiResponse = {
-      id: 'https://ror.org/04t3en479',
+      id: ROR_examples.VALID,
       names: [
         { value: 'Karlsruhe Institute of Technology', types: ['ror_display'] },
         { value: 'KIT', types: ['acronym'] },
@@ -86,7 +86,7 @@ describe('RORType', () => {
     });
 
     it('fetches ROR data and populates items', async () => {
-      const rt = new RORType('https://ror.org/04t3en479');
+      const rt = new RORType(ROR_examples.VALID);
       await rt.init();
 
       // Should have Display Name, Acronym, Alias, ROR ID, Status, Type, Link, External ID, Relationship, Country, Coordinates
@@ -101,7 +101,7 @@ describe('RORType', () => {
     });
 
     it('adds View on ROR action', async () => {
-      const rt = new RORType('https://ror.org/04t3en479');
+      const rt = new RORType(ROR_examples.VALID);
       await rt.init();
 
       const rorAction = rt.actions.find(a => a.title === 'View on ROR');
@@ -109,7 +109,7 @@ describe('RORType', () => {
     });
 
     it('adds country and coordinates items from locations', async () => {
-      const rt = new RORType('https://ror.org/04t3en479');
+      const rt = new RORType(ROR_examples.VALID);
       await rt.init();
 
       const countryItem = rt.items.find(i => i.keyTitle === 'Country');
@@ -126,7 +126,7 @@ describe('RORType', () => {
         status: 404,
       });
 
-      const rt = new RORType('https://ror.org/04t3en479');
+      const rt = new RORType(ROR_examples.VALID);
       await rt.init();
 
       const errorItem = rt.items.find(i => i.keyTitle === 'Error');
@@ -139,7 +139,7 @@ describe('RORType', () => {
         json: vi.fn().mockResolvedValue({ ...rorApiResponse, names: [] }),
       });
 
-      const rt = new RORType('https://ror.org/04t3en479');
+      const rt = new RORType(ROR_examples.VALID);
       await rt.init();
 
       const nameItem = rt.items.find(i => i.keyTitle === 'Name');

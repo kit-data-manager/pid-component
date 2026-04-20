@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { scanDom } from '../../auto-detect/DomScanner';
+import { DOI_examples } from '../../../../../examples/doi/values';
 
 // Polyfill NodeFilter constants for Stencil's test environment
 if (typeof (globalThis as any).NodeFilter === 'undefined') {
@@ -142,7 +143,7 @@ describe('DomScanner', () => {
     it('skips <pid-component> elements', async () => {
       const root = document.createElement('div');
       const pidComp = document.createElement('pid-component');
-      pidComp.textContent = '10.5281/zenodo.1234567';
+      pidComp.textContent = DOI_examples.VALID_BARE;
       root.appendChild(pidComp);
 
       const p = document.createElement('p');
@@ -252,14 +253,14 @@ describe('DomScanner', () => {
       root.appendChild(p1);
 
       const p2 = document.createElement('p');
-      p2.textContent = '10.5281/zenodo.1234567';
+      p2.textContent = DOI_examples.VALID_BARE;
       root.appendChild(p2);
 
       const results = await scanDom(root, undefined, 100);
 
       expect(results.length).toBe(2);
       expect(results[0].text).toBe('Hello world');
-      expect(results[1].text).toBe('10.5281/zenodo.1234567');
+      expect(results[1].text).toBe(DOI_examples.VALID_BARE);
     });
 
     it('skips already-processed elements (with data-pid-auto-detected attribute)', async () => {

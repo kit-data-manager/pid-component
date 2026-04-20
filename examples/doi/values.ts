@@ -1,6 +1,6 @@
 export const DOI_examples = {
-  VALID_BARE: '10.5281/zenodo.1234567',
-  VALID_WITH_PREFIX: 'https://doi.org/10.5281/zenodo.1234567',
+  VALID_BARE: '10.5281/zenodo.13629109',
+  VALID_WITH_PREFIX: 'https://dx.doi.org/10.5281/zenodo.13629109',
   DATACITE_JOURNAL_PAPER: '10.5445/IR/1000185135',
   CROSSREF_JOURNAL_PAPER: '10.1109/eScience65000.2025.00022',
   DATACITE_SOFTWARE: 'https://doi.org/10.5281/zenodo.13629109',

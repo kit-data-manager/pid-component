@@ -3,7 +3,7 @@ export const URL_examples = {
   GITHUB: 'https://github.com/kit-data-manager/pid-component',
   ZENODO: 'https://zenodo.org',
   INVALID_NOT_A_URL: 'not-a-url',
-  INVALID_WRONG_PROTOCOL: 'ftp://example.com',
+  INVALID_WRONG_PROTOCOL: '://example.com',
   INVALID_EMPTY: '',
 } as const;
 

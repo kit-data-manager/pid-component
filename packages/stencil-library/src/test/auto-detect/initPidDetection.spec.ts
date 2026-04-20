@@ -3,6 +3,7 @@ import { initPidDetection } from '../../auto-detect/initPidDetection';
 import * as DomScanner from '../../auto-detect/DomScanner';
 import * as TextReplacer from '../../auto-detect/TextReplacer';
 import * as DetectionRegistry from '../../auto-detect/detection-registry';
+import { DOI_examples } from '../../../../../examples/doi/values';
 
 vi.mock('../../components/json-viewer/json-viewer', () => ({}));
 
@@ -128,11 +129,11 @@ describe('initPidDetection', () => {
 
     it('creates pid-components for detected matches via replaceMatches', async () => {
       const root = document.createElement('div');
-      const textNode = document.createTextNode('10.5281/zenodo.123');
+      const textNode = document.createTextNode(DOI_examples.VALID_BARE);
       root.appendChild(textNode);
 
       spyScanDom.mockResolvedValueOnce([
-        { id: 0, textNode, text: '10.5281/zenodo.123' },
+        { id: 0, textNode, text: DOI_examples.VALID_BARE },
       ]);
       spyDetectBestFit.mockReturnValue('DOIType');
 
@@ -146,7 +147,7 @@ describe('initPidDetection', () => {
       // matches array should contain a match with rendererKey 'DOIType'
       expect(callArgs[1]).toEqual(
         expect.arrayContaining([
-          expect.objectContaining({ value: '10.5281/zenodo.123', rendererKey: 'DOIType' }),
+          expect.objectContaining({ value: DOI_examples.VALID_BARE, rendererKey: 'DOIType' }),
         ]),
       );
       controller.destroy();
@@ -170,28 +171,28 @@ describe('initPidDetection', () => {
 
     it('passes the renderers config to detectBestFit as orderedRenderers', async () => {
       const root = document.createElement('div');
-      const textNode = document.createTextNode('10.5281/zenodo.123');
+      const textNode = document.createTextNode(DOI_examples.VALID_BARE);
       root.appendChild(textNode);
 
       spyScanDom.mockResolvedValueOnce([
-        { id: 0, textNode, text: '10.5281/zenodo.123' },
+        { id: 0, textNode, text: DOI_examples.VALID_BARE },
       ]);
 
       const renderers = ['DOIType', 'ORCIDType'];
       const controller = initPidDetection({ root, renderers });
       await flushMicrotasks();
 
-      expect(spyDetectBestFit).toHaveBeenCalledWith('10.5281/zenodo.123', renderers);
+      expect(spyDetectBestFit).toHaveBeenCalledWith(DOI_examples.VALID_BARE, renderers);
       controller.destroy();
     });
 
     it('passes config through to replaceMatches', async () => {
       const root = document.createElement('div');
-      const textNode = document.createTextNode('10.5281/zenodo.123');
+      const textNode = document.createTextNode(DOI_examples.VALID_BARE);
       root.appendChild(textNode);
 
       spyScanDom.mockResolvedValueOnce([
-        { id: 0, textNode, text: '10.5281/zenodo.123' },
+        { id: 0, textNode, text: DOI_examples.VALID_BARE },
       ]);
       spyDetectBestFit.mockReturnValue('DOIType');
 
@@ -324,12 +325,12 @@ describe('initPidDetection', () => {
   describe('lifecycle methods', () => {
     it('destroy() calls restoreOriginalText with accumulated records', async () => {
       const root = document.createElement('div');
-      const textNode = document.createTextNode('10.5281/zenodo.123');
+      const textNode = document.createTextNode(DOI_examples.VALID_BARE);
       root.appendChild(textNode);
 
-      const fakeRecord = { wrapper: document.createElement('span'), originalText: '10.5281/zenodo.123' };
+      const fakeRecord = { wrapper: document.createElement('span'), originalText: DOI_examples.VALID_BARE };
       spyScanDom.mockResolvedValueOnce([
-        { id: 0, textNode, text: '10.5281/zenodo.123' },
+        { id: 0, textNode, text: DOI_examples.VALID_BARE },
       ]);
       spyDetectBestFit.mockReturnValue('DOIType');
       spyReplaceMatches.mockReturnValue([fakeRecord]);

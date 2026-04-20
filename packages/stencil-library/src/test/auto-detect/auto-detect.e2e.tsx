@@ -3,7 +3,7 @@ import { render, h } from '@stencil/vitest';
 // h is the JSX factory required at runtime by TSX – do not remove
 void h;
 import { initPidDetection } from '../../auto-detect/initPidDetection';
-import { DOI_examples } from '../../../../../examples';
+import { DOI_examples } from '../../../../../examples/doi/values';
 
 vi.mock('../../components/json-viewer/json-viewer', () => ({}));
 
@@ -29,7 +29,7 @@ describe('auto-detect e2e', () => {
   });
 
   it('original text remains visible before component loads', async () => {
-    const doiValue = '10.5281/zenodo.9999999';
+    const doiValue = DOI_examples.VALID_BARE;
 
     const { root } = await render(
       <div id="content">
@@ -43,8 +43,8 @@ describe('auto-detect e2e', () => {
   it('exclude selector prevents detection in excluded elements', async () => {
     const { root, waitForChanges } = await render(
       <div id="content">
-        <p class="no-detect">10.5281/zenodo.1234567</p>
-        <p class="detect-me">10.5281/zenodo.7654321</p>
+        <p class="no-detect">{DOI_examples.VALID_BARE}</p>
+        <p class="detect-me">{DOI_examples.VALID_BARE}</p>
       </div>,
     );
 
@@ -58,13 +58,13 @@ describe('auto-detect e2e', () => {
 
     // The excluded element should still contain its original text without wrappers
     const excludedEl = root.querySelector('.no-detect');
-    expect(excludedEl?.textContent).toContain('10.5281/zenodo.1234567');
+    expect(excludedEl?.textContent).toContain(DOI_examples.VALID_BARE);
   });
 
   it('destroy() restores original text', async () => {
     const { root, waitForChanges } = await render(
       <div id="content">
-        <p id="test-paragraph">Check 10.5281/zenodo.1234567 here</p>
+        <p id="test-paragraph">Check {DOI_examples.VALID_BARE} here</p>
       </div>,
     );
 
@@ -87,13 +87,13 @@ describe('auto-detect e2e', () => {
 
     // Original text should be restored
     const restoredText = root.querySelector('#test-paragraph')?.textContent;
-    expect(restoredText).toContain('10.5281/zenodo.1234567');
+    expect(restoredText).toContain(DOI_examples.VALID_BARE);
   });
 
   it('detection controller has stop, rescan, and destroy methods', async () => {
     const { root } = await render(
       <div id="content">
-        <p>Some text with 10.5281/zenodo.1234567</p>
+        <p>Some text with {DOI_examples.VALID_BARE}</p>
       </div>,
     );
 

@@ -16,12 +16,12 @@ afterEach(() => {
 describe('DOIType', () => {
   describe('hasCorrectFormatQuick()', () => {
     it('returns true for a bare DOI', () => {
-      const dt = new DOIType('10.5281/zenodo.1234567');
+      const dt = new DOIType(DOI_examples.VALID_BARE);
       expect(dt.hasCorrectFormatQuick()).toBe(true);
     });
 
     it('returns true for DOI with https prefix', () => {
-      const dt = new DOIType('https://doi.org/10.5281/zenodo.1234567');
+      const dt = new DOIType(DOI_examples.VALID_WITH_PREFIX);
       expect(dt.hasCorrectFormatQuick()).toBe(true);
     });
 
@@ -38,22 +38,22 @@ describe('DOIType', () => {
 
   describe('hasCorrectFormat()', () => {
     it('matches hasCorrectFormatQuick() result', async () => {
-      const dt = new DOIType('10.5281/zenodo.1234567');
+      const dt = new DOIType(DOI_examples.VALID_BARE);
       expect(await dt.hasCorrectFormat()).toBe(dt.hasCorrectFormatQuick());
     });
   });
 
   describe('getSettingsKey()', () => {
     it('returns "DOIType"', () => {
-      const dt = new DOIType('10.5281/zenodo.1234567');
+      const dt = new DOIType(DOI_examples.VALID_BARE);
       expect(dt.getSettingsKey()).toBe('DOIType');
     });
   });
 
   describe('constructor', () => {
     it('stores the value', () => {
-      const dt = new DOIType('10.5281/zenodo.1234567');
-      expect(dt.value).toBe('10.5281/zenodo.1234567');
+      const dt = new DOIType(DOI_examples.VALID_BARE);
+      expect(dt.value).toBe('10.5281/zenodo.13629109');
     });
   });
 

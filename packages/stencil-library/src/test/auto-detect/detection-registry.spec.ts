@@ -1,5 +1,15 @@
 import { describe, it, expect, vi } from 'vitest';
 import { sanitizeToken, detectBestFit, detectionRegistry } from '../../auto-detect/detection-registry';
+import { DOI_examples } from '../../../../../examples/doi/values';
+import { ORCID_examples } from '../../../../../examples/orcid/values';
+import { HANDLE_examples } from '../../../../../examples/handle/values';
+import { ROR_examples } from '../../../../../examples/ror/values';
+import { SPDX_examples } from '../../../../../examples/spdx/values';
+import { EMAIL_examples } from '../../../../../examples/email/values';
+import { URL_examples } from '../../../../../examples/url/values';
+import { DATE_examples } from '../../../../../examples/date/values';
+import { LOCALE_examples } from '../../../../../examples/locale/values';
+import { JSON_examples } from '../../../../../examples/json/values';
 
 vi.mock('../../components/json-viewer/json-viewer', () => ({}));
 
@@ -79,47 +89,47 @@ describe('detection-registry', () => {
 
   describe('detectBestFit() — default mode', () => {
     it('returns DOIType for a bare DOI', () => {
-      expect(detectBestFit('10.5281/zenodo.1234567')).toBe('DOIType');
+      expect(detectBestFit(DOI_examples.VALID_BARE)).toBe('DOIType');
     });
 
     it('returns DOIType for a DOI with doi: prefix', () => {
-      expect(detectBestFit('doi:10.5281/zenodo.1234567')).toBe('DOIType');
+      expect(detectBestFit(DOI_examples.DATACITE_RFC)).toBe('DOIType');
     });
 
     it('returns ORCIDType for a bare ORCID', () => {
-      expect(detectBestFit('0009-0005-2800-4833')).toBe('ORCIDType');
+      expect(detectBestFit(ORCID_examples.VALID)).toBe('ORCIDType');
     });
 
     it('returns ORCIDType for an ORCID URL', () => {
-      expect(detectBestFit('https://orcid.org/0009-0005-2800-4833')).toBe('ORCIDType');
+      expect(detectBestFit(ORCID_examples.VALID_WITH_HTTPS)).toBe('ORCIDType');
     });
 
     it('returns HandleType for a Handle identifier', () => {
-      expect(detectBestFit('21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6')).toBe('HandleType');
+      expect(detectBestFit(HANDLE_examples.FDO_TYPED)).toBe('HandleType');
     });
 
     it('returns RORType for a ROR URL', () => {
-      expect(detectBestFit('https://ror.org/04t3en479')).toBe('RORType');
+      expect(detectBestFit(ROR_examples.VALID)).toBe('RORType');
     });
 
     it('returns SPDXType for an SPDX license URL', () => {
-      expect(detectBestFit('https://spdx.org/licenses/Apache-2.0')).toBe('SPDXType');
+      expect(detectBestFit(SPDX_examples.APACHE_2_0)).toBe('SPDXType');
     });
 
     it('returns EmailType for an email address', () => {
-      expect(detectBestFit('someone@example.com')).toBe('EmailType');
+      expect(detectBestFit(EMAIL_examples.VALID)).toBe('EmailType');
     });
 
     it('returns URLType for a generic HTTPS URL', () => {
-      expect(detectBestFit('https://example.com')).toBe('URLType');
+      expect(detectBestFit(URL_examples.KIT_WEBSITE)).toBe('URLType');
     });
 
     it('returns DateType for an ISO 8601 datetime with timezone offset', () => {
-      expect(detectBestFit('2024-06-15T09:30:00.000+02:00')).toBe('DateType');
+      expect(detectBestFit(DATE_examples.ISO_8601_ALT)).toBe('DateType');
     });
 
     it('returns LocaleType for a locale with region subtag', () => {
-      expect(detectBestFit('de-DE')).toBeNull();
+      expect(detectBestFit(LOCALE_examples.DE_DE)).toBeNull();
     });
 
     it('returns null for a random word with no match', () => {
@@ -131,11 +141,11 @@ describe('detection-registry', () => {
     });
 
     it('returns JSONType for a JSON object string', () => {
-      expect(detectBestFit('{"key":"value"}')).toBe('JSONType');
+      expect(detectBestFit(JSON_examples.SIMPLE)).toBe('JSONType');
     });
 
     it('returns DOIType for a DOI with https://doi.org/ prefix', () => {
-      expect(detectBestFit('https://doi.org/10.5281/zenodo.1234567')).toBe('DOIType');
+      expect(detectBestFit(DOI_examples.VALID_WITH_PREFIX)).toBe('DOIType');
     });
 
     it('returns DOIType for a DOI with https://dx.doi.org/ prefix', () => {
@@ -143,7 +153,7 @@ describe('detection-registry', () => {
     });
 
     it('returns DateType for a datetime with Z timezone', () => {
-      expect(detectBestFit('2024-01-01T00:00:00Z')).toBe('DateType');
+      expect(detectBestFit(DATE_examples.ISO_8601)).toBe('DateType');
     });
 
     it('returns null for a bare two-letter locale code (too ambiguous)', () => {
@@ -151,7 +161,7 @@ describe('detection-registry', () => {
     });
 
     it('returns null for a bare SPDX license ID (too broad for auto-detect)', () => {
-      expect(detectBestFit('Apache-2.0')).toBeNull();
+      expect(detectBestFit(SPDX_examples.APACHE_2_0_BARE)).toBeNull();
     });
   });
 
@@ -159,33 +169,33 @@ describe('detection-registry', () => {
 
   describe('detectBestFit() — ordered mode', () => {
     it('matches DOI value when DOIType is in the list', () => {
-      expect(detectBestFit('10.5281/zenodo.1234567', ['DOIType'])).toBe('DOIType');
+      expect(detectBestFit(DOI_examples.VALID_BARE, ['DOIType'])).toBe('DOIType');
     });
 
     it('does NOT match DOI value when only ORCIDType is in the list', () => {
-      expect(detectBestFit('10.5281/zenodo.1234567', ['ORCIDType'])).toBeNull();
+      expect(detectBestFit(DOI_examples.VALID_BARE, ['ORCIDType'])).toBeNull();
     });
 
     it('HandleType wins for a DOI when HandleType is listed before DOIType', () => {
       // DOIs also match the Handle regex (prefix/suffix format)
-      expect(detectBestFit('10.5281/zenodo.1234567', ['HandleType', 'DOIType'])).toBe('HandleType');
+      expect(detectBestFit(DOI_examples.VALID_BARE, ['HandleType', 'DOIType'])).toBe('HandleType');
     });
 
     it('DOIType wins when it is listed before HandleType', () => {
-      expect(detectBestFit('10.5281/zenodo.1234567', ['DOIType', 'HandleType'])).toBe('DOIType');
+      expect(detectBestFit(DOI_examples.VALID_BARE, ['DOIType', 'HandleType'])).toBe('DOIType');
     });
 
     it('skips unknown keys gracefully and still matches known ones', () => {
-      expect(detectBestFit('10.5281/zenodo.1234567', ['UnknownType', 'DOIType'])).toBe('DOIType');
+      expect(detectBestFit(DOI_examples.VALID_BARE, ['UnknownType', 'DOIType'])).toBe('DOIType');
     });
 
     it('returns null when all keys in the list are unknown', () => {
-      expect(detectBestFit('10.5281/zenodo.1234567', ['FooType', 'BarType'])).toBeNull();
+      expect(detectBestFit(DOI_examples.VALID_BARE, ['FooType', 'BarType'])).toBeNull();
     });
 
     it('returns null when the ordered list is empty', () => {
       // Empty array falls through to default mode because of the length check
-      expect(detectBestFit('10.5281/zenodo.1234567', [])).toBe('DOIType');
+      expect(detectBestFit(DOI_examples.VALID_BARE, [])).toBe('DOIType');
     });
   });
 
@@ -195,14 +205,14 @@ describe('detection-registry', () => {
     it('DOI beats Handle in default mode for a DOI value', () => {
       // A DOI like "10.5281/zenodo.1234567" matches both DOIType and HandleType.
       // DOIType appears before HandleType in the registry, so it should win.
-      const result = detectBestFit('10.5281/zenodo.1234567');
+      const result = detectBestFit(DOI_examples.VALID_BARE);
       expect(result).toBe('DOIType');
     });
 
     it('ORCID beats Handle in default mode for an ORCID value', () => {
       // An ORCID like "0009-0005-2800-4833" could theoretically match other patterns.
       // ORCIDType appears before HandleType in the registry.
-      const result = detectBestFit('0009-0005-2800-4833');
+      const result = detectBestFit(ORCID_examples.VALID);
       expect(result).toBe('ORCIDType');
     });
 
@@ -220,17 +230,17 @@ describe('detection-registry', () => {
 
     it('SPDXType URL is matched before URLType in default mode', () => {
       // An SPDX URL also matches URLType, but SPDXType should come first.
-      const result = detectBestFit('https://spdx.org/licenses/MIT');
+      const result = detectBestFit(SPDX_examples.MIT);
       expect(result).toBe('SPDXType');
     });
 
     it('ROR URL is matched as RORType rather than URLType', () => {
-      const result = detectBestFit('https://ror.org/04t3en479');
+      const result = detectBestFit(ROR_examples.VALID);
       expect(result).toBe('RORType');
     });
 
     it('ORCID URL is matched as ORCIDType rather than URLType', () => {
-      const result = detectBestFit('https://orcid.org/0009-0005-2800-4833');
+      const result = detectBestFit(ORCID_examples.VALID_WITH_HTTPS);
       expect(result).toBe('ORCIDType');
     });
   });
@@ -240,7 +250,7 @@ describe('detection-registry', () => {
   describe('individual detector edge cases', () => {
     it('EmailType rejects empty string', () => {
       const emailEntry = detectionRegistry.find(e => e.key === 'EmailType')!;
-      expect(emailEntry.check('')).toBe(false);
+      expect(emailEntry.check(EMAIL_examples.INVALID_EMPTY)).toBe(false);
     });
 
     it('JSONType rejects a plain string (non-object)', () => {
@@ -250,12 +260,12 @@ describe('detection-registry', () => {
 
     it('JSONType rejects an empty string', () => {
       const jsonEntry = detectionRegistry.find(e => e.key === 'JSONType')!;
-      expect(jsonEntry.check('')).toBe(false);
+      expect(jsonEntry.check(JSON_examples.INVALID_EMPTY)).toBe(false);
     });
 
     it('JSONType accepts a JSON array', () => {
       const jsonEntry = detectionRegistry.find(e => e.key === 'JSONType')!;
-      expect(jsonEntry.check('[1,2,3]')).toBe(true);
+      expect(jsonEntry.check(JSON_examples.ARRAY)).toBe(true);
     });
 
     it('JSONType rejects invalid JSON', () => {
@@ -270,7 +280,7 @@ describe('detection-registry', () => {
 
     it('LocaleType accepts "en-US"', () => {
       const localeEntry = detectionRegistry.find(e => e.key === 'LocaleType')!;
-      expect(localeEntry.check('en-US')).toBe(true);
+      expect(localeEntry.check(LOCALE_examples.EN_US)).toBe(true);
     });
   });
 });

@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { replaceMatches, restoreOriginalText } from '../../auto-detect/TextReplacer';
 import type { DetectionMatch, PidDetectionConfig } from '../../auto-detect/types';
+import { DOI_examples } from '../../../../../examples/doi/values';
 
 describe('TextReplacer', () => {
   // Polyfill MutationObserver and patch replaceChild for DocumentFragment
@@ -72,9 +73,9 @@ describe('TextReplacer', () => {
 
   describe('replaceMatches()', () => {
     it('replaces a single match with a wrapper containing pid-component', () => {
-      const { parent, textNode } = createTextNodeInParent('10.5281/zenodo.1234567');
+      const { parent, textNode } = createTextNodeInParent(DOI_examples.VALID_BARE);
       const matches: DetectionMatch[] = [
-        { start: 0, end: 22, value: '10.5281/zenodo.1234567', rendererKey: 'DOIType' },
+        { start: 0, end: 22, value: DOI_examples.VALID_BARE, rendererKey: 'DOIType' },
       ];
 
       const records = replaceMatches(textNode, matches, baseConfig);
@@ -84,13 +85,13 @@ describe('TextReplacer', () => {
       expect(wrapper).not.toBeNull();
       const pidComp = wrapper!.querySelector('pid-component');
       expect(pidComp).not.toBeNull();
-      expect(pidComp!.getAttribute('value')).toBe('10.5281/zenodo.1234567');
+      expect(pidComp!.getAttribute('value')).toBe(DOI_examples.VALID_BARE);
     });
 
     it('keeps non-matched text before and after as plain text nodes', () => {
       const { parent, textNode } = createTextNodeInParent('See 10.5281/zenodo.1234567 for details');
       const matches: DetectionMatch[] = [
-        { start: 4, end: 26, value: '10.5281/zenodo.1234567', rendererKey: 'DOIType' },
+        { start: 4, end: 26, value: DOI_examples.VALID_BARE, rendererKey: 'DOIType' },
       ];
 
       replaceMatches(textNode, matches, baseConfig);
@@ -141,9 +142,9 @@ describe('TextReplacer', () => {
     });
 
     it('applies config props (darkMode) to created pid-component', () => {
-      const { textNode } = createTextNodeInParent('10.5281/zenodo.1234567');
+      const { textNode } = createTextNodeInParent(DOI_examples.VALID_BARE);
       const matches: DetectionMatch[] = [
-        { start: 0, end: 22, value: '10.5281/zenodo.1234567', rendererKey: 'DOIType' },
+        { start: 0, end: 22, value: DOI_examples.VALID_BARE, rendererKey: 'DOIType' },
       ];
       const config: PidDetectionConfig = { darkMode: 'dark' };
 
@@ -153,9 +154,9 @@ describe('TextReplacer', () => {
     });
 
     it('applies config props (settings as string) to created pid-component', () => {
-      const { textNode } = createTextNodeInParent('10.5281/zenodo.1234567');
+      const { textNode } = createTextNodeInParent(DOI_examples.VALID_BARE);
       const matches: DetectionMatch[] = [
-        { start: 0, end: 22, value: '10.5281/zenodo.1234567', rendererKey: 'DOIType' },
+        { start: 0, end: 22, value: DOI_examples.VALID_BARE, rendererKey: 'DOIType' },
       ];
       const settingsStr = '[{"type":"DOIType","values":[]}]';
       const config: PidDetectionConfig = { settings: settingsStr };
@@ -166,9 +167,9 @@ describe('TextReplacer', () => {
     });
 
     it('applies config props (settings as object) to created pid-component', () => {
-      const { textNode } = createTextNodeInParent('10.5281/zenodo.1234567');
+      const { textNode } = createTextNodeInParent(DOI_examples.VALID_BARE);
       const matches: DetectionMatch[] = [
-        { start: 0, end: 22, value: '10.5281/zenodo.1234567', rendererKey: 'DOIType' },
+        { start: 0, end: 22, value: DOI_examples.VALID_BARE, rendererKey: 'DOIType' },
       ];
       const settingsObj = [{ type: 'DOIType', values: [{ name: 'showCitation', value: true }] }];
       const config: PidDetectionConfig = { settings: settingsObj };
@@ -179,9 +180,9 @@ describe('TextReplacer', () => {
     });
 
     it('sets aria-hidden="true" on the hidden pid-component', () => {
-      const { textNode } = createTextNodeInParent('10.5281/zenodo.1234567');
+      const { textNode } = createTextNodeInParent(DOI_examples.VALID_BARE);
       const matches: DetectionMatch[] = [
-        { start: 0, end: 22, value: '10.5281/zenodo.1234567', rendererKey: 'DOIType' },
+        { start: 0, end: 22, value: DOI_examples.VALID_BARE, rendererKey: 'DOIType' },
       ];
 
       const records = replaceMatches(textNode, matches, baseConfig);
@@ -201,15 +202,15 @@ describe('TextReplacer', () => {
     });
 
     it('returns ReplacementRecords with correct data', () => {
-      const { textNode } = createTextNodeInParent('10.5281/zenodo.1234567');
+      const { textNode } = createTextNodeInParent(DOI_examples.VALID_BARE);
       const matches: DetectionMatch[] = [
-        { start: 0, end: 22, value: '10.5281/zenodo.1234567', rendererKey: 'DOIType' },
+        { start: 0, end: 22, value: DOI_examples.VALID_BARE, rendererKey: 'DOIType' },
       ];
 
       const records = replaceMatches(textNode, matches, baseConfig);
 
       expect(records.length).toBe(1);
-      expect(records[0].originalText).toBe('10.5281/zenodo.1234567');
+      expect(records[0].originalText).toBe(DOI_examples.VALID_BARE);
       expect(records[0].wrapper).toBeTruthy();
       expect(records[0].wrapper.tagName).toBeDefined();
       expect(records[0].pidComponent).toBeTruthy();
@@ -231,9 +232,9 @@ describe('TextReplacer', () => {
     });
 
     it('applies levelOfSubcomponents config', () => {
-      const { textNode } = createTextNodeInParent('10.5281/zenodo.1234567');
+      const { textNode } = createTextNodeInParent(DOI_examples.VALID_BARE);
       const matches: DetectionMatch[] = [
-        { start: 0, end: 22, value: '10.5281/zenodo.1234567', rendererKey: 'DOIType' },
+        { start: 0, end: 22, value: DOI_examples.VALID_BARE, rendererKey: 'DOIType' },
       ];
       const config: PidDetectionConfig = { levelOfSubcomponents: 3 };
 
@@ -243,9 +244,9 @@ describe('TextReplacer', () => {
     });
 
     it('applies fallback-to-all attribute from config', () => {
-      const { textNode } = createTextNodeInParent('10.5281/zenodo.1234567');
+      const { textNode } = createTextNodeInParent(DOI_examples.VALID_BARE);
       const matches: DetectionMatch[] = [
-        { start: 0, end: 22, value: '10.5281/zenodo.1234567', rendererKey: 'DOIType' },
+        { start: 0, end: 22, value: DOI_examples.VALID_BARE, rendererKey: 'DOIType' },
       ];
       const config: PidDetectionConfig = { fallbackToAll: false };
 
@@ -259,7 +260,7 @@ describe('TextReplacer', () => {
     it('removes wrappers and puts text back', () => {
       const { parent, textNode } = createTextNodeInParent('See 10.5281/zenodo.1234567 here');
       const matches: DetectionMatch[] = [
-        { start: 4, end: 26, value: '10.5281/zenodo.1234567', rendererKey: 'DOIType' },
+        { start: 4, end: 26, value: DOI_examples.VALID_BARE, rendererKey: 'DOIType' },
       ];
 
       const records = replaceMatches(textNode, matches, baseConfig);
@@ -272,7 +273,7 @@ describe('TextReplacer', () => {
       // Wrapper should be gone
       expect(parent.querySelector('.pid-auto-detect-wrapper')).toBeNull();
       // The restored text should be present in the parent
-      expect(parent.textContent).toContain('10.5281/zenodo.1234567');
+      expect(parent.textContent).toContain(DOI_examples.VALID_BARE);
     });
 
     it('normalizes adjacent text nodes after restoration', () => {
@@ -291,9 +292,9 @@ describe('TextReplacer', () => {
 
   describe('config prop forwarding', () => {
     it('applies emphasizeComponent config to pid-component', () => {
-      const { textNode } = createTextNodeInParent('10.5281/zenodo.1234567');
+      const { textNode } = createTextNodeInParent(DOI_examples.VALID_BARE);
       const matches: DetectionMatch[] = [
-        { start: 0, end: 22, value: '10.5281/zenodo.1234567', rendererKey: 'DOIType' },
+        { start: 0, end: 22, value: DOI_examples.VALID_BARE, rendererKey: 'DOIType' },
       ];
       const config: PidDetectionConfig = { emphasizeComponent: false };
 
@@ -303,9 +304,9 @@ describe('TextReplacer', () => {
     });
 
     it('applies showTopLevelCopy config to pid-component', () => {
-      const { textNode } = createTextNodeInParent('10.5281/zenodo.1234567');
+      const { textNode } = createTextNodeInParent(DOI_examples.VALID_BARE);
       const matches: DetectionMatch[] = [
-        { start: 0, end: 22, value: '10.5281/zenodo.1234567', rendererKey: 'DOIType' },
+        { start: 0, end: 22, value: DOI_examples.VALID_BARE, rendererKey: 'DOIType' },
       ];
       const config: PidDetectionConfig = { showTopLevelCopy: false };
 
@@ -315,9 +316,9 @@ describe('TextReplacer', () => {
     });
 
     it('applies defaultTTL config to pid-component', () => {
-      const { textNode } = createTextNodeInParent('10.5281/zenodo.1234567');
+      const { textNode } = createTextNodeInParent(DOI_examples.VALID_BARE);
       const matches: DetectionMatch[] = [
-        { start: 0, end: 22, value: '10.5281/zenodo.1234567', rendererKey: 'DOIType' },
+        { start: 0, end: 22, value: DOI_examples.VALID_BARE, rendererKey: 'DOIType' },
       ];
       const config: PidDetectionConfig = { defaultTTL: 3600000 };
 
@@ -327,9 +328,9 @@ describe('TextReplacer', () => {
     });
 
     it('applies amountOfItems config to pid-component', () => {
-      const { textNode } = createTextNodeInParent('10.5281/zenodo.1234567');
+      const { textNode } = createTextNodeInParent(DOI_examples.VALID_BARE);
       const matches: DetectionMatch[] = [
-        { start: 0, end: 22, value: '10.5281/zenodo.1234567', rendererKey: 'DOIType' },
+        { start: 0, end: 22, value: DOI_examples.VALID_BARE, rendererKey: 'DOIType' },
       ];
       const config: PidDetectionConfig = { amountOfItems: 25 };
 
@@ -341,9 +342,9 @@ describe('TextReplacer', () => {
 
   describe('replaceMatches with fallbackToAll: false', () => {
     it('sets fallback-to-all attribute to false', () => {
-      const { textNode } = createTextNodeInParent('10.5281/zenodo.1234567');
+      const { textNode } = createTextNodeInParent(DOI_examples.VALID_BARE);
       const matches: DetectionMatch[] = [
-        { start: 0, end: 22, value: '10.5281/zenodo.1234567', rendererKey: 'DOIType' },
+        { start: 0, end: 22, value: DOI_examples.VALID_BARE, rendererKey: 'DOIType' },
       ];
       const config: PidDetectionConfig = { fallbackToAll: false };
 
@@ -353,9 +354,9 @@ describe('TextReplacer', () => {
     });
 
     it('sets fallback-to-all attribute to true by default', () => {
-      const { textNode } = createTextNodeInParent('10.5281/zenodo.1234567');
+      const { textNode } = createTextNodeInParent(DOI_examples.VALID_BARE);
       const matches: DetectionMatch[] = [
-        { start: 0, end: 22, value: '10.5281/zenodo.1234567', rendererKey: 'DOIType' },
+        { start: 0, end: 22, value: DOI_examples.VALID_BARE, rendererKey: 'DOIType' },
       ];
 
       const records = replaceMatches(textNode, matches, baseConfig);
