@@ -195,7 +195,7 @@ function buildConfig(args: Record<string, unknown>, root: HTMLElement) {
  * This example includes: a Handle PID, an ORCiD, a ROR ID, an SPDX license URL,
  * a DOI, an email address, and a URL.
  */
-export const MixedPIDsInText: Story = {
+export const MixedPidsInText: Story = {
   render: (args) => {
     const container = document.createElement('div');
     container.innerHTML = `

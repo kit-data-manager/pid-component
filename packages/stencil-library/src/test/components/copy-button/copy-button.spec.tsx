@@ -1,7 +1,30 @@
 import { render, h } from '@stencil/vitest';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 // h is the JSX factory required at runtime by TSX – do not remove
 void h;
+
+const origCreateElement = document.createElement.bind(document);
+
+function createMockedTextArea() {
+  const textarea = origCreateElement('textarea');
+  (textarea as any).select = vi.fn();
+  (textarea as any).setSelectionRange = vi.fn();
+  (textarea as any).focus = vi.fn();
+  return textarea;
+}
+
+function patchTextAreaCreation() {
+  (document as any).createElement = ((tag: string) => {
+    if (tag === 'textarea') {
+      return createMockedTextArea();
+    }
+    return origCreateElement(tag);
+  }) as typeof document.createElement;
+}
+
+function restoreTextAreaCreation() {
+  (document as any).createElement = origCreateElement;
+}
 
 /**
  * Helper: mock navigator.clipboard.writeText and return the mock function.
@@ -29,9 +52,14 @@ async function clickCopyButton(root: HTMLElement, waitForChanges: () => Promise<
 }
 
 describe('copy-button', () => {
+  beforeEach(() => {
+    patchTextAreaCreation();
+  });
+
   afterEach(() => {
     vi.useRealTimers();
     vi.restoreAllMocks();
+    restoreTextAreaCreation();
   });
 
   it('renders with value prop', async () => {
@@ -194,9 +222,14 @@ describe('copy-button accessibility', () => {
 });
 
 describe('copy-button additional coverage', () => {
+  beforeEach(() => {
+    patchTextAreaCreation();
+  });
+
   afterEach(() => {
     vi.useRealTimers();
     vi.restoreAllMocks();
+    restoreTextAreaCreation();
   });
 
   it('success state shows check icon after copy', async () => {

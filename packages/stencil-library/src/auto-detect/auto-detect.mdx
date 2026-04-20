@@ -55,26 +55,13 @@ const controller = initPidDetection({
 
 ## Detected Types
 
-Auto-detection supports the following PID types:
-
-| Type | Example | Notes |
-|------|---------|-------|
-| **DateType** | `2022-11-11T08:01:20.557+00:00` | ISO 8601 with timezone |
-| **ORCIDType** | `0009-0005-2800-4833` | With or without `https://orcid.org/` prefix |
-| **DOIType** | `10.1234/example` | With or without `https://doi.org/` or `doi:` prefix |
-| **HandleType** | `21.T11981/be908bd1-...` | Any Handle-based PID |
-| **RORType** | `https://ror.org/04t3en479` | Full ROR URL |
-| **SPDXType** | `https://spdx.org/licenses/Apache-2.0` | Full SPDX URL only (bare IDs like `MIT` are too ambiguous for auto-detection) |
-| **EmailType** | `someone@example.com` | Email addresses |
-| **URLType** | `https://scc.kit.edu` | HTTP/HTTPS URLs |
-| **LocaleType** | `de-DE` | Only with region subtag (bare `de` is too ambiguous) |
-| **JSONType** | `{"key": "value"}` | Valid JSON objects/arrays |
+Auto-detection supports the full feature set of the pid-component.
 
 ## Examples
 
 ### Mixed PIDs in Text
 
-<Canvas of={AutoDetectStories.MixedPIDsInText} />
+<Canvas of={AutoDetectStories.MixedPidsInText} />
 
 ### Filtered Renderers
 

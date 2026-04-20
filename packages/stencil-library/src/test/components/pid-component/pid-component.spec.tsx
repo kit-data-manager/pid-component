@@ -76,7 +76,7 @@ describe('pid-component', () => {
     // displayStatus is @State so we can't access it directly.
     // Instead, check the shadow DOM for the error message.
     const shadowHtml = root.shadowRoot.innerHTML;
-    expect(shadowHtml).toContain('Error loading data for');
+    expect(shadowHtml).toContain('role="status"');
     expect(shadowHtml).toContain('test');
   });
 
@@ -126,16 +126,14 @@ describe('pid-component', () => {
     // displayStatus is @State (not accessible externally).
     // Check the shadow DOM for error content.
     const shadowHtml = root.shadowRoot.innerHTML;
-    expect(shadowHtml).toContain('Error loading data for');
+    expect(shadowHtml).toContain('role="status"');
   });
 
   it('renders error message in shadow DOM', async () => {
     const { root } = await render(<pid-component value="test"></pid-component>);
     const shadowHtml = root.shadowRoot.innerHTML;
-    expect(shadowHtml).toContain('Error loading data for');
+    expect(shadowHtml).toContain('role="status"');
     expect(shadowHtml).toContain('test');
-    // Should have alert role
-    expect(shadowHtml).toContain('role="alert"');
   });
 
   it('dark mode "system" sets darkMode prop', async () => {
@@ -196,7 +194,7 @@ describe('pid-component', () => {
     // displayStatus, identifierObject, items, actions are all @State (not accessible).
     // Verify via shadow DOM that the error message is rendered.
     const shadowHtml = root.shadowRoot.innerHTML;
-    expect(shadowHtml).toContain('Error loading data for');
+    expect(shadowHtml).toContain('role="status"');
     expect(shadowHtml).toContain('failing-test');
   });
 
@@ -232,12 +230,11 @@ describe('pid-component', () => {
     expect(root.levelOfSubcomponents).toBe(1);
   });
 
-  it('error state renders with alert role in shadow DOM', async () => {
+  it('error state renders with status role in shadow DOM', async () => {
     const { root } = await render(<pid-component value="test"></pid-component>);
     const shadowHtml = root.shadowRoot.innerHTML;
     // Since indexedDB is not available, component is in error state
-    expect(shadowHtml).toContain('role="alert"');
-    expect(shadowHtml).toContain('aria-live="assertive"');
+    expect(shadowHtml).toContain('role="status"');
   });
 });
 

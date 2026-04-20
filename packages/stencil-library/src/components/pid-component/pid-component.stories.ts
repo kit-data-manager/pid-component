@@ -122,7 +122,7 @@ const meta: Meta = {
   args: {
     value: '21.11152/B88E78D4-E1EE-40F7-96CE-EC1AFCFF6343',
     settings: '[]',
-    openByDefault: false,
+    openByDefault: true,
     amountOfItems: 10,
     levelOfSubcomponents: 1,
     currentLevelOfSubcomponents: 0,

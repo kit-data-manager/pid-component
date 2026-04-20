@@ -13,19 +13,19 @@ describe('SPDXType', () => {
       expect(st.hasCorrectFormatQuick()).toBe(true);
     });
 
-    it('returns true for bare license ID "MIT"', () => {
+    it('returns undefined for bare license ID "MIT"', () => {
       const st = new SPDXType('MIT');
-      expect(st.hasCorrectFormatQuick()).toBe(true);
+      expect(st.hasCorrectFormatQuick()).toBeUndefined();
     });
 
-    it('returns true for bare license ID "Apache-2.0"', () => {
+    it('returns undefined for bare license ID "Apache-2.0"', () => {
       const st = new SPDXType('Apache-2.0');
-      expect(st.hasCorrectFormatQuick()).toBe(true);
+      expect(st.hasCorrectFormatQuick()).toBeUndefined();
     });
 
-    it('returns true for bare license ID "GPL-3.0-only"', () => {
+    it('returns undefined for bare license ID "GPL-3.0-only"', () => {
       const st = new SPDXType('GPL-3.0-only');
-      expect(st.hasCorrectFormatQuick()).toBe(true);
+      expect(st.hasCorrectFormatQuick()).toBeUndefined();
     });
 
     it('returns false for empty string', () => {
