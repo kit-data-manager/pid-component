@@ -643,11 +643,8 @@ export class PidComponent {
     }
 
     return (
-      <Host class={`relative font-sans`}>
-        {/* Hidden description for accessibility */}
-        <span id={`${this.el.id}-description`} class="sr-only">
-          This component displays information about the identifier {this.value}. It can be expanded to show more details.
-        </span>
+      <Host class={`relative font-sans`}
+            aria-label={`This component displays information about the identifier ${this.value}. It can be expanded to show more details.`}>
         {
           // Check if there are any items or actions to show, or if there's a body to render
           (this.items.length === 0 && this.actions.length === 0 && !this.identifierObject?.renderBody()) || this.hideSubcomponents ? (
@@ -721,7 +718,7 @@ export class PidComponent {
             >
               <span
                 slot="summary"
-                class={`inline-flex max-w-full flex-nowrap overflow-x-auto font-mono font-medium text-ellipsis whitespace-nowrap select-all pr-2 text-sm`}
+                class={`font-mono font-medium whitespace-nowrap select-all text-sm`}
                 aria-label={`Preview of ${this.value}`}
               >
                 {this.identifierObject?.renderPreview()}
@@ -732,7 +729,7 @@ export class PidComponent {
                 <copy-button
                   slot="summary-actions"
                   value={this.value}
-                  class="ml-auto shrink-0"
+                  class="ml-auto pl-2 shrink-0"
                   aria-label={`Copy value: ${this.value}`}
                   onClick={this.blockEventPropagation}
                 />
@@ -751,7 +748,7 @@ export class PidComponent {
                   settings={this.settings}
                   darkMode={this.darkMode}
                   onPageChange={e => (this.tablePage = e.detail)}
-                  class="w-full grow overflow-auto"
+                  class="w-full grow overflow-x-clip overflow-y-auto"
                   aria-label={`Data table for ${this.value}`}
                   aria-describedby={`${this.el.id}-table-description`}
                 />
@@ -759,7 +756,7 @@ export class PidComponent {
 
               {/* Hidden description for data table accessibility */}
               {this.items.length > 0 && (
-                <span id={`${this.el.id}-table-description`} class="sr-only">
+                <span id={`${this.el.id}-table-description`} class="sr-only fixed">
                   This table displays properties and values associated with the identifier {this.value}.
                 </span>
               )}

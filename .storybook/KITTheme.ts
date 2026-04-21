@@ -25,7 +25,7 @@ export default create({
   barHoverColor: '#00876C',
   barBg: '#262626',
 
-  inputBg: '#00876C',
+  inputBg: '#262626',
   inputBorder: '#00876C',
   inputTextColor: '#f0f0f0',
   inputBorderRadius: 2,

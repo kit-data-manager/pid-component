@@ -31,7 +31,7 @@ export class ColorHighlight {
           style={{
             color: 'hsl(' + this.color.hue + ',' + this.color.sat + '%,' + this.color.lum + '%)',
           }}
-          class={`m-0 inline-block p-0 align-baseline font-mono leading-none font-bold`}
+          class={`m-0 inline p-0 align-baseline font-mono leading-none font-bold`}
         >
           {this.text}
         </span>

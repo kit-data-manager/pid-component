@@ -144,10 +144,10 @@ export namespace Components {
           * Public method to recalculate content dimensions Can be called externally, for example when pagination changes Optimized for better performance
          */
         'recalculateContentDimensions': () => Promise<{
-            contentWidth: number;
-            contentHeight: number;
-            maxWidth: number;
-            maxHeight: number;
+          contentWidth: number;
+          contentHeight: number;
+          maxWidth: number;
+          maxHeight: number;
         }>;
         /**
           * Whether to show the footer section
@@ -880,7 +880,7 @@ declare namespace LocalJSX {
         "initialHeight": string;
         "lineHeight": number;
         "showFooter": boolean;
-        'expanded': boolean;
+      'expanded': boolean;
     }
     interface PidComponentAttributes {
         "value": string;

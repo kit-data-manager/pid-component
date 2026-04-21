@@ -25,6 +25,6 @@ export class LocaleType extends GenericIdentifierType {
   }
 
   renderPreview(): FunctionalComponent {
-    return <locale-visualization locale={this.value} showFlag={true}></locale-visualization>;
+    return <locale-visualization locale={this.value} showFlag={true} class={'align-baseline'}></locale-visualization>;
   }
 }

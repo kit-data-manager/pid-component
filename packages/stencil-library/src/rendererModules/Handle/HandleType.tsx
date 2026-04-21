@@ -102,12 +102,12 @@ export class HandleType extends GenericIdentifierType {
 
   renderPreview(): FunctionalComponent {
     return (
-      <span class={'rounded-md bg-inherit font-mono font-bold'}>
+      <span class={'font-mono font-bold align-baseline'}>
         {this._parts.map(element => {
           return (
-            <span class={'font-mono font-bold'}>
+            <span>
               <color-highlight text={element.text} />
-              <span class={`mx-0.5 font-mono font-bold`}>{element.nextExists ? '/' : ''}</span>
+              {element.nextExists ? <span class={`mx-0.5`}>/</span> : ''}
             </span>
           );
         })}
