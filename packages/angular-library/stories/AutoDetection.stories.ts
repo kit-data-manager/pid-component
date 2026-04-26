@@ -40,24 +40,6 @@ export default meta;
 
 type Story = StoryObj;
 
-// ---------------------------------------------------------------------------
-// Shared helper: creates a container, runs initPidDetection after render
-// ---------------------------------------------------------------------------
-function autoDetectRender(
-  html: string,
-  configOverrides: Record<string, unknown> = {},
-) {
-  return {
-    template: `<div #root>${html}</div>`,
-    props: {},
-    // Angular Storybook renders the template; we attach auto-detection
-    // via a setTimeout to let Angular finish rendering first.
-    moduleMetadata: {},
-    // Use a decorator-style approach with the Storybook render
-    userDefinedTemplate: true,
-  };
-}
-
 /** Multiple PID types embedded in a research-paper-style paragraph. */
 export const MixedPIDsInText: Story = {
   render: () => ({

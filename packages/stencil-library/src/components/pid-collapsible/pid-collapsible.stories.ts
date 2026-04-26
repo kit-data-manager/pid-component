@@ -56,12 +56,20 @@ const meta: Meta = {
         type: { summary: 'boolean' },
       },
     },
+    expanded: {
+      description: 'Whether to apply floating/overlay styling when expanded. When true, applies absolute positioning and z-index for overlay behavior.',
+      control: { type: 'boolean' },
+      table: {
+        defaultValue: { summary: 'false' },
+        type: { summary: 'boolean' },
+      },
+    },
     darkMode: {
       description: 'The dark mode setting for the component',
       control: 'select',
       options: ['light', 'dark', 'system'],
       table: {
-        type: { summary: 'string' },
+        type: { summary: '"light" | "dark" | "system"' },
         defaultValue: { summary: 'system' },
       },
     },
@@ -71,6 +79,7 @@ const meta: Meta = {
     emphasize: true,
     lineHeight: 24,
     showFooter: false,
+    expanded: false,
     darkMode: 'light',
   },
 };

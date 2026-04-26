@@ -45,6 +45,7 @@ const meta: Meta = {
       description: 'Determines whether the component is open or not by default',
       control: { type: 'boolean' },
       table: {
+        defaultValue: { summary: 'false' },
         type: { summary: 'boolean' },
       },
     },
@@ -82,9 +83,10 @@ const meta: Meta = {
       },
     },
     hideSubcomponents: {
-      description: 'Determines whether subcomponents should generally be shown or not',
+      description: 'Determines whether subcomponents should generally be shown or not. If true, no nested sub-components are rendered.',
       control: { type: 'boolean' },
       table: {
+        defaultValue: { summary: 'false' },
         type: { summary: 'boolean' },
       },
     },
@@ -104,13 +106,35 @@ const meta: Meta = {
         type: { summary: 'boolean' },
       },
     },
+    defaultTTL: {
+      description: 'Default time-to-live for cached responses in milliseconds (default: 86400000 = 24 hours)',
+      control: { type: 'number', min: 0 },
+      table: {
+        defaultValue: { summary: '86400000' },
+        type: { summary: 'number' },
+      },
+    },
+    width: {
+      description: 'Initial width of the component (e.g. "500px", "50%"). If not set, defaults to 500px on large screens, 400px on medium, 300px on small.',
+      control: { type: 'text' },
+      table: {
+        type: { summary: 'string' },
+      },
+    },
+    height: {
+      description: 'Initial height of the component (e.g. "300px", "50vh"). If not set, defaults to 300px.',
+      control: { type: 'text' },
+      table: {
+        type: { summary: 'string' },
+      },
+    },
     darkMode: {
       description: 'The dark mode setting for the component',
       control: 'select',
       options: ['light', 'dark', 'system'],
       table: {
-        type: { summary: 'string' },
-        defaultValue: { summary: 'system' },
+        type: { summary: '"light" | "dark" | "system"' },
+        defaultValue: { summary: 'light' },
       },
     },
     renderers: {
@@ -348,27 +372,27 @@ export const Fallback: Story = {
   },
 };
 
-export const ORCIDInRecord = {
+export const ORCIDInRecord: Story = {
   id: 'pid-component-orcid-in-record',
   args: {
     value: HANDLE_examples.FDO_TYPED,
-    openStatus: true,
+    openByDefault: true,
   },
   parameters: {
     docs: {
       source: {
-        code: `<pid-component value='This is a fallback test'></pid-component>`,
+        code: `<pid-component value='${HANDLE_examples.FDO_TYPED}' open-by-default='true'></pid-component>`,
       },
     },
   },
 };
 
-export const ORCIDInRecordWithoutLimit = {
+export const ORCIDInRecordWithoutLimit: Story = {
   id: 'pid-component-orcid-in-record-without-limit',
   args: {
     value: HANDLE_examples.FDO_TYPED,
     amountOfItems: 100,
-    openStatus: true,
+    openByDefault: true,
   },
   parameters: {
     docs: {
@@ -379,7 +403,7 @@ export const ORCIDInRecordWithoutLimit = {
   },
 };
 
-export const ORCIDInRecordWithSettings = {
+export const ORCIDInRecordWithSettings: Story = {
   id: 'pid-component-orcid-in-record-with-settings',
   args: {
     value: HANDLE_examples.FDO_TYPED,
@@ -389,7 +413,7 @@ export const ORCIDInRecordWithSettings = {
     docs: {
       source: {
         code: `
-<pid-component value='${HANDLE_examples.FDO_BARE}' settings='[{"type":"ORCIDConfig","values":[{"name":"affiliationAt","value":949363200000},{"name":"showAffiliation","value":true}]}]'></pid-component>
+<pid-component value='${HANDLE_examples.FDO_TYPED}' settings='[{"type":"ORCIDType","values":[{"name":"affiliationAt","value":949363200000},{"name":"showAffiliation","value":true}]}]'></pid-component>
         `,
       },
     },

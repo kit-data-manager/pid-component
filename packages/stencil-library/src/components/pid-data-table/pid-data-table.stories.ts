@@ -17,16 +17,24 @@ const createMockItems = (count: number): FoldableItem[] => {
   });
 };
 
+/**
+ * The pid-data-table component displays a paginated table of key-value items,
+ * with optional subcomponent rendering for nested identifiers.
+ */
 const meta: Meta = {
   title: 'Internal/Data Table',
   component: 'pid-data-table',
+  tags: ['autodocs'],
   argTypes: {
     items: {
-      description: 'Array of items to display in the table',
+      description: 'Array of items to display in the table. Each item has a key (title) and a value.',
       control: 'object',
       table: {
         type: {
           summary: 'FoldableItem[]',
+        },
+        defaultValue: {
+          summary: '[]',
         },
       },
     },
@@ -61,7 +69,7 @@ const meta: Meta = {
       },
     },
     pageSizes: {
-      description: 'Available page sizes',
+      description: 'Available page sizes shown in the items-per-page dropdown',
       control: {
         type: 'object',
       },
@@ -75,7 +83,7 @@ const meta: Meta = {
       },
     },
     loadSubcomponents: {
-      description: 'Whether to load subcomponents',
+      description: 'Whether to load and render subcomponents for values that are recognized identifiers',
       control: {
         type: 'boolean',
       },
@@ -89,7 +97,7 @@ const meta: Meta = {
       },
     },
     hideSubcomponents: {
-      description: 'Whether to hide subcomponents',
+      description: 'Whether to completely hide subcomponents regardless of nesting level',
       control: {
         type: 'boolean',
       },
@@ -103,7 +111,7 @@ const meta: Meta = {
       },
     },
     currentLevelOfSubcomponents: {
-      description: 'Current level of subcomponents',
+      description: 'Current nesting depth of subcomponents (used internally for recursion tracking)',
       control: {
         type: 'number',
         min: 0,
@@ -118,7 +126,7 @@ const meta: Meta = {
       },
     },
     levelOfSubcomponents: {
-      description: 'Total level of subcomponents',
+      description: 'Maximum allowed nesting depth for subcomponents',
       control: {
         type: 'number',
         min: 0,
@@ -133,7 +141,7 @@ const meta: Meta = {
       },
     },
     settings: {
-      description: 'Settings to pass to subcomponents',
+      description: 'Stringified JSON settings to pass to subcomponents (e.g. citation style, TTL)',
       control: {
         type: 'text',
       },
@@ -151,7 +159,7 @@ const meta: Meta = {
       control: 'select',
       options: ['light', 'dark', 'system'],
       table: {
-        type: { summary: 'string' },
+        type: { summary: '"light" | "dark" | "system"' },
         defaultValue: { summary: 'system' },
       },
     },
@@ -178,89 +186,106 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-// Helper function to create data table story
-const createDataTableStory = (props: Record<string, unknown>) => {
-  return {
-    render: () => {
-      // Create data table element
-      const dataTable = document.createElement('pid-data-table');
-
-      // Apply all properties
-      Object.entries(props).forEach(([key, value]) => {
-        if (key === 'items') {
-          // Special handling for items array
-          dataTable.items = value as FoldableItem[];
-        } else {
-          dataTable[key] = value;
-        }
-      });
-
-      // Create container with styling
-      const container = document.createElement('div');
-      container.className = 'p-4 max-w-3xl';
-      container.appendChild(dataTable);
-
-      return container;
-    },
+/**
+ * Shared render function: creates a pid-data-table element from Storybook args
+ * so that the Controls panel is interactive.
+ */
+function renderDataTable(args: Record<string, unknown>) {
+  const dataTable = document.createElement('pid-data-table') as HTMLElement & {
+    items: FoldableItem[];
+    [key: string]: unknown;
   };
-};
 
+  // Apply all properties from args
+  Object.entries(args).forEach(([key, value]) => {
+    if (key === 'items') {
+      dataTable.items = value as FoldableItem[];
+    } else if (key === 'pageSizes') {
+      (dataTable as unknown as { pageSizes: number[] }).pageSizes = value as number[];
+    } else {
+      dataTable[key] = value;
+    }
+  });
+
+  const container = document.createElement('div');
+  container.className = 'p-4 max-w-3xl';
+  container.appendChild(dataTable);
+
+  return container;
+}
+
+/**
+ * Default data table with 25 items and 10 items per page
+ */
 export const Default: Story = {
   id: 'data-table-default',
-  ...createDataTableStory({
-    items: createMockItems(25),
-    itemsPerPage: 10,
-  }),
+  render: args => renderDataTable(args),
 };
 
+/**
+ * Data table with a smaller page size of 5
+ */
 export const SmallPageSize: Story = {
   id: 'data-table-small-page-size',
-  ...createDataTableStory({
-    items: createMockItems(25),
+  args: {
     itemsPerPage: 5,
-  }),
+  },
+  render: args => renderDataTable(args),
 };
 
+/**
+ * Data table showing all 25 items on a single page
+ */
 export const LargePageSize: Story = {
   id: 'data-table-large-page-size',
-  ...createDataTableStory({
-    items: createMockItems(25),
+  args: {
     itemsPerPage: 25,
-  }),
+  },
+  render: args => renderDataTable(args),
 };
 
+/**
+ * Data table with subcomponent loading enabled
+ */
 export const WithSubcomponents: Story = {
   id: 'data-table-with-subcomponents',
-  ...createDataTableStory({
+  args: {
     items: createMockItems(15),
     itemsPerPage: 10,
     loadSubcomponents: true,
-  }),
+  },
+  render: args => renderDataTable(args),
 };
 
+/**
+ * Data table in dark mode
+ */
 export const DarkMode: Story = {
   id: 'data-table-dark-mode',
-  ...createDataTableStory({
-    items: createMockItems(25),
-    itemsPerPage: 10,
+  args: {
     darkMode: 'dark',
-  }),
+  },
+  render: args => renderDataTable(args),
 };
 
+/**
+ * Data table in light mode
+ */
 export const LightMode: Story = {
   id: 'data-table-light-mode',
-  ...createDataTableStory({
-    items: createMockItems(25),
-    itemsPerPage: 10,
+  args: {
     darkMode: 'light',
-  }),
+  },
+  render: args => renderDataTable(args),
 };
 
+/**
+ * Data table using system dark mode preference
+ */
 export const SystemMode: Story = {
   id: 'data-table-system-mode',
-  ...createDataTableStory({
-    items: createMockItems(25),
-    itemsPerPage: 10,
+  args: {
     darkMode: 'system',
-  }),
+  },
+  render: args => renderDataTable(args),
 };

@@ -1,0 +1,110 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+
+import * as IntroStories from './intro.stories';
+
+<Meta of={IntroStories} />
+
+# PID Component
+
+A web component that automatically detects, resolves, and renders **persistent identifiers** (PIDs) as rich, interactive elements.
+Drop a single HTML tag into your page and the component handles the rest -- fetching metadata from registries like DataCite, CrossRef, ORCID, ROR, and Handle.net, then displaying it in a compact, expandable format.
+
+## Quick Start
+
+### Via CDN (plain HTML)
+
+```html
+<script type="module"
+  src="https://unpkg.com/@kit-data-manager/pid-component/dist/pid-component/pid-component.esm.js">
+</script>
+
+<pid-component value="10.5445/IR/1000185135"></pid-component>
+```
+
+### Via npm
+
+```bash
+npm install @kit-data-manager/pid-component
+```
+
+Framework-specific wrappers are available for [React](?path=/docs/react-vite-pidcomponent--docs), [Vue](?path=/docs/vue-pidcomponent--docs), [Angular](?path=/docs/angular-pidcomponent--docs), and [Next.js](?path=/docs/react-nextjs-pidcomponent--docs).
+
+---
+
+## Live Examples
+
+### Rendering a single identifier
+
+<Canvas of={IntroStories.PidComponentDemo} />
+
+> See the full **[pid-component documentation](?path=/docs/01-pid-component--docs)** for all configuration options, settings, and advanced usage.
+
+### Automatic detection in text
+
+Use `initPidDetection()` to scan a block of HTML for identifiers and replace them with components automatically -- no manual markup required.
+
+<Canvas of={IntroStories.AutoDetectionDemo} />
+
+> See the full **[auto-detection documentation](?path=/docs/02-pid-component-auto-detection--docs)** for configuration, filtering, exclusion zones, and the controller API.
+
+---
+
+## Supported Identifier Types
+
+The component recognizes and renders the following identifier types out of the box:
+
+| Type             | Example                     | Description                                                        |
+|------------------|-----------------------------|--------------------------------------------------------------------|
+| **Handle PID**   | `21.T11981/be908bd1-...`    | FAIR Digital Object handles resolved via the Handle System         |
+| **DOI**          | `10.5445/IR/1000185135`     | Digital Object Identifiers with metadata from DataCite or CrossRef |
+| **ORCiD**        | `0009-0005-2800-4833`       | Researcher identifiers with profile data from the ORCID API        |
+| **ROR**          | `https://ror.org/04t3en479` | Research organizations from the ROR registry                       |
+| **SPDX License** | `Apache-2.0` or full URL    | Software licenses validated against the SPDX database              |
+| **URL**          | `https://scc.kit.edu`       | Clickable external links                                           |
+| **Email**        | `someone@example.com`       | Clickable mailto links (single or comma-separated)                 |
+| **Date**         | `2022-11-11T08:01:20Z`      | ISO 8601 dates rendered in a locale-aware format                   |
+| **JSON**         | `{"key": "value"}`          | Parsed JSON shown in an interactive tree/code viewer               |
+| **Locale**       | `de-DE`                     | Language codes with country flag and name                          |
+
+Any value that does not match a known type is rendered as plain text (fallback).
+
+---
+
+## Framework Wrappers
+
+Install the wrapper for your framework and use the component with native bindings:
+
+| Framework          | Package                                   | Install                                         |
+|--------------------|-------------------------------------------|-------------------------------------------------|
+| **React**          | `@kit-data-manager/react-pid-component`   | `npm i @kit-data-manager/react-pid-component`   |
+| **Vue 3**          | `@kit-data-manager/vue-pid-component`     | `npm i @kit-data-manager/vue-pid-component`     |
+| **Angular**        | `@kit-data-manager/angular-pid-component` | `npm i @kit-data-manager/angular-pid-component` |
+| **Web Components** | `@kit-data-manager/pid-component`         | `npm i @kit-data-manager/pid-component`         |
+
+Each wrapper Storybook includes its own demos:
+
+- **[React (Vite)](?path=/docs/react-vite-pidcomponent--docs)** -- PidComponent, Auto-Detection, and a full Research Data Portal demo
+- **[React (Next.js)](?path=/docs/react-nextjs-pidcomponent--docs)** -- Same features inside a Next.js App Router application
+- **[Vue 3](?path=/docs/vue-pidcomponent--docs)** -- PidComponent with Vuetify integration and Research Portal demo
+- **[Angular](?path=/docs/angular-pidcomponent--docs)** -- PidComponent with Angular Material and Research Portal demo
+
+---
+
+## Key Features
+
+- **Zero configuration** -- Pass a `value` prop and the component auto-detects the identifier type
+- **Metadata resolution** -- Fetches and caches data from public registries (DataCite, CrossRef, ORCID, ROR, Handle.net, SPDX)
+- **Auto-detection** -- `initPidDetection()` scans DOM text and replaces identifiers automatically
+- **Recursive rendering** -- Nested identifiers (e.g. an ORCiD inside a Handle record) are rendered as sub-components
+- **Dark mode** -- Supports `"light"`, `"dark"`, and `"system"` color schemes
+- **Configurable** -- Citation styles, caching TTL, nesting depth, renderer selection, and more via props and settings
+- **Lightweight** -- Web component with no framework dependency; framework wrappers are thin bindings
+
+---
+
+## Links
+
+- [GitHub Repository](https://github.com/kit-data-manager/pid-component)
+- [npm Package](https://www.npmjs.com/package/@kit-data-manager/pid-component)
+- [pid-component Docs](?path=/docs/01-pid-component--docs)
+- [Auto-Detection Docs](?path=/docs/02-pid-component-auto-detection--docs)

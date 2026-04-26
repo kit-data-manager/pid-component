@@ -12,13 +12,87 @@ const meta: Meta<PidComponent> = {
       },
     },
   },
+  argTypes: {
+    value: {
+      description: 'The persistent identifier to resolve',
+      control: 'text',
+    },
+    darkMode: {
+      description: 'Color scheme: "dark", "light", or "system"',
+      control: 'select',
+      options: ['dark', 'light', 'system'],
+    },
+    renderers: {
+      description: 'JSON array of renderer names to use (e.g. \'["DOIType"]\')',
+      control: 'text',
+    },
+    fallbackToAll: {
+      description: 'Whether to fall back to all renderers when none match',
+      control: 'boolean',
+    },
+    emphasizeComponent: {
+      description: 'Whether to visually emphasize the component with border and shadow',
+      control: 'boolean',
+    },
+    openByDefault: {
+      description: 'Whether the component is expanded on mount',
+      control: 'boolean',
+    },
+    amountOfItems: {
+      description: 'Number of items to display per page',
+      control: 'number',
+    },
+    levelOfSubcomponents: {
+      description: 'Maximum nesting depth for sub-components',
+      control: 'number',
+    },
+    width: {
+      description: 'CSS width of the component (e.g. "500px", "50%")',
+      control: 'text',
+    },
+    height: {
+      description: 'CSS height of the component (e.g. "300px", "50vh")',
+      control: 'text',
+    },
+    showTopLevelCopy: {
+      description: 'Whether to show a copy button at the top level',
+      control: 'boolean',
+    },
+    defaultTTL: {
+      description: 'Default time-to-live for cached responses in milliseconds (default: 86400000 = 24h)',
+      control: 'number',
+    },
+    hideSubcomponents: {
+      description: 'Whether to hide nested sub-components',
+      control: 'boolean',
+    },
+    settings: {
+      description: 'Stringified JSON settings array passed to all subcomponents',
+      control: 'text',
+    },
+    currentLevelOfSubcomponents: {
+      description: 'Current nesting depth (used internally)',
+      control: 'number',
+    },
+  },
   render: (args) => ({
     props: args,
     template: `<pid-component
       [value]="value"
       [darkMode]="darkMode"
       [renderers]="renderers"
+      [fallbackToAll]="fallbackToAll"
       [openByDefault]="openByDefault"
+      [emphasizeComponent]="emphasizeComponent"
+      [amountOfItems]="amountOfItems"
+      [levelOfSubcomponents]="levelOfSubcomponents"
+      [currentLevelOfSubcomponents]="currentLevelOfSubcomponents"
+      [hideSubcomponents]="hideSubcomponents"
+      [showTopLevelCopy]="showTopLevelCopy"
+      [defaultTTL]="defaultTTL"
+      [width]="width"
+      [height]="height"
+      [settings]="settings"
     ></pid-component>`,
   }),
 };

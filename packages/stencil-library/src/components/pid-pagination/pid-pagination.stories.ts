@@ -55,7 +55,7 @@ const meta: Meta = {
       control: 'select',
       options: ['light', 'dark', 'system'],
       table: {
-        type: { summary: 'string' },
+        type: { summary: '"light" | "dark" | "system"' },
         defaultValue: { summary: 'system' },
       },
     },
@@ -64,7 +64,7 @@ const meta: Meta = {
     currentPage: 0,
     totalItems: 100,
     itemsPerPage: 10,
-    adaptivePagination: false,
+    pageSizes: [5, 10, 25, 50, 100],
     showItemsPerPageControl: true,
     darkMode: 'light',
   },
@@ -88,7 +88,9 @@ const PaginationContainer = (args, width = '500px', styles = {}) => {
         currentPage=${args.currentPage}
         totalItems=${args.totalItems}
         itemsPerPage=${args.itemsPerPage}
+        .pageSizes=${args.pageSizes}
         showItemsPerPageControl=${args.showItemsPerPageControl}
+        darkMode=${args.darkMode}
         @pageChange=${e => console.log('Page changed to', e.detail)}
         @itemsPerPageChange=${e => console.log('Items per page changed to', e.detail)}
       ></pid-pagination>
@@ -105,7 +107,6 @@ export const Default: Story = {
     currentPage: 0,
     totalItems: 100,
     itemsPerPage: 10,
-    adaptivePagination: false,
   },
   render: args => PaginationContainer(args),
   parameters: {

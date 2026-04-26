@@ -53,7 +53,7 @@ describe('DOIType', () => {
   describe('constructor', () => {
     it('stores the value', () => {
       const dt = new DOIType(DOI_examples.VALID_BARE);
-      expect(dt.value).toBe('10.5281/zenodo.13629109');
+      expect(dt.value).toBe('10.52825/ocp.v5i.1411');
     });
   });
 

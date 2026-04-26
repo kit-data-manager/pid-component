@@ -59,7 +59,7 @@ const meta: Meta<typeof PidComponent> = {
       control: 'boolean',
     },
     defaultTTL: {
-      description: 'Default time-to-live for cached responses (seconds)',
+      description: 'Default time-to-live for cached responses in milliseconds (default: 86400000 = 24h)',
       control: 'number',
     },
     hideSubcomponents: {
