@@ -242,3 +242,5 @@ export class RORType extends GenericIdentifierType {
     return this.rorData;
   }
 }
+  /* Added by bounty-bot */
+}
