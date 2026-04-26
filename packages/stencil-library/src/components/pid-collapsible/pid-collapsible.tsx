@@ -655,7 +655,10 @@ export class PidCollapsible {
 
     // Use the stored dimensions for logging/debugging
     if (this.lastExpandedWidth || this.lastExpandedHeight) {
-      console.debug('Storing dimensions for later restoration:', { width: this.lastExpandedWidth, height: this.lastExpandedHeight });
+      console.debug('Storing dimensions for later restoration:', {
+        width: this.lastExpandedWidth,
+        height: this.lastExpandedHeight,
+      });
     }
 
     // Clear size constraints
@@ -992,15 +995,12 @@ export class PidCollapsible {
         >
           <summary
             class={summaryClasses}
-            // style={{ lineHeight: `${this.lineHeight}px`, height: `${this.lineHeight}px` }}
             onClick={this.handleSummaryClick}
           >
-            {/*<span*/}
-            {/*  class={`inline-flex h-full items-center ${this.open ? 'flex-nowrap whitespace-nowrap' : 'min-w-0 flex-nowrap overflow-hidden'}`}>*/}
-              {this.emphasize && (
-                <span>
+            {this.emphasize && (
+              <span>
                   <svg
-                    class={`${this.isDarkMode ? 'text-gray-300' : 'text-gray-600'} transition-transform duration-200 group-open:rotate-180`}
+                    class={`${this.isDarkMode ? 'text-gray-300' : 'text-gray-600'} transition-transform duration-200 group-open:rotate-180 mr-2 ml-1`}
                     fill="none"
                     height="12"
                     width="12"
@@ -1014,12 +1014,11 @@ export class PidCollapsible {
                     <path d="M 2 3 l 4 6 l 4 -6"></path>
                   </svg>
                 </span>
-              )}
+            )}
             <span
               class={`align-baseline min-w-0 ${this.open ? 'overflow-x-auto whitespace-normal pl-2' : 'block whitespace-nowrap overflow-hidden text-ellipsis'}`}>
                 <slot name="summary"></slot>
               </span>
-            {/*</span>*/}
             <div class="ml-auto">
               <slot name="summary-actions"></slot>
             </div>
@@ -1032,7 +1031,8 @@ export class PidCollapsible {
           {this.showFooter && this.open && (
             <div class={footerClasses}>
               {/* Main footer slot for pagination */}
-              <div class={`z-50 overflow-visible border-b ${this.isDarkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-100 bg-white'}`}>
+              <div
+                class={`z-50 overflow-visible border-b ${this.isDarkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-100 bg-white'}`}>
                 <slot name="footer"></slot>
               </div>
 
