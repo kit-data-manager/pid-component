@@ -156,7 +156,7 @@ export class DOIType extends GenericIdentifierType {
 
     return (
       <span
-        class={`inline-flex flex-nowrap align-baseline font-mono min-w-0 max-w-full ${this.isDarkMode ? 'text-gray-200' : ''}`}>
+        class={`inline-flex flex-nowrap items-baseline font-mono min-w-0 max-w-full ${this.isDarkMode ? 'text-gray-200' : ''}`}>
         <span class={'flex-none px-0.5 h-4 self-center'}>{logoNode}</span>
         <span class={'min-w-0 pl-2 overflow-hidden text-ellipsis whitespace-nowrap'} title={tooltip}>
           {citation}

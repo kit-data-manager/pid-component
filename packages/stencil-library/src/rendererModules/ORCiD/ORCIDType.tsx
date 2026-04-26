@@ -176,7 +176,7 @@ export class ORCIDType extends GenericIdentifierType {
   renderPreview(): FunctionalComponent {
     return (
       <span
-        class={`inline-flex flex-nowrap align-baseline font-mono min-w-0 max-w-full ${this.isDarkMode ? 'text-gray-200' : ''}`}>
+        class={`inline-flex flex-nowrap items-baseline font-mono min-w-0 max-w-full ${this.isDarkMode ? 'text-gray-200' : ''}`}>
         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"
              class={'mr-1 h-4 flex-none px-0.5 self-center'}>
           <style type="text/css">
