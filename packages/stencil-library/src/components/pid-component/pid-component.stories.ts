@@ -159,7 +159,7 @@ const meta: Meta = {
   args: {
     value: HANDLE_examples.FDO_BARE,
     settings: '[]',
-    openByDefault: true,
+    openByDefault: false,
     amountOfItems: 10,
     levelOfSubcomponents: 1,
     currentLevelOfSubcomponents: 0,
@@ -183,6 +183,10 @@ const textDecorator = (story: () => unknown) =>
 export default meta;
 type Story = StoryObj;
 
+/**
+ * Default story showing a Handle PID in its collapsed initial state.
+ * Click the component to expand and see the resolved record.
+ */
 export const Default: Story = {
   id: 'pid-component-default',
   args: {
@@ -199,6 +203,10 @@ export const Default: Story = {
   },
 };
 
+/**
+ * Resolves a Handle PID and displays its record entries (URL, checksum, etc.)
+ * in a structured, expandable table. Starts expanded.
+ */
 export const Handle: Story = {
   id: 'pid-component-handle',
   // Exclude from vitest: this test requires network access to resolve PIDs
@@ -206,12 +214,13 @@ export const Handle: Story = {
   tags: ['!test'],
   args: {
     value: HANDLE_examples.FDO_BARE,
+    openByDefault: true,
   },
   parameters: {
     docs: {
       source: {
         code: `
-<pid-component value='${HANDLE_examples.FDO_BARE}'></pid-component>
+<pid-component value='${HANDLE_examples.FDO_BARE}' open-by-default='true'></pid-component>
         `,
       },
     },
@@ -226,6 +235,11 @@ export const Handle: Story = {
   },
 };
 
+/**
+ * Shows a Handle PID with subcomponents disabled. Only the collapsed
+ * preview is shown -- clicking will not expand to show the resolved record.
+ * Useful when you want a compact, non-interactive identifier display.
+ */
 export const HandleWithoutSubcomponent: Story = {
   id: 'pid-component-handle-without-subcomponent',
   args: {
@@ -243,6 +257,10 @@ export const HandleWithoutSubcomponent: Story = {
   },
 };
 
+/**
+ * Resolves an ORCiD and displays the researcher's name, biography, and
+ * affiliations fetched from the ORCID API. Starts expanded.
+ */
 export const ORCID: Story = {
   id: 'pid-component-orcid',
   args: {
@@ -253,41 +271,55 @@ export const ORCID: Story = {
     docs: {
       source: {
         code: `
-<pid-component value='${ORCID_examples.VALID}'></pid-component>
+<pid-component value='${ORCID_examples.VALID}' open-by-default='true'></pid-component>
         `,
       },
     },
   },
 };
 
+/**
+ * Resolves a ROR ID and displays the organization name, acronyms, location,
+ * and related organizations. Starts expanded.
+ */
 export const ROR: Story = {
   id: 'pid-component-ror',
   args: {
     value: ROR_examples.VALID,
+    openByDefault: true,
   },
   parameters: {
     docs: {
       source: {
-        code: `<pid-component value='${ROR_examples.VALID}'></pid-component>`,
+        code: `<pid-component value='${ROR_examples.VALID}' open-by-default='true'></pid-component>`,
       },
     },
   },
 };
 
+/**
+ * Recognizes an SPDX license URL and displays the license name with a link
+ * to the full license text. Starts expanded.
+ */
 export const SPDXLong: Story = {
   id: 'pid-component-spdx-long',
   args: {
     value: SPDX_examples.APACHE_2_0,
+    openByDefault: true,
   },
   parameters: {
     docs: {
       source: {
-        code: `<pid-component value='${SPDX_examples.APACHE_2_0}'></pid-component>`,
+        code: `<pid-component value='${SPDX_examples.APACHE_2_0}' open-by-default='true'></pid-component>`,
       },
     },
   },
 };
 
+/**
+ * Recognizes a bare SPDX license identifier (without URL prefix).
+ * Shows a compact preview -- click to expand.
+ */
 export const SPDXShort: Story = {
   id: 'pid-component-spdx-short',
   args: {
@@ -302,6 +334,10 @@ export const SPDXShort: Story = {
   },
 };
 
+/**
+ * Detects an ISO 8601 date string and renders it in a human-readable,
+ * locale-aware format. Dates are simple types with no expandable details.
+ */
 export const Date: Story = {
   id: 'pid-component-date',
   args: {
@@ -316,6 +352,10 @@ export const Date: Story = {
   },
 };
 
+/**
+ * Renders a URL as a clickable external link. URLs are simple types with
+ * no expandable details.
+ */
 export const URL: Story = {
   id: 'pid-component-url',
   args: {
@@ -330,6 +370,9 @@ export const URL: Story = {
   },
 };
 
+/**
+ * Renders an email address as a clickable mailto link.
+ */
 export const Email: Story = {
   id: 'pid-component-email',
   args: {
@@ -344,6 +387,10 @@ export const Email: Story = {
   },
 };
 
+/**
+ * Handles comma-separated email addresses and renders each one
+ * as a clickable mailto link.
+ */
 export const CommaSeperatedMails: Story = {
   id: 'pid-component-comma-separated-mails',
   args: {
@@ -358,6 +405,10 @@ export const CommaSeperatedMails: Story = {
   },
 };
 
+/**
+ * When the value does not match any known identifier type, the component
+ * renders it as plain text. This is the catch-all fallback behavior.
+ */
 export const Fallback: Story = {
   id: 'pid-component-fallback',
   args: {
@@ -372,6 +423,11 @@ export const Fallback: Story = {
   },
 };
 
+/**
+ * Demonstrates recursive rendering: a Handle record that contains an ORCiD
+ * as one of its values. The ORCiD is automatically detected and rendered
+ * as a nested sub-component inside the Handle record.
+ */
 export const ORCIDInRecord: Story = {
   id: 'pid-component-orcid-in-record',
   args: {
@@ -387,6 +443,10 @@ export const ORCIDInRecord: Story = {
   },
 };
 
+/**
+ * Same Handle record as above, but with `amountOfItems` set to 100 so
+ * all record entries are visible on a single page without pagination.
+ */
 export const ORCIDInRecordWithoutLimit: Story = {
   id: 'pid-component-orcid-in-record-without-limit',
   args: {
@@ -403,6 +463,11 @@ export const ORCIDInRecordWithoutLimit: Story = {
   },
 };
 
+/**
+ * Demonstrates per-type settings: the `settings` prop passes configuration
+ * to the ORCiD sub-component, showing the affiliation valid at a specific
+ * date (2000-02-01).
+ */
 export const ORCIDInRecordWithSettings: Story = {
   id: 'pid-component-orcid-in-record-with-settings',
   args: {
@@ -420,10 +485,16 @@ export const ORCIDInRecordWithSettings: Story = {
   },
 };
 
+/**
+ * Shows the component inline within a paragraph of text. The component
+ * starts collapsed and blends into the surrounding text. Clicking
+ * expands it in place with an overlay.
+ */
 export const HandleInText: Story = {
   id: 'pid-component-handle-in-text',
   args: {
     value: HANDLE_examples.FDO_TYPED,
+    openByDefault: false,
   },
   decorators: [textDecorator],
   parameters: {
@@ -439,11 +510,17 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
   },
 };
 
+/**
+ * Same inline scenario but with `emphasizeComponent` set to false. The
+ * component has no border or shadow, blending even more seamlessly into
+ * the surrounding text.
+ */
 export const HandleInTextNotEmphasized: Story = {
   id: 'pid-component-handle-in-text-not-emphasized',
   args: {
     value: HANDLE_examples.FDO_TYPED,
     emphasizeComponent: false,
+    openByDefault: false,
   },
   decorators: [textDecorator],
   parameters: {
@@ -459,10 +536,15 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
   },
 };
 
+/**
+ * An ORCiD identifier used inline within running text. Starts collapsed
+ * to show the compact preview alongside the surrounding content.
+ */
 export const ORCIDInText: Story = {
   id: 'pid-component-orcid-in-text',
   args: {
     value: ORCID_examples.VALID,
+    openByDefault: false,
   },
   decorators: [textDecorator],
   parameters: {
@@ -478,12 +560,19 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
   },
 };
 
+/**
+ * A Handle PID inline in text with both `hideSubcomponents` and
+ * `emphasizeComponent` disabled. This is the most minimal inline
+ * appearance -- just the identifier text with no border, shadow,
+ * or expandable content.
+ */
 export const HandleWithoutSubcomponentInText: Story = {
   id: 'pid-component-handle-without-subcomponent-in-text',
   args: {
     value: HANDLE_examples.FDO_BARE,
     hideSubcomponents: true,
     emphasizeComponent: false,
+    openByDefault: false,
   },
   decorators: [textDecorator],
   parameters: {
@@ -500,10 +589,16 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
   },
 };
 
+/**
+ * A real-world example: a PID embedded in a descriptive paragraph about
+ * the Typed PID Maker. The component starts collapsed so it reads naturally
+ * as part of the sentence.
+ */
 export const TypedPIDMakerExampleText: Story = {
   id: 'pid-component-typed-pid-maker-text',
   args: {
     value: HANDLE_examples.FDO_TYPED,
+    openByDefault: false,
   },
   decorators: [
     (story: () => unknown) => html`
@@ -518,13 +613,15 @@ export const TypedPIDMakerExampleText: Story = {
 };
 
 /**
- * Demonstrates the component in dark mode
+ * Demonstrates the component in dark mode. The component and all its
+ * sub-components adapt their colors for dark backgrounds.
  */
 export const DarkMode: Story = {
   id: 'pid-component-dark-mode',
   args: {
     value: HANDLE_examples.FDO_BARE,
     darkMode: 'dark',
+    openByDefault: true,
   },
   globals: {
     backgrounds: { value: 'dark' },
@@ -541,13 +638,14 @@ export const DarkMode: Story = {
 };
 
 /**
- * Demonstrates the component in light mode
+ * Demonstrates the component in light mode (the default).
  */
 export const LightMode: Story = {
   id: 'pid-component-light-mode',
   args: {
     value: HANDLE_examples.FDO_BARE,
     darkMode: 'light',
+    openByDefault: true,
   },
   globals: {
     backgrounds: { value: 'light' },
@@ -564,13 +662,16 @@ export const LightMode: Story = {
 };
 
 /**
- * Demonstrates the component with system preference for dark mode
+ * Uses the operating system's color scheme preference. The component
+ * automatically switches between light and dark based on the user's
+ * system setting.
  */
 export const SystemMode: Story = {
   id: 'pid-component-system-mode',
   args: {
     value: HANDLE_examples.FDO_BARE,
     darkMode: 'system',
+    openByDefault: true,
   },
   parameters: {
     docs: {

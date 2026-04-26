@@ -6,8 +6,37 @@ import * as IntroStories from './intro.stories';
 
 # PID Component
 
+<div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', alignItems: 'center' }}>
+  <a href="https://github.com/kit-data-manager/pid-component/actions/workflows/npm-ci.yml"><img
+    src="https://github.com/kit-data-manager/pid-component/actions/workflows/npm-ci.yml/badge.svg?branch=main"
+    alt="Build" /></a>
+  <a href="https://github.com/kit-data-manager/pid-component/actions/workflows/github-code-scanning/codeql"><img
+    src="https://github.com/kit-data-manager/pid-component/actions/workflows/github-code-scanning/codeql/badge.svg"
+    alt="CodeQL" /></a>
+  <a href="https://doi.org/10.5281/zenodo.13629109"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.13629109.svg"
+                                                         alt="DOI" /></a>
+  <a href="https://www.npmjs.com/package/@kit-data-manager/pid-component"><img
+    src="https://img.shields.io/npm/v/@kit-data-manager/pid-component.svg" alt="npm version" /></a>
+  <a href="https://www.npmjs.com/package/@kit-data-manager/pid-component"><img
+    src="https://img.shields.io/npm/dm/@kit-data-manager/pid-component.svg" alt="npm downloads" /></a>
+  <a href="https://spdx.org/licenses/Apache-2.0"><img
+    src="https://img.shields.io/github/license/kit-data-manager/pid-component.svg" alt="License" /></a>
+</div>
+
+<div style={{ display: 'flex', gap: '12px', marginTop: '8px', fontSize: '0.95em' }}>
+  <a href="https://github.com/kit-data-manager/pid-component">GitHub</a>
+  <span style={{ color: '#999' }}>|</span>
+  <a href="https://www.npmjs.com/package/@kit-data-manager/pid-component">npm</a>
+  <span style={{ color: '#999' }}>|</span>
+  <a href="https://doi.org/10.5281/zenodo.13629109">Cite (Zenodo)</a>
+</div>
+
+<br />
+
 A web component that automatically detects, resolves, and renders **persistent identifiers** (PIDs) as rich, interactive elements.
 Drop a single HTML tag into your page and the component handles the rest -- fetching metadata from registries like DataCite, CrossRef, ORCID, ROR, and Handle.net, then displaying it in a compact, expandable format.
+
+---
 
 ## Quick Start
 
@@ -35,6 +64,8 @@ Framework-specific wrappers are available for [React](?path=/docs/react-vite-pid
 
 ### Rendering a single identifier
 
+Pass any supported identifier as the `value` prop. The component auto-detects the type, fetches metadata, and renders an interactive preview. Click to expand.
+
 <Canvas of={IntroStories.PidComponentDemo} />
 
 > See the full **[pid-component documentation](?path=/docs/01-pid-component--docs)** for all configuration options, settings, and advanced usage.
@@ -53,18 +84,67 @@ Use `initPidDetection()` to scan a block of HTML for identifiers and replace the
 
 The component recognizes and renders the following identifier types out of the box:
 
-| Type             | Example                     | Description                                                        |
-|------------------|-----------------------------|--------------------------------------------------------------------|
-| **Handle PID**   | `21.T11981/be908bd1-...`    | FAIR Digital Object handles resolved via the Handle System         |
-| **DOI**          | `10.5445/IR/1000185135`     | Digital Object Identifiers with metadata from DataCite or CrossRef |
-| **ORCiD**        | `0009-0005-2800-4833`       | Researcher identifiers with profile data from the ORCID API        |
-| **ROR**          | `https://ror.org/04t3en479` | Research organizations from the ROR registry                       |
-| **SPDX License** | `Apache-2.0` or full URL    | Software licenses validated against the SPDX database              |
-| **URL**          | `https://scc.kit.edu`       | Clickable external links                                           |
-| **Email**        | `someone@example.com`       | Clickable mailto links (single or comma-separated)                 |
-| **Date**         | `2022-11-11T08:01:20Z`      | ISO 8601 dates rendered in a locale-aware format                   |
-| **JSON**         | `{"key": "value"}`          | Parsed JSON shown in an interactive tree/code viewer               |
-| **Locale**       | `de-DE`                     | Language codes with country flag and name                          |
+<table>
+  <thead>
+  <tr>
+    <th style={{ textAlign: 'left' }}>Type</th>
+    <th style={{ textAlign: 'left' }}>Example</th>
+    <th style={{ textAlign: 'left' }}>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td><strong>Handle PID</strong></td>
+    <td><code>21.T11981/be908bd1-...</code></td>
+    <td>FAIR Digital Object handles resolved via the Handle System</td>
+  </tr>
+  <tr>
+    <td><strong>DOI</strong></td>
+    <td><code>10.5445/IR/1000185135</code></td>
+    <td>Digital Object Identifiers with metadata from DataCite or CrossRef</td>
+  </tr>
+  <tr>
+    <td><strong>ORCiD</strong></td>
+    <td><code>0009-0005-2800-4833</code></td>
+    <td>Researcher identifiers with profile data from the ORCID API</td>
+  </tr>
+  <tr>
+    <td><strong>ROR</strong></td>
+    <td><code>https://ror.org/04t3en479</code></td>
+    <td>Research organizations from the ROR registry</td>
+  </tr>
+  <tr>
+    <td><strong>SPDX License</strong></td>
+    <td><code>Apache-2.0</code></td>
+    <td>Software licenses validated against the SPDX database</td>
+  </tr>
+  <tr>
+    <td><strong>URL</strong></td>
+    <td><code>https://scc.kit.edu</code></td>
+    <td>Clickable external links</td>
+  </tr>
+  <tr>
+    <td><strong>Email</strong></td>
+    <td><code>someone@example.com</code></td>
+    <td>Clickable mailto links (single or comma-separated)</td>
+  </tr>
+  <tr>
+    <td><strong>Date</strong></td>
+    <td><code>2022-11-11T08:01:20Z</code></td>
+    <td>ISO 8601 dates rendered in a locale-aware format</td>
+  </tr>
+  <tr>
+    <td><strong>JSON</strong></td>
+    <td><code>{'{"key": "value"}'}</code></td>
+    <td>Parsed JSON shown in an interactive tree/code viewer</td>
+  </tr>
+  <tr>
+    <td><strong>Locale</strong></td>
+    <td><code>de-DE</code></td>
+    <td>Language codes with country flag and name</td>
+  </tr>
+  </tbody>
+</table>
 
 Any value that does not match a known type is rendered as plain text (fallback).
 
@@ -74,12 +154,37 @@ Any value that does not match a known type is rendered as plain text (fallback).
 
 Install the wrapper for your framework and use the component with native bindings:
 
-| Framework          | Package                                   | Install                                         |
-|--------------------|-------------------------------------------|-------------------------------------------------|
-| **React**          | `@kit-data-manager/react-pid-component`   | `npm i @kit-data-manager/react-pid-component`   |
-| **Vue 3**          | `@kit-data-manager/vue-pid-component`     | `npm i @kit-data-manager/vue-pid-component`     |
-| **Angular**        | `@kit-data-manager/angular-pid-component` | `npm i @kit-data-manager/angular-pid-component` |
-| **Web Components** | `@kit-data-manager/pid-component`         | `npm i @kit-data-manager/pid-component`         |
+<table>
+  <thead>
+  <tr>
+    <th style={{ textAlign: 'left' }}>Framework</th>
+    <th style={{ textAlign: 'left' }}>Package</th>
+    <th style={{ textAlign: 'left' }}>Install</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td><strong>React</strong></td>
+    <td><code>@kit-data-manager/react-pid-component</code></td>
+    <td><code>npm i @kit-data-manager/react-pid-component</code></td>
+  </tr>
+  <tr>
+    <td><strong>Vue 3</strong></td>
+    <td><code>@kit-data-manager/vue-pid-component</code></td>
+    <td><code>npm i @kit-data-manager/vue-pid-component</code></td>
+  </tr>
+  <tr>
+    <td><strong>Angular</strong></td>
+    <td><code>@kit-data-manager/angular-pid-component</code></td>
+    <td><code>npm i @kit-data-manager/angular-pid-component</code></td>
+  </tr>
+  <tr>
+    <td><strong>Web Components</strong></td>
+    <td><code>@kit-data-manager/pid-component</code></td>
+    <td><code>npm i @kit-data-manager/pid-component</code></td>
+  </tr>
+  </tbody>
+</table>
 
 Each wrapper Storybook includes its own demos:
 
@@ -106,5 +211,6 @@ Each wrapper Storybook includes its own demos:
 
 - [GitHub Repository](https://github.com/kit-data-manager/pid-component)
 - [npm Package](https://www.npmjs.com/package/@kit-data-manager/pid-component)
+- [Cite via Zenodo (DOI: 10.5281/zenodo.13629109)](https://doi.org/10.5281/zenodo.13629109)
 - [pid-component Docs](?path=/docs/01-pid-component--docs)
 - [Auto-Detection Docs](?path=/docs/02-pid-component-auto-detection--docs)
