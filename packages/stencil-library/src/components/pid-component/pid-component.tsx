@@ -671,7 +671,7 @@ export class PidComponent {
                 aria-expanded={this.isExpanded}
               >
                 <span
-                  class={`inline-flex max-w-full flex-nowrap overflow-x-auto font-mono font-medium text-ellipsis whitespace-nowrap select-all ${this.isExpanded ? 'text-xs' : 'text-sm'}`}
+                  class={`pid-preview-wrapper inline-block font-mono font-medium whitespace-nowrap select-all ${this.isExpanded ? 'text-xs' : 'text-sm'}`}
                 >
                   { // Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
                     this.identifierObject?.renderPreview()

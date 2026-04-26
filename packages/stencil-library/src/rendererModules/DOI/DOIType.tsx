@@ -155,9 +155,10 @@ export class DOIType extends GenericIdentifierType {
     const logoNode = this._doiInfo.source === DOISource.DATACITE ? DataCiteLogo() : CrossRefLogo();
 
     return (
-      <span class={`inline-flex flex-nowrap align-top font-mono ${this.isDarkMode ? 'text-gray-200' : ''}`}>
+      <span
+        class={`inline-flex flex-nowrap align-baseline font-mono min-w-0 max-w-full ${this.isDarkMode ? 'text-gray-200' : ''}`}>
         <span class={'flex-none px-0.5 h-4 self-center'}>{logoNode}</span>
-        <span class={'flex-none pl-2 align-baseline truncate'} title={tooltip}>
+        <span class={'min-w-0 pl-2 align-baseline overflow-hidden text-ellipsis whitespace-nowrap'} title={tooltip}>
           {citation}
         </span>
       </span>

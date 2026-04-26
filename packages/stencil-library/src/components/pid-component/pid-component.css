@@ -10,12 +10,13 @@ details summary::-webkit-details-marker {
  * where tag-name selectors cannot target the host element.
  *
  * display:inline-block lets the component sit inline with text while still being a
- * proper box (supporting width/height/resize when expanded). vertical-align:top
- * aligns the top of the component with the surrounding text line.
+ * proper box (supporting width/height/resize when expanded). vertical-align:middle
+ * aligns the midpoint of the component with the surrounding text midpoint,
+ * keeping the preview visually on the same line as adjacent text.
  */
 :host {
   display: inline-block;
-  vertical-align: top;
+  vertical-align: middle;
 }
 
 /* Preview content: fill available space, cap at 50% of viewport width */

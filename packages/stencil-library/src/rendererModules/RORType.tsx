@@ -220,7 +220,7 @@ export class RORType extends GenericIdentifierType {
 
     // If data is loaded, show organization name and ID
     return (
-      <span class={`inline-flex flex-nowrap font-mono`}>
+      <span class={`inline-flex flex-nowrap align-baseline font-mono min-w-0 max-w-full`}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 164 118"
@@ -242,7 +242,7 @@ export class RORType extends GenericIdentifierType {
             />
           </g>
         </svg>
-        <span class={`flex-none align-baseline`}>
+        <span class={`min-w-0 align-baseline overflow-hidden text-ellipsis whitespace-nowrap`}>
           {this.label}
           {this.acronym ? ' (' + this.acronym + ')' : ''}
         </span>
