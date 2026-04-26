@@ -242,7 +242,7 @@ export class RORType extends GenericIdentifierType {
             />
           </g>
         </svg>
-        <span class={`min-w-0 align-baseline overflow-hidden text-ellipsis whitespace-nowrap`}>
+        <span class={`min-w-0 overflow-hidden text-ellipsis whitespace-nowrap`}>
           {this.label}
           {this.acronym ? ' (' + this.acronym + ')' : ''}
         </span>

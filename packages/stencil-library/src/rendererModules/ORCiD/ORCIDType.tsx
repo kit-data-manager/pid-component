@@ -199,7 +199,7 @@ export class ORCIDType extends GenericIdentifierType {
           </g>
         </svg>
         <span
-          class={`min-w-0 align-baseline overflow-hidden text-ellipsis whitespace-nowrap ${this.isDarkMode ? 'text-gray-200' : ''}`}>
+          class={`min-w-0 overflow-hidden text-ellipsis whitespace-nowrap ${this.isDarkMode ? 'text-gray-200' : ''}`}>
           {this._orcidInfo.familyName}, {this._orcidInfo.givenNames}{' '}
           {this.showAffiliation && this._orcidInfo.getAffiliationsAt(new Date()).length > 0
             ? `(${this._orcidInfo.getAffiliationAsString(this._orcidInfo.getAffiliationsAt(new Date())[0], false)}${

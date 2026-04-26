@@ -503,6 +503,7 @@ export class PidCollapsible {
     this.el.style.maxHeight = '';
     this.el.style.resize = '';
     this.el.style.lineHeight = '';
+    this.el.style.overflow = '';
   }
 
   /**
@@ -665,7 +666,11 @@ export class PidCollapsible {
     this.el.style.width = 'auto';
 
     // Apply Tailwind classes for collapsed state (inline with text, no float)
-    this.el.classList.add('w-auto', 'inline-block', 'overflow-hidden', 'py-0', 'my-0');
+    // NOTE: Using overflow:clip instead of overflow:hidden because overflow:hidden
+    // on an inline-block changes its baseline to the bottom margin edge (CSS spec),
+    // which breaks vertical alignment with surrounding text.
+    this.el.classList.add('w-auto', 'inline-block', 'py-0', 'my-0');
+    this.el.style.overflow = 'clip';
 
     // Set strict height and line height for text to ensure smooth text flow
     this.el.style.height = `${this.lineHeight}px`;
