@@ -16,7 +16,7 @@ details summary::-webkit-details-marker {
  */
 :host {
   display: inline-block;
-  vertical-align: middle;
+  vertical-align: baseline;
 }
 
 /* Preview content: fill available space, cap at 50% of viewport width */
