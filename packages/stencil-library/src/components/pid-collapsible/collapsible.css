@@ -32,6 +32,16 @@ pid-collapsible.resize-both {
 }
 
 /*
+ * Floating overlay behavior when expanded (e.g., in header context)
+ * The expanded attribute is set by pid-component when isExpanded is true
+ */
+pid-collapsible[expanded] {
+  position: absolute;
+  z-index: 50;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+/*
  * Safari-specific fixes using browser detection
  * REASON: These browser-specific media queries and feature detection
  * aren't possible with Tailwind's utility classes.

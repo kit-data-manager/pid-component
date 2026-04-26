@@ -10,7 +10,6 @@ import cssnanoPlugin from 'cssnano';
 export const config: Config = {
   namespace: 'pid-component',
   globalStyle: 'src/tailwind.css',
-  buildEs5: true,
   outputTargets: [
     {
       type: 'dist'
@@ -47,9 +46,6 @@ export const config: Config = {
     },
     webTypesOutputTarget(),
   ],
-  testing: {
-    browserHeadless: true,
-  },
   plugins:[
     postcss({
       plugins:[
@@ -60,7 +56,6 @@ export const config: Config = {
   ],
   sourceMap: true,
   extras: {
-    enableImportInjection: true,
     experimentalSlotFixes: true
   },
   preamble:

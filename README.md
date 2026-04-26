@@ -1,6 +1,6 @@
 # PID Component
 
-[![Build](https://github.com/kit-data-manager/pid-component/actions/workflows/npm-ci.yml/badge.svg?branch=main)](https://github.com/kit-data-manager/pid-component/actions/workflows/ci.yml)
+[![Build](https://github.com/kit-data-manager/pid-component/actions/workflows/npm-ci.yml/badge.svg?branch=main)](https://github.com/kit-data-manager/pid-component/actions/workflows/npm-ci.yml)
 [![CodeQL](https://github.com/kit-data-manager/pid-component/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/kit-data-manager/pid-component/actions/workflows/github-code-scanning/codeql)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13629109.svg)](https://doi.org/10.5281/zenodo.13629109)
 [![npm version](https://img.shields.io/npm/v/@kit-data-manager/pid-component.svg)](https://www.npmjs.com/package/@kit-data-manager/pid-component)
@@ -12,7 +12,7 @@ The `pid-component` is an easily extensible web component that can be used to di
 identifiers in a user-friendly way.
 It is easily extensible to support other identifier types.
 
-> A [React wrapper]() is also available
+> Framework wrappers are available for [React](https://www.npmjs.com/package/@kit-data-manager/react-pid-component), [Vue](https://www.npmjs.com/package/@kit-data-manager/vue-pid-component), and [Angular](https://www.npmjs.com/package/@kit-data-manager/angular-pid-component).
 
 The `pid-component` dynamically renders a component based on the value of the `value` property.
 Depending on the value, it decides which component to render, what priority to give it, and what props to pass to it.
@@ -22,40 +22,34 @@ By default, it is set to 1, which means that it will only render the first level
 You can prohibit unfolding of the component by setting the `current-level-of-subcomponents` to the same value as
 the `level-of-subcomponents` property.
 
-To use the component, import the [npm-package](https://www.npmjs.com/package/@kit-data-manager/pid-component)
-via [unpkg](https://unpkg.com/).
-Note that two scripts are provided: one for modern browsers (type="module") and a fallback for older browsers (
-nomodule).
-Include **both** scripts to ensure support for modern browsers (ESM) and legacy browsers:
+### Via CDN (no bundler)
+
+You can load the component directly from [unpkg](https://unpkg.com/) with a single script tag:
 
 ```html
+<script type="module" src="https://unpkg.com/@kit-data-manager/pid-component/dist/pid-component/pid-component.esm.js"></script>
 
-<head>
-  <script type="module"
-          src="https://unpkg.com/@kit-data-manager/pid-component/dist/pid-component/pid-component.esm.js"></script>
-  <script nomodule src="https://unpkg.com/@kit-data-manager/pid-component/dist/pid-component/pid-component.js"></script>
-</head>
-```
-
-Alternatively, you can install the package via npm:
-
-```bash
-npm install @kit-data-manager/pid-component
-```
-
-Then, you can use this component like this:
-
-```html
 <pid-component value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"></pid-component>
 ```
 
 <div>
 <aside>
 <script type="module" src="https://unpkg.com/@kit-data-manager/pid-component/dist/pid-component/pid-component.esm.js"></script>
-<script nomodule src="https://unpkg.com/@kit-data-manager/pid-component/dist/pid-component/pid-component.js"></script>
 <pid-component value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"></pid-component>
 </aside>
 </div>
+
+### Via npm
+
+```bash
+npm install @kit-data-manager/pid-component
+```
+
+Then use the component in your HTML:
+
+```html
+<pid-component value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"></pid-component>
+```
 
 You can try this web component in the [demo](https://kit-data-manager.github.io/pid-component).
 
@@ -213,38 +207,222 @@ const pidDataType = await PIDDataType.resolveDataType(pid)
 
 Further documentation is available in the [source code](packages/stencil-library/src/rendererModules/Handle/PID.ts).
 
-## Monorepo
+## Monorepo Structure
 
-This is a monorepo containing the following packages:
+This is an npm workspaces monorepo managed by [Lerna](https://lerna.js.org). It contains:
 
- - stencil-library (@kit-data-manager/pid-component)
- - react-library (@kit-data-manager/react-pid-component)
+| Package                    | npm                                                                                                                | Description                                         |
+|----------------------------|--------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------|
+| `packages/stencil-library` | [`@kit-data-manager/pid-component`](https://www.npmjs.com/package/@kit-data-manager/pid-component)                 | Core Stencil web component library                  |
+| `packages/react-library`   | [`@kit-data-manager/react-pid-component`](https://www.npmjs.com/package/@kit-data-manager/react-pid-component)     | React wrapper (auto-generated proxies)              |
+| `packages/vue-library`     | [`@kit-data-manager/vue-pid-component`](https://www.npmjs.com/package/@kit-data-manager/vue-pid-component)         | Vue 3 wrapper (auto-generated proxies)              |
+| `packages/angular-library` | [`@kit-data-manager/angular-pid-component`](https://www.npmjs.com/package/@kit-data-manager/angular-pid-component) | Angular standalone wrapper (auto-generated proxies) |
+| `packages/nextjs-app`      | *(private)*                                                                                                        | Next.js demo app with React (SSR) Storybook         |
 
-[Lerna](https://lerna.js.org) is used for managing and building the packages (but you can also do it manually). To use, install Lerna:
+The framework wrappers are thin proxy layers generated by Stencil's output targets during the
+`stencil-library` build. They forward props and events to the underlying web components.
 
-    npm install --global lerna
+## Development
 
-and then use it to build the packages:
+### Prerequisites
 
-    lerna run build
+- Node.js 22+
+- npm (this project uses npm exclusively; do not use yarn or pnpm)
 
-It will make sure to build the packages in the correct order.
+### Setup
 
-## How to run when developing
+```bash
+git clone https://github.com/kit-data-manager/pid-component.git
+cd pid-component
+npm ci
+```
 
-1. Clone the repo
-2. Run `npm install`
+### Building
 
-For running storybook in dev mode, navigate to `packages/stencil-library` and run these commands in separate terminals:
+Build all packages in dependency order:
 
-- `npm run buildWatch`
-- `npm run storybook`
+```bash
+npm run build
+```
 
-Attention: Do **NOT** run `npm run start`. It will cause the storybook to not work properly.
-If you did run `npm run start`, delete the following folders (in `packages/stencil-library`) and run `npm install` again:
+This runs `npx lerna run build`, which:
 
-- `node_modules`
-- `www`
-- `dist`
-- `loader`
-- `.stencil`
+1. Builds `stencil-library` first (`stencil build --docs`), generating the web components, the
+   `dist/` and `hydrate/` outputs, plus the auto-generated framework proxy code in the
+   sibling wrapper packages.
+2. Builds `react-library`, `vue-library`, and `angular-library` (each runs `tsc` to compile their
+   generated proxy code).
+
+To rebuild the Stencil library in watch mode during development:
+
+```bash
+cd packages/stencil-library
+npm run buildWatch
+```
+
+### Running Storybook
+
+Storybook is configured at the **repository root** (`.storybook/`) and serves stories from
+`packages/stencil-library/src/`. It requires the Stencil library to be built first.
+
+**Main Storybook (Web Components):**
+
+```bash
+npm run build                 # build all packages first
+npm run storybook             # starts on http://localhost:6006
+```
+
+**Composed Storybook (all frameworks):**
+
+The project uses [Storybook Composition](https://storybook.js.org/docs/sharing/storybook-composition)
+to display framework-specific stories from the React, Vue, Angular, and Next.js wrapper packages
+alongside the main Web Components stories. To run the full composed Storybook locally:
+
+```bash
+npm run storybook:all
+```
+
+This uses `concurrently` + `wait-on` to:
+
+1. Start the React (Vite) sub-Storybook on port 6007
+2. Start the Vue sub-Storybook on port 6008
+3. Start the Angular sub-Storybook on port 6009
+4. Start the React (Next.js) sub-Storybook on port 6010
+5. Wait for all four, then start the main composed Storybook on port 6006
+
+You can kill all storybooks with `lsof -tiTCP:6006-6010 -sTCP:LISTEN | xargs kill`.
+
+You can also run just the main Storybook (`npm run storybook`) without the framework
+sub-Storybooks; the composed refs will simply show as unavailable.
+
+**Build a static Storybook:**
+
+```bash
+npm run build-storybook
+```
+
+This builds the main Storybook and all framework sub-Storybooks into `storybook-static/`,
+with the sub-Storybooks placed in subdirectories (`react-vite/`, `vue/`, `angular/`,
+`react-nextjs/`).
+
+## Testing
+
+This project uses [Vitest](https://vitest.dev/) for all testing:
+
+- **Stencil unit/spec tests** run via [`@stencil/vitest`](https://stenciljs.com/docs/testing-vitest)
+  in a Stencil mock-DOM environment.
+- **Stencil E2E tests** run in a real Chromium browser via
+  [`@vitest/browser-playwright`](https://vitest.dev/guide/browser/).
+- **Storybook tests** run via
+  [`@storybook/addon-vitest`](https://storybook.js.org/docs/writing-tests) with integrated
+  accessibility checks.
+
+### Running Tests
+
+```bash
+npm test                      # runs ALL tests with coverage
+```
+
+This runs three test suites in sequence:
+
+1. **Stencil spec tests** -- unit and component tests in a mock-DOM environment
+2. **Stencil E2E tests** -- component tests in a real Chromium browser via Playwright
+3. **Storybook tests** (`vitest run --project=storybook`) -- renders every story in headless
+   Chromium and runs `play()` functions and accessibility audits
+
+From `packages/stencil-library` you can also run subsets:
+
+```bash
+npm run test:spec             # spec tests only (node DOM)
+npm run test:e2e              # E2E tests only (real browser)
+npm run test:watch            # watch mode (no coverage)
+```
+
+A V8 coverage report is generated automatically on every test run (except in watch mode).
+Coverage output is available as text in the terminal and as HTML in `packages/stencil-library/coverage/`.
+
+> Storybook tests require Playwright with Chromium. Install with:
+> `npx playwright install --with-deps chromium`
+
+### Writing Tests
+
+**Spec tests** (`*.spec.ts` / `*.spec.tsx`) test pure logic and component rendering in a node DOM:
+
+```tsx
+import { render, h } from '@stencil/vitest';
+import { describe, it, expect } from 'vitest';
+
+describe('my-component', () => {
+  it('renders with value', async () => {
+    const { root } = await render(<my-component value="test" />);
+    expect(root).toBeTruthy();
+    expect(root.value).toBe('test');
+  });
+});
+```
+
+**E2E tests** (`*.e2e.tsx`) run in a real browser:
+
+```tsx
+import { render, h } from '@stencil/vitest';
+import { describe, it, expect } from 'vitest';
+
+describe('my-component e2e', () => {
+  it('renders and hydrates', async () => {
+    const { root } = await render(<my-component value="test" />);
+    expect(root).toHaveClass('hydrated');
+  });
+});
+```
+
+## Continuous Integration
+
+### npm-ci.yml
+
+Runs on every push and pull request. Tests against Node.js 22 (LTS) and 24 (current):
+
+1. `npm ci` -- install dependencies
+2. `npx playwright install --with-deps chromium` -- install browser for E2E and Storybook tests
+3. `npx lerna run build` -- build all packages
+4. `npx lerna run lint` -- ESLint
+5. `npx lerna run format:check` -- Prettier
+6. `npm run build-storybook` -- build static Storybook
+7. `npm test` -- runs all tests (Stencil spec + E2E + Storybook) with coverage
+
+On pull requests, a coverage summary is posted as a comment. On pushes to `main`, a coverage
+badge is updated automatically.
+
+### deploy-storybook.yml
+
+Runs on pushes to `main`. Builds all packages and the composed Storybook, then deploys the static
+output to [GitHub Pages](https://kit-data-manager.github.io/pid-component/).
+
+### chromatic.yml
+
+Runs on every push and pull request. Uploads the main Web Components Storybook to
+[Chromatic](https://www.chromatic.com/) for visual regression testing. Changes on `main` are
+auto-accepted.
+
+## Deployment
+
+### Storybook
+
+The production Storybook is deployed to GitHub Pages at
+**https://kit-data-manager.github.io/pid-component/**. It is rebuilt and redeployed automatically
+on every push to `main` via the `deploy-storybook.yml` workflow.
+
+The deployed Storybook includes the main Web Components stories plus the composed React (Vite),
+React (Next.js), Vue, and Angular sub-Storybooks (accessible via the sidebar).
+
+### npm Packages
+
+The npm packages are published independently (Lerna independent versioning). To publish:
+
+```bash
+npx lerna publish
+```
+
+### Chromatic
+
+[Chromatic](https://www.chromatic.com/) provides visual regression testing and a hosted Storybook
+preview for each PR. It runs automatically via `chromatic.yml` on every push and pull request.

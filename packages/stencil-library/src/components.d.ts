@@ -7,7 +7,6 @@
 import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 import { FoldableAction } from './utils/FoldableAction';
 import { FoldableItem } from './utils/FoldableItem';
-
 export { FoldableAction } from "./utils/FoldableAction";
 export { FoldableItem } from "./utils/FoldableItem";
 export namespace Components {
@@ -118,6 +117,11 @@ export namespace Components {
          */
         "emphasize": boolean;
         /**
+         * Whether to apply floating/overlay styling when expanded. When true, applies absolute positioning and z-index for overlay behavior.
+         * @default false
+         */
+        'expanded': boolean;
+        /**
           * Initial height when expanded
          */
         "initialHeight"?: string;
@@ -139,7 +143,12 @@ export namespace Components {
         /**
           * Public method to recalculate content dimensions Can be called externally, for example when pagination changes Optimized for better performance
          */
-        "recalculateContentDimensions": () => Promise<any>;
+        'recalculateContentDimensions': () => Promise<{
+            contentWidth: number;
+            contentHeight: number;
+            maxWidth: number;
+            maxHeight: number;
+        }>;
         /**
           * Whether to show the footer section
           * @default false
@@ -178,11 +187,11 @@ export namespace Components {
          */
         "emphasizeComponent": boolean;
         /**
-         * When renderers is set and no listed renderer matches the value, this flag controls whether to fall back to the full default renderer registry. Default: true (always falls back to try all renderers). Set to false to strictly restrict detection to only the listed renderers. Not forwarded to child subcomponents. (optional)
-         * @type {boolean}
-         * @default true
+          * When renderers is set and no listed renderer matches the value, this flag controls whether to fall back to the full default renderer registry. Default: true (always falls back to try all renderers). Set to false to strictly restrict detection to only the listed renderers. Not forwarded to child subcomponents. (optional)
+          * @type {boolean}
+          * @default true
          */
-        'fallbackToAll': boolean;
+        "fallbackToAll": boolean;
         /**
           * Initial height of the component (e.g. '300px', '50vh'). If not set, defaults to 300px.
           * @type {string}
@@ -205,10 +214,10 @@ export namespace Components {
          */
         "openByDefault": boolean;
         /**
-         * An ordered list of renderer keys to try first (JSON string array). These renderers are tried in the specified order as a non-binding preselection. If none match, the component falls back to the full default renderer registry (unless fallbackToAll is explicitly set to false). Not forwarded to child subcomponents — their types are independent. (optional)  Example: '["DOIType", "ORCIDType", "HandleType"]'
-         * @type {string}
+          * An ordered list of renderer keys to try first (JSON string array). These renderers are tried in the specified order as a non-binding preselection. If none match, the component falls back to the full default renderer registry (unless fallbackToAll is explicitly set to false). Not forwarded to child subcomponents — their types are independent. (optional)  Example: '["DOIType", "ORCIDType", "HandleType"]'
+          * @type {string}
          */
-        'renderers'?: string;
+        "renderers"?: string;
         /**
           * A stringified JSON object containing settings for this component. The resulting object is passed to every subcomponent, so that every component has the same settings. Values and the according type are defined by the components themselves. (optional)  Schema: ```typescript {  type: string,  values: {   name: string,   value: any  }[] }[] ```
           * @type {string}
@@ -586,6 +595,11 @@ declare namespace LocalJSX {
          */
         "emphasize"?: boolean;
         /**
+         * Whether to apply floating/overlay styling when expanded. When true, applies absolute positioning and z-index for overlay behavior.
+         * @default false
+         */
+        'expanded'?: boolean;
+        /**
           * Initial height when expanded
          */
         "initialHeight"?: string;
@@ -650,11 +664,11 @@ declare namespace LocalJSX {
          */
         "emphasizeComponent"?: boolean;
         /**
-         * When renderers is set and no listed renderer matches the value, this flag controls whether to fall back to the full default renderer registry. Default: true (always falls back to try all renderers). Set to false to strictly restrict detection to only the listed renderers. Not forwarded to child subcomponents. (optional)
-         * @type {boolean}
-         * @default true
+          * When renderers is set and no listed renderer matches the value, this flag controls whether to fall back to the full default renderer registry. Default: true (always falls back to try all renderers). Set to false to strictly restrict detection to only the listed renderers. Not forwarded to child subcomponents. (optional)
+          * @type {boolean}
+          * @default true
          */
-        'fallbackToAll'?: boolean;
+        "fallbackToAll"?: boolean;
         /**
           * Initial height of the component (e.g. '300px', '50vh'). If not set, defaults to 300px.
           * @type {string}
@@ -677,10 +691,10 @@ declare namespace LocalJSX {
          */
         "openByDefault"?: boolean;
         /**
-         * An ordered list of renderer keys to try first (JSON string array). These renderers are tried in the specified order as a non-binding preselection. If none match, the component falls back to the full default renderer registry (unless fallbackToAll is explicitly set to false). Not forwarded to child subcomponents — their types are independent. (optional)  Example: '["DOIType", "ORCIDType", "HandleType"]'
-         * @type {string}
+          * An ordered list of renderer keys to try first (JSON string array). These renderers are tried in the specified order as a non-binding preselection. If none match, the component falls back to the full default renderer registry (unless fallbackToAll is explicitly set to false). Not forwarded to child subcomponents — their types are independent. (optional)  Example: '["DOIType", "ORCIDType", "HandleType"]'
+          * @type {string}
          */
-        'renderers'?: string;
+        "renderers"?: string;
         /**
           * A stringified JSON object containing settings for this component. The resulting object is passed to every subcomponent, so that every component has the same settings. Values and the according type are defined by the components themselves. (optional)  Schema: ```typescript {  type: string,  values: {   name: string,   value: any  }[] }[] ```
           * @type {string}
@@ -866,6 +880,7 @@ declare namespace LocalJSX {
         "initialHeight": string;
         "lineHeight": number;
         "showFooter": boolean;
+        'expanded': boolean;
     }
     interface PidComponentAttributes {
         "value": string;
@@ -881,8 +896,8 @@ declare namespace LocalJSX {
         "width": string;
         "height": string;
         "darkMode": 'light' | 'dark' | 'system';
-        'renderers': string;
-        'fallbackToAll': boolean;
+        "renderers": string;
+        "fallbackToAll": boolean;
     }
     interface PidDataTableAttributes {
         "itemsPerPage": number;

@@ -59,15 +59,16 @@ with resize capability and cross-browser compatibility
 
 ## Properties
 
-| Property        | Attribute        | Description                                                                                  | Type                            | Default     |
-| --------------- | ---------------- | -------------------------------------------------------------------------------------------- | ------------------------------- | ----------- |
-| `darkMode`      | `dark-mode`      | The dark mode setting for the component Options: "light", "dark", "system" Default: "system" | `"dark" \| "light" \| "system"` | `'system'`  |
-| `emphasize`     | `emphasize`      | Whether to emphasize the component with border and shadow                                    | `boolean`                       | `false`     |
-| `initialHeight` | `initial-height` | Initial height when expanded                                                                 | `string`                        | `undefined` |
-| `initialWidth`  | `initial-width`  | Initial width when expanded                                                                  | `string`                        | `undefined` |
-| `lineHeight`    | `line-height`    | Line height for collapsed state                                                              | `number`                        | `24`        |
-| `open`          | `open`           | Whether the collapsible is open                                                              | `boolean`                       | `false`     |
-| `showFooter`    | `show-footer`    | Whether to show the footer section                                                           | `boolean`                       | `false`     |
+| Property        | Attribute        | Description                                                                                                                        | Type                            | Default     |
+|-----------------|------------------|------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|-------------|
+| `darkMode`      | `dark-mode`      | The dark mode setting for the component Options: "light", "dark", "system" Default: "system"                                       | `"dark" \| "light" \| "system"` | `'system'`  |
+| `emphasize`     | `emphasize`      | Whether to emphasize the component with border and shadow                                                                          | `boolean`                       | `false`     |
+| `expanded`      | `expanded`       | Whether to apply floating/overlay styling when expanded. When true, applies absolute positioning and z-index for overlay behavior. | `boolean`                       | `false`     |
+| `initialHeight` | `initial-height` | Initial height when expanded                                                                                                       | `string`                        | `undefined` |
+| `initialWidth`  | `initial-width`  | Initial width when expanded                                                                                                        | `string`                        | `undefined` |
+| `lineHeight`    | `line-height`    | Line height for collapsed state                                                                                                    | `number`                        | `24`        |
+| `open`          | `open`           | Whether the collapsible is open                                                                                                    | `boolean`                       | `false`     |
+| `showFooter`    | `show-footer`    | Whether to show the footer section                                                                                                 | `boolean`                       | `false`     |
 
 
 ## Events
@@ -80,7 +81,8 @@ with resize capability and cross-browser compatibility
 
 ## Methods
 
-### `recalculateContentDimensions() => Promise<any>`
+###
+`recalculateContentDimensions() => Promise<{ contentWidth: number; contentHeight: number; maxWidth: number; maxHeight: number; }>`
 
 Public method to recalculate content dimensions
 Can be called externally, for example when pagination changes
@@ -88,7 +90,7 @@ Optimized for better performance
 
 #### Returns
 
-Type: `Promise<any>`
+Type: `Promise<{ contentWidth: number; contentHeight: number; maxWidth: number; maxHeight: number; }>`
 
 
 

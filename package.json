@@ -1,20 +1,48 @@
 {
   "name": "pid-component",
   "private": true,
-  "version": "0.3.1",
+  "version": "0.4.0",
   "workspaces": [
     "packages/*"
   ],
   "devDependencies": {
+    "@chromatic-com/storybook": "^5.1.2",
+    "@storybook/addon-a11y": "^10.3.5",
+    "@storybook/addon-docs": "^10.3.5",
+    "@storybook/addon-links": "^10.3.5",
+    "@storybook/addon-themes": "^10.3.5",
+    "@storybook/addon-vitest": "^10.3.5",
+    "@storybook/web-components-vite": "^10.3.5",
     "@types/node": "^25.6.0",
+    "@vitest/coverage-v8": "^4.1.4",
+    "ajv": "^8.18.0",
+    "chromatic": "^16.3.0",
+    "concurrently": "^9.2.1",
+    "eslint-plugin-storybook": "^10.3.5",
     "lerna": "^9.0.7",
-    "typescript": "^6.0.2"
+    "lit": "^3.3.2",
+    "playwright": "^1.59.1",
+    "storybook": "^10.3.5",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.4",
+    "wait-on": "^9.0.5"
   },
   "dependencies": {
     "vite": "8.0.8"
   },
   "scripts": {
-    "build": "lerna run build"
+    "build": "lerna run build",
+    "lint": "lerna run lint",
+    "test": "lerna run test && npm run test-storybook",
+    "storybook": "storybook dev -p 6006 --no-open",
+    "build-storybook": "npm run build-storybook:root && npm run build-storybook:children && npm run build-storybook:copy",
+    "build-storybook:root": "storybook build -o storybook-static",
+    "build-storybook:children": "npm run build-storybook -w packages/react-library && npm run build-storybook -w packages/vue-library && npm run build-storybook -w packages/angular-library && npm run build-storybook -w packages/nextjs-app",
+    "build-storybook:copy": "cp -r packages/react-library/storybook-static storybook-static/react-vite && cp -r packages/vue-library/storybook-static storybook-static/vue && cp -r packages/angular-library/storybook-static storybook-static/angular && cp -r packages/nextjs-app/storybook-static storybook-static/react-nextjs",
+    "test-storybook": "vitest run --project=storybook",
+    "storybook:children": "concurrently \"npm run storybook --workspace=packages/react-library\" \"npm run storybook --workspace=packages/vue-library\" \"npm run storybook --workspace=packages/angular-library\" \"npm run storybook --workspace=packages/nextjs-app\"",
+    "storybook:composed": "wait-on http://localhost:6007 http://localhost:6008 http://localhost:6009 http://localhost:6010 && storybook dev -p 6006",
+    "storybook:all": "concurrently \"npm run storybook:children\" \"npm run storybook:composed\""
   },
   "description": "Monorepo for the PID Component and related packages",
   "author": {
@@ -59,6 +87,8 @@
   ],
   "keywords": [
     "react",
+    "vue",
+    "angular",
     "pid",
     "datatyperegistry",
     "handle.net",
@@ -77,6 +107,5 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/kit-data-manager/pid-component"
-  },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  }
 }

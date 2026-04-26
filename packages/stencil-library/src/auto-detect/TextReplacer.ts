@@ -152,9 +152,8 @@ function applyConfig(pidComponent: HTMLElement, config: PidDetectionConfig): voi
   if (config.amountOfItems !== undefined) {
     pidComponent.setAttribute('amount-of-items', String(config.amountOfItems));
   }
-  if (config.emphasizeComponent !== undefined) {
-    pidComponent.setAttribute('emphasize-component', String(config.emphasizeComponent));
-  }
+  // Default to non-emphasized for auto-detected components (blends into text)
+  pidComponent.setAttribute('emphasize-component', String(config.emphasizeComponent ?? false));
   if (config.showTopLevelCopy !== undefined) {
     pidComponent.setAttribute('show-top-level-copy', String(config.showTopLevelCopy));
   }

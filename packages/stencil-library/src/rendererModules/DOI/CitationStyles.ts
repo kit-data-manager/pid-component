@@ -29,41 +29,42 @@ export function formatCitationPreview(
 
   const firstAuthor = creators[0];
   const authorCount = creators.length;
+  const truncateCitation = false;
 
   switch (style) {
     case CitationStyle.APA:
       return {
-        citation: formatAPA(firstAuthor, authorCount, title, year, true),
+        citation: formatAPA(firstAuthor, authorCount, title, year, truncateCitation),
         tooltip: formatAPA(firstAuthor, authorCount, title, year, false),
       };
 
     case CitationStyle.CHICAGO:
       return {
-        citation: formatChicago(firstAuthor, authorCount, title, year, true),
+        citation: formatChicago(firstAuthor, authorCount, title, year, truncateCitation),
         tooltip: formatChicago(firstAuthor, authorCount, title, year, false),
       };
 
     case CitationStyle.IEEE:
       return {
-        citation: formatIEEE(firstAuthor, authorCount, title, year, true),
+        citation: formatIEEE(firstAuthor, authorCount, title, year, truncateCitation),
         tooltip: formatIEEE(firstAuthor, authorCount, title, year, false),
       };
 
     case CitationStyle.HARVARD:
       return {
-        citation: formatHarvard(firstAuthor, authorCount, title, year, true),
+        citation: formatHarvard(firstAuthor, authorCount, title, year, truncateCitation),
         tooltip: formatHarvard(firstAuthor, authorCount, title, year, false),
       };
 
     case CitationStyle.ANGLIA_RUSKIN:
       return {
-        citation: formatAngliaRuskin(firstAuthor, authorCount, title, year, true),
+        citation: formatAngliaRuskin(firstAuthor, authorCount, title, year, truncateCitation),
         tooltip: formatAngliaRuskin(firstAuthor, authorCount, title, year, false),
       };
 
     default:
       return {
-        citation: formatAPA(firstAuthor, authorCount, title, year, true),
+        citation: formatAPA(firstAuthor, authorCount, title, year, truncateCitation),
         tooltip: formatAPA(firstAuthor, authorCount, title, year, false),
       };
   }

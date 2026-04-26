@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Component, Element, Event, EventEmitter, h, Host, Listen, Prop, State } from '@stencil/core';
 
 @Component({
@@ -293,7 +292,7 @@ export class PidTooltip {
       <Host class="relative inline-block w-full" onMouseEnter={this.showTooltip} onMouseLeave={this.hideTooltip}>
         {/* Screen reader announcement for tooltip state changes */}
         {this.isVisible && (
-          <span class="sr-only" aria-live="assertive">
+          <span class="sr-only fixed" aria-live="assertive">
             Information tooltip opened
           </span>
         )}

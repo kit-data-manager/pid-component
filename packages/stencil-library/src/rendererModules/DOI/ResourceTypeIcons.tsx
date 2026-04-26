@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FunctionalComponent, h } from '@stencil/core';
 
 /**
@@ -53,7 +52,7 @@ export function beautifyResourceType(resourceType: string): string {
  * Downloaded from https://datacite.org/datacite-schwoop/ on 2026-02-04
  */
 export const DataCiteLogo = () => (
-  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 103.8" class={'h-5'}>
+  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 103.8" class={'h-4'}>
     <defs>
       <style>
         {`.cls-1{fill:#00b1e2;}`}
@@ -72,7 +71,7 @@ export const DataCiteLogo = () => (
 export const CrossRefLogo = () => (
   <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
        x="0px" y="0px"
-       class={'h-5'}
+       class={'h-4'}
        viewBox="0 0 65.400002 95.199999"
   >
     <style type="text/css">

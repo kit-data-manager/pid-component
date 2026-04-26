@@ -1,8 +1,19 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FunctionalComponent, h } from '@stencil/core';
 import { GenericIdentifierType } from '../utils/GenericIdentifierType';
 import { FoldableItem } from '../utils/FoldableItem';
 import { FoldableAction } from '../utils/FoldableAction';
+
+/** Shape of the ROR API v2 response used by this renderer. */
+interface RorApiResponse {
+  id: string;
+  status: string;
+  names: { value: string; types: string[] }[];
+  types: string[];
+  links: { type?: string; value: string }[];
+  external_ids: { type: string; preferred: string; all: string[] }[];
+  relationships: { type: string; id: string }[];
+  locations: { geonames_details: { country_code?: string; lat?: number; lng?: number } }[];
+}
 
 /**
  * This class specifies a custom renderer for Research Organization Registry (ROR) identifiers.
@@ -10,7 +21,7 @@ import { FoldableAction } from '../utils/FoldableAction';
  * @extends GenericIdentifierType
  */
 export class RORType extends GenericIdentifierType {
-  private rorData: Record<string, any>;
+  private rorData: RorApiResponse;
   private label: string;
   private acronym: string;
 
@@ -209,12 +220,12 @@ export class RORType extends GenericIdentifierType {
 
     // If data is loaded, show organization name and ID
     return (
-      <span class={`inline-flex flex-nowrap items-center align-top font-mono`}>
+      <span class={`inline-flex flex-nowrap items-baseline font-mono min-w-0 max-w-full`}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 164 118"
           version="1.1"
-          class={'mr-1 h-5 flex-none items-center p-0.5'}
+          class={'mr-1 h-4 flex-none px-0.5 self-center'}
           style={{ fillRule: 'evenodd', clipRule: 'evenodd', strokeLinejoin: 'round', strokeMiterlimit: '2' }}
         >
           <g transform="matrix(0.994301,0,0,0.989352,0,0)">
@@ -231,7 +242,7 @@ export class RORType extends GenericIdentifierType {
             />
           </g>
         </svg>
-        <span class={`flex-none items-center px-1`}>
+        <span class={`min-w-0 overflow-hidden text-ellipsis whitespace-nowrap`}>
           {this.label}
           {this.acronym ? ' (' + this.acronym + ')' : ''}
         </span>

@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Component, Element, h, Host, Prop, State } from '@stencil/core';
 
 @Component({
@@ -29,73 +28,51 @@ export class CopyButton {
 
   /**
    * Copies the given value to the clipboard and updates the state to show success message.
+   *
+   * Safari requires the copy to happen synchronously within the user gesture.
+   * Using setTimeout or awaiting navigator.clipboard.writeText() can cause
+   * Safari to lose the user-gesture context and reject the copy.
    */
-  private copyValue = async (event: MouseEvent) => {
-    // Stop event propagation to prevent parent elements from handling the click
+  private copyValue = (event: MouseEvent) => {
     event.stopPropagation();
     event.preventDefault();
 
+    // Synchronous execCommand approach — works in all browsers including Safari.
+    // We do this FIRST (synchronously) to preserve the user-gesture context.
+    const textArea = document.createElement('textarea');
+    textArea.value = this.value;
+    textArea.setAttribute('aria-hidden', 'true');
+    textArea.setAttribute('readonly', 'readonly');
+    // Position off-screen but within the viewport so Safari allows selection
+    textArea.style.cssText = 'position:fixed;top:0;left:0;width:2em;height:2em;padding:0;border:none;outline:none;box-shadow:none;opacity:0;';
+
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    // Safari on iOS needs setSelectionRange
+    textArea.setSelectionRange(0, textArea.value.length);
+
+    let copied = false;
     try {
-      // Try the Async Clipboard API first
-      if ('clipboard' in navigator) {
-        try {
-          await navigator.clipboard.writeText(this.value);
-          this.showSuccess();
-          return;
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        } catch (ignored) {
-          // Fall through to execCommand fallback
-        }
-      }
+      copied = document.execCommand('copy');
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_) {
+      // Silently ignore
+    }
+    document.body.removeChild(textArea);
 
-      // Fallback to execCommand for all browsers including Mac
-      const textArea = document.createElement('textarea');
-      textArea.value = this.value;
+    if (copied) {
+      this.showSuccess();
+      return;
+    }
 
-      // Add accessibility attributes and Tailwind classes for positioning
-      textArea.setAttribute('aria-hidden', 'true');
-      textArea.setAttribute('tabindex', '-1');
-      textArea.setAttribute('readonly', 'readonly');
-      textArea.className = 'fixed top-0 left-0 opacity-0 pointer-events-none z-[9999] w-[10em] h-[10em]';
-
-      document.body.appendChild(textArea);
-
-      // Focus and select need to happen after the element is in the DOM
-      // Increased timeout to ensure the element is properly rendered
-      setTimeout(() => {
-        textArea.focus();
-        textArea.select();
-
-        try {
-          const success = document.execCommand('copy');
-          if (success) {
-            this.showSuccess();
-          } else {
-            // If execCommand fails, try one more time with a different approach
-            const range = document.createRange();
-            range.selectNodeContents(textArea);
-            const selection = window.getSelection();
-            if (selection) {
-              selection.removeAllRanges();
-              selection.addRange(range);
-              textArea.setSelectionRange(0, textArea.value.length); // For mobile devices
-
-              const secondAttempt = document.execCommand('copy');
-              if (secondAttempt) {
-                this.showSuccess();
-              }
-            }
-          }
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        } catch (ignored) {
-          // Error handling is silent to not disrupt user experience
-        } finally {
-          document.body.removeChild(textArea);
-        }
-      }, 200); // Increased timeout for better reliability
-    } catch (err) {
-      console.error('Failed to copy text: ', err);
-      // Error handling is silent to not disrupt user experience
+    // Async fallback: navigator.clipboard API (non-Safari browsers)
+    if ('clipboard' in navigator) {
+      navigator.clipboard.writeText(this.value).then(
+        () => this.showSuccess(),
+        () => { /* silent failure */
+        },
+      );
     }
   };
 

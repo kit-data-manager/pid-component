@@ -1,0 +1,11 @@
+export { default as AppNavigation } from './AppNavigation.vue';
+export { default as HeroCard } from './HeroCard.vue';
+export { default as DoiCard } from './DoiCard.vue';
+export { default as DatasetTable } from './DatasetTable.vue';
+export { default as AuthorCard } from './AuthorCard.vue';
+export { default as AuthorGrid } from './AuthorGrid.vue';
+export { default as ArticleSection } from './ArticleSection.vue';
+export { default as LicenseDialog } from './LicenseDialog.vue';
+export { default as AppFooter } from './AppFooter.vue';
+export { default as DatasetsPage } from './DatasetsPage.vue';
+export { default as AboutPage } from './AboutPage.vue';

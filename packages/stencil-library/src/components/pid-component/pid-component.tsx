@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Component, Element, h, Host, Prop, State, Watch } from '@stencil/core';
 import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
 import { FoldableItem } from '../../utils/FoldableItem';
@@ -9,7 +8,7 @@ import { clearCache } from '../../utils/DataCache';
 @Component({
   tag: 'pid-component',
   styleUrl: 'pid-component.css',
-  shadow: true
+  shadow: true,
 })
 export class PidComponent {
   /**
@@ -210,19 +209,22 @@ export class PidComponent {
   @State() isExpanded: boolean = false;
 
   constructor() {
-    this.temporarilyEmphasized = this.emphasizeComponent;
+    // Note: @Prop values may not be set yet in the constructor.
+    // temporarilyEmphasized is properly initialized in componentWillLoad()
+    // to ensure it reflects the actual prop value.
   }
 
   componentDidLoad() {
     // Initialize component ID for references
     this.ensureComponentId();
 
-    // Ensure collapsible gets proper initial width and open state after load
-    // Use a longer delay to ensure DOM is fully rendered before recalculating
+    // Ensure collapsible gets proper initial width and open state after load.
+    // Use shadowRoot.querySelector because pid-collapsible is rendered inside
+    // this component's shadow DOM.
     setTimeout(() => {
-      const collapsible = this.el.querySelector('pid-collapsible');
-      if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
-        (collapsible as any).recalculateContentDimensions();
+      const collapsible = this.el.shadowRoot?.querySelector('pid-collapsible');
+      if (collapsible && typeof (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions === 'function') {
+        (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions();
       }
     }, 50);
   }
@@ -248,9 +250,9 @@ export class PidComponent {
 
     // After value updates, ensure dimensions are properly recalculated
     setTimeout(() => {
-      const collapsible = this.el.querySelector('pid-collapsible');
-      if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
-        (collapsible as any).recalculateContentDimensions();
+      const collapsible = this.el.shadowRoot?.querySelector('pid-collapsible');
+      if (collapsible && typeof (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions === 'function') {
+        (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions();
       }
     }, 10);
   }
@@ -313,9 +315,9 @@ export class PidComponent {
 
           // After loading subcomponents, ensure dimensions are recalculated
           setTimeout(() => {
-            const collapsible = this.el.querySelector('pid-collapsible');
-            if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
-              (collapsible as any).recalculateContentDimensions();
+            const collapsible = this.el.shadowRoot?.querySelector('pid-collapsible');
+            if (collapsible && typeof (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions === 'function') {
+              (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions();
             }
           }, 50);
         }
@@ -382,6 +384,23 @@ export class PidComponent {
 
     // Validate amountOfItems to prevent division by zero
     this.validateAmountOfItems(this.amountOfItems);
+
+    // Initialize temporarilyEmphasized from the actual prop value.
+    // This cannot be done in the constructor because @Prop values
+    // are not yet bound when the constructor runs, causing
+    // emphasizeComponent=false to be ignored on initial load.
+    this.temporarilyEmphasized = this.emphasizeComponent || this.loadSubcomponents;
+
+    // Set initial expanded state based on openByDefault.
+    // This must happen here (once) rather than in render(), because setting
+    // @State in render() triggers re-renders and prevents the user from
+    // ever collapsing the component.
+    if (this.openByDefault) {
+      if (!this.hideSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) {
+        this.isExpanded = true;
+        this.loadSubcomponents = true;
+      }
+    }
 
     // Initialize dark mode
     this.initializeDarkMode();
@@ -603,9 +622,7 @@ export class PidComponent {
 
   private blockEventPropagation = (e: Event) => {
     e.stopPropagation();
-    e.stopImmediatePropagation();
-    e.preventDefault()
-  }
+  };
 
   /**
    * Determines if footer should be shown based on whether there are actions or items with pagination
@@ -620,36 +637,14 @@ export class PidComponent {
    * Renders the component.
    */
   render() {
-    // Set initial expanded state based on openByDefault
-    if (this.openByDefault) {
-      if (!this.hideSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) {
-        this.isExpanded = this.openByDefault;
-        this.loadSubcomponents = true;
-
-        // After loading subcomponents, ensure dimensions are recalculated
-        setTimeout(() => {
-          const collapsible = this.el.querySelector('pid-collapsible');
-          if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
-            (collapsible as any).recalculateContentDimensions();
-          }
-          console.log(
-            `Loaded subcomponents and recalculated dimensions. expanded: ${this.isExpanded}, loadSubcomponents: ${this.loadSubcomponents}, currentLevel: ${this.currentLevelOfSubcomponents}, totalLevels: ${this.levelOfSubcomponents}`,
-          );
-        }, 50); // Give it a bit more time for the DOM to update with new content
-      }
-    }
-
     // If unmatched (renderers prop was set but no listed renderer matched), render nothing
     if (this.displayStatus === 'unmatched') {
       return <Host class={`relative font-sans`} style={{ display: 'none' }}></Host>;
     }
 
     return (
-      <Host class={`relative font-sans`}>
-        {/* Hidden description for accessibility */}
-        <span id={`${this.el.id}-description`} class="sr-only">
-          This component displays information about the identifier {this.value}. It can be expanded to show more details.
-        </span>
+      <Host class={`relative font-sans`}
+            aria-label={`This component displays information about the identifier ${this.value}. It can be expanded to show more details.`}>
         {
           // Check if there are any items or actions to show, or if there's a body to render
           (this.items.length === 0 && this.actions.length === 0 && !this.identifierObject?.renderBody()) || this.hideSubcomponents ? (
@@ -659,16 +654,15 @@ export class PidComponent {
                 class={
                   this.currentLevelOfSubcomponents === 0
                     ? //(w/o sub components)
-                      'group rounded-md border px-2 py-0 shadow-sm' +
-                      (this.emphasizeComponent || this.temporarilyEmphasized
-                        ? this.isDarkMode
-                          ? 'border-gray-600 bg-gray-800'
-                          : 'border-gray-300 bg-white'
-                        : this.isDarkMode
-                          ? 'bg-gray-800/60'
-                          : 'bg-white/60') +
-                    ' inline-flex cursor-pointer list-none flex-nowrap items-center overflow-hidden font-mono font-bold text-clip' +
-                      (!this.isExpanded ? ` h-[${this._lineHeight || 24}px] leading-[${this._lineHeight || 24}px]` : '')
+                    (
+                      this.emphasizeComponent || this.temporarilyEmphasized
+                        ? 'group rounded-md border py-0 shadow-sm '
+                        + (this.isDarkMode
+                            ? 'border-gray-600 bg-gray-800'
+                            : 'border-gray-300 bg-white'
+                        ) + ' inline-flex cursor-pointer list-none flex-nowrap items-center overflow-hidden font-mono font-bold text-clip'
+                        : (this.isDarkMode ? 'bg-gray-800/60' : '') + ' inline-flex cursor-pointer list-none flex-nowrap items-center font-mono font-bold'
+                    ) + (!this.isExpanded ? ` h-[${this._lineHeight || 24}px] leading-[${this._lineHeight || 24}px]` : '')
                     : ''
                 }
                 tabIndex={0}
@@ -677,16 +671,18 @@ export class PidComponent {
                 aria-expanded={this.isExpanded}
               >
                 <span
-                  class={`inline-flex max-w-full flex-nowrap overflow-x-auto font-mono font-medium text-ellipsis whitespace-nowrap select-all ${this.isExpanded ? 'text-xs' : 'text-sm'}`}
+                  class={`pid-preview-wrapper inline-block font-mono font-medium whitespace-nowrap select-all ${this.isExpanded ? 'text-xs' : 'text-sm'}`}
                 >
                   { // Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
                     this.identifierObject?.renderPreview()
                   }
                 </span>
                 {
-                  // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
-                  this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy ? (
-                    <copy-button value={this.identifierObject.value} class="shrink-0"
+                  // Show copy button on top level, but hide it in collapsed non-emphasized mode.
+                  // The copy button is always pinned to the right via ml-auto + shrink-0.
+                  this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy
+                  && (this.emphasizeComponent || this.temporarilyEmphasized || this.isExpanded) ? (
+                    <copy-button value={this.identifierObject.value} class="ml-auto shrink-0"
                                  aria-label={`Copy value: ${this.identifierObject.value}`}
                                  onClick={this.blockEventPropagation} />
                   ) : (
@@ -695,30 +691,22 @@ export class PidComponent {
                 }
               </span>
             ) : this.displayStatus === 'error' ? (
-              <span class={'inline-flex items-center font-medium text-red-600'} role="alert" aria-live="assertive">
-                <svg class="mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-2h2v2h-2zm0-10v6h2V7h-2z" clip-rule="evenodd" />
-                </svg>
-                Error loading data for: {this.value}
+              <span class={'inline-flex items-center font-mono text-sm text-gray-600 dark:text-gray-300'}
+                    role="status">
+                {this.value}
               </span>
             ) : (
-              <span class={'inline-flex items-center transition ease-in-out'} role="status" aria-live="polite">
-                <svg class="mr-3 ml-1 h-5 w-5 animate-spin text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
-                  <path
-                    class="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  />
-                </svg>
-                <span>Loading... {this.value}</span>
+              <span class={'inline-flex items-center font-mono text-sm text-gray-500'} role="status"
+                    aria-live="polite">
+                {this.value}
               </span>
             )
           ) : (
             <pid-collapsible
+              expanded={this.isExpanded}
               open={this.isExpanded}
               emphasize={this.emphasizeComponent || this.temporarilyEmphasized}
-              initialWidth={this.width}
+              initialWidth={this.currentLevelOfSubcomponents > 0 ? '100%' : this.width}
               initialHeight={this.height}
               lineHeight={this._lineHeight}
               showFooter={this.shouldShowFooter}
@@ -730,17 +718,18 @@ export class PidComponent {
             >
               <span
                 slot="summary"
-                class={`inline-flex items-center overflow-x-auto font-mono text-sm font-medium select-all ${this.isExpanded ? 'flex-wrap overflow-visible wrap-break-word' : 'flex-nowrap whitespace-nowrap'}`}
+                class={`font-mono font-medium whitespace-nowrap select-all text-sm`}
                 aria-label={`Preview of ${this.value}`}
               >
                 {this.identifierObject?.renderPreview()}
               </span>
 
-              {this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy && (this.emphasizeComponent || this.temporarilyEmphasized) ? (
+              {this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy
+              && (this.emphasizeComponent || this.temporarilyEmphasized || this.isExpanded) ? (
                 <copy-button
                   slot="summary-actions"
                   value={this.value}
-                  class="self-end shrink-0"
+                  class="ml-auto pl-2 shrink-0"
                   aria-label={`Copy value: ${this.value}`}
                   onClick={this.blockEventPropagation}
                 />
@@ -759,7 +748,7 @@ export class PidComponent {
                   settings={this.settings}
                   darkMode={this.darkMode}
                   onPageChange={e => (this.tablePage = e.detail)}
-                  class="w-full grow overflow-auto"
+                  class="w-full grow overflow-x-clip overflow-y-auto"
                   aria-label={`Data table for ${this.value}`}
                   aria-describedby={`${this.el.id}-table-description`}
                 />
@@ -767,7 +756,7 @@ export class PidComponent {
 
               {/* Hidden description for data table accessibility */}
               {this.items.length > 0 && (
-                <span id={`${this.el.id}-table-description`} class="sr-only">
+                <span id={`${this.el.id}-table-description`} class="sr-only fixed">
                   This table displays properties and values associated with the identifier {this.value}.
                 </span>
               )}
@@ -776,7 +765,8 @@ export class PidComponent {
 
               {/* Pagination in a separate line above actions */}
               {this.items.length > 0 && (
-                <div slot="footer" class={`relative z-50 w-full overflow-visible ${this.isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+                <div slot="footer"
+                     class={`relative z-50 w-full overflow-visible ${this.isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
                   <pid-pagination
                     currentPage={this.tablePage}
                     totalItems={this.items.length}
@@ -792,7 +782,9 @@ export class PidComponent {
 
               {/* Footer Actions - in a separate line below pagination */}
               {this.actions.length > 0 && (
-                <pid-actions slot="footer-actions" actions={this.actions} darkMode={this.darkMode} class="my-0 shrink-0" aria-label={`Available actions for ${this.value}`} />
+                <pid-actions slot="footer-actions" actions={this.actions} darkMode={this.darkMode}
+                             class="my-0 shrink-0 overflow-x-auto"
+                             aria-label={`Available actions for ${this.value}`} />
               )}
             </pid-collapsible>
           )

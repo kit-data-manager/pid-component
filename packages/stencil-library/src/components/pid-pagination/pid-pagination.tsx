@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Component, Element, Event, EventEmitter, h, Prop } from '@stencil/core';
 
 @Component({
@@ -64,8 +63,8 @@ export class PidPagination {
       // But we'll trigger it here as well to ensure it happens
       requestAnimationFrame(() => {
         const collapsible = this.el.closest('pid-collapsible');
-        if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
-          (collapsible as any).recalculateContentDimensions();
+        if (collapsible && typeof (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions === 'function') {
+          (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions();
         }
       });
     }
@@ -81,8 +80,8 @@ export class PidPagination {
     // as it watches for these changes, but we'll trigger it here as well to be certain
     requestAnimationFrame(() => {
       const collapsible = this.el.closest('pid-collapsible');
-      if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
-        (collapsible as any).recalculateContentDimensions();
+      if (collapsible && typeof (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions === 'function') {
+        (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions();
       }
     });
   };

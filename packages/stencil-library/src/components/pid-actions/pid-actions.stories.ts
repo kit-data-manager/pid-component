@@ -22,10 +22,18 @@ const meta: Meta = {
   tags: ['autodocs'],
   argTypes: {
     actions: {
-      description: 'Array of actions to display',
+      description: 'Array of actions to display. Each action has a priority, title, link, and style (primary, secondary, or danger).',
       control: 'object',
       table: {
         type: { summary: 'FoldableAction[]' },
+        defaultValue: { summary: '[]' },
+      },
+    },
+    actionsId: {
+      description: 'Optional ID for the actions container, used for ARIA references to improve accessibility',
+      control: { type: 'text' },
+      table: {
+        type: { summary: 'string' },
       },
     },
     darkMode: {
@@ -33,7 +41,7 @@ const meta: Meta = {
       control: 'select',
       options: ['light', 'dark', 'system'],
       table: {
-        type: { summary: 'string' },
+        type: { summary: '"light" | "dark" | "system"' },
         defaultValue: { summary: 'system' },
       },
     },
@@ -48,213 +56,148 @@ export default meta;
 type Story = StoryObj;
 
 /**
- * Helper function to create a story with different sets of actions
+ * Helper: renders a pid-actions element from Storybook args so that the
+ * Controls panel is interactive.
  */
-const createStory = (actions: FoldableAction[], darkMode: 'light' | 'dark' | 'system' = 'system') => {
-  return {
-    render: () => {
-      // Use a div with Tailwind classes for container
-      const container = document.createElement('div');
-      container.className = 'p-4 border rounded-sm bg-white'; // Using Tailwind classes
+function renderActions(args: Record<string, unknown>, containerClass = 'p-4 border rounded-sm bg-white') {
+  const container = document.createElement('div');
+  container.className = containerClass;
 
-      // Create pid-actions element
-      const pidActions = document.createElement('pid-actions');
+  const pidActions = document.createElement('pid-actions') as HTMLElement & { actions: unknown };
+  const actions = args.actions as FoldableAction[];
+  pidActions.actions = actions.map(action => ({
+    priority: action.priority,
+    title: action.title,
+    link: action.link,
+    style: action.style,
+  }));
+  pidActions.setAttribute('darkMode', (args.darkMode as string) || 'system');
+  if (args.actionsId) {
+    pidActions.setAttribute('actionsId', args.actionsId as string);
+  }
 
-      // Create plain object array from FoldableAction instances
-      // Set the actions property manually
-      // @ts-expect-error - Property assignment is expected to work at runtime
-      pidActions.actions = actions.map(action => ({
-        priority: action.priority,
-        title: action.title,
-        link: action.link,
-        style: action.style,
-      }));
-
-      // Set the darkMode property
-      pidActions.setAttribute('darkMode', darkMode);
-
-      // Append to container
-      container.appendChild(pidActions);
-
-      return container;
-    },
-    parameters: {
-      docs: {
-        source: {
-          code: `
-<pid-actions darkMode="${darkMode}"></pid-actions>
-<script>
-  document.querySelector('pid-actions').actions = ${JSON.stringify(
-    actions.map(a => ({
-      priority: a.priority,
-      title: a.title,
-      link: a.link,
-      style: a.style,
-    })),
-    null,
-    2,
-  )};
-</script>
-          `,
-        },
-      },
-    },
-  };
-};
+  container.appendChild(pidActions);
+  return container;
+}
 
 /**
  * Default story showing all action types
  */
 export const Default: Story = {
+  id: 'actions-default',
   args: {
     actions: mockActions,
     darkMode: 'system',
   },
-  ...createStory(mockActions, 'system'),
-};
-
-/**
- * Story showing only primary actions
- */
-export const PrimaryOnly: Story = {
-  args: {
-    actions: [mockActions[0], mockActions[3]],
-    darkMode: 'system',
-  },
-  ...createStory([mockActions[0], mockActions[3]], 'system'),
-};
-
-/**
- * Story showing only secondary actions
- */
-export const SecondaryOnly: Story = {
-  args: {
-    actions: [mockActions[1], mockActions[4]],
-    darkMode: 'system',
-  },
-  ...createStory([mockActions[1], mockActions[4]], 'system'),
-};
-
-/**
- * Story showing only danger actions
- */
-export const DangerOnly: Story = {
-  args: {
-    actions: [mockActions[2]],
-    darkMode: 'system',
-  },
-  ...createStory([mockActions[2]], 'system'),
-};
-
-/**
- * Story showing actions with custom priority order
- */
-export const CustomPriorityOrder: Story = {
-  args: {
-    actions: [
-      new FoldableAction(3, 'Third Priority', 'https://example.com/3', 'secondary'),
-      new FoldableAction(1, 'First Priority', 'https://example.com/1', 'primary'),
-      new FoldableAction(2, 'Second Priority', 'https://example.com/2', 'danger'),
-    ],
-    darkMode: 'system',
-  },
-  ...createStory(
-    [
-      new FoldableAction(3, 'Third Priority', 'https://example.com/3', 'secondary'),
-      new FoldableAction(1, 'First Priority', 'https://example.com/1', 'primary'),
-      new FoldableAction(2, 'Second Priority', 'https://example.com/2', 'danger'),
-    ],
-    'system',
-  ),
-};
-
-/**
- * Story showing actions in light mode
- */
-export const LightMode: Story = {
-  args: {
-    actions: mockActions,
-    darkMode: 'light',
-  },
-  ...createStory(mockActions, 'light'),
-};
-
-/**
- * Story showing actions in dark mode
- */
-export const DarkMode: Story = {
-  args: {
-    actions: mockActions,
-    darkMode: 'dark',
-  },
-  ...createStory(mockActions, 'dark'),
-};
-
-/**
- * Story showing many actions that will wrap to multiple lines
- */
-export const ManyActions: Story = {
-  args: {
-    actions: [
-      ...mockActions,
-      new FoldableAction(6, 'Extra Action 1', 'https://example.com/extra1', 'primary'),
-      new FoldableAction(7, 'Extra Action 2', 'https://example.com/extra2', 'secondary'),
-      new FoldableAction(8, 'Extra Action 3', 'https://example.com/extra3', 'danger'),
-      new FoldableAction(9, 'Extra Action 4', 'https://example.com/extra4', 'primary'),
-    ],
-    darkMode: 'system',
-  },
-  render: () => {
-    // Use a div with Tailwind classes for container
-    const container = document.createElement('div');
-    container.className = 'p-4 border rounded-sm bg-white max-w-md'; // Using Tailwind classes with width constraint
-
-    // Create pid-actions element
-    const pidActions = document.createElement('pid-actions');
-
-    // Create actions
-    const actions = [
-      ...mockActions,
-      new FoldableAction(6, 'Extra Action 1', 'https://example.com/extra1', 'primary'),
-      new FoldableAction(7, 'Extra Action 2', 'https://example.com/extra2', 'secondary'),
-      new FoldableAction(8, 'Extra Action 3', 'https://example.com/extra3', 'danger'),
-      new FoldableAction(9, 'Extra Action 4', 'https://example.com/extra4', 'primary'),
-    ];
-
-    // Create plain object array from FoldableAction instances
-    // Set the actions property manually
-    // @ts-expect-error - Property assignment is expected to work at runtime
-    pidActions.actions = actions.map(action => ({
-      priority: action.priority,
-      title: action.title,
-      link: action.link,
-      style: action.style,
-    }));
-
-    // Set the darkMode property
-    pidActions.setAttribute('darkMode', 'system');
-
-    // Append to container
-    container.appendChild(pidActions);
-
-    return container;
-  },
+  render: args => renderActions(args),
   parameters: {
     docs: {
       source: {
         code: `
 <pid-actions darkMode="system"></pid-actions>
 <script>
-  document.querySelector('pid-actions').actions = [
-    ...mockActions,
-    { priority: 6, title: "Extra Action 1", link: "https://example.com/extra1", style: "primary" },
-    { priority: 7, title: "Extra Action 2", link: "https://example.com/extra2", style: "secondary" },
-    { priority: 8, title: "Extra Action 3", link: "https://example.com/extra3", style: "danger" },
-    { priority: 9, title: "Extra Action 4", link: "https://example.com/extra4", style: "primary" }
-  ];
+  document.querySelector('pid-actions').actions = ${JSON.stringify(
+          mockActions.map(a => ({ priority: a.priority, title: a.title, link: a.link, style: a.style })),
+    null,
+    2,
+  )};
 </script>
         `,
       },
     },
   },
+};
+
+/**
+ * Story showing only primary actions
+ */
+export const PrimaryOnly: Story = {
+  id: 'actions-primary-only',
+  args: {
+    actions: [mockActions[0], mockActions[3]],
+    darkMode: 'system',
+  },
+  render: args => renderActions(args),
+};
+
+/**
+ * Story showing only secondary actions
+ */
+export const SecondaryOnly: Story = {
+  id: 'actions-secondary-only',
+  args: {
+    actions: [mockActions[1], mockActions[4]],
+    darkMode: 'system',
+  },
+  render: args => renderActions(args),
+};
+
+/**
+ * Story showing only danger actions
+ */
+export const DangerOnly: Story = {
+  id: 'actions-danger-only',
+  args: {
+    actions: [mockActions[2]],
+    darkMode: 'system',
+  },
+  render: args => renderActions(args),
+};
+
+/**
+ * Story showing actions with custom priority order
+ */
+export const CustomPriorityOrder: Story = {
+  id: 'actions-custom-priority-order',
+  args: {
+    actions: [
+      new FoldableAction(3, 'Third Priority', 'https://example.com/3', 'secondary'),
+      new FoldableAction(1, 'First Priority', 'https://example.com/1', 'primary'),
+      new FoldableAction(2, 'Second Priority', 'https://example.com/2', 'danger'),
+    ],
+    darkMode: 'system',
+  },
+  render: args => renderActions(args),
+};
+
+/**
+ * Story showing actions in light mode
+ */
+export const LightMode: Story = {
+  id: 'actions-light-mode',
+  args: {
+    actions: mockActions,
+    darkMode: 'light',
+  },
+  render: args => renderActions(args),
+};
+
+/**
+ * Story showing actions in dark mode
+ */
+export const DarkMode: Story = {
+  id: 'actions-dark-mode',
+  args: {
+    actions: mockActions,
+    darkMode: 'dark',
+  },
+  render: args => renderActions(args),
+};
+
+/**
+ * Story showing many actions that will wrap to multiple lines
+ */
+export const ManyActions: Story = {
+  id: 'actions-many-actions',
+  args: {
+    actions: [
+      ...mockActions,
+      new FoldableAction(6, 'Extra Action 1', 'https://example.com/extra1', 'primary'),
+      new FoldableAction(7, 'Extra Action 2', 'https://example.com/extra2', 'secondary'),
+      new FoldableAction(8, 'Extra Action 3', 'https://example.com/extra3', 'danger'),
+      new FoldableAction(9, 'Extra Action 4', 'https://example.com/extra4', 'primary'),
+    ],
+    darkMode: 'system',
+  },
+  render: args => renderActions(args, 'p-4 border rounded-sm bg-white max-w-md'),
 };

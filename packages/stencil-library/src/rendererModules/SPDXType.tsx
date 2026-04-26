@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FunctionalComponent, h } from '@stencil/core';
 import { GenericIdentifierType } from '../utils/GenericIdentifierType';
 import { FoldableItem } from '../utils/FoldableItem';
@@ -43,11 +42,20 @@ export class SPDXType extends GenericIdentifierType {
 
   /**
    * Quick, synchronous format check using only regex — no network I/O.
-   * Returns true if the value looks like an SPDX URL or bare license ID.
-   * Does NOT validate against the SPDX API.
+   * Returns `true` only for unambiguous SPDX license URLs (e.g. https://spdx.org/licenses/MIT).
+   * Returns `undefined` (uncertain) for bare ID-like strings (e.g. "MIT", "Apache-2.0")
+   * which need async API validation because the regex `/^[\w.\-+]+$/` is too broad
+   * and would incorrectly match locale codes, short words, etc.
    */
-  hasCorrectFormatQuick(): boolean {
-    return urlRegex.test(this.value) || SPDXType.ID_REGEX.test(this.value);
+  hasCorrectFormatQuick(): boolean | undefined {
+    if (urlRegex.test(this.value)) {
+      return true;
+    }
+    if (SPDXType.ID_REGEX.test(this.value)) {
+      // Bare ID — can't confirm without API validation
+      return undefined;
+    }
+    return false;
   }
 
   /**
@@ -461,11 +469,11 @@ export class SPDXType extends GenericIdentifierType {
 
     // If data is loaded, show license name and ID with badges
     return (
-      <span class={`flex flex-nowrap items-center align-top font-mono`}>
-        <span class={'items-center px-1'}>
-          <span class={`font-medium`}>{this.licenseData.name || this.licenseId}</span>
-          {this.licenseData.licenseId && <span class={`ml-1 text-gray-500`}>({this.licenseData.licenseId})</span>}
-        </span>
+      <span class={`inline-flex flex-nowrap items-baseline font-mono min-w-0 max-w-full`}>
+          <span
+            class={`font-medium min-w-0 overflow-hidden text-ellipsis whitespace-nowrap`}>{this.licenseData.name || this.licenseId}</span>
+        {this.licenseData.licenseId &&
+          <span class={`flex-none pl-1 text-gray-500`}>({this.licenseData.licenseId})</span>}
       </span>
     );
   }

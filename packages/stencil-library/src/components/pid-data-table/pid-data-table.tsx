@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Component, Element, Event, EventEmitter, h, Prop, State, Watch } from '@stencil/core';
 import { FoldableItem } from '../../utils/FoldableItem';
 
@@ -112,9 +111,9 @@ export class PidDataTable {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         const collapsible = this.el.closest('pid-collapsible');
-        if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
+        if (collapsible && typeof (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions === 'function') {
           // Call the method on collapsible to calculate proper dimensions based on content
-          (collapsible as any).recalculateContentDimensions();
+          (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions();
         }
       });
     });
@@ -173,7 +172,7 @@ export class PidDataTable {
           >
             <thead class="sticky top-0 z-20 rounded-t-lg bg-slate-600 text-slate-200">
               <tr class="font-semibold" role="row">
-                <th class="w-[25%] min-w-[150px] rounded-tl-lg p-2" scope="col" role="columnheader">
+                <th class="w-[25%] min-w-[150px] rounded-tl-lg p-1" scope="col" role="columnheader">
                   Key
                 </th>
                 <th class="w-[75%] rounded-tr-lg p-2" scope="col" role="columnheader">
@@ -193,7 +192,7 @@ export class PidDataTable {
                   aria-label={`Row for ${value.keyTitle} with value ${value.value}`}
                   role="row"
                 >
-                  <td class={'w-auto min-w-[150px] p-2 align-top font-mono'} role="cell">
+                  <td class={'w-auto min-w-[150px] p-1 align-top font-mono'} role="cell">
                     <pid-tooltip text={value.keyTooltip || `Details for ${value.keyTitle}`} position="top" maxHeight="200px" aria-label={`Information about ${value.keyTitle}`}>
                       <div slot="trigger" class="flex min-h-7 w-full items-center overflow-hidden">
                         <a
@@ -209,7 +208,7 @@ export class PidDataTable {
                       </div>
                     </pid-tooltip>
                   </td>
-                  <td class={'relative w-full p-2 align-top text-sm select-text'} role="cell">
+                  <td class={'relative w-full p-1 align-top text-sm select-text'} role="cell">
                     <div class="grid w-full grid-cols-[minmax(0,1fr)_auto] items-start gap-2">
                       <div class="min-w-0 overflow-x-auto break-words whitespace-normal">
                         {
@@ -242,7 +241,7 @@ export class PidDataTable {
                           )
                         }
                       </div>
-                      <div class="shrink-0">
+                      <div class="shrink-0 px-2">
                         <copy-button
                           value={value.value}
                           class={`visible z-50 cursor-pointer rounded-xs ${isDarkMode ? 'bg-gray-700/90 hover:bg-gray-600' : 'bg-white/90 hover:bg-white'} opacity-100 shadow-xs transition-all duration-200 hover:shadow-md`}

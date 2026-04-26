@@ -1,0 +1,34 @@
+{
+  "responseCode": 1,
+  "handle": "21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6",
+  "values": [
+    {
+      "index": 1,
+      "type": "URL",
+      "data": {
+        "format": "string",
+        "value": "https://example.com/data"
+      }
+    },
+    {
+      "index": 100,
+      "type": "HS_ADMIN",
+      "data": {
+        "format": "admin",
+        "value": {
+          "handle": "0.NA/21.T11981",
+          "index": 200,
+          "permissions": "011111110011"
+        }
+      }
+    },
+    {
+      "index": 2,
+      "type": "21.T11148/076759916209e5d62bd5",
+      "data": {
+        "format": "string",
+        "value": "21.T11148/301c6f04763a16f0f72a"
+      }
+    }
+  ]
+}

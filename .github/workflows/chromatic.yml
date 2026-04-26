@@ -1,0 +1,33 @@
+name: "Chromatic"
+
+on: [ push, pull_request ]
+
+permissions:
+  contents: read
+
+jobs:
+  chromatic:
+    name: Run Chromatic
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install dependencies
+        run: npm ci
+      - name: Build all packages
+        run: npx lerna run build
+      - name: Run Chromatic
+        id: chromatic
+        uses: chromaui/action@latest
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          autoAcceptChanges: ${{ github.ref == 'refs/heads/main' }}
+          exitZeroOnChanges: true
+          zip: true
+          buildScriptName: build-storybook:root
