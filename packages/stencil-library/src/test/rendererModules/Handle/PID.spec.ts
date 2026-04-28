@@ -51,6 +51,20 @@ describe('PID', () => {
     it('throws for invalid PID string', () => {
       expect(() => PID.getPIDFromString('invalid')).toThrow('Invalid input');
     });
+
+    it('preserves slashes in the suffix', () => {
+      const pid = PID.getPIDFromString('21.T11981/abc/def');
+      expect(pid.prefix).toBe('21.T11981');
+      expect(pid.suffix).toBe('abc/def');
+      expect(pid.toString()).toBe('21.T11981/abc/def');
+    });
+
+    it('preserves multiple slashes in the suffix', () => {
+      const pid = PID.getPIDFromString('10.5445/IR/1000178054');
+      expect(pid.prefix).toBe('10.5445');
+      expect(pid.suffix).toBe('IR/1000178054');
+      expect(pid.toString()).toBe('10.5445/IR/1000178054');
+    });
   });
 
   describe('toString()', () => {

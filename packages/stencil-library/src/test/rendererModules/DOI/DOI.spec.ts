@@ -30,6 +30,14 @@ describe('DOI', () => {
     it('returns false for a URL without DOI prefix', () => {
       expect(DOI.isDOI('https://example.com/something')).toBe(false);
     });
+
+    it('returns true for DOI with slashes in suffix', () => {
+      expect(DOI.isDOI('10.5445/IR/1000178054')).toBe(true);
+    });
+
+    it('returns true for DOI with multiple slashes in suffix', () => {
+      expect(DOI.isDOI('10.1234/a/b/c/d/e')).toBe(true);
+    });
   });
 
   describe('getDOIFromString()', () => {
@@ -50,6 +58,18 @@ describe('DOI', () => {
 
     it('throws for invalid DOI', () => {
       expect(() => DOI.getDOIFromString('not-a-doi')).toThrow('Invalid DOI format');
+    });
+
+    it('preserves slashes in the suffix', () => {
+      const doi = DOI.getDOIFromString('10.5445/IR/1000178054');
+      expect(doi.doi).toBe('10.5445/IR/1000178054');
+      expect(doi.toString()).toBe('10.5445/IR/1000178054');
+    });
+
+    it('preserves multiple slashes in the suffix', () => {
+      const doi = DOI.getDOIFromString('10.1234/a/b/c/d/e');
+      expect(doi.doi).toBe('10.1234/a/b/c/d/e');
+      expect(doi.toString()).toBe('10.1234/a/b/c/d/e');
     });
   });
 
