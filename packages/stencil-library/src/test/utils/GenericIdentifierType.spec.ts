@@ -46,7 +46,8 @@ describe('GenericIdentifierType', () => {
     it('defaults settings to an empty array when not provided', () => {
       const renderer = new TestRenderer('val');
       // settings may be undefined or empty array depending on the constructor path
-      expect(renderer.settings).toBeFalsy();
+      expect(renderer.settings).toEqual(expect.any(Array));
+      expect(renderer.settings).toHaveLength(0);
     });
   });
 

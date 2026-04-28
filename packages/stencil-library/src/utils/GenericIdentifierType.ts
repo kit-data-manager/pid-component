@@ -37,7 +37,7 @@ export abstract class GenericIdentifierType {
    */
   constructor(value: string, settings?: { name: string; value: unknown }[]) {
     this._value = value;
-    this._settings = settings;
+    this._settings = settings ? settings : [];
     this.updateDarkMode();
   }
 

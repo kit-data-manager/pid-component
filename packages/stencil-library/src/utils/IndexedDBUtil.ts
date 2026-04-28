@@ -17,6 +17,7 @@ export interface PIDComponentDB extends DBSchema {
     value: {
       value: string;
       rendererKey: string;
+      orderedRendererKeys: string[] | null;
       context: string;
       lastAccess: Date;
       lastData: unknown;
@@ -67,8 +68,9 @@ export class Database {
   /**
    * Adds an entity to the database.
    * @param {GenericIdentifierType} renderer The renderer to add to the database.
+   * @param {string[] | null} orderedRendererKeys The ordered list of renderer keys used when this entity was created.
    */
-  async addEntity(renderer: GenericIdentifierType) {
+  async addEntity(renderer: GenericIdentifierType, orderedRendererKeys?: string[] | null) {
     const context = document.documentURI;
     const db = await this.dbPromise;
 
@@ -80,6 +82,7 @@ export class Database {
       .add('entities', {
         value: entityKey,
         rendererKey: renderer.getSettingsKey(),
+        orderedRendererKeys: orderedRendererKeys ?? null,
         context: context,
         lastAccess: new Date(),
         lastData: renderer.data,
@@ -153,6 +156,7 @@ export class Database {
         | {
             value: string;
             rendererKey: string;
+        orderedRendererKeys: string[] | null;
             context: string;
             lastAccess: Date;
             lastData: unknown;
@@ -160,10 +164,20 @@ export class Database {
         | undefined = await db.get('entities', entityKey);
 
       if (entity !== undefined) {
+        // Check if the orderedRendererKeys used when caching differs from the current one
+        const cachedOrderedKeys = entity.orderedRendererKeys;
+        const currentOrderedKeys = orderedRendererKeys ?? null;
+        const orderedKeysChanged = JSON.stringify(cachedOrderedKeys) !== JSON.stringify(currentOrderedKeys);
+
         // If an ordered renderer list is specified, check that the cached renderer is in it
-        if (orderedRendererKeys && orderedRendererKeys.length > 0 && !orderedRendererKeys.includes(entity.rendererKey)) {
-          // Cached renderer is not in the allowed list — delete and re-detect
-          console.debug('Cached renderer not in ordered list, re-detecting', entity.rendererKey, orderedRendererKeys);
+        if (orderedKeysChanged || (orderedRendererKeys && orderedRendererKeys.length > 0 && !orderedRendererKeys.includes(entity.rendererKey))) {
+          // Cached renderer was created with different orderedRendererKeys or is not in the allowed list — delete and re-detect
+          console.debug('Ordered renderer keys changed or cached renderer not in ordered list, re-detecting', {
+            cached: cachedOrderedKeys,
+            current: currentOrderedKeys,
+            cachedRendererKey: entity.rendererKey,
+            currentAllowedKeys: orderedRendererKeys,
+          });
           await this.deleteEntity(value);
         } else {
           // If the entity was found, check if the TTL has expired
@@ -206,7 +220,7 @@ export class Database {
     // This prevents false positives (e.g. SPDX regex matching a random word)
     // from being persisted and polluting the cache.
     if (renderer.isResolvable()) {
-      await this.addEntity(renderer);
+      await this.addEntity(renderer, orderedRendererKeys);
       console.debug('added entity to db', value, renderer);
     } else {
       console.debug('renderer not resolvable, skipping IndexedDB cache', value, renderer.getSettingsKey());

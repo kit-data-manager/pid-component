@@ -91,6 +91,7 @@ describe('Database', () => {
   const cachedEntity = {
     value: 'test-doi',
     rendererKey: 'DOIType',
+    orderedRendererKeys: null,
     context: 'https://example.com',
     lastAccess: new Date(),
     lastData: { some: 'data' },
