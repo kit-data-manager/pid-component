@@ -15,32 +15,32 @@ afterEach(() => {
 });
 
 describe('ORCIDType', () => {
-  describe('hasCorrectFormatQuick()', () => {
+  describe('quickCheck()', () => {
     it('returns true for a bare ORCiD', () => {
       const ot = new ORCIDType(ORCID_examples.VALID);
-      expect(ot.hasCorrectFormatQuick()).toBe(true);
+      expect(ot.quickCheck()).toBe(true);
     });
 
     it('returns true for ORCiD with prefix URL', () => {
       const ot = new ORCIDType(ORCID_examples.VALID_WITH_HTTPS);
-      expect(ot.hasCorrectFormatQuick()).toBe(true);
+      expect(ot.quickCheck()).toBe(true);
     });
 
     it('returns false for non-ORCiD string', () => {
       const ot = new ORCIDType(ORCID_examples.INVALID_NOT_AN_ORCID);
-      expect(ot.hasCorrectFormatQuick()).toBe(false);
+      expect(ot.quickCheck()).toBe(false);
     });
 
     it('returns false for empty string', () => {
       const ot = new ORCIDType(ORCID_examples.INVALID_EMPTY);
-      expect(ot.hasCorrectFormatQuick()).toBe(false);
+      expect(ot.quickCheck()).toBe(false);
     });
   });
 
-  describe('hasCorrectFormat()', () => {
-    it('matches hasCorrectFormatQuick() result', async () => {
+  describe('hasMeaningfulInformation()', () => {
+    it('matches quickCheck() result', async () => {
       const ot = new ORCIDType(ORCID_examples.VALID);
-      expect(await ot.hasCorrectFormat()).toBe(ot.hasCorrectFormatQuick());
+      expect(await ot.hasMeaningfulInformation()).toBe(ot.quickCheck());
     });
   });
 

@@ -3,45 +3,45 @@ import { SPDXType } from '../../rendererModules/SPDXType';
 import { SPDX_examples } from '../../../../../examples/spdx/values.ts';
 
 describe('SPDXType', () => {
-  describe('hasCorrectFormatQuick()', () => {
+  describe('quickCheck()', () => {
     it('returns true for SPDX license URL', () => {
       const st = new SPDXType(SPDX_examples.APACHE_2_0);
-      expect(st.hasCorrectFormatQuick()).toBe(true);
+      expect(st.quickCheck()).toBe(true);
     });
 
     it('returns true for SPDX license URL with trailing slash', () => {
       const st = new SPDXType(SPDX_examples.MIT);
-      expect(st.hasCorrectFormatQuick()).toBe(true);
+      expect(st.quickCheck()).toBe(true);
     });
 
-    it('returns undefined for bare license ID "MIT"', () => {
+    it('returns undefined (uncertain, use hasMeaningfulInformation) for bare license ID "MIT"', () => {
       const st = new SPDXType(SPDX_examples.MIT_BARE);
-      expect(st.hasCorrectFormatQuick()).toBeUndefined();
+      expect(st.quickCheck()).toBe(undefined);
     });
 
-    it('returns undefined for bare license ID "Apache-2.0"', () => {
+    it('returns undefined (uncertain, use hasMeaningfulInformation) for bare license ID "Apache-2.0"', () => {
       const st = new SPDXType(SPDX_examples.APACHE_2_0_BARE);
-      expect(st.hasCorrectFormatQuick()).toBeUndefined();
+      expect(st.quickCheck()).toBe(undefined);
     });
 
-    it('returns undefined for bare license ID "GPL-3.0-only"', () => {
+    it('returns undefined (uncertain, use hasMeaningfulInformation) for bare license ID "GPL-3.0-only"', () => {
       const st = new SPDXType('GPL-3.0-only');
-      expect(st.hasCorrectFormatQuick()).toBeUndefined();
+      expect(st.quickCheck()).toBe(undefined);
     });
 
     it('returns false for empty string', () => {
       const st = new SPDXType(SPDX_examples.INVALID_EMPTY);
-      expect(st.hasCorrectFormatQuick()).toBe(false);
+      expect(st.quickCheck()).toBe(false);
     });
 
     it('returns false for string with spaces', () => {
       const st = new SPDXType(SPDX_examples.INVALID_LICENSE_NAME);
-      expect(st.hasCorrectFormatQuick()).toBe(false);
+      expect(st.quickCheck()).toBe(false);
     });
 
     it('returns false for unrelated URL', () => {
       const st = new SPDXType(SPDX_examples.INVALID_NOT_SPdx);
-      expect(st.hasCorrectFormatQuick()).toBe(false);
+      expect(st.quickCheck()).toBe(false);
     });
   });
 
@@ -59,7 +59,7 @@ describe('SPDXType', () => {
     });
   });
 
-  describe('hasCorrectFormat() (async with API validation)', () => {
+  describe('hasMeaningfulInformation() (async with API validation)', () => {
     const spdxLicenseResponse = {
       licenseId: 'Apache-2.0',
       name: 'Apache License 2.0',
@@ -85,14 +85,14 @@ describe('SPDXType', () => {
       });
 
       const st = new SPDXType(SPDX_examples.APACHE_2_0_BARE);
-      const result = await st.hasCorrectFormat();
+      const result = await st.hasMeaningfulInformation();
 
       expect(result).toBe(true);
     });
 
     it('returns false when API returns 404', async () => {
       const st = new SPDXType(SPDX_examples.INVALID_LICENSE);
-      const result = await st.hasCorrectFormat();
+      const result = await st.hasMeaningfulInformation();
 
       expect(result).toBe(false);
     });
@@ -104,7 +104,7 @@ describe('SPDXType', () => {
       });
 
       const st = new SPDXType(SPDX_examples.APACHE_2_0_BARE);
-      const result = await st.hasCorrectFormat();
+      const result = await st.hasMeaningfulInformation();
 
       expect(result).toBe(false);
     });
@@ -116,7 +116,7 @@ describe('SPDXType', () => {
       });
 
       const st = new SPDXType(SPDX_examples.APACHE_2_0);
-      const result = await st.hasCorrectFormat();
+      const result = await st.hasMeaningfulInformation();
 
       expect(result).toBe(true);
     });

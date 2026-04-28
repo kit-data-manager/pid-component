@@ -12,14 +12,13 @@ export class EmailType extends GenericIdentifierType {
 
   private static readonly FORMAT_REGEX = /^(([\w\-.]+@([\w-]+\.)+[\w-]{2,})(\s*,\s*)?)+$/gm;
 
-  hasCorrectFormatQuick(): boolean {
-    // Reset lastIndex since the regex has the global flag
+  quickCheck(): boolean {
     EmailType.FORMAT_REGEX.lastIndex = 0;
     return this.value.length > 0 && EmailType.FORMAT_REGEX.test(this.value);
   }
 
-  async hasCorrectFormat(): Promise<boolean> {
-    return this.hasCorrectFormatQuick();
+  async hasMeaningfulInformation(): Promise<boolean> {
+    return Promise.resolve(true);
   }
 
   init(): Promise<void> {

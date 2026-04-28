@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { HandleType } from '../../../rendererModules/Handle/HandleType';
 import { HANDLE_examples } from '../../../../../../examples/handle/values.ts';
 
@@ -10,34 +10,101 @@ vi.mock('../../../utils/utils', () => ({
 vi.mock('../../../utils/DataCache', () => ({
   cachedFetch: vi.fn(),
 }));
+vi.mock('../../../rendererModules/Handle/PID', () => {
+  const PID_REGEX = new RegExp('^([0-9A-Za-z])+.([0-9A-Za-z])+/([!-~])+$');
+  return {
+    PID: {
+      isPID: vi.fn().mockImplementation((text: string) => PID_REGEX.test(text)),
+      getPIDFromString: vi.fn().mockImplementation((pid: string) => {
+        if (!PID_REGEX.test(pid)) throw new Error('Invalid input');
+        const [prefix, suffix] = pid.split('/');
+        return {
+          prefix,
+          suffix,
+          toString: () => pid,
+          toObject: () => ({ prefix, suffix }),
+          resolve: vi.fn().mockResolvedValue({
+            pid: { prefix, suffix, toString: () => pid, toObject: () => ({ prefix, suffix }) },
+            values: [{ type: { name: 'URL' }, data: { value: 'https://example.com' } }],
+            toObject: () => ({ pid: JSON.stringify({ prefix, suffix }), values: [] }),
+          }),
+        };
+      }),
+      fromJSON: vi.fn().mockImplementation((serialized: string) => {
+        const data = JSON.parse(serialized);
+        return {
+          prefix: data.prefix,
+          suffix: data.suffix,
+          toString: () => data.prefix + '/' + data.suffix,
+          toObject: () => data,
+        };
+      }),
+    },
+    PIDRecord: {
+      fromJSON: vi.fn().mockImplementation((data: string) => {
+        const parsed = JSON.parse(data);
+        const pidData = typeof parsed.pid === 'string' ? JSON.parse(parsed.pid) : parsed.pid;
+        return {
+          pid: { ...pidData, toString: () => pidData.prefix + '/' + pidData.suffix, toObject: () => pidData },
+          values: [],
+          toObject: () => data,
+        };
+      }),
+    },
+    PIDDataType: class {
+      name = 'URL';
+      description = 'URL type';
+      redirectURL = null;
+      regex = null;
+    },
+  };
+});
 
 describe('HandleType', () => {
-  describe('hasCorrectFormatQuick()', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  describe('quickCheck()', () => {
     it('returns true for a valid Handle PID', () => {
       const ht = new HandleType('21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6');
-      expect(ht.hasCorrectFormatQuick()).toBe(true);
+      expect(ht.quickCheck()).toBe(true);
     });
 
     it('returns true for a numeric PID', () => {
       const ht = new HandleType('20.500/12345');
-      expect(ht.hasCorrectFormatQuick()).toBe(true);
+      expect(ht.quickCheck()).toBe(true);
     });
 
     it('returns false for a non-PID string', () => {
       const ht = new HandleType(HANDLE_examples.INVALID_NOT_A_PID);
-      expect(ht.hasCorrectFormatQuick()).toBe(false);
+      expect(ht.quickCheck()).toBe(false);
     });
 
     it('returns false for empty string', () => {
       const ht = new HandleType(HANDLE_examples.INVALID_EMPTY);
-      expect(ht.hasCorrectFormatQuick()).toBe(false);
+      expect(ht.quickCheck()).toBe(false);
     });
   });
 
-  describe('hasCorrectFormat()', () => {
-    it('matches hasCorrectFormatQuick() result', async () => {
+  describe('hasMeaningfulInformation()', () => {
+    it('matches quickCheck() result when PID resolves', async () => {
+      const mockPIDInstance = {
+        prefix: '21.T11981',
+        suffix: 'abc123',
+        toString: () => '21.T11981/abc123',
+        toObject: () => ({ prefix: '21.T11981', suffix: 'abc123' }),
+        resolve: vi.fn().mockResolvedValue({
+          pid: { prefix: '21.T11981', suffix: 'abc123', toString: () => '21.T11981/abc123' },
+          values: [{ type: { name: 'URL' }, data: { value: 'https://example.com' } }],
+          toObject: () => ({}),
+        }),
+      };
+      const { PID } = await import('../../../rendererModules/Handle/PID');
+      vi.mocked(PID.getPIDFromString).mockReturnValue(mockPIDInstance as any);
+
       const ht = new HandleType('21.T11981/abc123');
-      expect(await ht.hasCorrectFormat()).toBe(ht.hasCorrectFormatQuick());
+      expect(await ht.hasMeaningfulInformation()).toBe(ht.quickCheck());
     });
   });
 
@@ -161,21 +228,46 @@ describe('HandleType', () => {
 
   describe('data getter', () => {
     it('returns serialized PIDRecord as JSON string', async () => {
-      const serializedRecord = JSON.stringify({
-        pid: JSON.stringify({ prefix: '21.T11981', suffix: 'abc123' }),
-        values: [
-          JSON.stringify({
-            index: 1,
-            type: JSON.stringify({ string: 'URL' }),
-            data: JSON.stringify({ format: 'string', value: 'https://example.com' }),
-            ttl: 86400,
-            timestamp: 1704067200000,
+      const mockPIDInstance = {
+        prefix: '21.T11981',
+        suffix: 'abc123',
+        toString: () => '21.T11981/abc123',
+        toObject: () => ({ prefix: '21.T11981', suffix: 'abc123' }),
+        resolve: vi.fn().mockResolvedValue({
+          pid: {
+            prefix: '21.T11981',
+            suffix: 'abc123',
+            toString: () => '21.T11981/abc123',
+            toObject: () => ({ prefix: '21.T11981', suffix: 'abc123' }),
+          },
+          values: [
+            {
+              index: 1,
+              type: 'URL',
+              data: { format: 'string', value: 'https://example.com' },
+              ttl: 86400,
+              timestamp: 1704067200000,
+            },
+          ],
+          toObject: () => ({
+            pid: JSON.stringify({ prefix: '21.T11981', suffix: 'abc123' }),
+            values: [
+              JSON.stringify({
+                index: 1,
+                type: JSON.stringify({ string: 'URL' }),
+                data: JSON.stringify({ format: 'string', value: 'https://example.com' }),
+                ttl: 86400,
+                timestamp: 1704067200000,
+              }),
+            ],
           }),
-        ],
-      });
+        }),
+      };
+      const { PID } = await import('../../../rendererModules/Handle/PID');
+      vi.mocked(PID.getPIDFromString).mockReturnValue(mockPIDInstance as any);
 
       const ht = new HandleType('21.T11981/abc123');
-      await ht.init(serializedRecord);
+      await ht.init();
 
       const data = ht.data;
       expect(typeof data).toBe('string');

@@ -49,17 +49,19 @@ export class JSONType extends GenericIdentifierType {
     return 'JSONType';
   }
 
-  hasCorrectFormatQuick(): boolean {
-    const { data, error } = this.getParsedJson();
-    if (error) {
+  quickCheck(): boolean {
+    try {
+      const trimmed = this.value.trim();
+      if (trimmed === '') return false;
+      const parsed = JSON.parse(trimmed);
+      return typeof parsed === 'object' && parsed !== null;
+    } catch {
       return false;
     }
-    // Only objects and arrays are considered the "correct format" for rich rendering by this type
-    return typeof data === 'object' && data !== null;
   }
 
-  async hasCorrectFormat(): Promise<boolean> {
-    return this.hasCorrectFormatQuick();
+  async hasMeaningfulInformation(): Promise<boolean> {
+    return Promise.resolve(true);
   }
 
   init(): Promise<void> {

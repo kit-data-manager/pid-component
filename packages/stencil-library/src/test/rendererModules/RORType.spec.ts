@@ -3,42 +3,42 @@ import { RORType } from '../../rendererModules/RORType';
 import { ROR_examples } from '../../../../../examples/ror/values.ts';
 
 describe('RORType', () => {
-  describe('hasCorrectFormatQuick()', () => {
+  describe('quickCheck()', () => {
     it('returns true for a valid ROR ID with https', () => {
       const rt = new RORType(ROR_examples.VALID);
-      expect(rt.hasCorrectFormatQuick()).toBe(true);
+      expect(rt.quickCheck()).toBe(true);
     });
 
     it('returns true for a valid ROR ID with http', () => {
       const rt = new RORType('http://ror.org/04t3en479');
-      expect(rt.hasCorrectFormatQuick()).toBe(true);
+      expect(rt.quickCheck()).toBe(true);
     });
 
     it('returns false for a non-ROR URL', () => {
       const rt = new RORType(ROR_examples.INVALID_WRONG_DOMAIN);
-      expect(rt.hasCorrectFormatQuick()).toBe(false);
+      expect(rt.quickCheck()).toBe(false);
     });
 
     it('returns false for ROR without scheme', () => {
       const rt = new RORType(ROR_examples.INVALID_NO_SCHEME);
-      expect(rt.hasCorrectFormatQuick()).toBe(false);
+      expect(rt.quickCheck()).toBe(false);
     });
 
     it('returns false for empty string', () => {
       const rt = new RORType(ROR_examples.INVALID_EMPTY);
-      expect(rt.hasCorrectFormatQuick()).toBe(false);
+      expect(rt.quickCheck()).toBe(false);
     });
 
     it('returns false for ROR ID with wrong suffix length', () => {
       const rt = new RORType(ROR_examples.INVALID_WRONG_LENGTH);
-      expect(rt.hasCorrectFormatQuick()).toBe(false);
+      expect(rt.quickCheck()).toBe(false);
     });
   });
 
-  describe('hasCorrectFormat()', () => {
-    it('matches hasCorrectFormatQuick() result', async () => {
+  describe('hasMeaningfulInformation()', () => {
+    it('matches quickCheck() result', async () => {
       const rt = new RORType(ROR_examples.VALID);
-      expect(await rt.hasCorrectFormat()).toBe(rt.hasCorrectFormatQuick());
+      expect(await rt.hasMeaningfulInformation()).toBe(rt.quickCheck());
     });
   });
 

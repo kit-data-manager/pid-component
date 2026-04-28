@@ -14,18 +14,20 @@ import { renderers } from '../../utils/utils';
 function createMockConstructor(opts: {
   key: string;
   quickResult?: boolean | undefined;
-  asyncResult?: boolean;
+  meaningfulInfoResult?: boolean;
   settingsKey?: string;
 }) {
   return vi.fn().mockImplementation(function(value: string) {
     return {
       value,
-      hasCorrectFormatQuick: vi.fn().mockReturnValue(opts.quickResult),
-      hasCorrectFormat: vi.fn().mockResolvedValue(opts.asyncResult ?? false),
+      quickCheck: vi.fn().mockReturnValue(opts.quickResult),
+      hasMeaningfulInformation: vi.fn().mockResolvedValue(opts.meaningfulInfoResult ?? false),
       init: vi.fn().mockResolvedValue(undefined),
       getSettingsKey: vi.fn().mockReturnValue(opts.settingsKey ?? opts.key),
       isResolvable: vi.fn().mockReturnValue(true),
       settings: undefined as unknown,
+      items: [],
+      actions: [],
     };
   });
 }
@@ -36,17 +38,19 @@ vi.mock('../../utils/utils', () => {
   function _create(opts: {
     key: string;
     quickResult?: boolean | undefined;
-    asyncResult?: boolean;
+    meaningfulInfoResult?: boolean;
   }) {
     return vi.fn().mockImplementation(function(value: string) {
       return {
         value,
-        hasCorrectFormatQuick: vi.fn().mockReturnValue(opts.quickResult),
-        hasCorrectFormat: vi.fn().mockResolvedValue(opts.asyncResult ?? false),
+        quickCheck: vi.fn().mockReturnValue(opts.quickResult),
+        hasMeaningfulInformation: vi.fn().mockResolvedValue(opts.meaningfulInfoResult ?? false),
         init: vi.fn().mockResolvedValue(undefined),
         getSettingsKey: vi.fn().mockReturnValue(opts.key),
         isResolvable: vi.fn().mockReturnValue(true),
         settings: undefined as unknown,
+        items: [],
+        actions: [],
       };
     });
   }
@@ -58,7 +62,7 @@ vi.mock('../../utils/utils', () => {
       {
         priority: 2,
         key: 'DOIType',
-        constructor: _create({ key: 'DOIType', quickResult: undefined, asyncResult: true }),
+        constructor: _create({ key: 'DOIType', quickResult: undefined, meaningfulInfoResult: true }),
       },
       { priority: 3, key: 'HandleType', constructor: _create({ key: 'HandleType', quickResult: false }) },
       { priority: 99, key: 'FallbackType', constructor: _create({ key: 'FallbackType', quickResult: true }) },
@@ -82,10 +86,22 @@ describe('Parser', () => {
 
   function resetRenderers() {
     mockRenderers[0].constructor = createMockConstructor({ key: 'DateType', quickResult: false });
-    mockRenderers[1].constructor = createMockConstructor({ key: 'ORCIDType', quickResult: true });
-    mockRenderers[2].constructor = createMockConstructor({ key: 'DOIType', quickResult: undefined, asyncResult: true });
+    mockRenderers[1].constructor = createMockConstructor({
+      key: 'ORCIDType',
+      quickResult: true,
+      meaningfulInfoResult: true,
+    });
+    mockRenderers[2].constructor = createMockConstructor({
+      key: 'DOIType',
+      quickResult: undefined,
+      meaningfulInfoResult: true,
+    });
     mockRenderers[3].constructor = createMockConstructor({ key: 'HandleType', quickResult: false });
-    mockRenderers[4].constructor = createMockConstructor({ key: 'FallbackType', quickResult: true });
+    mockRenderers[4].constructor = createMockConstructor({
+      key: 'FallbackType',
+      quickResult: true,
+      meaningfulInfoResult: true,
+    });
   }
 
   beforeEach(() => {
@@ -211,9 +227,13 @@ describe('Parser', () => {
     it('skips renderers that fail quick check', async () => {
       // Only DateType has quickResult=true, rest are false
       mockRenderers.forEach(r => {
-        r.constructor = createMockConstructor({ key: r.key, quickResult: false });
+        r.constructor = createMockConstructor({ key: r.key, quickResult: false, meaningfulInfoResult: true });
       });
-      mockRenderers[0].constructor = createMockConstructor({ key: 'DateType', quickResult: true });
+      mockRenderers[0].constructor = createMockConstructor({
+        key: 'DateType',
+        quickResult: true,
+        meaningfulInfoResult: true,
+      });
 
       const result = await Parser.getBestFit('value', emptySettings);
       expect(result).not.toBeNull();
@@ -221,14 +241,14 @@ describe('Parser', () => {
     });
 
     it('runs async check for uncertain (undefined quick) candidates', async () => {
-      // Only DOIType is uncertain (undefined quick, asyncResult true), rest are false
+      // Only DOIType is uncertain (undefined quick, meaningfulInfoResult true), rest are false
       mockRenderers.forEach(r => {
-        r.constructor = createMockConstructor({ key: r.key, quickResult: false });
+        r.constructor = createMockConstructor({ key: r.key, quickResult: false, meaningfulInfoResult: false });
       });
       mockRenderers[2].constructor = createMockConstructor({
         key: 'DOIType',
         quickResult: undefined,
-        asyncResult: true,
+        meaningfulInfoResult: true,
       });
 
       const result = await Parser.getBestFit('value', emptySettings);
@@ -245,7 +265,7 @@ describe('Parser', () => {
       expect(result).toBeNull();
     });
 
-    it('in ordered mode, uses async hasCorrectFormat when quick is undefined', async () => {
+    it('in ordered mode, uses hasMeaningfulInformation when quickCheck is undefined', async () => {
       // DOIType: quickResult=undefined, asyncResult=true
       const result = await Parser.getBestFit('value', emptySettings, ['DOIType'], false);
       expect(result).not.toBeNull();
@@ -256,13 +276,15 @@ describe('Parser', () => {
       const badConstructor = vi.fn().mockImplementation(function(value: string) {
         return {
           value,
-          hasCorrectFormatQuick: vi.fn().mockReturnValue(true),
-          hasCorrectFormat: vi.fn().mockResolvedValue(true),
+          quickCheck: vi.fn().mockReturnValue(true),
+          hasMeaningfulInformation: vi.fn().mockResolvedValue(true),
           init: vi.fn().mockResolvedValue(undefined),
           getSettingsKey: vi.fn().mockImplementation(() => {
             throw new Error('boom');
           }),
           settings: undefined as unknown,
+          items: [],
+          actions: [],
         };
       });
       mockRenderers[1].constructor = badConstructor;
@@ -300,7 +322,7 @@ describe('Parser', () => {
       mockRenderers[2].constructor = createMockConstructor({
         key: 'DOIType',
         quickResult: undefined,
-        asyncResult: true,
+        meaningfulInfoResult: true,
       });
 
       const priority = await Parser.getEstimatedPriority('value');

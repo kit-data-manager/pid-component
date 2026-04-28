@@ -33,8 +33,6 @@ import type {
   DetectionMatch,
   PidDetectionConfig,
   PidDetectionController,
-  WorkerDetectMessage,
-  WorkerResultMessage,
 } from './types';
 import { scanDom } from './DomScanner';
 import { replaceMatches, ReplacementRecord, restoreOriginalText } from './TextReplacer';
@@ -47,8 +45,7 @@ const INSERT_BATCH_SIZE = 10;
  * Initialize automatic PID detection on a webpage.
  *
  * Scans the DOM for text that matches known PID patterns, then replaces
- * matching text with <pid-component> elements. Detection runs in a
- * Web Worker for performance; DOM manipulation happens on the main thread.
+ * matching text with <pid-component> elements.
  * Original text stays visible until the component has fully loaded.
  *
  * When no `renderers` list is provided, only renderers whose
@@ -64,61 +61,60 @@ export function initPidDetection(config: PidDetectionConfig = {}): PidDetectionC
   const orderedRenderers = config.renderers;
 
   // State
-  let worker: Worker | null = null;
   let observer: MutationObserver | null = null;
   let allRecords: ReplacementRecord[] = [];
-  const pendingCallbacks = new Map<number, (matches: DetectionMatch[]) => void>();
-  let nextRequestId = 0;
   let destroyed = false;
 
-  // Try to create the Web Worker
-  try {
-    worker = createWorker();
-    if (worker) {
-      // Configure the worker with the ordered renderer list
-      worker.postMessage({ type: 'init', orderedRenderers });
-
-      // Handle worker responses
-      worker.onmessage = (event: MessageEvent<WorkerResultMessage>) => {
-        const { id, matches } = event.data;
-        const callback = pendingCallbacks.get(id);
-        if (callback) {
-          pendingCallbacks.delete(id);
-          callback(matches);
-        }
-      };
-
-      worker.onerror = (error) => {
-        console.error('PID detection worker error:', error);
-        // Fall back to main-thread detection
-        worker = null;
-      };
-    }
-  } catch {
-    console.warn('Could not create Web Worker for PID detection, falling back to main thread.');
-    worker = null;
-  }
-
   /**
-   * Send text to the worker for detection, or fall back to main-thread detection.
+   * Detect PIDs in text using the renderer registry.
    */
-  function detectText(text: string): Promise<DetectionMatch[]> {
-    return new Promise((resolve) => {
-      if (worker) {
-        const id = nextRequestId++;
-        pendingCallbacks.set(id, resolve);
-        const message: WorkerDetectMessage = {
-          type: 'detect',
-          id,
-          text,
-          orderedRenderers,
-        };
-        worker.postMessage(message);
+  function detectMatches(text: string): DetectionMatch[] {
+    const DELIMITER_REGEX = /[\s,;()[\]{}<>"']+/;
+    const matches: DetectionMatch[] = [];
+
+    let remaining = text;
+    let offset = 0;
+
+    while (remaining.length > 0) {
+      const delimMatch = DELIMITER_REGEX.exec(remaining);
+
+      let token: string;
+      let tokenStart: number;
+
+      if (delimMatch === null) {
+        token = remaining;
+        tokenStart = offset;
+        remaining = '';
       } else {
-        // Main-thread fallback using Parser.getBestFitQuick
-        resolve(detectOnMainThread(text, orderedRenderers));
+        if (delimMatch.index > 0) {
+          token = remaining.substring(0, delimMatch.index);
+          tokenStart = offset;
+        } else {
+          offset += delimMatch[0].length;
+          remaining = remaining.substring(delimMatch[0].length);
+          continue;
+        }
+        offset += delimMatch.index + delimMatch[0].length;
+        remaining = remaining.substring(delimMatch.index + delimMatch[0].length);
       }
-    });
+
+      if (token.length < 2) continue;
+
+      const { sanitized, leadingStripped } = sanitizeToken(token);
+      if (sanitized.length < 2) continue;
+
+      const rendererKey = detectBestFit(sanitized, orderedRenderers);
+      if (rendererKey !== null) {
+        matches.push({
+          start: tokenStart + leadingStripped,
+          end: tokenStart + leadingStripped + sanitized.length,
+          value: sanitized,
+          rendererKey,
+        });
+      }
+    }
+
+    return matches;
   }
 
   /**
@@ -148,7 +144,7 @@ export function initPidDetection(config: PidDetectionConfig = {}): PidDetectionC
             // Check that the text node is still in the DOM
             if (!scannedNode.textNode.parentNode) continue;
 
-            const matches = await detectText(scannedNode.text);
+            const matches = detectMatches(scannedNode.text);
 
             if (matches.length > 0) {
               const records = replaceMatches(scannedNode.textNode, matches, config);
@@ -180,7 +176,7 @@ export function initPidDetection(config: PidDetectionConfig = {}): PidDetectionC
                 if (destroyed) break;
                 if (!scannedNode.textNode.parentNode) continue;
 
-                const matches = await detectText(scannedNode.text);
+                const matches = detectMatches(scannedNode.text);
                 if (matches.length > 0) {
                   const records = replaceMatches(scannedNode.textNode, matches, config);
                   allRecords.push(...records);
@@ -224,101 +220,11 @@ export function initPidDetection(config: PidDetectionConfig = {}): PidDetectionC
         observer = null;
       }
 
-      // Terminate worker
-      if (worker) {
-        worker.terminate();
-        worker = null;
-      }
-
-      // Clear pending callbacks
-      pendingCallbacks.clear();
-
       // Restore all original text nodes
       restoreOriginalText(allRecords);
       allRecords = [];
     },
   };
-}
-
-/**
- * Create the detection Web Worker using a Blob URL.
- * This bundles the worker code inline to avoid separate file hosting issues.
- * Falls back to null if Workers are not supported.
- */
-function createWorker(): Worker | null {
-  if (typeof Worker === 'undefined') {
-    return null;
-  }
-
-  try {
-    // The worker imports from the same bundle. Since Stencil may not
-    // support standard worker bundling out of the box, we create the
-    // worker using a blob URL that imports from the current script's origin.
-    // For the initial implementation, we fall back to main-thread detection
-    // if the worker cannot be instantiated.
-    //
-    // TODO: Investigate Stencil v4 worker bundling options (Rollup plugin,
-    // or using the dist-custom-elements output with a separate worker entry point).
-    // For now, the main-thread fallback provides identical functionality.
-    return null;
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Main-thread fallback for PID detection.
- * Uses Parser.getBestFitQuick() which calls hasCorrectFormatQuick() on renderers.
- */
-function detectOnMainThread(text: string, orderedRenderers?: string[]): DetectionMatch[] {
-  const DELIMITER_REGEX = /[\s,;()[\]{}<>"']+/;
-  const matches: DetectionMatch[] = [];
-
-  let remaining = text;
-  let offset = 0;
-
-  while (remaining.length > 0) {
-    const delimMatch = DELIMITER_REGEX.exec(remaining);
-
-    let token: string;
-    let tokenStart: number;
-
-    if (delimMatch === null) {
-      token = remaining;
-      tokenStart = offset;
-      remaining = '';
-    } else {
-      if (delimMatch.index > 0) {
-        token = remaining.substring(0, delimMatch.index);
-        tokenStart = offset;
-      } else {
-        // Delimiter at start — skip it
-        offset += delimMatch[0].length;
-        remaining = remaining.substring(delimMatch[0].length);
-        continue;
-      }
-      offset += delimMatch.index + delimMatch[0].length;
-      remaining = remaining.substring(delimMatch.index + delimMatch[0].length);
-    }
-
-    if (token.length < 2) continue;
-
-    // Sanitize: strip surrounding punctuation that may be part of prose
-    const { sanitized, leadingStripped } = sanitizeToken(token);
-    if (sanitized.length < 2) continue;
-
-    const rendererKey = detectBestFit(sanitized, orderedRenderers);
-    if (rendererKey !== null) {
-      matches.push({
-        start: tokenStart + leadingStripped,
-        end: tokenStart + leadingStripped + sanitized.length,
-        value: sanitized,
-        rendererKey,
-      });
-    }
-  }
-
-  return matches;
 }
 
 /**

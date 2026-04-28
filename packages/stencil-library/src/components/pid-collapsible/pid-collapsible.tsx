@@ -1016,7 +1016,7 @@ export class PidCollapsible {
                 </span>
             )}
             <span
-              class={`align-baseline min-w-0 ${this.open ? 'overflow-x-auto whitespace-normal pl-2' : 'block whitespace-nowrap overflow-hidden text-ellipsis'}`}>
+              class={`align-baseline min-w-0 ${this.open ? 'overflow-x-auto whitespace-normal' : 'block whitespace-nowrap overflow-hidden text-ellipsis'}`}>
                 <slot name="summary"></slot>
               </span>
             <div class="ml-auto">

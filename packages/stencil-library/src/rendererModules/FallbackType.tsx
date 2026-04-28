@@ -6,12 +6,12 @@ import { GenericIdentifierType } from '../utils/GenericIdentifierType';
  * @extends GenericIdentifierType
  */
 export class FallbackType extends GenericIdentifierType {
-  hasCorrectFormatQuick(): boolean {
+  quickCheck(): boolean {
     return true;
   }
 
-  async hasCorrectFormat(): Promise<boolean> {
-    return true;
+  async hasMeaningfulInformation(): Promise<boolean> {
+    return Promise.resolve(true);
   }
 
   init(): Promise<void> {

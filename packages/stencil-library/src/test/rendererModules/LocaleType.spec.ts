@@ -3,42 +3,42 @@ import { LocaleType } from '../../rendererModules/LocaleType';
 import { LOCALE_examples } from '../../../../../examples/locale/values.ts';
 
 describe('LocaleType', () => {
-  describe('hasCorrectFormatQuick()', () => {
+  describe('quickCheck()', () => {
     it('returns true for "en-US"', () => {
       const lt = new LocaleType('en-US');
-      expect(lt.hasCorrectFormatQuick()).toBe(true);
+      expect(lt.quickCheck()).toBe(true);
     });
 
     it('returns true for bare two-letter code "de"', () => {
       const lt = new LocaleType('de');
-      expect(lt.hasCorrectFormatQuick()).toBe(true);
+      expect(lt.quickCheck()).toBe(true);
     });
 
     it('returns true for "fr-FR"', () => {
       const lt = new LocaleType('fr-FR');
-      expect(lt.hasCorrectFormatQuick()).toBe(true);
+      expect(lt.quickCheck()).toBe(true);
     });
 
     it('returns false for full word "english"', () => {
       const lt = new LocaleType(LOCALE_examples.INVALID_FREE_TEXT);
-      expect(lt.hasCorrectFormatQuick()).toBe(false);
+      expect(lt.quickCheck()).toBe(false);
     });
 
     it('returns false for empty string', () => {
       const lt = new LocaleType(LOCALE_examples.INVALID_EMPTY);
-      expect(lt.hasCorrectFormatQuick()).toBe(false);
+      expect(lt.quickCheck()).toBe(false);
     });
 
     it('returns false for numeric string', () => {
       const lt = new LocaleType(LOCALE_examples.INVALID_NUMERIC);
-      expect(lt.hasCorrectFormatQuick()).toBe(false);
+      expect(lt.quickCheck()).toBe(false);
     });
   });
 
-  describe('hasCorrectFormat()', () => {
-    it('matches hasCorrectFormatQuick() result', async () => {
+  describe('hasMeaningfulInformation()', () => {
+    it('matches quickCheck() result', async () => {
       const lt = new LocaleType('en-US');
-      expect(await lt.hasCorrectFormat()).toBe(lt.hasCorrectFormatQuick());
+      expect(await lt.hasMeaningfulInformation()).toBe(lt.quickCheck());
     });
   });
 

@@ -70,17 +70,20 @@ export class RORType extends GenericIdentifierType {
 
   private static readonly FORMAT_REGEX = new RegExp('^https?://ror.org/[0-9a-z]{9}$', 'i');
 
-  /**
-   * Checks if the provided value is a valid ROR ID format
-   * ROR IDs typically have the format: https://ror.org/XXXXXXXXX where X is an alphanumeric character
-   * @returns {boolean} Whether the value has the correct ROR ID format
-   */
-  hasCorrectFormatQuick(): boolean {
+  quickCheck(): boolean {
     return RORType.FORMAT_REGEX.test(this.value);
   }
 
-  async hasCorrectFormat(): Promise<boolean> {
-    return this.hasCorrectFormatQuick();
+  async hasMeaningfulInformation(): Promise<boolean> {
+    const rorId = this.getRorId();
+    try {
+      const response = await fetch(`https://api.ror.org/v2/organizations/${rorId}`);
+      if (!response.ok) return false;
+      this.rorData = await response.json();
+      return this.rorData !== undefined;
+    } catch {
+      return false;
+    }
   }
 
   /**
@@ -101,24 +104,19 @@ export class RORType extends GenericIdentifierType {
   }
 
   /**
-   * Fetches organization data from the ROR API v2
+   * Builds items and actions from pre-fetched ROR data
    * @returns {Promise<void>}
    */
   async init(): Promise<void> {
-    try {
-      // Extract the ROR ID from the URL
-      const rorId = this.getRorId();
-
-      // Fetch data from ROR API v2
-      const response = await fetch(`https://api.ror.org/v2/organizations/${rorId}`);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch ROR data: ${response.status}`);
+    if (!this.rorData) {
+      const hasData = await this.hasMeaningfulInformation();
+      if (!hasData) {
+        this.items.push(new FoldableItem(0, 'Error', 'No ROR data available'));
+        return;
       }
+    }
 
-      this.rorData = await response.json();
-
-      if (!this.rorData) return;
-
+    try {
       // Initialize name, acronym, and labels
       if (!this.rorData.names || this.rorData.names.length === 0) {
         this.label = 'Unknown';

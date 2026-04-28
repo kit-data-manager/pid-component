@@ -3,42 +3,42 @@ import { URLType } from '../../rendererModules/URLType';
 import { URL_examples } from '../../../../../examples/url/values.ts';
 
 describe('URLType', () => {
-  describe('hasCorrectFormatQuick()', () => {
+  describe('quickCheck()', () => {
     it('returns true for https URL', () => {
       const ut = new URLType(URL_examples.KIT_WEBSITE);
-      expect(ut.hasCorrectFormatQuick()).toBe(true);
+      expect(ut.quickCheck()).toBe(true);
     });
 
     it('returns true for http URL with path, query and hash', () => {
       const ut = new URLType('http://example.com/path?q=1#hash');
-      expect(ut.hasCorrectFormatQuick()).toBe(true);
+      expect(ut.quickCheck()).toBe(true);
     });
 
     it('returns true for https URL with complex path', () => {
       const ut = new URLType(URL_examples.GITHUB);
-      expect(ut.hasCorrectFormatQuick()).toBe(true);
+      expect(ut.quickCheck()).toBe(true);
     });
 
     it('returns false for string without scheme', () => {
       const ut = new URLType(URL_examples.INVALID_NOT_A_URL);
-      expect(ut.hasCorrectFormatQuick()).toBe(false);
+      expect(ut.quickCheck()).toBe(false);
     });
 
     it('returns false for ftp URL', () => {
       const ut = new URLType(URL_examples.INVALID_WRONG_PROTOCOL);
-      expect(ut.hasCorrectFormatQuick()).toBe(false);
+      expect(ut.quickCheck()).toBe(false);
     });
 
     it('returns false for empty string', () => {
       const ut = new URLType(URL_examples.INVALID_EMPTY);
-      expect(ut.hasCorrectFormatQuick()).toBe(false);
+      expect(ut.quickCheck()).toBe(false);
     });
   });
 
-  describe('hasCorrectFormat()', () => {
-    it('matches hasCorrectFormatQuick() result', async () => {
+  describe('hasMeaningfulInformation()', () => {
+    it('matches quickCheck() result', async () => {
       const ut = new URLType(URL_examples.KIT_WEBSITE);
-      expect(await ut.hasCorrectFormat()).toBe(ut.hasCorrectFormatQuick());
+      expect(await ut.hasMeaningfulInformation()).toBe(ut.quickCheck());
     });
   });
 

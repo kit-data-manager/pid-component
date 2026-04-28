@@ -7,7 +7,11 @@ import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
  * Implements all abstract methods with minimal no-op behavior.
  */
 class TestRenderer extends GenericIdentifierType {
-  async hasCorrectFormat() {
+  quickCheck(): boolean {
+    return true;
+  }
+
+  async hasMeaningfulInformation() {
     return true;
   }
 
@@ -143,12 +147,12 @@ describe('GenericIdentifierType', () => {
     });
   });
 
-  // ─── hasCorrectFormatQuick() ───────────────────────────────────────
+  // ─── quickCheck() ───────────────────────────────────────
 
-  describe('hasCorrectFormatQuick()', () => {
-    it('returns undefined by default (base class implementation)', () => {
+  describe('quickCheck()', () => {
+    it('returns true by default for test renderer', () => {
       const renderer = new TestRenderer('val');
-      expect(renderer.hasCorrectFormatQuick()).toBeUndefined();
+      expect(renderer.quickCheck()).toBe(true);
     });
   });
 
@@ -173,9 +177,9 @@ describe('GenericIdentifierType', () => {
   // ─── abstract method implementations (via TestRenderer) ───────────
 
   describe('abstract methods (TestRenderer stubs)', () => {
-    it('hasCorrectFormat() resolves to true', async () => {
+    it('hasMeaningfulInformation() resolves to true', async () => {
       const renderer = new TestRenderer('val');
-      const result = await renderer.hasCorrectFormat();
+      const result = await renderer.hasMeaningfulInformation();
       expect(result).toBe(true);
     });
 

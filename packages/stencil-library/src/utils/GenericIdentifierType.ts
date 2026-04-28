@@ -127,25 +127,32 @@ export abstract class GenericIdentifierType {
   abstract init(data?: unknown): Promise<void>;
 
   /**
-   * This method indicates if a value has the correct format or not.
-   * It is heavily recommended to use a regular expression to check the format.
-   * It must be implemented by the child classes as it is abstract.
-   * @returns {boolean} Whether the value has the correct format or not.
-   * @abstract
+   * Stage 1: Quick, synchronous format check using only local data (no network I/O).
+   * Returns:
+   * - `true` if the format is definitively correct
+   * - `false` if the format is definitively incorrect
+   *
+   * Subclasses MUST override this with a definitive synchronous check.
+   * @returns {boolean} Whether the format is definitively correct.
    */
-  abstract hasCorrectFormat(): Promise<boolean>;
+  abstract quickCheck(): boolean | undefined;
 
   /**
-   * Quick, synchronous format check using only regex/parsing — no network I/O.
-   * Used for pre-filtering during auto-detection and for optimizing the parser.
-   * Subclasses with expensive checks (e.g. network calls in hasCorrectFormat)
-   * SHOULD override this to return only the cheap regex portion.
-   * @returns {boolean | undefined} true/false for a definitive answer,
-   *          undefined to signal "unknown — caller must use the async hasCorrectFormat()".
+   * Stage 2: Checks if the renderer has meaningful information to display.
+   * This method resolves the remote resource, validates it, and interprets the data.
+   * It is called after quickCheck() returns false or for candidates that need resolution.
+   *
+   * - For types requiring network data (DOI, ORCiD, Handle, ROR, SPDX):
+   *   Fetches data from external APIs and validates that meaningful data was retrieved.
+   *   The fetched data is stored in the instance for later use by init().
+   *
+   * - For simple types (Date, Email, URL, Locale, JSON, Fallback):
+   *   Returns true since syntax is already validated by quickCheck().
+   *
+   * @returns {Promise<boolean>} True if meaningful information is available, false otherwise.
+   * @abstract
    */
-  hasCorrectFormatQuick(): boolean | undefined {
-    return undefined;
-  }
+  abstract hasMeaningfulInformation(): Promise<boolean>;
 
   /**
    * Returns whether the renderer has resolved successfully and can render

@@ -15,7 +15,7 @@ function buildDetectionRegistry(): DetectionEntry[] {
       autoDiscoverableByDefault: renderer.autoDiscoverableByDefault,
       check: (value: string) => {
         const instance = new renderer.constructor(value);
-        return renderer.constructor.prototype.hasCorrectFormatQuick.call(instance) ?? false;
+        return instance.quickCheck();
       },
     }))
     .sort((a, b) => {

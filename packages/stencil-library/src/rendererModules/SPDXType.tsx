@@ -18,8 +18,6 @@ interface SPDXLicense {
   seeAlso?: string[];
 }
 
-const urlRegex = new RegExp('^https?://spdx.org/licenses/[\\w.\\-+]+/?$', 'i');
-
 /**
  * This class specifies a custom renderer for SPDX license identifiers.
  * It fetches license details from the SPDX API and displays them.
@@ -39,112 +37,48 @@ export class SPDXType extends GenericIdentifierType {
   }
 
   private static readonly ID_REGEX = /^[\w.\-+]+$/;
+  private static readonly URL_REGEX = /^https?:\/\/spdx\.org\/licenses\/[\w.\-+]+\/?$/i;
 
-  /**
-   * Quick, synchronous format check using only regex — no network I/O.
-   * Returns `true` only for unambiguous SPDX license URLs (e.g. https://spdx.org/licenses/MIT).
-   * Returns `undefined` (uncertain) for bare ID-like strings (e.g. "MIT", "Apache-2.0")
-   * which need async API validation because the regex `/^[\w.\-+]+$/` is too broad
-   * and would incorrectly match locale codes, short words, etc.
-   */
-  hasCorrectFormatQuick(): boolean | undefined {
-    if (urlRegex.test(this.value)) {
-      return true;
-    }
-    if (SPDXType.ID_REGEX.test(this.value)) {
-      // Bare ID — can't confirm without API validation
-      return undefined;
-    }
+  quickCheck(): boolean | undefined {
+    if (SPDXType.URL_REGEX.test(this.value)) return true;
+    if (SPDXType.ID_REGEX.test(this.value)) return undefined;
     return false;
   }
 
-  /**
-   * Checks if the provided value is a valid SPDX license identifier or URL.
-   * Validates against the SPDX API to confirm the license exists.
-   * @returns Promise resolving to true if the value is a valid SPDX license identifier
-   */
-  async hasCorrectFormat(): Promise<boolean> {
-    // Check if the value is directly a SPDX URL
-    const isValidUrl = urlRegex.test(this.value);
+  async hasMeaningfulInformation(): Promise<boolean> {
+    const licenseId = this.extractLicenseId();
+    if (!licenseId) return false;
 
-    // Check if the value looks like a license ID (e.g., "MIT", "Apache-2.0")
-    const isValidId = SPDXType.ID_REGEX.test(this.value);
+    const url = this.buildLicenseApiUrl(licenseId);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), this.requestTimeout);
 
-    // If neither format is valid, return false immediately
-    if (!isValidUrl && !isValidId) {
-      return false;
-    }
-
-    // Extract potential license ID from the value
-    let licenseId: string;
-
-    if (isValidUrl) {
-      // Extract license ID from URL
-      licenseId = this.value.replace(/^https?:\/\/spdx\.org\/licenses\//i, '').replace(/\/$/, '');
-    } else {
-      // Use the value directly as license ID
-      licenseId = this.value;
-    }
-
-    // Always perform full validation against SPDX API
-    const isValid = await this.validateLicense(licenseId);
-
-    // Log validation results for debugging
-    console.log('SPDX License validation result:', {
-      licenseId,
-      isValid,
-      licenseData: this.licenseData,
-    });
-
-    // Return the validation result directly
-    return isValid;
-  }
-
-  /**
-   * Validates that a license ID exists in SPDX and fetches complete data
-   * @param licenseId The license ID to validate
-   * @returns A promise that resolves to true if the license exists
-   */
-  private async validateLicense(licenseId: string): Promise<boolean> {
     try {
-      console.log(`Validating SPDX license: ${licenseId}`);
-      // Store the license ID for later use
-      this.licenseId = licenseId;
-
-      // Always fetch from SPDX API regardless of common license list
-      const url = this.buildLicenseApiUrl(licenseId);
-
-      // Attempt to fetch with timeout
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), this.requestTimeout);
-
       const response = await fetch(url, { signal: controller.signal });
       clearTimeout(timeoutId);
 
-      if (!response.ok) {
-        console.log(`License ${licenseId} validation failed with status ${response.status}`);
-        return false;
-      }
+      if (!response.ok) return false;
 
-      // Store license data for later use
       const data = await response.json();
-      console.log(`License API response for ${licenseId}:`, data);
-
       if (data && data.licenseId) {
-        // Store the complete license data
         this.licenseData = data;
-        console.log(`License data populated for ${licenseId}:`, this.licenseData);
+        this.licenseId = licenseId;
         return true;
       }
-
-      console.log(`Invalid license data received for ${licenseId}`);
       return false;
-    } catch (error) {
-      console.error(`License validation error for ${licenseId}:`, error);
-      // When validation fails due to network issues, we should return false
-      // since we can't confirm it's a valid SPDX license
+    } catch {
       return false;
     }
+  }
+
+  private extractLicenseId(): string {
+    if (!this.value.includes('/') && !this.value.includes('://')) {
+      return this.value.trim();
+    }
+    return this.value
+      .replace(/^https?:\/\/spdx\.org\/licenses\//i, '')
+      .replace(/\/$/, '')
+      .replace(/\.(json|html)$/i, '');
   }
 
   /**
@@ -178,104 +112,19 @@ export class SPDXType extends GenericIdentifierType {
     });
   }
   /**
-   * Main initialization method that fetches license data and populates the view
+   * Main initialization method that fetches data if needed and populates the view
    */
   async init(): Promise<void> {
-    try {
-      // Extract license ID if not already set during validation
-      if (!this.licenseId) {
-        this.extractLicenseIdFromInput();
+    // Fetch data if not already available (for backwards compatibility)
+    if (!this.licenseData) {
+      const success = await this.hasMeaningfulInformation();
+      if (!success) {
+        this.handleInitError(new Error('Failed to fetch SPDX license data'));
+        return;
       }
-
-      // If we already have license data from validation, skip fetching
-      if (!this.licenseData) {
-        await this.fetchLicenseData();
-      } else {
-        console.debug(`Using pre-fetched data for license ${this.licenseId}`);
-      }
-
-      this.populateLicenseData();
-      this.addActionButtons();
-    } catch (error) {
-      console.error('Error fetching SPDX data:', error);
-      this.handleInitError(error);
     }
-  }
-
-  /**
-   * Extracts license ID from the input value
-   */
-  private extractLicenseIdFromInput(): void {
-    // If input is likely a direct license ID, set it immediately
-    if (!this.value.includes('/') && !this.value.includes('://')) {
-      this.licenseId = this.value.trim();
-    } else {
-      // Extract the license ID from the URL
-      this.licenseId = this.value
-        .replace(/^https?:\/\/spdx\.org\/licenses\//i, '')
-        .replace(/\/$/, '')
-        .replace(/\.(json|html)$/i, '');
-    }
-  }
-
-  /**
-   * Fetches license data from the SPDX API with fallback options
-   */
-  private async fetchLicenseData(): Promise<void> {
-    const timeout = new Promise<never>((_, reject) => {
-      setTimeout(() => reject(new Error('Request timeout')), this.requestTimeout);
-    });
-
-    try {
-      const apiUrl = this.buildApiUrl();
-      console.debug(`Fetching license data from: ${apiUrl}`);
-
-      const fetchPromise = fetch(apiUrl);
-      const response = (await Promise.race([fetchPromise, timeout])) as Response;
-
-      if (!response.ok) {
-        if (this.corsFallback && apiUrl.includes(this.corsProxy)) {
-          await this.tryFallbackOptions();
-        } else {
-          throw new Error(`Failed to fetch SPDX data: ${response.status}`);
-        }
-      } else {
-        this.licenseData = await response.json();
-      }
-
-      if (!this.licenseData) {
-        throw new Error('No license data available');
-      }
-    } catch (fetchError) {
-      console.warn('Error fetching SPDX license data:', fetchError);
-      throw fetchError; // Re-throw
-    }
-  }
-
-  /**
-   * Tries fallback options when the primary fetch fails
-   */
-  private async tryFallbackOptions(): Promise<void> {
-    const timeout = new Promise<never>((_, reject) => {
-      setTimeout(() => reject(new Error('Request timeout')), this.requestTimeout);
-    });
-
-    const directUrl = `${this.spdxBaseUrl}/${this.licenseId}.${this.fileFormat}`;
-    const directFetchPromise = fetch(directUrl);
-    const directResponse = (await Promise.race([directFetchPromise, timeout])) as Response;
-
-    if (!directResponse.ok) {
-      throw new Error(`Failed to fetch SPDX data: ${directResponse.status}`);
-    }
-
-    this.licenseData = await directResponse.json();
-  }
-
-  /**
-   * Builds the API URL with CORS proxy if needed
-   */
-  private buildApiUrl(): string {
-    return this.buildLicenseApiUrl(this.licenseId);
+    this.populateLicenseData();
+    this.addActionButtons();
   }
 
   /**
@@ -299,7 +148,7 @@ export class SPDXType extends GenericIdentifierType {
         this.licenseData.isOsiApproved ? 'Yes' : 'No',
         'Whether the license is approved by the Open Source Initiative',
         'https://opensource.org/licenses/',
-        null,
+        undefined,
         false,
       ),
     );
@@ -338,7 +187,7 @@ export class SPDXType extends GenericIdentifierType {
         this.licenseData.isFsfLibre ? 'Yes' : 'No',
         'Whether the license is considered "Free" by the Free Software Foundation',
         'https://www.fsf.org/licensing/',
-        null,
+        undefined,
         false,
       ),
     );

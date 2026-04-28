@@ -39,15 +39,17 @@ export class HandleType extends GenericIdentifierType {
   private _pidRecord: PIDRecord;
 
   get data(): string {
-    return JSON.stringify(this._pidRecord.toObject());
+    return JSON.stringify(this._pidRecord?.toObject() ?? {});
   }
 
-  hasCorrectFormatQuick(): boolean {
+  quickCheck(): boolean {
     return PID.isPID(this.value);
   }
 
-  async hasCorrectFormat(): Promise<boolean> {
-    return this.hasCorrectFormatQuick();
+  async hasMeaningfulInformation(): Promise<boolean> {
+    const pid = PID.getPIDFromString(this.value);
+    this._pidRecord = await pid.resolve();
+    return this._pidRecord.values.length > 0;
   }
 
   async init(data?: string): Promise<void> {
@@ -79,9 +81,13 @@ export class HandleType extends GenericIdentifierType {
         },
       ];
 
-      // Resolve the PID
-      this._pidRecord = await pid.resolve();
-      console.debug('load PIDRecord from API', this._pidRecord);
+      // Use cached data if available, otherwise fetch
+      if (!this._pidRecord) {
+        this._pidRecord = await pid.resolve();
+        console.debug('load PIDRecord from API', this._pidRecord);
+      } else {
+        console.debug('using cached PIDRecord');
+      }
     }
 
     for (const value of this._pidRecord.values) {

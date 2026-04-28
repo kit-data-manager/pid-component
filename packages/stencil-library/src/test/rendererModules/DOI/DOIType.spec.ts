@@ -14,32 +14,57 @@ afterEach(() => {
 });
 
 describe('DOIType', () => {
-  describe('hasCorrectFormatQuick()', () => {
+  describe('quickCheck()', () => {
     it('returns true for a bare DOI', () => {
       const dt = new DOIType(DOI_examples.VALID_BARE);
-      expect(dt.hasCorrectFormatQuick()).toBe(true);
+      expect(dt.quickCheck()).toBe(true);
     });
 
     it('returns true for DOI with https prefix', () => {
       const dt = new DOIType(DOI_examples.VALID_WITH_PREFIX);
-      expect(dt.hasCorrectFormatQuick()).toBe(true);
+      expect(dt.quickCheck()).toBe(true);
     });
 
     it('returns false for non-DOI string', () => {
       const dt = new DOIType(DOI_examples.INVALID_NOT_A_DOI);
-      expect(dt.hasCorrectFormatQuick()).toBe(false);
+      expect(dt.quickCheck()).toBe(false);
     });
 
     it('returns false for empty string', () => {
       const dt = new DOIType(DOI_examples.INVALID_EMPTY);
-      expect(dt.hasCorrectFormatQuick()).toBe(false);
+      expect(dt.quickCheck()).toBe(false);
     });
   });
 
-  describe('hasCorrectFormat()', () => {
-    it('matches hasCorrectFormatQuick() result', async () => {
+  describe('hasMeaningfulInformation()', () => {
+    const dataCiteResponse = {
+      data: {
+        attributes: {
+          titles: [{ title: 'The PID Component' }],
+          creators: [{
+            name: 'Inckmann, Maximilian',
+            givenName: 'Maximilian',
+            familyName: 'Inckmann',
+            nameIdentifiers: [{
+              nameIdentifier: 'https://orcid.org/0009-0005-2800-4833',
+              nameIdentifierScheme: 'ORCID',
+            }],
+          }],
+          publisher: 'KIT',
+          publicationYear: 2024,
+          types: { resourceTypeGeneral: 'Software', resourceType: 'Software' },
+          descriptions: [{ description: 'A web component.', descriptionType: 'Abstract' }],
+          url: 'https://github.com/kit-data-manager/pid-component',
+          subjects: [{ subject: 'CS' }],
+          dates: [{ date: '2024-06-15', dateType: 'Issued' }],
+        },
+      },
+    };
+
+    it('matches quickCheck() result', async () => {
+      cachedFetchSpy.mockResolvedValue(dataCiteResponse);
       const dt = new DOIType(DOI_examples.VALID_BARE);
-      expect(await dt.hasCorrectFormat()).toBe(dt.hasCorrectFormatQuick());
+      expect(await dt.hasMeaningfulInformation()).toBe(dt.quickCheck());
     });
   });
 

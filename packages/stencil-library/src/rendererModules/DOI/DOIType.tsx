@@ -28,15 +28,17 @@ export class DOIType extends GenericIdentifierType {
   private _doiInfo: DOIInfo;
 
   get data(): string {
-    return JSON.stringify(this._doiInfo.toObject());
+    return JSON.stringify(this._doiInfo?.toObject() ?? {});
   }
 
-  hasCorrectFormatQuick(): boolean {
+  quickCheck(): boolean {
     return DOI.isDOI(this.value);
   }
 
-  async hasCorrectFormat(): Promise<boolean> {
-    return this.hasCorrectFormatQuick();
+  async hasMeaningfulInformation(): Promise<boolean> {
+    this._doi = DOI.getDOIFromString(this.value);
+    this._doiInfo = await DOIInfo.getDOIInfo(this._doi);
+    return this._doiInfo !== undefined && this._doiInfo !== null && this._doiInfo.title !== '';
   }
 
   async init(data?: string): Promise<void> {

@@ -21,12 +21,12 @@ export class DateType extends GenericIdentifierType {
     '^([0-9]{4})-([0]?[1-9]|1[0-2])-([0-2][0-9]|3[0-1])(T([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9](.[0-9]*)?(Z|([+|-]([0-1][0-9]|2[0-3]):[0-5][0-9])){1}))$',
   );
 
-  hasCorrectFormatQuick(): boolean {
+  quickCheck(): boolean {
     return DateType.FORMAT_REGEX.test(this.value);
   }
 
-  async hasCorrectFormat(): Promise<boolean> {
-    return this.hasCorrectFormatQuick();
+  async hasMeaningfulInformation(): Promise<boolean> {
+    return Promise.resolve(this.quickCheck());
   }
 
   init(): Promise<void> {

@@ -3,48 +3,48 @@ import { EmailType } from '../../rendererModules/EmailType';
 import { EMAIL_examples } from '../../../../../examples/email/values.ts';
 
 describe('EmailType', () => {
-  describe('hasCorrectFormatQuick()', () => {
+  describe('quickCheck()', () => {
     it('returns true for a simple email address', () => {
       const et = new EmailType('test@example.com');
-      expect(et.hasCorrectFormatQuick()).toBe(true);
+      expect(et.quickCheck()).toBe(true);
     });
 
     it('returns true for comma-separated emails', () => {
       const et = new EmailType('alice@example.com, bob@example.com');
-      expect(et.hasCorrectFormatQuick()).toBe(true);
+      expect(et.quickCheck()).toBe(true);
     });
 
     it('returns true for email with dots and hyphens in local part', () => {
       const et = new EmailType('first.last-name@sub.domain.org');
-      expect(et.hasCorrectFormatQuick()).toBe(true);
+      expect(et.quickCheck()).toBe(true);
     });
 
     it('returns false for empty string', () => {
       const et = new EmailType(EMAIL_examples.INVALID_EMPTY);
-      expect(et.hasCorrectFormatQuick()).toBe(false);
+      expect(et.quickCheck()).toBe(false);
     });
 
     it('returns false for string without @ sign', () => {
       const et = new EmailType(EMAIL_examples.INVALID_NOT_AN_EMAIL);
-      expect(et.hasCorrectFormatQuick()).toBe(false);
+      expect(et.quickCheck()).toBe(false);
     });
 
     it('returns false for string with @ but missing domain', () => {
       const et = new EmailType(EMAIL_examples.INVALID_MISSING_DOMAIN);
-      expect(et.hasCorrectFormatQuick()).toBe(false);
+      expect(et.quickCheck()).toBe(false);
     });
 
     it('handles repeated calls correctly (regex lastIndex reset)', () => {
       const et = new EmailType('test@example.com');
-      expect(et.hasCorrectFormatQuick()).toBe(true);
-      expect(et.hasCorrectFormatQuick()).toBe(true);
+      expect(et.quickCheck()).toBe(true);
+      expect(et.quickCheck()).toBe(true);
     });
   });
 
-  describe('hasCorrectFormat()', () => {
-    it('matches hasCorrectFormatQuick() for a valid email', async () => {
+  describe('hasMeaningfulInformation()', () => {
+    it('matches quickCheck() for a valid email', async () => {
       const et = new EmailType('user@domain.com');
-      expect(await et.hasCorrectFormat()).toBe(et.hasCorrectFormatQuick());
+      expect(await et.hasMeaningfulInformation()).toBe(et.quickCheck());
     });
   });
 

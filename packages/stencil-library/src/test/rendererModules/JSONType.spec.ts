@@ -7,52 +7,52 @@ import { JSON_examples } from '../../../../../examples/json/values.ts';
 vi.mock('../../components/json-viewer/json-viewer', () => ({}));
 
 describe('JSONType', () => {
-  describe('hasCorrectFormatQuick()', () => {
+  describe('quickCheck()', () => {
     it('returns true for a JSON object string', () => {
       const jt = new JSONType('{"key":"value"}');
-      expect(jt.hasCorrectFormatQuick()).toBe(true);
+      expect(jt.quickCheck()).toBe(true);
     });
 
     it('returns true for a JSON array string', () => {
       const jt = new JSONType('[1,2,3]');
-      expect(jt.hasCorrectFormatQuick()).toBe(true);
+      expect(jt.quickCheck()).toBe(true);
     });
 
     it('returns true for nested JSON object', () => {
       const jt = new JSONType('{"a":{"b":1},"c":[1,2]}');
-      expect(jt.hasCorrectFormatQuick()).toBe(true);
+      expect(jt.quickCheck()).toBe(true);
     });
 
     it('returns false for plain text', () => {
       const jt = new JSONType(JSON_examples.INVALID_NOT_JSON);
-      expect(jt.hasCorrectFormatQuick()).toBe(false);
+      expect(jt.quickCheck()).toBe(false);
     });
 
     it('returns false for a JSON primitive string "42"', () => {
       const jt = new JSONType(JSON_examples.INVALID_PRIMITIVE);
-      expect(jt.hasCorrectFormatQuick()).toBe(false);
+      expect(jt.quickCheck()).toBe(false);
     });
 
     it('returns false for a JSON primitive string "true"', () => {
       const jt = new JSONType(JSON_examples.INVALID_PRIMITIVE);
-      expect(jt.hasCorrectFormatQuick()).toBe(false);
+      expect(jt.quickCheck()).toBe(false);
     });
 
     it('returns false for empty string', () => {
       const jt = new JSONType(JSON_examples.INVALID_EMPTY);
-      expect(jt.hasCorrectFormatQuick()).toBe(false);
+      expect(jt.quickCheck()).toBe(false);
     });
 
     it('returns true for JSON with whitespace', () => {
       const jt = new JSONType('  { "key": "value" }  ');
-      expect(jt.hasCorrectFormatQuick()).toBe(true);
+      expect(jt.quickCheck()).toBe(true);
     });
   });
 
-  describe('hasCorrectFormat()', () => {
-    it('matches hasCorrectFormatQuick() for valid JSON', async () => {
+  describe('hasMeaningfulInformation()', () => {
+    it('matches quickCheck() for valid JSON', async () => {
       const jt = new JSONType('{"key":"value"}');
-      expect(await jt.hasCorrectFormat()).toBe(jt.hasCorrectFormatQuick());
+      expect(await jt.hasMeaningfulInformation()).toBe(jt.quickCheck());
     });
   });
 
@@ -88,10 +88,10 @@ describe('JSONType', () => {
     it('resets the parsed JSON cache', async () => {
       const jt = new JSONType('{"key":"value"}');
       // Access parsed JSON to populate the cache
-      expect(jt.hasCorrectFormatQuick()).toBe(true);
+      expect(jt.quickCheck()).toBe(true);
       // After init, the cache is reset but re-parsing yields the same result
       await jt.init();
-      expect(jt.hasCorrectFormatQuick()).toBe(true);
+      expect(jt.quickCheck()).toBe(true);
     });
 
     it('returns a resolved promise', async () => {
