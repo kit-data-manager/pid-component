@@ -30,7 +30,7 @@ describe('pid-component', () => {
   it('has correct default props', async () => {
     const { root } = await render(<pid-component value="test"></pid-component>);
     expect(root.settings).toBe('[]');
-    expect(root.amountOfItems).toBe(10);
+    expect(root.itemsPerPage).toBe(10);
     expect(root.levelOfSubcomponents).toBe(1);
     expect(root.currentLevelOfSubcomponents).toBe(0);
     expect(root.emphasizeComponent).toBe(true);
@@ -44,9 +44,9 @@ describe('pid-component', () => {
     expect(root.settings).toBe('[]');
   });
 
-  it('defaults amountOfItems to 10', async () => {
+  it('defaults itemsPerPage to 10', async () => {
     const { root } = await render(<pid-component value="test"></pid-component>);
-    expect(root.amountOfItems).toBe(10);
+    expect(root.itemsPerPage).toBe(10);
   });
 
   it('defaults defaultTTL to 24 hours in milliseconds', async () => {
@@ -220,9 +220,9 @@ describe('pid-component', () => {
     expect(rootClasses).toContain('font-sans');
   });
 
-  it('amountOfItems prop can be set', async () => {
-    const { root } = await render(<pid-component value="test" amount-of-items={20}></pid-component>);
-    expect(root.amountOfItems).toBe(20);
+  it('itemsPerPage prop can be set', async () => {
+    const { root } = await render(<pid-component value="test" items-per-page={20}></pid-component>);
+    expect(root.itemsPerPage).toBe(20);
   });
 
   it('levelOfSubcomponents prop defaults to 1', async () => {

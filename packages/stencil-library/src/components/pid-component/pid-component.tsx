@@ -55,7 +55,7 @@ export class PidComponent {
    * (optional)
    * @type {number}
    */
-  @Prop() amountOfItems: number = 10;
+  @Prop() itemsPerPage: number = 10;
 
   /**
    * The total number of levels of subcomponents to show.
@@ -334,17 +334,17 @@ export class PidComponent {
   @Watch('items')
   onItemsChange(): void {
     // Reset page if we're beyond the available pages
-    const maxPage = Math.ceil(this.items.length / this.amountOfItems) - 1;
+    const maxPage = Math.ceil(this.items.length / this.itemsPerPage) - 1;
     if (this.tablePage > maxPage && maxPage >= 0) {
       this.tablePage = maxPage;
     }
   }
 
-  @Watch('amountOfItems')
-  validateAmountOfItems(newValue: number): void {
+  @Watch('itemsPerPage')
+  validateItemsPerPage(newValue: number): void {
     if (newValue <= 0) {
-      console.warn(`pid-component: amountOfItems prop must be positive. Received ${newValue}, defaulting to 10.`);
-      this.amountOfItems = 10;
+      console.warn(`pid-component: itemsPerPage prop must be positive. Received ${newValue}, defaulting to 10.`);
+      this.itemsPerPage = 10;
     }
   }
 
@@ -382,8 +382,8 @@ export class PidComponent {
     // Ensure component has an ID for accessibility references
     this.ensureComponentId();
 
-    // Validate amountOfItems to prevent division by zero
-    this.validateAmountOfItems(this.amountOfItems);
+    // Validate itemsPerPage to prevent division by zero
+    this.validateItemsPerPage(this.itemsPerPage);
 
     // Initialize temporarilyEmphasized from the actual prop value.
     // This cannot be done in the constructor because @Prop values
@@ -629,7 +629,7 @@ export class PidComponent {
    */
   private get shouldShowFooter(): boolean {
     const hasActions = this.actions.length > 0;
-    const hasPagination = this.items.length > this.amountOfItems;
+    const hasPagination = this.items.length > this.itemsPerPage;
     return hasActions || hasPagination;
   }
 
@@ -739,7 +739,7 @@ export class PidComponent {
               {this.items.length > 0 ? (
                 <pid-data-table
                   items={this.items}
-                  itemsPerPage={this.amountOfItems}
+                  itemsPerPage={this.itemsPerPage}
                   currentPage={this.tablePage}
                   loadSubcomponents={this.loadSubcomponents}
                   hideSubcomponents={this.hideSubcomponents}
@@ -770,10 +770,10 @@ export class PidComponent {
                   <pid-pagination
                     currentPage={this.tablePage}
                     totalItems={this.items.length}
-                    itemsPerPage={this.amountOfItems}
+                    itemsPerPage={this.itemsPerPage}
                     darkMode={this.darkMode}
                     onPageChange={e => (this.tablePage = e.detail)}
-                    onItemsPerPageChange={e => (this.amountOfItems = e.detail)}
+                    onItemsPerPageChange={e => (this.itemsPerPage = e.detail)}
                     aria-label={`Pagination controls for ${this.value} data`}
                     aria-controls={`${this.el.id}-table`}
                   />

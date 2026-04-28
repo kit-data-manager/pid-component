@@ -64,7 +64,7 @@ export const PidComponent: StencilVueComponent<JSX.PidComponent> = /*@__PURE__*/
   'value',
   'settings',
   'openByDefault',
-  'amountOfItems',
+  'itemsPerPage',
   'levelOfSubcomponents',
   'currentLevelOfSubcomponents',
   'hideSubcomponents',

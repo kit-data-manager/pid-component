@@ -291,7 +291,7 @@
               "priority": "high"
             },
             {
-              "name": "amount-of-items",
+              "name": "items-per-page",
               "deprecated": false,
               "description": "The number of items to show in the table per page.\nDefaults to 10.\n(optional)",
               "required": false,
@@ -743,7 +743,7 @@
               "name": "openByDefault"
             },
             {
-              "name": "amountOfItems"
+              "name": "itemsPerPage"
             },
             {
               "name": "levelOfSubcomponents"

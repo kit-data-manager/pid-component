@@ -18,8 +18,8 @@ describe('pid-component e2e', () => {
     expect(root.darkMode).toBe('light');
     // fallback-to-all defaults to true
     expect(root.fallbackToAll).toBe(true);
-    // amount-of-items defaults to 10
-    expect(root.amountOfItems).toBe(10);
+    // items-per-page defaults to 10
+    expect(root.itemsPerPage).toBe(10);
     // level-of-subcomponents defaults to 1
     expect(root.levelOfSubcomponents).toBe(1);
     // current-level-of-subcomponents defaults to 0

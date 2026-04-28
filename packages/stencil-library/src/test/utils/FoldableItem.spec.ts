@@ -80,16 +80,16 @@ describe('FoldableItem', () => {
       expect(item.estimatedTypePriority).toBe(0);
     });
 
-    it('defaults to 0 when renderDynamically is false', () => {
+    it('defaults to MAX_SAFE_INTEGER when renderDynamically is false', () => {
       const item = new FoldableItem(1, 'Key', 'Value', undefined, undefined, undefined, false);
 
-      expect(item.estimatedTypePriority).toBe(0);
+      expect(item.estimatedTypePriority).toBe(Number.MAX_SAFE_INTEGER);
     });
 
-    it('defaults to 0 when renderDynamically is not provided', () => {
+    it('defaults to MAX_SAFE_INTEGER when renderDynamically is not provided', () => {
       const item = new FoldableItem(1, 'Key', 'Value');
 
-      expect(item.estimatedTypePriority).toBe(0);
+      expect(item.estimatedTypePriority).toBe(Number.MAX_SAFE_INTEGER);
     });
   });
 

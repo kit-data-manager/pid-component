@@ -122,30 +122,14 @@ export class Parser {
         const quickResult = obj.quickCheck();
 
         if (quickResult === true) {
-          // Quick check passed - apply settings and init
-          try {
-            const settingsKey = obj.getSettingsKey();
-            const settingsValues = settings.find(v => v.type === settingsKey)?.values;
-            if (settingsValues) obj.settings = settingsValues;
-          } catch (e) {
-            console.warn('Error while adding settings to object:', e);
-          }
-
+          Parser.applySettings(obj, settings);
           await obj.init();
           return obj;
         }
 
         if (quickResult === undefined || quickResult === false) {
-          // Quick check returned undefined (uncertain) or false - try hasMeaningfulInformation for explicit selection
           if (await obj.hasMeaningfulInformation()) {
-            try {
-              const settingsKey = obj.getSettingsKey();
-              const settingsValues = settings.find(v => v.type === settingsKey)?.values;
-              if (settingsValues) obj.settings = settingsValues;
-            } catch (e) {
-              console.warn('Error while adding settings to object:', e);
-            }
-
+            Parser.applySettings(obj, settings);
             await obj.init();
             return obj;
           }
@@ -200,14 +184,7 @@ export class Parser {
 
     const best = validResults[0].obj;
 
-    // Apply settings for the best renderer type
-    try {
-      const settingsKey = best.getSettingsKey();
-      const settingsValues = settings.find(v => v.type === settingsKey)?.values;
-      if (settingsValues) best.settings = settingsValues;
-    } catch (e) {
-      console.warn('Error while adding settings to object:', e);
-    }
+    Parser.applySettings(best, settings);
 
     await best.init();
     return best;
@@ -230,5 +207,23 @@ export class Parser {
     const actionScore = obj.actions.length * actionWeight;
 
     return priorityScore + itemScore + actionScore;
+  }
+
+  /**
+   * Applies settings to a renderer object.
+   * @param obj The renderer instance to apply settings to
+   * @param settings The settings array
+   */
+  private static applySettings(
+    obj: GenericIdentifierType,
+    settings: { type: string; values: { name: string; value: unknown }[] }[],
+  ): void {
+    try {
+      const settingsKey = obj.getSettingsKey();
+      const settingsValues = settings.find(v => v.type === settingsKey)?.values;
+      if (settingsValues) obj.settings = settingsValues;
+    } catch (e) {
+      console.warn('Error while adding settings to object:', e);
+    }
   }
 }

@@ -327,16 +327,16 @@ describe('TextReplacer', () => {
       expect(records[0].pidComponent.getAttribute('default-t-t-l')).toBe('3600000');
     });
 
-    it('applies amountOfItems config to pid-component', () => {
+    it('applies itemsPerPage config to pid-component', () => {
       const { textNode } = createTextNodeInParent(DOI_examples.VALID_BARE);
       const matches: DetectionMatch[] = [
         { start: 0, end: 22, value: DOI_examples.VALID_BARE, rendererKey: 'DOIType' },
       ];
-      const config: PidDetectionConfig = { amountOfItems: 25 };
+      const config: PidDetectionConfig = { itemsPerPage: 25 };
 
       const records = replaceMatches(textNode, matches, config);
 
-      expect(records[0].pidComponent.getAttribute('amount-of-items')).toBe('25');
+      expect(records[0].pidComponent.getAttribute('items-per-page')).toBe('25');
     });
   });
 

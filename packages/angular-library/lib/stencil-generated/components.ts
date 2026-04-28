@@ -171,14 +171,14 @@ Useful for pagination to ensure proper height
 
 @ProxyCmp({
   defineCustomElementFn: definePidComponent,
-  inputs: ['amountOfItems', 'currentLevelOfSubcomponents', 'darkMode', 'defaultTTL', 'emphasizeComponent', 'fallbackToAll', 'height', 'hideSubcomponents', 'levelOfSubcomponents', 'openByDefault', 'renderers', 'settings', 'showTopLevelCopy', 'value', 'width']
+  inputs: ['currentLevelOfSubcomponents', 'darkMode', 'defaultTTL', 'emphasizeComponent', 'fallbackToAll', 'height', 'hideSubcomponents', 'itemsPerPage', 'levelOfSubcomponents', 'openByDefault', 'renderers', 'settings', 'showTopLevelCopy', 'value', 'width'],
 })
 @Component({
   selector: 'pid-component',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['amountOfItems', 'currentLevelOfSubcomponents', 'darkMode', 'defaultTTL', 'emphasizeComponent', 'fallbackToAll', 'height', 'hideSubcomponents', 'levelOfSubcomponents', 'openByDefault', 'renderers', 'settings', 'showTopLevelCopy', 'value', 'width'],
+  inputs: ['currentLevelOfSubcomponents', 'darkMode', 'defaultTTL', 'emphasizeComponent', 'fallbackToAll', 'height', 'hideSubcomponents', 'itemsPerPage', 'levelOfSubcomponents', 'openByDefault', 'renderers', 'settings', 'showTopLevelCopy', 'value', 'width'],
 })
 export class PidComponent {
   protected el: HTMLPidComponentElement;

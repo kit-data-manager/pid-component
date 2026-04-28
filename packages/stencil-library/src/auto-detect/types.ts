@@ -33,7 +33,7 @@ export interface PidDetectionConfig {
   /**
    * Number of items to show per page in the data table. Default: 10.
    */
-  amountOfItems?: number;
+  itemsPerPage?: number;
 
   /**
    * Whether to emphasize detected components with border and shadow. Default: false.

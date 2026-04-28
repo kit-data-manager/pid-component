@@ -4,7 +4,7 @@ import { renderers } from './utils';
 import { DBSchema, openDB } from '@tempfix/idb';
 
 const dbName: string = 'pid-component';
-const dbVersion: number = undefined;
+const dbVersion: number = 1;
 
 /**
  * The database schema for the PID component.
@@ -106,15 +106,17 @@ export class Database {
       // Check if the relation already exists
       const index = tx.store.index('by-start');
       let cursor = await index.openCursor();
+      let relationExists = false;
       while (cursor) {
         if (cursor.value.start === relation.start && cursor.value.end === relation.end && cursor.value.description === relation.description) {
-          // relation already exists
-          return;
+          relationExists = true;
+          break;
         }
         cursor = await cursor.continue();
       }
-      // Add the relation to the relations object store if it does not exist
-      promises.push(tx.store.add(relation));
+      if (!relationExists) {
+        promises.push(tx.store.add(relation));
+      }
     }
     promises.push(tx.done);
     await Promise.all(promises);

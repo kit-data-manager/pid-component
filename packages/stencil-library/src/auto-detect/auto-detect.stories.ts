@@ -137,7 +137,7 @@ const meta: Meta = {
         defaultValue: { summary: '1' },
       },
     },
-    amountOfItems: {
+    itemsPerPage: {
       description: 'Number of items to show per page in the data table of each auto-detected component.',
       control: { type: 'number', min: 1 },
       table: {
@@ -182,7 +182,7 @@ const meta: Meta = {
     observe: false,
     settings: '[]',
     levelOfSubcomponents: 1,
-    amountOfItems: 10,
+    itemsPerPage: 10,
     emphasizeComponent: false,
     showTopLevelCopy: true,
   },
@@ -208,7 +208,7 @@ function buildConfig(args: Record<string, unknown>, root: HTMLElement) {
     observe: args.observe as boolean,
     settings: (args.settings as string) || undefined,
     levelOfSubcomponents: args.levelOfSubcomponents as number,
-    amountOfItems: args.amountOfItems as number,
+    itemsPerPage: args.itemsPerPage as number,
     emphasizeComponent: args.emphasizeComponent as boolean,
     showTopLevelCopy: args.showTopLevelCopy as boolean,
     defaultTTL: args.defaultTTL as number | undefined,

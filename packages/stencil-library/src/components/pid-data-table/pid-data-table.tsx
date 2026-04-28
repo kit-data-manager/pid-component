@@ -218,7 +218,7 @@ export class PidDataTable {
                               value={value.value}
                               levelOfSubcomponents={this.levelOfSubcomponents}
                               currentLevelOfSubcomponents={this.currentLevelOfSubcomponents + 1}
-                              amountOfItems={this.itemsPerPage}
+                              itemsPerPage={this.itemsPerPage}
                               settings={this.settings}
                               openByDefault={false}
                               darkMode={this.darkMode}
@@ -229,7 +229,7 @@ export class PidDataTable {
                               value={value.value}
                               levelOfSubcomponents={this.currentLevelOfSubcomponents}
                               currentLevelOfSubcomponents={this.currentLevelOfSubcomponents + 1}
-                              amountOfItems={this.itemsPerPage}
+                              itemsPerPage={this.itemsPerPage}
                               settings={this.settings}
                               hideSubcomponents={true}
                               openByDefault={false}

@@ -149,8 +149,8 @@ function applyConfig(pidComponent: HTMLElement, config: PidDetectionConfig): voi
   if (config.levelOfSubcomponents !== undefined) {
     pidComponent.setAttribute('level-of-subcomponents', String(config.levelOfSubcomponents));
   }
-  if (config.amountOfItems !== undefined) {
-    pidComponent.setAttribute('amount-of-items', String(config.amountOfItems));
+  if (config.itemsPerPage !== undefined) {
+    pidComponent.setAttribute('items-per-page', String(config.itemsPerPage));
   }
   // Default to non-emphasized for auto-detected components (blends into text)
   pidComponent.setAttribute('emphasize-component', String(config.emphasizeComponent ?? false));

@@ -49,7 +49,7 @@ const meta: Meta = {
         type: { summary: 'boolean' },
       },
     },
-    amountOfItems: {
+    itemsPerPage: {
       description: 'The number of items to show in the table per page',
       control: {
         type: 'number',
@@ -160,7 +160,7 @@ const meta: Meta = {
     value: HANDLE_examples.FDO_BARE,
     settings: '[]',
     openByDefault: false,
-    amountOfItems: 10,
+    itemsPerPage: 10,
     levelOfSubcomponents: 1,
     currentLevelOfSubcomponents: 0,
     hideSubcomponents: false,
@@ -444,14 +444,14 @@ export const ORCIDInRecord: Story = {
 };
 
 /**
- * Same Handle record as above, but with `amountOfItems` set to 100 so
+ * Same Handle record as above, but with `itemsPerPage` set to 100 so
  * all record entries are visible on a single page without pagination.
  */
 export const ORCIDInRecordWithoutLimit: Story = {
   id: 'pid-component-orcid-in-record-without-limit',
   args: {
     value: HANDLE_examples.FDO_TYPED,
-    amountOfItems: 100,
+    itemsPerPage: 100,
     openByDefault: true,
   },
   parameters: {

@@ -58,7 +58,7 @@ export default {
     options: {
       storySort: {
         order: [
-          'intro', 'pid-component', 'auto-detect', 'react-vite', 'react-nextjs', 'vue', 'angular', 'Internal', '*',
+          'introduction', 'pid-component', 'auto-detect', 'react-vite', 'react-nextjs', 'vue', 'angular', 'Internal', '*',
         ],
       },
     },

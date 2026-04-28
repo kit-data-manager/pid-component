@@ -11,7 +11,7 @@ import {
 } from '../../../../examples';
 
 const meta: Meta = {
-  title: 'intro',
+  title: 'Introduction',
   tags: ['autodocs'],
 };
 
@@ -35,7 +35,7 @@ export const PidComponentDemo: Story = {
       </p>
       <div style="margin: 16px 0;">
         <pid-component value="${DOI_examples.DATACITE_JOURNAL_PAPER}" dark-mode="light"
-                       open-by-default="true"></pid-component>
+                       open-by-default="false"></pid-component>
       </div>
     </div>
   `,

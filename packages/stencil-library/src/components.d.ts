@@ -157,12 +157,6 @@ export namespace Components {
     }
     interface PidComponent {
         /**
-          * The number of items to show in the table per page. Defaults to 10. (optional)
-          * @type {number}
-          * @default 10
-         */
-        "amountOfItems": number;
-        /**
           * The current level of subcomponents. Defaults to 0. (optional)
           * @type {number}
           * @default 0
@@ -202,6 +196,12 @@ export namespace Components {
           * @type {boolean}
          */
         "hideSubcomponents": boolean;
+        /**
+         * The number of items to show in the table per page. Defaults to 10. (optional)
+         * @type {number}
+         * @default 10
+         */
+        'itemsPerPage': number;
         /**
           * The total number of levels of subcomponents to show. Defaults to 1. (optional)
           * @type {number}
@@ -634,12 +634,6 @@ declare namespace LocalJSX {
     }
     interface PidComponent {
         /**
-          * The number of items to show in the table per page. Defaults to 10. (optional)
-          * @type {number}
-          * @default 10
-         */
-        "amountOfItems"?: number;
-        /**
           * The current level of subcomponents. Defaults to 0. (optional)
           * @type {number}
           * @default 0
@@ -679,6 +673,12 @@ declare namespace LocalJSX {
           * @type {boolean}
          */
         "hideSubcomponents"?: boolean;
+        /**
+         * The number of items to show in the table per page. Defaults to 10. (optional)
+         * @type {number}
+         * @default 10
+         */
+        'itemsPerPage'?: number;
         /**
           * The total number of levels of subcomponents to show. Defaults to 1. (optional)
           * @type {number}
@@ -886,7 +886,7 @@ declare namespace LocalJSX {
         "value": string;
         "settings": string;
         "openByDefault": boolean;
-        "amountOfItems": number;
+        'itemsPerPage': number;
         "levelOfSubcomponents": number;
         "currentLevelOfSubcomponents": number;
         "hideSubcomponents": boolean;

@@ -38,7 +38,7 @@ const meta: Meta<typeof PidComponent> = {
       description: 'Whether the component is expanded on mount',
       control: 'boolean',
     },
-    amountOfItems: {
+    itemsPerPage: {
       description: 'Number of items to display per page',
       control: 'number',
     },

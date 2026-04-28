@@ -38,7 +38,7 @@ const meta: Meta<PidComponent> = {
       description: 'Whether the component is expanded on mount',
       control: 'boolean',
     },
-    amountOfItems: {
+    itemsPerPage: {
       description: 'Number of items to display per page',
       control: 'number',
     },
@@ -84,7 +84,7 @@ const meta: Meta<PidComponent> = {
       [fallbackToAll]="fallbackToAll"
       [openByDefault]="openByDefault"
       [emphasizeComponent]="emphasizeComponent"
-      [amountOfItems]="amountOfItems"
+      [itemsPerPage]="itemsPerPage"
       [levelOfSubcomponents]="levelOfSubcomponents"
       [currentLevelOfSubcomponents]="currentLevelOfSubcomponents"
       [hideSubcomponents]="hideSubcomponents"
