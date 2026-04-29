@@ -156,7 +156,7 @@ export class ORCIDType extends GenericIdentifierType {
         this.items.push(new FoldableItem(25, 'Preferred Language', this._orcidInfo.preferredLocale, 'The preferred locale/language of the person.'));
 
       for (const url of this._orcidInfo.researcherUrls) {
-        this.items.push(new FoldableItem(100, url.name, url.url, 'A link to a website specified by the person.'));
+        this.items.push(new FoldableItem(100, url.name.length > 1 ? url.name : 'User-specified reference', url.url, 'A link to a website specified by the person.'));
       }
 
       if (this._orcidInfo.keywords.length > 50)
