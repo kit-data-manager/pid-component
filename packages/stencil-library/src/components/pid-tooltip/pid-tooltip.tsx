@@ -349,7 +349,7 @@ export class PidTooltip {
             role="tooltip"
             class={`${this.isVisible ? 'block' : 'hidden'} absolute z-50 ${this.getPositionClasses(this.calculatedPosition)} w-full rounded border ${
               isDarkMode ? 'border-gray-600 bg-gray-700 text-gray-200' : 'border-gray-300 bg-white text-gray-700'
-            } p-3 text-xs whitespace-normal shadow-lg transition-opacity duration-200 ease-in-out`}
+            } p-1 text-xs whitespace-normal shadow-lg transition-opacity duration-200 ease-in-out`}
             style={this.getTooltipStyles()}
             aria-live="polite"
           >

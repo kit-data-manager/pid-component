@@ -92,6 +92,11 @@ export class PidCollapsible {
   @Prop() expanded: boolean = false;
 
   /**
+   * Whether the preview should be scrollable (for subcomponents or expanded state).
+   */
+  @Prop() previewScrollable: boolean = false;
+
+  /**
    * Event emitted when the collapsible is toggled
    */
   @Event() collapsibleToggle: EventEmitter<boolean>;
@@ -824,8 +829,6 @@ export class PidCollapsible {
     }, 50);
   }
 
-  // toggleCollapsible replaced by performToggle + handleSummaryClick
-
   /**
    * Gets host classes based on current state
    */
@@ -849,7 +852,7 @@ export class PidCollapsible {
       baseClasses.push('mb-2', 'max-w-full', 'text-xs', 'block');
     } else {
       // Collapsed: inline with text, no float (float causes clear/line-break issues)
-      baseClasses.push('my-0', 'max-w-md', 'text-sm', 'inline-block');
+      baseClasses.push('my-0', 'max-w-full', 'text-sm', 'inline-block');
     }
 
     // Add dark mode text color only (no background)
@@ -911,7 +914,7 @@ export class PidCollapsible {
           baseClasses.push('border-b', 'box-border', 'border-gray-700');
         }
       } else {
-        baseClasses.push('bg-white', 'text-ellipsis', ' overflow-hidden');
+        baseClasses.push('bg-white', 'text-ellipsis');
         if (this.emphasize) {
           baseClasses.push('border-b', 'box-border', 'border-gray-100');
         }
@@ -1016,10 +1019,10 @@ export class PidCollapsible {
                 </span>
             )}
             <span
-              class={`align-baseline min-w-0 ${this.open ? 'overflow-x-auto whitespace-normal' : 'block whitespace-nowrap overflow-hidden text-ellipsis'}`}>
+              class={`block ${this.previewScrollable ? 'shrink-0' : 'min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'}`}>
                 <slot name="summary"></slot>
               </span>
-            <div class="ml-auto">
+            <div class={`ml-auto shrink-0 ${this.previewScrollable ? 'sticky right-0' : ''}`}>
               <slot name="summary-actions"></slot>
             </div>
           </summary>

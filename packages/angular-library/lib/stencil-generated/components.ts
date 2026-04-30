@@ -134,7 +134,7 @@ export declare interface PidActions extends Components.PidActions {}
 
 @ProxyCmp({
   defineCustomElementFn: definePidCollapsible,
-  inputs: ['darkMode', 'emphasize', 'expanded', 'initialHeight', 'initialWidth', 'lineHeight', 'open', 'showFooter'],
+  inputs: ['darkMode', 'emphasize', 'expanded', 'initialHeight', 'initialWidth', 'lineHeight', 'open', 'previewScrollable', 'showFooter'],
   methods: ['recalculateContentDimensions']
 })
 @Component({
@@ -142,7 +142,7 @@ export declare interface PidActions extends Components.PidActions {}
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['darkMode', 'emphasize', 'expanded', 'initialHeight', 'initialWidth', 'lineHeight', 'open', 'showFooter'],
+  inputs: ['darkMode', 'emphasize', 'expanded', 'initialHeight', 'initialWidth', 'lineHeight', 'open', 'previewScrollable', 'showFooter'],
   outputs: ['collapsibleToggle', 'contentHeightChange'],
 })
 export class PidCollapsible {

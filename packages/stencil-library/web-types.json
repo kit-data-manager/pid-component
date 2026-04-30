@@ -252,6 +252,14 @@
               "required": false,
               "default": "false",
               "priority": "high"
+            },
+            {
+              "name": "preview-scrollable",
+              "deprecated": false,
+              "description": "Whether the preview should be scrollable (for subcomponents or expanded state).",
+              "required": false,
+              "default": "false",
+              "priority": "high"
             }
           ],
           "slots": [],
@@ -728,6 +736,9 @@
             },
             {
               "name": "expanded"
+            },
+            {
+              "name": "previewScrollable"
             }
           ]
         },

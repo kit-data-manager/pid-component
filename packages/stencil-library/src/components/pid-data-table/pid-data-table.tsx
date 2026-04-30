@@ -155,108 +155,100 @@ export class PidDataTable {
     }
 
     return (
-      <div
-        class={
-          isDarkMode
-            ? 'mx-1 flex h-full w-full flex-col rounded-lg border border-gray-700 bg-gray-800'
-            : 'mx-1 flex h-full w-full flex-col rounded-lg border border-gray-200 bg-gray-50'
-        }
+      <table
+        id={this.tableId}
+        class={`w-full h-full table-auto border-collapse text-left font-sans text-sm select-text rounded-md overflow-y-auto ${isDarkMode ? 'text-gray-200 bg-gray-800' : 'bg-gray-50'}`}
+        aria-label="Data table with properties and values"
+        role="table"
       >
-        {/* Table container with scrollable content */}
-        <div class="relative z-10 w-full grow overflow-auto">
-          <table
-            id={this.tableId}
-            class={`w-full table-fixed border-collapse text-left font-sans text-sm select-text ${isDarkMode ? 'text-gray-200' : ''}`}
-            aria-label="Data table with properties and values"
-            role="table"
+        <thead class="sticky top-0 z-20 p-1 rounded-md bg-slate-600 text-slate-200">
+        <tr class="font-semibold flex-col" role="row">
+          <th class="w-1/5 flex-2 resize-x rounded-l-md p-1" scope="col" role="columnheader">
+            Key
+          </th>
+          <th class="min-w-36 w-4/5 flex-6 resize-x rounded-r-md p-1" scope="col" role="columnheader">
+            Value
+          </th>
+        </tr>
+        </thead>
+        <tbody class={isDarkMode ? 'bg-gray-800 overflow-y-auto relative' : 'bg-gray-50 overflow-y-auto relative'}
+               role="rowgroup">
+        {this.filteredItems.map((value, index) => (
+          <tr
+            key={`item-${value.keyTitle}-${index}`}
+            class={
+              isDarkMode
+                ? `odd:bg-gray-700 even:bg-gray-800 ${index !== this.filteredItems.length - 1 ? 'border-b border-gray-700' : ''}`
+                : `odd:bg-slate-200 even:bg-gray-50 ${index !== this.filteredItems.length - 1 ? 'border-b border-gray-200' : ''}`
+            }
+            aria-label={`Row for ${value.keyTitle} with value ${value.value}`}
+            role="row"
           >
-            <thead class="sticky top-0 z-20 rounded-t-lg bg-slate-600 text-slate-200">
-              <tr class="font-semibold" role="row">
-                <th class="w-[25%] min-w-[150px] rounded-tl-lg p-1" scope="col" role="columnheader">
-                  Key
-                </th>
-                <th class="w-[75%] rounded-tr-lg p-2" scope="col" role="columnheader">
-                  Value
-                </th>
-              </tr>
-            </thead>
-            <tbody class={isDarkMode ? 'bg-gray-800' : 'bg-gray-50'} role="rowgroup">
-              {this.filteredItems.map((value, index) => (
-                <tr
-                  key={`item-${value.keyTitle}-${index}`}
-                  class={
-                    isDarkMode
-                      ? `odd:bg-gray-700 even:bg-gray-800 ${index !== this.filteredItems.length - 1 ? 'border-b border-gray-700' : ''}`
-                      : `odd:bg-slate-200 even:bg-gray-50 ${index !== this.filteredItems.length - 1 ? 'border-b border-gray-200' : ''}`
+            <td class={'w-auto p-1 align-top font-mono'} role="cell">
+              <pid-tooltip text={value.keyTooltip || `Details for ${value.keyTitle}`} position="top" maxHeight="200px"
+                           aria-label={`Information about ${value.keyTitle}`}>
+                <div slot="trigger" class="flex min-h-7 w-full items-center overflow-hidden">
+                  <a
+                    href={value.keyLink}
+                    target={'_blank'}
+                    rel={'noopener noreferrer'}
+                    class="mr-2 truncate rounded-sm text-blue-600 underline hover:text-blue-800 focus:text-blue-900 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-hidden"
+                    onClick={e => e.stopPropagation()}
+                    aria-label={`Open ${value.keyTitle} in new tab`}
+                  >
+                    {value.keyTitle}
+                  </a>
+                </div>
+              </pid-tooltip>
+            </td>
+            <td class={'relative w-full p-1 align-top text-sm select-text'} role="cell">
+              <div class="grid w-full grid-cols-[minmax(0,1fr)_auto] items-start gap-2">
+                <div class="min-w-0 overflow-x-auto whitespace-normal">
+                  {
+                    // Load a foldable subcomponent if subcomponents are not disabled (hideSubcomponents), and the current level of subcomponents is not the total level of subcomponents. If the subcomponent is on the bottom level of the hierarchy, render just a preview. If the value should not be resolved (isFoldable), just render the value as text.
+                    this.loadSubcomponents && !this.hideSubcomponents && value.renderDynamically ? (
+                      <pid-component
+                        value={value.value}
+                        levelOfSubcomponents={this.levelOfSubcomponents}
+                        currentLevelOfSubcomponents={this.currentLevelOfSubcomponents + 1}
+                        itemsPerPage={this.itemsPerPage}
+                        settings={this.settings}
+                        openByDefault={false}
+                        darkMode={this.darkMode}
+                        class="block w-full min-w-0"
+                      />
+                    ) : !this.hideSubcomponents && this.currentLevelOfSubcomponents === this.levelOfSubcomponents && value.renderDynamically ? (
+                      <pid-component
+                        value={value.value}
+                        levelOfSubcomponents={this.currentLevelOfSubcomponents}
+                        currentLevelOfSubcomponents={this.currentLevelOfSubcomponents + 1}
+                        itemsPerPage={this.itemsPerPage}
+                        settings={this.settings}
+                        hideSubcomponents={true}
+                        openByDefault={false}
+                        darkMode={this.darkMode}
+                        class="block w-full min-w-0"
+                      />
+                    ) : (
+                      <span
+                        class={'inline-block w-full max-w-full overflow-x-auto font-mono text-sm break-words whitespace-normal'}>{value.value}</span>
+                    )
                   }
-                  aria-label={`Row for ${value.keyTitle} with value ${value.value}`}
-                  role="row"
-                >
-                  <td class={'w-auto min-w-[150px] p-1 align-top font-mono'} role="cell">
-                    <pid-tooltip text={value.keyTooltip || `Details for ${value.keyTitle}`} position="top" maxHeight="200px" aria-label={`Information about ${value.keyTitle}`}>
-                      <div slot="trigger" class="flex min-h-7 w-full items-center overflow-hidden">
-                        <a
-                          href={value.keyLink}
-                          target={'_blank'}
-                          rel={'noopener noreferrer'}
-                          class="mr-2 truncate rounded-sm text-blue-600 underline hover:text-blue-800 focus:text-blue-900 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-hidden"
-                          onClick={e => e.stopPropagation()}
-                          aria-label={`Open ${value.keyTitle} in new tab`}
-                        >
-                          {value.keyTitle}
-                        </a>
-                      </div>
-                    </pid-tooltip>
-                  </td>
-                  <td class={'relative w-full p-1 align-top text-sm select-text'} role="cell">
-                    <div class="grid w-full grid-cols-[minmax(0,1fr)_auto] items-start gap-2">
-                      <div class="min-w-0 overflow-x-auto break-words whitespace-normal">
-                        {
-                          // Load a foldable subcomponent if subcomponents are not disabled (hideSubcomponents), and the current level of subcomponents is not the total level of subcomponents. If the subcomponent is on the bottom level of the hierarchy, render just a preview. If the value should not be resolved (isFoldable), just render the value as text.
-                          this.loadSubcomponents && !this.hideSubcomponents && value.renderDynamically ? (
-                            <pid-component
-                              value={value.value}
-                              levelOfSubcomponents={this.levelOfSubcomponents}
-                              currentLevelOfSubcomponents={this.currentLevelOfSubcomponents + 1}
-                              itemsPerPage={this.itemsPerPage}
-                              settings={this.settings}
-                              openByDefault={false}
-                              darkMode={this.darkMode}
-                              class="block w-full min-w-0"
-                            />
-                          ) : !this.hideSubcomponents && this.currentLevelOfSubcomponents === this.levelOfSubcomponents && value.renderDynamically ? (
-                            <pid-component
-                              value={value.value}
-                              levelOfSubcomponents={this.currentLevelOfSubcomponents}
-                              currentLevelOfSubcomponents={this.currentLevelOfSubcomponents + 1}
-                              itemsPerPage={this.itemsPerPage}
-                              settings={this.settings}
-                              hideSubcomponents={true}
-                              openByDefault={false}
-                              darkMode={this.darkMode}
-                              class="block w-full min-w-0"
-                            />
-                          ) : (
-                            <span class={'inline-block w-full max-w-full overflow-x-auto font-mono text-sm break-words whitespace-normal'}>{value.value}</span>
-                          )
-                        }
-                      </div>
-                      <div class="shrink-0 px-2">
-                        <copy-button
-                          value={value.value}
-                          class={`visible z-50 cursor-pointer rounded-xs ${isDarkMode ? 'bg-gray-700/90 hover:bg-gray-600' : 'bg-white/90 hover:bg-white'} opacity-100 shadow-xs transition-all duration-200 hover:shadow-md`}
-                          aria-label={`Copy ${value.keyTitle} value to clipboard`}
-                          title={`Copy ${value.keyTitle} value to clipboard`}
-                        />
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+                </div>
+                <div class="shrink-0 px-2">
+                  <copy-button
+                    value={value.value}
+                    class={`visible z-50 cursor-pointer rounded-xs ${isDarkMode ? 'bg-gray-700/90 hover:bg-gray-600' : 'bg-white/90 hover:bg-white'} opacity-100 shadow-xs transition-all duration-200 hover:shadow-md`}
+                    aria-label={`Copy ${value.keyTitle} value to clipboard`}
+                    title={`Copy ${value.keyTitle} value to clipboard`}
+                  />
+                </div>
+              </div>
+            </td>
+          </tr>
+        ))}
+        </tbody>
+      </table>
     );
   }
 }

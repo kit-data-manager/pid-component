@@ -141,6 +141,11 @@ export namespace Components {
          */
         "open": boolean;
         /**
+         * Whether the preview should be scrollable (for subcomponents or expanded state).
+         * @default false
+         */
+        'previewScrollable': boolean;
+        /**
           * Public method to recalculate content dimensions Can be called externally, for example when pagination changes Optimized for better performance
          */
         'recalculateContentDimensions': () => Promise<{
@@ -627,6 +632,11 @@ declare namespace LocalJSX {
          */
         "open"?: boolean;
         /**
+         * Whether the preview should be scrollable (for subcomponents or expanded state).
+         * @default false
+         */
+        'previewScrollable'?: boolean;
+        /**
           * Whether to show the footer section
           * @default false
          */
@@ -881,6 +891,7 @@ declare namespace LocalJSX {
         "lineHeight": number;
         "showFooter": boolean;
         'expanded': boolean;
+        'previewScrollable': boolean;
     }
     interface PidComponentAttributes {
         "value": string;

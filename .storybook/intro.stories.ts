@@ -8,7 +8,7 @@ import {
   SPDX_examples,
   URL_examples,
   EMAIL_examples,
-} from '../../../../examples';
+} from '../examples';
 
 const meta: Meta = {
   title: 'Introduction',
@@ -75,7 +75,7 @@ export const AutoDetectionDemo: Story = {
     `;
 
     setTimeout(async () => {
-      const { initPidDetection } = await import('../auto-detect/initPidDetection');
+      const { initPidDetection } = await import('../packages/stencil-library/src/auto-detect/initPidDetection');
       const root = container.querySelector('#intro-auto-detect') as HTMLElement;
       if (root) {
         initPidDetection({

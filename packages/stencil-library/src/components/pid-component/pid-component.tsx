@@ -671,7 +671,7 @@ export class PidComponent {
                 aria-expanded={this.isExpanded}
               >
                 <span
-                  class={`pid-preview-wrapper inline-block font-mono font-medium whitespace-nowrap select-all ${this.isExpanded ? 'text-xs' : 'text-sm'}`}
+                  class={`inline-block font-mono font-medium select-all ${this.isExpanded ? 'text-xs' : 'text-sm'} ${this.isExpanded ? 'max-w-[60vw] overflow-x-auto whitespace-nowrap' : 'max-w-full truncate'}`}
                 >
                   { // Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
                     this.identifierObject?.renderPreview()
@@ -705,6 +705,7 @@ export class PidComponent {
             <pid-collapsible
               expanded={this.isExpanded}
               open={this.isExpanded}
+              previewScrollable={this.isExpanded}
               emphasize={this.emphasizeComponent || this.temporarilyEmphasized}
               initialWidth={this.currentLevelOfSubcomponents > 0 ? '100%' : this.width}
               initialHeight={this.height}
@@ -718,7 +719,7 @@ export class PidComponent {
             >
               <span
                 slot="summary"
-                class={`font-mono font-medium whitespace-nowrap select-all text-sm`}
+                class={`font-mono font-medium select-all text-sm ${this.isExpanded ? 'overflow-x-auto whitespace-nowrap' : 'max-w-full truncate'}`}
                 aria-label={`Preview of ${this.value}`}
               >
                 {this.identifierObject?.renderPreview()}

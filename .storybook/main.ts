@@ -47,6 +47,8 @@ const config: StorybookConfig = {
   stories: [
     '../packages/stencil-library/src/**/*.mdx',
     '../packages/stencil-library/src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    '*.stories.ts',
+    '*.mdx',
   ],
   addons: [
     '@storybook/addon-links',
