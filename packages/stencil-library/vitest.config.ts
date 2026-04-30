@@ -32,7 +32,11 @@ try {
         enabled: true,
         provider: playwright(),
         headless: true,
-        instances: [{ browser: 'chromium' }],
+        instances: [
+          { browser: 'chromium' },
+          { browser: 'firefox' },
+          { browser: 'webkit' },
+        ],
       },
     },
   });
@@ -45,7 +49,9 @@ export default defineVitestConfig({
   test: {
     projects,
     coverage: {
-      provider: 'v8',
+      // Note: 'v8' provider does not support multiple browser instances.
+      // Using 'istanbul' for coverage when testing with chromium, firefox, and webkit.
+      provider: 'istanbul',
       enabled: true,
       reporter: ['text', 'json', 'json-summary', 'html'],
       include: ['src/**/*.{ts,tsx}'],

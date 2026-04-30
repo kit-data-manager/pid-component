@@ -151,7 +151,7 @@ export const ExcludeElements: Story = {
         <div
           className="no-detect"
           style={{
-            background: '#f0f0f0',
+            background: light - dark('#f0f0f0', '#2a2a3d'),
             padding: 12,
             borderRadius: 4,
             fontFamily: 'monospace',
