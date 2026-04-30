@@ -32,10 +32,10 @@
 import type {
   DetectionMatch,
   PidDetectionConfig,
-  PidDetectionController,
+  PidDetectionController, ReplacementRecord,
 } from './types';
 import { scanDom } from './DomScanner';
-import { replaceMatches, ReplacementRecord, restoreOriginalText } from './TextReplacer';
+import { replaceMatches, restoreOriginalText } from './TextReplacer';
 import { detectBestFit, sanitizeToken } from './detection-registry';
 
 /** Batch size for inserting components via requestIdleCallback */
@@ -103,7 +103,7 @@ export function initPidDetection(config: PidDetectionConfig = {}): PidDetectionC
       const { sanitized, leadingStripped } = sanitizeToken(token);
       if (sanitized.length < 2) continue;
 
-      const rendererKey = detectBestFit(sanitized, orderedRenderers);
+      const rendererKey = detectBestFit(sanitized, orderedRenderers, config.fallbackToAll ?? true);
       if (rendererKey !== null) {
         matches.push({
           start: tokenStart + leadingStripped,

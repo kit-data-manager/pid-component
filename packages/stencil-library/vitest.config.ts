@@ -50,6 +50,7 @@ export default defineVitestConfig({
       reporter: ['text', 'json', 'json-summary', 'html'],
       include: ['src/**/*.{ts,tsx}'],
       exclude: [
+        'src/**/*.stories.ts',
         'src/**/*.spec.{ts,tsx}',
         'src/**/*.e2e.{ts,tsx}',
         'src/**/*.test.{ts,tsx}',

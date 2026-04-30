@@ -11,33 +11,13 @@
  * and the pid-component takes over.
  */
 
-import type { DetectionMatch, PidDetectionConfig } from './types';
+import type { DetectionMatch, PidDetectionConfig, ReplacementRecord } from './types';
 
 /** CSS class for the wrapper span around auto-detected PIDs */
 const WRAPPER_CLASS = 'pid-auto-detect-wrapper';
 
 /** Attribute marking wrapper elements for cleanup and scanning exclusion */
 const WRAPPER_ATTR = 'data-pid-auto-detected';
-
-/**
- * Tracks a single replacement for later restoration.
- */
-export interface ReplacementRecord {
-  /** The wrapper element that was inserted */
-  wrapper: HTMLElement;
-  /** The original full text of the parent text node (for restore) */
-  originalText: string;
-  /** Reference to preceding text node (may be null) */
-  precedingTextNode: Text | null;
-  /** Reference to following text node (may be null) */
-  followingTextNode: Text | null;
-  /** The pid-component element */
-  pidComponent: HTMLElement;
-  /** Observer watching for component load */
-  observer: MutationObserver;
-  /** The original text span inside the wrapper */
-  originalSpan: HTMLElement;
-}
 
 /**
  * Replace detected PID matches in a text node with <pid-component> elements.

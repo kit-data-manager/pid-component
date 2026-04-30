@@ -122,8 +122,8 @@ describe('initPidDetection', () => {
       await flushMicrotasks();
 
       // "hello" and "world" are the two tokens from "hello world"
-      expect(spyDetectBestFit).toHaveBeenCalledWith('hello', undefined);
-      expect(spyDetectBestFit).toHaveBeenCalledWith('world', undefined);
+      expect(spyDetectBestFit).toHaveBeenCalledWith('hello', undefined, true);
+      expect(spyDetectBestFit).toHaveBeenCalledWith('world', undefined, true);
       controller.destroy();
     });
 
@@ -182,7 +182,7 @@ describe('initPidDetection', () => {
       const controller = initPidDetection({ root, renderers });
       await flushMicrotasks();
 
-      expect(spyDetectBestFit).toHaveBeenCalledWith(DOI_examples.VALID_BARE, renderers);
+      expect(spyDetectBestFit).toHaveBeenCalledWith(DOI_examples.VALID_BARE, renderers, true);
       controller.destroy();
     });
 
@@ -248,7 +248,7 @@ describe('initPidDetection', () => {
 
       // The whole text is one token (no delimiter characters present)
       expect(spySanitizeToken).toHaveBeenCalledWith('...value...');
-      expect(spyDetectBestFit).toHaveBeenCalledWith('value', undefined);
+      expect(spyDetectBestFit).toHaveBeenCalledWith('value', undefined, true);
       controller.destroy();
     });
 

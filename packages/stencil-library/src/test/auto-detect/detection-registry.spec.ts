@@ -83,6 +83,36 @@ describe('detection-registry', () => {
       expect(result.sanitized).toBe('value');
       expect(result.leadingStripped).toBe(2);
     });
+
+    it('strips surrounding straight double quotes', () => {
+      const result = sanitizeToken('"10.5281/foo"');
+      expect(result.sanitized).toBe('10.5281/foo');
+      expect(result.leadingStripped).toBe(1);
+    });
+
+    it('strips surrounding guillemets', () => {
+      const result = sanitizeToken('\u00AB10.5281/foo\u00BB');
+      expect(result.sanitized).toBe('10.5281/foo');
+      expect(result.leadingStripped).toBe(1);
+    });
+
+    it('strips whitespace-only input to empty string', () => {
+      const result = sanitizeToken('   ');
+      expect(result.sanitized).toBe('');
+      expect(result.leadingStripped).toBeGreaterThan(0);
+    });
+
+    it('handles mixed leading and trailing punctuation', () => {
+      const result = sanitizeToken('"10.5281/foo."');
+      expect(result.sanitized).toBe('10.5281/foo');
+      expect(result.leadingStripped).toBe(1);
+    });
+
+    it('returns empty string for empty input with leadingStripped 0', () => {
+      const result = sanitizeToken('');
+      expect(result.sanitized).toBe('');
+      expect(result.leadingStripped).toBe(0);
+    });
   });
 
   // ─── detectBestFit() — default mode ────────────────────────────────
@@ -172,8 +202,8 @@ describe('detection-registry', () => {
       expect(detectBestFit(DOI_examples.VALID_BARE, ['DOIType'])).toBe('DOIType');
     });
 
-    it('does NOT match DOI value when only ORCIDType is in the list', () => {
-      expect(detectBestFit(DOI_examples.VALID_BARE, ['ORCIDType'])).toBeNull();
+    it('does NOT match DOI value when only ORCIDType is in the list (strict mode)', () => {
+      expect(detectBestFit(DOI_examples.VALID_BARE, ['ORCIDType'], false)).toBeNull();
     });
 
     it('HandleType wins for a DOI when HandleType is listed before DOIType', () => {
@@ -189,13 +219,106 @@ describe('detection-registry', () => {
       expect(detectBestFit(DOI_examples.VALID_BARE, ['UnknownType', 'DOIType'])).toBe('DOIType');
     });
 
-    it('returns null when all keys in the list are unknown', () => {
-      expect(detectBestFit(DOI_examples.VALID_BARE, ['FooType', 'BarType'])).toBeNull();
+    it('returns null when all keys in the list are unknown (strict mode)', () => {
+      expect(detectBestFit(DOI_examples.VALID_BARE, ['FooType', 'BarType'], false)).toBeNull();
     });
 
     it('returns null when the ordered list is empty', () => {
       // Empty array falls through to default mode because of the length check
       expect(detectBestFit(DOI_examples.VALID_BARE, [])).toBe('DOIType');
+    });
+
+    it('returns null when the ordered list has no match', () => {
+      // 'not-a-doi' doesn't match ORCID, Handle, or any other renderer in the list
+      expect(detectBestFit(DOI_examples.INVALID_NOT_A_DOI, ['ORCIDType', 'HandleType'])).toBeNull();
+    });
+
+    it('skips unknown keys and falls back to default when fallbackToAll is true', () => {
+      // Unknown key first, then DOI-like value — should fall back to default registry
+      expect(detectBestFit(DOI_examples.VALID_BARE, ['UnknownType'], true)).toBe('DOIType');
+    });
+
+    it('skips unknown keys and returns null when fallbackToAll is false', () => {
+      // Unknown key first with no fallback — should return null
+      expect(detectBestFit(DOI_examples.VALID_BARE, ['UnknownType'], false)).toBeNull();
+    });
+
+    it('duplicate keys in ordered list — first match wins', () => {
+      // DOI matches DOIType, which comes first even with duplicates
+      expect(detectBestFit(DOI_examples.VALID_BARE, ['DOIType', 'DOIType', 'HandleType'])).toBe('DOIType');
+    });
+  });
+
+  // ─── detectBestFit() — ordered mode with non-auto-discoverable renderers ──
+
+  describe('detectBestFit() — ordered mode with non-auto-discoverable renderers', () => {
+    it('LocaleType matches when explicitly listed (not auto-discoverable by default)', () => {
+      expect(detectBestFit(LOCALE_examples.DE_DE, ['LocaleType'])).toBe('LocaleType');
+    });
+
+    it('LocaleType returns null in default mode (not auto-discoverable)', () => {
+      expect(detectBestFit(LOCALE_examples.DE_DE)).toBeNull();
+    });
+
+    it('en-US locale matches when explicitly listed', () => {
+      expect(detectBestFit(LOCALE_examples.EN_US, ['LocaleType'])).toBe('LocaleType');
+    });
+
+    it('strictly ordered mode with non-auto-discoverable renderer and fallbackToAll=false', () => {
+      // LocaleType is not auto-discoverable, but listed explicitly — should match
+      expect(detectBestFit(LOCALE_examples.DE_DE, ['LocaleType'], false)).toBe('LocaleType');
+    });
+  });
+
+  // ─── detectBestFit() — quickCheck() returning undefined ─────────────
+
+  describe('detectBestFit() — quickCheck() returning undefined', () => {
+    it('SPDX bare license ID quickCheck() returns undefined (not false)', () => {
+      // SPDX bare IDs like "MIT" return undefined from quickCheck() — uncertain, needs API lookup
+      const spdxEntry = detectionRegistry.find(e => e.key === 'SPDXType')!;
+      expect(spdxEntry.check(SPDX_examples.MIT_BARE)).toBeUndefined();
+    });
+
+    it('SPDX bare license ID returns null in default mode (undefined is falsy)', () => {
+      // SPDX bare IDs are not detected in default mode because quickCheck() returns undefined
+      expect(detectBestFit(SPDX_examples.MIT_BARE)).toBeNull();
+    });
+
+    it('SPDX bare license ID with ordered list and fallbackToAll=true falls back to null', () => {
+      // Even with fallbackToAll=true, SPDX bare IDs fall through because they're not auto-discoverable
+      expect(detectBestFit(SPDX_examples.MIT_BARE, ['SPDXType'], true)).toBeNull();
+    });
+
+    it('Apache-2.0 bare ID returns null in default mode', () => {
+      expect(detectBestFit(SPDX_examples.APACHE_2_0_BARE)).toBeNull();
+    });
+  });
+
+  // ─── detectBestFit() — fallbackToAll ──────────────────────────────
+
+  describe('detectBestFit() — fallbackToAll', () => {
+    it('falls back to default registry when ordered list has no match (fallbackToAll=true)', () => {
+      // ORCIDType listed but DOI value doesn't match ORCID — falls back to DOIType
+      expect(detectBestFit(DOI_examples.VALID_BARE, ['ORCIDType'], true)).toBe('DOIType');
+    });
+
+    it('returns null when ordered list has no match and fallbackToAll=false', () => {
+      // Strictly restricted to ORCIDType which doesn't match DOI — returns null
+      expect(detectBestFit(DOI_examples.VALID_BARE, ['ORCIDType'], false)).toBeNull();
+    });
+
+    it('fallbackToAll defaults to true when not specified', () => {
+      // Even without explicit fallbackToAll, the default should fall back
+      expect(detectBestFit(DOI_examples.VALID_BARE, ['ORCIDType'])).toBe('DOIType');
+    });
+
+    it('empty ordered list with fallbackToAll=true falls back to default', () => {
+      expect(detectBestFit(DOI_examples.VALID_BARE, [], true)).toBe('DOIType');
+    });
+
+    it('empty ordered list with fallbackToAll=false falls back to default', () => {
+      // Empty list is treated as "no explicit list" so fallbackToAll doesn't apply
+      expect(detectBestFit(DOI_examples.VALID_BARE, [], false)).toBe('DOIType');
     });
   });
 

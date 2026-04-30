@@ -79,25 +79,33 @@ export function sanitizeToken(token: string): { sanitized: string; leadingStripp
  * @param orderedRendererKeys Optional ordered list of renderer keys to try.
  *        If set, only these renderers are checked, in this order. First match wins.
  *        If not set, only renderers with `autoDiscoverableByDefault: true` are tried.
+ * @param fallbackToAll When orderedRendererKeys is set but no listed renderer matches,
+ *        falls back to the full default registry if true (default: true).
  * @returns The renderer key of the best-fit, or null if nothing matches.
  */
-export function detectBestFit(value: string, orderedRendererKeys?: string[]): string | null {
+export function detectBestFit(
+  value: string,
+  orderedRendererKeys?: string[],
+  fallbackToAll: boolean = true,
+): string | null {
   const registry = getDetectionRegistry();
   if (orderedRendererKeys && orderedRendererKeys.length > 0) {
     for (const key of orderedRendererKeys) {
       const entry = registry.find(e => e.key === key);
       if (entry && entry.check(value)) {
-        return entry.key;
+        return entry.key; // First match wins
       }
     }
-    return null;
+    if (!fallbackToAll) { // If fallbackToAll is false, return null if no match is found
+      return null;
+    }
   }
 
-  // No explicit list: only try renderers that are auto-discoverable by default
+  // No explicit list (or fallback mode): only try renderers that are auto-discoverable by default
   for (const entry of registry) {
     if (entry.autoDiscoverableByDefault && entry.check(value)) {
       return entry.key;
     }
   }
-  return null;
+  return null; // No match found
 }

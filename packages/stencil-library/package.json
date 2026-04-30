@@ -108,7 +108,7 @@
     "build": "stencil build --docs",
     "buildWatch": "stencil build --docs --watch",
     "start": "stencil build --dev --watch --serve",
-    "test": "stencil-test",
+    "test": "stencil-test --coverage",
     "test:watch": "stencil-test --watch",
     "test:spec": "stencil-test --project spec",
     "test:e2e": "stencil-test --project browser",

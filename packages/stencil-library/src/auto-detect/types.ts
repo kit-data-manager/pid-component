@@ -110,7 +110,7 @@ export interface PidDetectionController {
 }
 
 /**
- * A single match detected by the Web Worker.
+ * A single match detected during scanning.
  */
 export interface DetectionMatch {
   /** Start character index within the text node content */
@@ -124,44 +124,21 @@ export interface DetectionMatch {
 }
 
 /**
- * Message sent from main thread to the detection Web Worker.
+ * Tracks a single replacement for later restoration.
  */
-export interface WorkerDetectMessage {
-  type: 'detect';
-  /** Unique ID for correlating requests with responses */
-  id: number;
-  /** The text content of a DOM text node */
-  text: string;
-  /** Optional ordered renderer keys to restrict detection */
-  orderedRenderers?: string[];
+export interface ReplacementRecord {
+  /** The wrapper element that was inserted */
+  wrapper: HTMLElement;
+  /** The original full text of the parent text node (for restore) */
+  originalText: string;
+  /** Reference to preceding text node (may be null) */
+  precedingTextNode: Text | null;
+  /** Reference to following text node (may be null) */
+  followingTextNode: Text | null;
+  /** The pid-component element */
+  pidComponent: HTMLElement;
+  /** Observer watching for component load */
+  observer: MutationObserver;
+  /** The original text span inside the wrapper */
+  originalSpan: HTMLElement;
 }
-
-/**
- * Message sent from main thread to configure the worker.
- */
-export interface WorkerInitMessage {
-  type: 'init';
-  /** Optional ordered renderer keys to use for all subsequent detection */
-  orderedRenderers?: string[];
-}
-
-/**
- * Response message sent from the detection Web Worker back to main thread.
- */
-export interface WorkerResultMessage {
-  type: 'result';
-  /** Correlates with the request ID */
-  id: number;
-  /** Detected matches within the text */
-  matches: DetectionMatch[];
-}
-
-/**
- * Union type for all messages that can be sent to the worker.
- */
-export type WorkerInboundMessage = WorkerDetectMessage | WorkerInitMessage;
-
-/**
- * Union type for all messages that can be received from the worker.
- */
-export type WorkerOutboundMessage = WorkerResultMessage;
