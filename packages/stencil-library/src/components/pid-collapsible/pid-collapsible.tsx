@@ -852,7 +852,9 @@ export class PidCollapsible {
       baseClasses.push('mb-2', 'max-w-full', 'text-xs', 'block');
     } else {
       // Collapsed: inline with text, no float (float causes clear/line-break issues)
-      baseClasses.push('my-0', 'max-w-full', 'text-sm', 'inline-block');
+      // Use max-w-md for top-level (~30% width cap), max-w-full for subcomponents in constrained spaces
+      baseClasses.push(this.initialWidth === '100%' ? 'max-w-full' : 'max-w-md');
+      baseClasses.push('my-0', 'text-sm', 'inline-block');
     }
 
     // Add dark mode text color only (no background)
