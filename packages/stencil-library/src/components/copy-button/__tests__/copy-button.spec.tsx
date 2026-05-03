@@ -178,6 +178,16 @@ describe('copy-button', () => {
     expect(root.className).toContain('inline-block');
   });
 
+  it('renders with dark mode parent component', async () => {
+    const { root } = await render(
+      <pid-component value="test" dark-mode="dark">
+        <copy-button value="test"></copy-button>
+      </pid-component>,
+    );
+    const copyBtn = root.querySelector('copy-button');
+    expect(copyBtn).toBeTruthy();
+  });
+
   it('copyValue stops event propagation', async () => {
     mockClipboard();
 

@@ -193,6 +193,110 @@ describe('json-viewer', () => {
     expect(root.expandAll).toBe(false);
     // expandedNodes is @State (not accessible from outside)
   });
+
+  it('handles null data gracefully', async () => {
+    const { root } = await render(<json-viewer data={null}></json-viewer>);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles number data', async () => {
+    const { root } = await render(<json-viewer data={42}></json-viewer>);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles boolean data', async () => {
+    const { root } = await render(<json-viewer data={true}></json-viewer>);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles array data', async () => {
+    const { root } = await render(<json-viewer data={[1, 2, 3]}></json-viewer>);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles nested objects with special keys', async () => {
+    const { root } = await render(
+      <json-viewer data='{"$schema":"test","data":{"$elm":{"value":1}}}'></json-viewer>,
+    );
+    expect(root).toBeTruthy();
+  });
+
+  it('handles empty object', async () => {
+    const { root } = await render(<json-viewer data="{}"></json-viewer>);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles empty array', async () => {
+    const { root } = await render(<json-viewer data="[]"></json-viewer>);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles deep nesting', async () => {
+    const { root } = await render(
+      <json-viewer data='{"a":{"b":{"c":{"d":{"e":1}}}}}'></json-viewer>,
+    );
+    expect(root).toBeTruthy();
+  });
+
+  it('handles special JSON characters in strings', async () => {
+    const { root } = await render(<json-viewer data='{"text":"Hello\\nWorld"}'></json-viewer>);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles unicode characters', async () => {
+    const { root } = await render(<json-viewer data='{"emoji":"😀"}'></json-viewer>);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles large numbers', async () => {
+    const { root } = await render(<json-viewer data='{"big":1e20}'></json-viewer>);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles decimal numbers', async () => {
+    const { root } = await render(<json-viewer data='{"decimal":3.14159}'></json-viewer>);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles negative numbers', async () => {
+    const { root } = await render(<json-viewer data='{"negative":-42}'></json-viewer>);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles zero', async () => {
+    const { root } = await render(<json-viewer data='{"zero":0}'></json-viewer>);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles whitespace in JSON', async () => {
+    const { root } = await render(<json-viewer data='{ "key" : "value" }'></json-viewer>);
+    expect(root).toBeTruthy();
+  });
+
+  it('theme prop reflects correctly', async () => {
+    const { root } = await render(<json-viewer data='{"a":1}' theme="light"></json-viewer>);
+    expect(root.theme).toBe('light');
+  });
+
+  it('system theme uses default', async () => {
+    const { root } = await render(<json-viewer data='{"a":1}' theme="system"></json-viewer>);
+    expect(root.theme).toBe('system');
+  });
+
+  it('viewMode prop reflects correctly for tree', async () => {
+    const { root } = await render(<json-viewer data='{"a":1}' view-mode="tree"></json-viewer>);
+    expect(root.viewMode).toBe('tree');
+  });
+
+  it('maxHeight prop reflects correctly', async () => {
+    const { root } = await render(<json-viewer data='{"a":1}' max-height={100}></json-viewer>);
+    expect(root.maxHeight).toBe(100);
+  });
+
+  it('expandAll prop reflects correctly when true', async () => {
+    const { root } = await render(<json-viewer data='{"a":1}' expand-all={true}></json-viewer>);
+    expect(root.expandAll).toBe(true);
+  });
 });
 
 describe('json-viewer accessibility', () => {

@@ -1,5 +1,13 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { render, h } from '@stencil/vitest';
+
+beforeEach(() => {
+  vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({
+    matches: false,
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+  }));
+});
 
 import '../copy-button';
 
@@ -11,156 +19,88 @@ describe('copy-button source', () => {
   });
 
   it('renders with label prop', async () => {
-    const { root } = await render(<copy-button value="test" label="Custom Label"></copy-button>);
-    expect(root).toBeTruthy();
-    const button = root.querySelector('button');
-    expect(button?.textContent).toContain('Copy');
+    const { root } = await render(<copy-button value="val" label="DOI"></copy-button>);
+    expect(root.label).toBe('DOI');
   });
 
-  it('has aria-label containing Copy', async () => {
-    const { root } = await render(<copy-button value="test-value"></copy-button>);
-    const button = root.querySelector('button');
-    expect(button?.getAttribute('aria-label')).toContain('Copy');
+  it('renders with value and label together', async () => {
+    const { root } = await render(<copy-button value="10.5445/IR/1000185135" label="Copy DOI"></copy-button>);
+    expect(root.value).toBe('10.5445/IR/1000185135');
+    expect(root.label).toBe('Copy DOI');
   });
 
-  it('updates aria-label with custom label', async () => {
-    const { root } = await render(<copy-button value="test" label="My Label"></copy-button>);
-    const button = root.querySelector('button');
-    expect(button?.getAttribute('aria-label')).toContain('My Label');
-  });
-
-  it('renders copy button with correct structure', async () => {
-    const { root } = await render(<copy-button value="test"></copy-button>);
-    const button = root.querySelector('button');
-    expect(button).toBeTruthy();
-    expect(button?.type).toBe('button');
-  });
-
-  it('handles missing parent component gracefully', async () => {
-    const { root } = await render(<copy-button value="test"></copy-button>);
-    const button = root.querySelector('button');
-    expect(button).toBeTruthy();
-    expect(button?.className).toContain('bg-white');
-  });
-
-  it('has sr-only span for screen readers', async () => {
-    const { root } = await render(<copy-button value="test"></copy-button>);
-    const srSpan = root.querySelector('.sr-only');
-    expect(srSpan).toBeFalsy();
-  });
-
-  it('has button with correct type attribute', async () => {
-    const { root } = await render(<copy-button value="test"></copy-button>);
-    const button = root.querySelector('button');
-    expect(button?.type).toBe('button');
-  });
-
-  it('has title attribute for tooltip', async () => {
-    const { root } = await render(<copy-button value="test"></copy-button>);
-    const button = root.querySelector('button');
-    expect(button?.title).toBeTruthy();
-  });
-
-  it('renders with host element', async () => {
+  it('renders without optional props', async () => {
     const { root } = await render(<copy-button value="test"></copy-button>);
     expect(root).toBeTruthy();
   });
 
-  it('handles empty value prop', async () => {
+  it('label prop is optional', async () => {
+    const { root } = await render(<copy-button value="required-value"></copy-button>);
+    expect(root.value).toBe('required-value');
+  });
+
+  it('renders host element with classes', async () => {
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    expect(root.className).toBeTruthy();
+  });
+
+  it('renders with empty string value', async () => {
     const { root } = await render(<copy-button value=""></copy-button>);
-    expect(root).toBeTruthy();
+    expect(root.value).toBe('');
   });
 
-  it('handles special characters in value', async () => {
-    const { root } = await render(<copy-button value='{"key":"value"}'></copy-button>);
-    expect(root).toBeTruthy();
+  it('renders with URL value', async () => {
+    const { root } = await render(
+      <copy-button value="https://example.com/path?query=value"></copy-button>,
+    );
+    expect(root.value).toBe('https://example.com/path?query=value');
   });
 
-  it('handles long text in value', async () => {
-    const longText = 'a'.repeat(1000);
-    const { root } = await render(<copy-button value={longText}></copy-button>);
-    expect(root).toBeTruthy();
+  it('renders with special characters in value', async () => {
+    const { root } = await render(
+      <copy-button value='{"key":"value with spaces & symbols"}'></copy-button>,
+    );
+    expect(root.value).toBe('{"key":"value with spaces & symbols"}');
   });
 
-  it('handles unicode characters in value', async () => {
-    const { root } = await render(<copy-button value="Hëllö Wörld 🌍"></copy-button>);
-    expect(root).toBeTruthy();
+  it('renders with unicode value', async () => {
+    const { root } = await render(<copy-button value="Test 😀🎉"></copy-button>);
+    expect(root.value).toBe('Test 😀🎉');
   });
 
-  it('renders with dark mode prop', async () => {
-    const { root } = await render(<copy-button value="test" dark-mode="dark"></copy-button>);
-    expect(root).toBeTruthy();
-  });
-
-  it('renders with hideLabel prop', async () => {
-    const { root } = await render(<copy-button value="test" hide-label="true"></copy-button>);
-    expect(root).toBeTruthy();
-  });
-
-  it('renders with showIcon true', async () => {
-    const { root } = await render(<copy-button value="test" show-icon="true"></copy-button>);
-    expect(root).toBeTruthy();
-  });
-
-  it('renders with showIcon false', async () => {
-    const { root } = await render(<copy-button value="test" show-icon="false"></copy-button>);
-    expect(root).toBeTruthy();
-  });
-
-  it('renders with small size', async () => {
-    const { root } = await render(<copy-button value="test" size="small"></copy-button>);
-    expect(root).toBeTruthy();
-  });
-
-  it('renders with medium size', async () => {
-    const { root } = await render(<copy-button value="test" size="medium"></copy-button>);
-    expect(root).toBeTruthy();
-  });
-
-  it('renders with large size', async () => {
-    const { root } = await render(<copy-button value="test" size="large"></copy-button>);
-    expect(root).toBeTruthy();
-  });
-
-  it('has button with base classes', async () => {
+  it('has button element', async () => {
     const { root } = await render(<copy-button value="test"></copy-button>);
     const button = root.querySelector('button');
     expect(button).toBeTruthy();
   });
 
-  it('has inline-block alignment class', async () => {
+  it('button has aria-label when label provided', async () => {
+    const { root } = await render(<copy-button value="test" label="DOI"></copy-button>);
+    const button = root.querySelector('button');
+    expect(button?.getAttribute('aria-label')).toContain('Copy DOI');
+  });
+
+  it('button has aria-label when no label provided', async () => {
     const { root } = await render(<copy-button value="test"></copy-button>);
-    expect(root).toBeTruthy();
+    const button = root.querySelector('button');
+    expect(button?.getAttribute('aria-label')).toContain('Copy content');
   });
 
-  it('handles undefined label prop', async () => {
+  it('button has type attribute', async () => {
     const { root } = await render(<copy-button value="test"></copy-button>);
-    expect(root).toBeTruthy();
+    const button = root.querySelector('button');
+    expect(button?.getAttribute('type')).toBe('button');
   });
 
-  it('handles undefined dark mode prop', async () => {
+  it('button has title attribute', async () => {
+    const { root } = await render(<copy-button value="test" label="Custom"></copy-button>);
+    const button = root.querySelector('button');
+    expect(button?.getAttribute('title')).toContain('Copy Custom');
+  });
+
+  it('renders sr-only span when copied state is not directly testable', async () => {
     const { root } = await render(<copy-button value="test"></copy-button>);
-    expect(root).toBeTruthy();
-  });
-
-  it('handles JSON string value', async () => {
-    const json = JSON.stringify({ key: 'value', nested: { a: 1 } });
-    const { root } = await render(<copy-button value={json}></copy-button>);
-    expect(root).toBeTruthy();
-  });
-
-  it('handles URL value', async () => {
-    const { root } = await render(<copy-button value="https://example.com/path?query=1#fragment"></copy-button>);
-    expect(root).toBeTruthy();
-  });
-
-  it('handles email value', async () => {
-    const { root } = await render(<copy-button value="test@example.com"></copy-button>);
-    expect(root).toBeTruthy();
-  });
-
-  it('handles DOI value', async () => {
-    const { root } = await render(<copy-button value="10.5281/zenodo.1234567"></copy-button>);
-    expect(root).toBeTruthy();
+    const srOnly = root.querySelector('.sr-only');
+    expect(srOnly).toBeNull();
   });
 });

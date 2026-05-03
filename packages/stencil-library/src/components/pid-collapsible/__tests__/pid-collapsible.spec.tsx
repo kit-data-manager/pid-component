@@ -297,4 +297,123 @@ describe('pid-collapsible additional coverage', () => {
     const result = await root.recalculateContentDimensions();
     expect(result).toBeNull();
   });
+
+  it('expanded prop is reflected correctly', async () => {
+    const { root } = await render(
+      <pid-collapsible expanded><span slot="summary">Title</span></pid-collapsible>,
+    );
+    expect(root.expanded).toBe(true);
+  });
+
+  it('expanded prop defaults to false', async () => {
+    const { root } = await render(
+      <pid-collapsible><span slot="summary">Title</span></pid-collapsible>,
+    );
+    expect(root.expanded).toBe(false);
+  });
+
+  it('previewScrollable prop is reflected correctly', async () => {
+    const { root } = await render(
+      <pid-collapsible preview-scrollable><span slot="summary">Title</span></pid-collapsible>,
+    );
+    expect(root.previewScrollable).toBe(true);
+  });
+
+  it('previewScrollable prop defaults to false', async () => {
+    const { root } = await render(
+      <pid-collapsible><span slot="summary">Title</span></pid-collapsible>,
+    );
+    expect(root.previewScrollable).toBe(false);
+  });
+
+  it('initialWidth prop is reflected correctly', async () => {
+    const { root } = await render(
+      <pid-collapsible initial-width="600px"><span slot="summary">Title</span></pid-collapsible>,
+    );
+    expect(root.initialWidth).toBe('600px');
+  });
+
+  it('initialHeight prop is reflected correctly', async () => {
+    const { root } = await render(
+      <pid-collapsible initial-height="400px"><span slot="summary">Title</span></pid-collapsible>,
+    );
+    expect(root.initialHeight).toBe('400px');
+  });
+
+  it('darkMode system defaults to system', async () => {
+    const { root } = await render(
+      <pid-collapsible dark-mode="system"><span slot="summary">Title</span></pid-collapsible>,
+    );
+    expect(root.darkMode).toBe('system');
+  });
+
+  it('all darkMode values are accepted', async () => {
+    const { root: root1 } = await render(
+      <pid-collapsible dark-mode="light"><span slot="summary">Light</span></pid-collapsible>,
+    );
+    expect(root1.darkMode).toBe('light');
+
+    const { root: root2 } = await render(
+      <pid-collapsible dark-mode="dark"><span slot="summary">Dark</span></pid-collapsible>,
+    );
+    expect(root2.darkMode).toBe('dark');
+
+    const { root: root3 } = await render(
+      <pid-collapsible dark-mode="system"><span slot="summary">System</span></pid-collapsible>,
+    );
+    expect(root3.darkMode).toBe('system');
+  });
+
+  it('multiple props work together', async () => {
+    const { root } = await render(
+      <pid-collapsible
+        open
+        emphasize
+        dark-mode="dark"
+        show-footer
+        expanded
+        preview-scrollable
+      >
+        <span slot="summary">Complex</span>
+        <p>Content</p>
+        <div slot="footer">Footer</div>
+      </pid-collapsible>,
+    );
+    expect(root.open).toBe(true);
+    expect(root.emphasize).toBe(true);
+    expect(root.darkMode).toBe('dark');
+    expect(root.showFooter).toBe(true);
+    expect(root.expanded).toBe(true);
+    expect(root.previewScrollable).toBe(true);
+  });
+
+  it('toggles multiple times correctly', async () => {
+    const { root, waitForChanges } = await render(
+      <pid-collapsible><span slot="summary">Title</span><p>Content</p></pid-collapsible>,
+    );
+
+    root.open = true;
+    await waitForChanges();
+    expect(root.open).toBe(true);
+
+    root.open = false;
+    await waitForChanges();
+    expect(root.open).toBe(false);
+
+    root.open = true;
+    await waitForChanges();
+    expect(root.open).toBe(true);
+  });
+
+  it('lineHeight prop handles edge cases', async () => {
+    const { root } = await render(
+      <pid-collapsible line-height={0}><span slot="summary">Title</span></pid-collapsible>,
+    );
+    expect(root.lineHeight).toBe(0);
+
+    const { root: root2 } = await render(
+      <pid-collapsible line-height={100}><span slot="summary">Title</span></pid-collapsible>,
+    );
+    expect(root2.lineHeight).toBe(100);
+  });
 });
