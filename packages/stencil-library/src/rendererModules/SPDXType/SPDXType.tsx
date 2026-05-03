@@ -1,7 +1,7 @@
 import { FunctionalComponent, h } from '@stencil/core';
-import { GenericIdentifierType } from '../utils/GenericIdentifierType';
-import { FoldableItem } from '../utils/FoldableItem';
-import { FoldableAction } from '../utils/FoldableAction';
+import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
+import { FoldableItem } from '../../utils/FoldableItem';
+import { FoldableAction } from '../../utils/FoldableAction';
 
 interface SPDXLicense {
   licenseId: string;
@@ -134,8 +134,8 @@ export class SPDXType extends GenericIdentifierType {
     if (!this.licenseData) return;
 
     // Add license name and ID
-    this.items.push(new FoldableItem(0, 'Full Name', this.licenseData.name, 'The full legal name of the license', null, null, false));
-    this.items.push(new FoldableItem(10, 'SPDX ID', this.licenseData.licenseId, 'The unique SPDX identifier for this license', null, null, false));
+    this.items.push(new FoldableItem(0, 'Full Name', this.licenseData.name, 'The full legal name of the license', undefined, null, false));
+    this.items.push(new FoldableItem(10, 'SPDX ID', this.licenseData.licenseId, 'The unique SPDX identifier for this license', undefined, null, false));
 
     // Add deprecated status if applicable
     this.addDeprecationInfo();
@@ -166,11 +166,11 @@ export class SPDXType extends GenericIdentifierType {
   private addDeprecationInfo(): void {
     if (!this.licenseData || !this.licenseData.isDeprecatedLicenseId) return;
 
-    this.items.push(new FoldableItem(15, 'Deprecated', 'Yes', 'This license ID has been deprecated by SPDX', null, null, false));
+    this.items.push(new FoldableItem(15, 'Deprecated', 'Yes', 'This license ID has been deprecated by SPDX', undefined, null, false));
 
     // Add deprecation notes if available
     if (this.licenseData.deprecatedVersion) {
-      this.items.push(new FoldableItem(16, 'Deprecated Since', this.licenseData.deprecatedVersion, 'The SPDX version when this license was deprecated', null, null, false));
+      this.items.push(new FoldableItem(16, 'Deprecated Since', this.licenseData.deprecatedVersion, 'The SPDX version when this license was deprecated', undefined, null, false));
     }
   }
 

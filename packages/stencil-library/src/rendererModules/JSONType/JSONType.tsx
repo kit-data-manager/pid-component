@@ -1,6 +1,6 @@
 import { FunctionalComponent, h } from '@stencil/core';
-import { GenericIdentifierType } from '../utils/GenericIdentifierType';
-import '../components/json-viewer/json-viewer';
+import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
+import '../../components/json-viewer/json-viewer';
 
 interface ParsedJsonResult {
   data?: object | string;

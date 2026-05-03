@@ -109,7 +109,7 @@ export const PidCollapsible: StencilReactComponent<PidCollapsibleElement, PidCol
         lineHeight: 'line-height',
         showFooter: 'show-footer',
         expanded: 'expanded',
-        previewScrollable: 'preview-scrollable',
+      previewScrollable: 'preview-scrollable',
     },
     hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
     clientModule: clientComponents.PidCollapsible as StencilReactComponent<PidCollapsibleElement, PidCollapsibleEvents, Components.PidCollapsible>,

@@ -5,10 +5,10 @@ import { playwright } from '@vitest/browser-playwright';
 export default defineVitestConfig({
   stencilConfig: './stencil.config.ts',
   resolve: {
-    alias: {
-      '@test-fixtures': '/Users/maximilian/GitHub/pid-component/examples/fixtures',
-      '@examples': '/Users/maximilian/GitHub/pid-component/examples',
-    },
+    alias: [
+      { find: '@test-fixtures', replacement: '/Users/maximilian/GitHub/pid-component/examples/fixtures' },
+      { find: '@examples', replacement: '/Users/maximilian/GitHub/pid-component/examples' },
+    ],
   },
   test: {
     projects: [

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { RORType } from '../../RORType';
+import { RORType } from '../RORType';
 
 const VALID = 'https://ror.org/04t3en479';
 const INVALID_WRONG_DOMAIN = 'https://example.com/04t3en479';

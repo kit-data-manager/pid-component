@@ -1,7 +1,6 @@
 import { PIDRecord } from './PIDRecord';
 import { PID } from './PID';
 import { PIDDataType } from './PIDDataType';
-
 import { FunctionalComponent, h } from '@stencil/core';
 import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
 import { FoldableItem } from '../../utils/FoldableItem';

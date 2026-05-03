@@ -1,7 +1,7 @@
 import { FunctionalComponent, h } from '@stencil/core';
-import { GenericIdentifierType } from '../utils/GenericIdentifierType';
-import { FoldableItem } from '../utils/FoldableItem';
-import { FoldableAction } from '../utils/FoldableAction';
+import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
+import { FoldableItem } from '../../utils/FoldableItem';
+import { FoldableAction } from '../../utils/FoldableAction';
 
 /** Shape of the ROR API v2 response used by this renderer. */
 interface RorApiResponse {
@@ -91,7 +91,7 @@ export class RORType extends GenericIdentifierType {
    * @returns {string} The ROR ID
    */
   private getRorId(): string {
-    return this.value.split('/').pop();
+    return this.value.split('/').pop() || '';
   }
 
   private getOptimizedContent(content: string): string {
@@ -140,7 +140,7 @@ export class RORType extends GenericIdentifierType {
       }
 
       // Add ROR ID
-      this.items.push(new FoldableItem(20, 'ROR ID', this.rorData.id, 'Unique identifier for the organization in the ROR registry', null, null, false));
+      this.items.push(new FoldableItem(20, 'ROR ID', this.rorData.id, 'Unique identifier for the organization in the ROR registry', undefined, undefined, false));
       this.actions.push(new FoldableAction(10, 'View on ROR', this.rorData.id, 'primary'));
 
       // Add status of the organization

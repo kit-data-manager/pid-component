@@ -797,12 +797,7 @@ const SHOWCASE_HTML = `
       a study conducted at the Karlsruhe Institute of Technology (${ROR_examples.VALID}).
       The corresponding software is available under the ${SPDX_examples.MIT} license
       and can be accessed at ${URL_examples.KIT_WEBSITE}. For questions, please contact ${EMAIL_examples.KIT_EMAIL} or visit the project page ${URL_examples.GITHUB}.
-    </p>
-    <p style="margin-top: 12px;">
-      The research builds upon earlier work published as ${DOI_examples.CROSSREF_JOURNAL_PAPER} and extends it
-      with FAIR Digital Object capabilities. The primary language of this publication is ${LOCALE_examples.EN_US},
-      with supplementary materials available in ${LOCALE_examples.DE_DE}.
-    </p>
+    </p>please
   </section>
 
   <footer style="border-top: 1px solid #e5e7eb; padding-top: 12px; color: #888; font-size: 0.85em;">

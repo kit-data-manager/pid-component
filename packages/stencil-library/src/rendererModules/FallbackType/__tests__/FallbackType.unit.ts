@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Parser } from '../../../utils/Parser';
 import { renderers } from '../../../utils/utils';
-import { FallbackType } from '../../FallbackType';
+import { FallbackType } from '../FallbackType';
 
 vi.mock('../../../utils/utils', () => {
   function _create(opts: {
@@ -98,9 +98,9 @@ describe('FallbackType', () => {
   });
 
   describe('init()', () => {
-    it('completes without error', () => {
+    it('completes without error', async () => {
       const ft = new FallbackType('some value');
-      expect(ft.init()).toBeUndefined();
+      await expect(ft.init()).resolves.toBeUndefined();
     });
   });
 

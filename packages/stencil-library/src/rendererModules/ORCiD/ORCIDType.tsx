@@ -120,15 +120,16 @@ export class ORCIDType extends GenericIdentifierType {
 
       for (const data of affiliationsThen) {
         const affiliation = this._orcidInfo.getAffiliationAsString(data);
-        this.items.push(
+
+        if (affiliation !== undefined && affiliation.length > 2) this.items.push(
           new FoldableItem(
             49,
             'Affiliation at ' +
-              this.affiliationAt.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'numeric',
-                day: 'numeric',
-              }),
+            this.affiliationAt.toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'numeric',
+              day: 'numeric',
+            }),
             affiliation,
             'The affiliation of the person at the given date.',
             undefined,
@@ -184,7 +185,8 @@ export class ORCIDType extends GenericIdentifierType {
             {`.st0{fill:#A6CE39;}`}
             {`.st1{fill:#FFFFFF;}`}
           </style>
-          <path class="st0" d="M256,128c0,70.7-57.3,128-128,128C57.3,256,0,198.7,0,128C0,57.3,57.3,0,128,0C198.7,0,256,57.3,256,128z" />
+          <path class="st0"
+                d="M256,128c0,70.7-57.3,128-128,128C57.3,256,0,198.7,0,128C0,57.3,57.3,0,128,0C198.7,0,256,57.3,256,128z" />
           <g>
             <path class="st1" d="M86.3,186.2H70.9V79.1h15.4v48.4V186.2z" />
             <path
@@ -204,12 +206,12 @@ export class ORCIDType extends GenericIdentifierType {
           {this._orcidInfo.familyName}, {this._orcidInfo.givenNames}{' '}
           {this.showAffiliation && this._orcidInfo.getAffiliationsAt(new Date()).length > 0
             ? `(${this._orcidInfo.getAffiliationAsString(this._orcidInfo.getAffiliationsAt(new Date())[0], false)}${
-                this._orcidInfo.getAffiliationsAt(this.affiliationAt).length > 0 &&
-                this.affiliationAt.toLocaleDateString() !== new Date().toLocaleDateString() &&
-                this._orcidInfo.getAffiliationsAt(this.affiliationAt)[0].organization !== this._orcidInfo.getAffiliationsAt(new Date())[0].organization
-                  ? `, then: ${this._orcidInfo.getAffiliationsAt(this.affiliationAt)[0].organization}`
-                  : ''
-              })`
+              this._orcidInfo.getAffiliationsAt(this.affiliationAt).length > 0 &&
+              this.affiliationAt.toLocaleDateString() !== new Date().toLocaleDateString() &&
+              this._orcidInfo.getAffiliationsAt(this.affiliationAt)[0].organization !== this._orcidInfo.getAffiliationsAt(new Date())[0].organization
+                ? `, then: ${this._orcidInfo.getAffiliationsAt(this.affiliationAt)[0].organization}`
+                : ''
+            })`
             : ''}
         </span>
       </span>

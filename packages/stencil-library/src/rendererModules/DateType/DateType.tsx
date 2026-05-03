@@ -1,5 +1,5 @@
 import { FunctionalComponent, h } from '@stencil/core';
-import { GenericIdentifierType } from '../utils/GenericIdentifierType';
+import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
 
 /**
  * This class specifies a custom renderer for dates.
@@ -31,7 +31,7 @@ export class DateType extends GenericIdentifierType {
 
   init(): Promise<void> {
     this._date = new Date(this.value);
-    return;
+    return Promise.resolve();
   }
 
   renderPreview(): FunctionalComponent {

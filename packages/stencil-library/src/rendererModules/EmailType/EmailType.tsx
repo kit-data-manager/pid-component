@@ -1,5 +1,5 @@
 import { FunctionalComponent, h } from '@stencil/core';
-import { GenericIdentifierType } from '../utils/GenericIdentifierType';
+import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
 
 /**
  * This class specifies a custom renderer for Email addresses.
@@ -22,7 +22,7 @@ export class EmailType extends GenericIdentifierType {
   }
 
   init(): Promise<void> {
-    return;
+    return Promise.resolve();
   }
 
   renderPreview(): FunctionalComponent {

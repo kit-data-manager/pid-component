@@ -2,17 +2,17 @@ import { PID } from '../rendererModules/Handle/PID';
 import { PIDDataType } from '../rendererModules/Handle/PIDDataType';
 import { PIDRecord } from '../rendererModules/Handle/PIDRecord';
 import { GenericIdentifierType } from './GenericIdentifierType';
-import { DateType } from '../rendererModules/DateType';
 import { ORCIDType } from '../rendererModules/ORCiD/ORCIDType';
 import { HandleType } from '../rendererModules/Handle/HandleType';
 import { DOIType } from '../rendererModules/DOI/DOIType';
-import { EmailType } from '../rendererModules/EmailType';
-import { URLType } from '../rendererModules/URLType';
-import { FallbackType } from '../rendererModules/FallbackType';
-import { LocaleType } from '../rendererModules/LocaleType';
-import { JSONType } from '../rendererModules/JSONType';
-import { RORType } from '../rendererModules/RORType';
-import { SPDXType } from '../rendererModules/SPDXType';
+import { DateType } from '../rendererModules/DateType/DateType';
+import { RORType } from '../rendererModules/RORType/RORType';
+import { SPDXType } from '../rendererModules/SPDXType/SPDXType';
+import { EmailType } from '../rendererModules/EmailType/EmailType';
+import { URLType } from '../rendererModules/URLType/URLType';
+import { LocaleType } from '../rendererModules/LocaleType/LocaleType';
+import { JSONType } from '../rendererModules/JSONType/JSONType';
+import { FallbackType } from '../rendererModules/FallbackType/FallbackType';
 
 /**
  * Array of all component objects that can be used to parse a given value, ordered by priority (lower is better).
