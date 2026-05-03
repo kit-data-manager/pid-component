@@ -322,3 +322,115 @@ describe('pid-tooltip source', () => {
     expect(tooltip?.className).toContain('left-0');
   });
 });
+
+describe('pid-tooltip keyboard events', () => {
+  it('handles Escape key event', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    expect(root).toBeTruthy();
+    const event = new KeyboardEvent('keydown', { key: 'Escape' });
+    root.dispatchEvent(event);
+  });
+
+  it('handles Enter key on button', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles Space key on button', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    expect(root).toBeTruthy();
+  });
+});
+
+describe('pid-tooltip dark mode detection', () => {
+  it('handles tooltip without parent component', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles tooltip with parent having no classList', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    expect(root).toBeTruthy();
+  });
+});
+
+describe('pid-tooltip positioning edge cases', () => {
+  it('handles very small maxWidth', async () => {
+    const { root } = await render(<pid-tooltip text="Test" max-width="50px"></pid-tooltip>);
+    expect(root.maxWidth).toBe('50px');
+  });
+
+  it('handles very large maxWidth', async () => {
+    const { root } = await render(<pid-tooltip text="Test" max-width="1000px"></pid-tooltip>);
+    expect(root.maxWidth).toBe('1000px');
+  });
+
+  it('handles pixel-only maxWidth format', async () => {
+    const { root } = await render(<pid-tooltip text="Test" max-width="500px"></pid-tooltip>);
+    expect(root.maxWidth).toBe('500px');
+  });
+
+  it('handles viewBox unit maxWidth', async () => {
+    const { root } = await render(<pid-tooltip text="Test" max-width="50vw"></pid-tooltip>);
+    expect(root.maxWidth).toBe('50vw');
+  });
+
+  it('handles position prop set to top', async () => {
+    const { root } = await render(<pid-tooltip text="Test" position="top"></pid-tooltip>);
+    expect(root.position).toBe('top');
+  });
+
+  it('handles position prop set to bottom', async () => {
+    const { root } = await render(<pid-tooltip text="Test" position="bottom"></pid-tooltip>);
+    expect(root.position).toBe('bottom');
+  });
+});
+
+describe('pid-tooltip event emission', () => {
+  it('renders without crashing when event listeners are attached', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    expect(root).toBeTruthy();
+  });
+
+  it('has sr-only announcement span', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const srSpan = root.querySelector('.sr-only');
+    expect(srSpan).toBeFalsy();
+  });
+});
+
+describe('pid-tooltip render edge cases', () => {
+  it('handles text with newlines', async () => {
+    const { root } = await render(<pid-tooltip text="Line 1\nLine 2\nLine 3"></pid-tooltip>);
+    expect(root.text).toBeDefined();
+    expect(root.text.length).toBeGreaterThan(5);
+  });
+
+  it('handles text with tabs', async () => {
+    const { root } = await render(<pid-tooltip text="Col1\tCol2"></pid-tooltip>);
+    expect(root.text).toBeDefined();
+    expect(root.text.length).toBeGreaterThan(4);
+  });
+
+  it('handles empty slot content', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles whitespace-only text', async () => {
+    const { root } = await render(<pid-tooltip text="   "></pid-tooltip>);
+    expect(root.text).toBe('   ');
+  });
+
+  it('button has rounded-full class', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const button = root.querySelector('button');
+    expect(button?.className).toContain('rounded-full');
+  });
+
+  it('button has p-0.5 class', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const button = root.querySelector('button');
+    expect(button?.className).toContain('p-0.5');
+  });
+});

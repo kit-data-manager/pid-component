@@ -259,3 +259,54 @@ describe('copy-button source', () => {
     expect(root.label).toBe('');
   });
 });
+
+describe('copy-button error conditions', () => {
+  it('handles missing value gracefully', async () => {
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {
+    });
+    const { root } = await render(<copy-button value=""></copy-button>);
+    expect(root).toBeTruthy();
+    consoleSpy.mockRestore();
+  });
+
+  it('handles very long value without crashing', async () => {
+    const longValue = 'x'.repeat(100000);
+    const { root } = await render(<copy-button value={longValue}></copy-button>);
+    expect(root.value).toBe(longValue);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles special HTML characters in value', async () => {
+    const htmlValue = '<script>alert("xss")</script>';
+    const { root } = await render(<copy-button value={htmlValue}></copy-button>);
+    expect(root.value).toBe(htmlValue);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles unicode control characters in value', async () => {
+    const controlValue = '\u0000\u0001\u0002\u0003';
+    const { root } = await render(<copy-button value={controlValue}></copy-button>);
+    expect(root.value).toBe(controlValue);
+    expect(root).toBeTruthy();
+  });
+});
+
+describe('copy-button edge cases', () => {
+  it('handles missing value prop edge case', async () => {
+    const { root } = await render(<copy-button value=""></copy-button>);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles whitespace-only value', async () => {
+    const { root } = await render(<copy-button value="   "></copy-button>);
+    expect(root.value).toBe('   ');
+  });
+
+  it('handles multiline text value', async () => {
+    const { root } = await render(<copy-button value="line1
+line2
+line3"></copy-button>);
+    expect(root.value).toBeDefined();
+    expect(root.value.length).toBeGreaterThan(5);
+  });
+});

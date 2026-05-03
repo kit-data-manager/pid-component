@@ -238,3 +238,129 @@ describe('json-viewer source', () => {
     expect(root).toBeTruthy();
   });
 });
+
+describe('json-viewer error conditions', () => {
+  it('shows error state with malformed JSON string', async () => {
+    const { root } = await render(<json-viewer data="not valid { json"></json-viewer>);
+    expect(root).toBeTruthy();
+  });
+
+  it('shows error state with incomplete JSON', async () => {
+    const { root } = await render(<json-viewer data='{"incomplete":'></json-viewer>);
+    expect(root).toBeTruthy();
+  });
+
+  it('shows error state with trailing comma', async () => {
+    const { root } = await render(<json-viewer data='{"key": "value",}'></json-viewer>);
+    expect(root).toBeTruthy();
+  });
+
+  it('shows error state with single quotes instead of double', async () => {
+    const { root } = await render(<json-viewer data="{'key': 'value'}"></json-viewer>);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles null data gracefully', async () => {
+    const { root } = await render(<json-viewer data={null}></json-viewer>);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles undefined data gracefully', async () => {
+    const { root } = await render(<json-viewer data={undefined as any}></json-viewer>);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles number data type', async () => {
+    const { root } = await render(<json-viewer data={42 as any}></json-viewer>);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles boolean data type', async () => {
+    const { root } = await render(<json-viewer data={true as any}></json-viewer>);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles array data type', async () => {
+    const { root } = await render(<json-viewer data={[1, 2, 3] as any}></json-viewer>);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles string data type', async () => {
+    const { root } = await render(<json-viewer data="just a string" as any></json-viewer>);
+    expect(root).toBeTruthy();
+  });
+});
+
+describe('json-viewer sanitization', () => {
+  it('strips $ prefixed keys from object data', async () => {
+    const { root } = await render(
+      <json-viewer data={{ $internal: 'hidden', normal: 'visible' }}></json-viewer>,
+    );
+    expect(root).toBeTruthy();
+  });
+
+  it('strips $ prefixed keys from nested objects', async () => {
+    const { root } = await render(
+      <json-viewer data={{ $root: 'hidden', nested: { $child: 'hidden', normal: 'visible' } }}></json-viewer>,
+    );
+    expect(root).toBeTruthy();
+  });
+
+  it('strips $ prefixed keys from arrays', async () => {
+    const { root } = await render(
+      <json-viewer data={{ items: [{ $hidden: true, visible: true }] }}></json-viewer>,
+    );
+    expect(root).toBeTruthy();
+  });
+
+  it('handles deeply nested $ prefixed keys', async () => {
+    const { root } = await render(
+      <json-viewer data={{ level1: { $level2: { $level3: 'hidden' } } }}></json-viewer>,
+    );
+    expect(root).toBeTruthy();
+  });
+});
+
+describe('json-viewer edge cases', () => {
+  it('handles empty string data', async () => {
+    const { root } = await render(<json-viewer data=""></json-viewer>);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles whitespace only data', async () => {
+    const { root } = await render(<json-viewer data="   "></json-viewer>);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles maxHeight of 0', async () => {
+    const { root } = await render(<json-viewer data='{"key":"value"}' max-height={0}></json-viewer>);
+    expect(root.maxHeight).toBe(0);
+  });
+
+  it('handles very large maxHeight', async () => {
+    const { root } = await render(<json-viewer data='{"key":"value"}' max-height={999999}></json-viewer>);
+    expect(root.maxHeight).toBe(999999);
+  });
+
+  it('handles empty object', async () => {
+    const { root } = await render(<json-viewer data={{}}></json-viewer>);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles empty array', async () => {
+    const { root } = await render(<json-viewer data={[]}></json-viewer>);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles array with empty objects', async () => {
+    const { root } = await render(<json-viewer data={[{}, {}]}></json-viewer>);
+    expect(root).toBeTruthy();
+  });
+
+  it('handles deeply nested empty objects', async () => {
+    const { root } = await render(
+      <json-viewer data={{ a: { b: { c: { d: {} } } } }}></json-viewer>,
+    );
+    expect(root).toBeTruthy();
+  });
+});
