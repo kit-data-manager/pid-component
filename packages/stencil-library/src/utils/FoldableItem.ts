@@ -84,7 +84,7 @@ export class FoldableItem {
     this._renderDynamically = renderDynamically !== undefined ? renderDynamically : true; // Default to true if not provided
     // If the value shouldn't be rendered dynamically, the estimated type priority is the highest value possible (very unimportant information).
     // Set a default value for estimated type priority
-    this._estimatedTypePriority = renderDynamically ? 0 : Number.MAX_SAFE_INTEGER;
+    this._estimatedTypePriority = this._renderDynamically ? 0 : Number.MAX_SAFE_INTEGER;
   }
 
   /**

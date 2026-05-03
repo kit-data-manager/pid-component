@@ -4,16 +4,36 @@
     "allowUnreachableCode": false,
     "declaration": false,
     "experimentalDecorators": true,
-    "lib": ["dom", "es2017"],
+    "lib": [
+      "dom",
+      "es2017",
+      "ESNext.Disposable"
+    ],
     "moduleResolution": "bundler",
     "module": "esnext",
     "target": "es2017",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "jsx": "react",
-    "jsxFactory": "h"
+    "jsxFactory": "h",
+    "baseUrl": ".",
+    "paths": {
+      "@test-fixtures/*": [
+        "../../examples/fixtures/*"
+      ]
+    }
   },
-  "include": ["src"],
-  "exclude": ["../../node_modules", "src/test", "src/**/*.stories.ts", "src/**/*.stories.tsx", "src/**/*.mdx"],
+  "include": [
+    "src",
+    "../../examples"
+  ],
+  "exclude": [
+    "../../node_modules",
+    "src/test",
+    "src/**/*.stories.ts",
+    "src/**/*.stories.tsx",
+    "src/**/*.mdx",
+    "src/**/__tests__/**"
+  ],
   "extends": "../../tsconfig.json"
 }

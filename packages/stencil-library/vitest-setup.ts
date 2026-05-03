@@ -1,3 +1,5 @@
+import { beforeAll } from 'vitest';
+
 // Polyfill `self` before component imports (DataCache references self.caches)
 if (typeof globalThis.self === 'undefined') {
   (globalThis as any).self = globalThis;
@@ -51,6 +53,8 @@ if (typeof document !== 'undefined' && document.ELEMENT_NODE === undefined) {
 // tests, so the dist/ output is available. Without this import, custom
 // elements are never defined and render() produces bare HTML elements
 // with no component behavior.
-import './dist/pid-component/pid-component.esm.js';
+beforeAll(async () => {
+  await import('./dist/pid-component/pid-component.esm.js');
+});
 
 export {};
