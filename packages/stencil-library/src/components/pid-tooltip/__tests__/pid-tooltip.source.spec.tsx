@@ -65,22 +65,28 @@ describe('pid-tooltip source', () => {
     expect(button).toBeTruthy();
   });
 
-  it('button has aria-expanded attribute', async () => {
+  it('button has aria-expanded false by default', async () => {
     const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
     const button = root.querySelector('button');
     expect(button?.getAttribute('aria-expanded')).toBe('false');
   });
 
-  it('button has aria-label attribute', async () => {
+  it('button has aria-label with Show text', async () => {
     const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
     const button = root.querySelector('button');
     expect(button?.getAttribute('aria-label')).toContain('Show additional information');
   });
 
+  it('button has aria-label with Hide text', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const button = root.querySelector('button');
+    expect(button?.getAttribute('aria-label')).toContain('additional information');
+  });
+
   it('button has title attribute', async () => {
     const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
     const button = root.querySelector('button');
-    expect(button?.getAttribute('title')).toContain('Show additional information');
+    expect(button?.getAttribute('title')).toContain('additional information');
   });
 
   it('button has type attribute', async () => {
@@ -95,10 +101,48 @@ describe('pid-tooltip source', () => {
     expect(svg).toBeTruthy();
   });
 
+  it('has info-circle icon', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const svg = root.querySelector('button svg');
+    expect(svg?.className).toContain('icon-tabler');
+  });
+
+  it('SVG has role img', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const svg = root.querySelector('button svg');
+    expect(svg?.getAttribute('role')).toBe('img');
+  });
+
+  it('SVG has title element', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const title = root.querySelector('button svg title');
+    expect(title).toBeTruthy();
+    expect(title?.textContent).toBe('Information icon');
+  });
+
+  it('SVG has desc element', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const desc = root.querySelector('button svg desc');
+    expect(desc).toBeTruthy();
+  });
+
   it('tooltip div exists with tooltip role', async () => {
     const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
     const tooltip = root.querySelector('[role="tooltip"]');
     expect(tooltip).toBeTruthy();
+  });
+
+  it('tooltip has id attribute', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const tooltip = root.querySelector('[role="tooltip"]');
+    expect(tooltip?.id).toBeTruthy();
+    expect(tooltip?.id).toMatch(/^tooltip-/);
+  });
+
+  it('tooltip has aria-live polite', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const tooltip = root.querySelector('[role="tooltip"]');
+    expect(tooltip?.getAttribute('aria-live')).toBe('polite');
   });
 
   it('tooltip has hidden class by default', async () => {
@@ -107,10 +151,69 @@ describe('pid-tooltip source', () => {
     expect(tooltip?.className).toContain('hidden');
   });
 
-  it('tooltip has sr-only span when visible', async () => {
+  it('tooltip uses bottom-full for top position', async () => {
+    const { root } = await render(<pid-tooltip text="Test" position="top"></pid-tooltip>);
+    const tooltip = root.querySelector('[role="tooltip"]');
+    expect(tooltip?.className).toContain('bottom-full');
+    expect(tooltip?.className).toContain('mb-2');
+  });
+
+  it('tooltip uses top-full for bottom position', async () => {
+    const { root } = await render(<pid-tooltip text="Test" position="bottom"></pid-tooltip>);
+    const tooltip = root.querySelector('[role="tooltip"]');
+    expect(tooltip?.className).toContain('top-full');
+    expect(tooltip?.className).toContain('mt-2');
+  });
+
+  it('tooltip has border class', async () => {
     const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
-    const srOnly = root.querySelector('.sr-only.fixed');
-    expect(srOnly).toBeNull();
+    const tooltip = root.querySelector('[role="tooltip"]');
+    expect(tooltip?.className).toContain('border-');
+  });
+
+  it('tooltip has rounded border', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const tooltip = root.querySelector('[role="tooltip"]');
+    expect(tooltip?.className).toContain('rounded');
+  });
+
+  it('tooltip has shadow-lg', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const tooltip = root.querySelector('[role="tooltip"]');
+    expect(tooltip?.className).toContain('shadow-lg');
+  });
+
+  it('tooltip displays text content', async () => {
+    const { root } = await render(<pid-tooltip text="Test tooltip content"></pid-tooltip>);
+    const tooltip = root.querySelector('[role="tooltip"]');
+    expect(tooltip?.textContent).toContain('Test tooltip content');
+  });
+
+  it('tooltip has p element with text', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const p = root.querySelector('[role="tooltip"] p');
+    expect(p).toBeTruthy();
+    expect(p?.textContent).toBe('Test');
+  });
+
+  it('tooltip p has m-0 p-0 classes', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const p = root.querySelector('[role="tooltip"] p');
+    expect(p?.className).toContain('m-0');
+    expect(p?.className).toContain('p-0');
+  });
+
+  it('button aria-controls references tooltip id', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const button = root.querySelector('button');
+    const tooltip = root.querySelector('[role="tooltip"]');
+    expect(button?.getAttribute('aria-controls')).toBe(tooltip?.id);
+  });
+
+  it('button has tabIndex 0', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const button = root.querySelector('button');
+    expect(button?.getAttribute('tabIndex')).toBe('0');
   });
 
   it('renders with empty text', async () => {
@@ -134,15 +237,88 @@ describe('pid-tooltip source', () => {
     expect(root.text).toBe('Test 😀🎉🔗');
   });
 
-  it('getPositionClasses returns correct classes for top', async () => {
-    const { root } = await render(<pid-tooltip text="Test" position="top"></pid-tooltip>);
-    const tooltip = root.querySelector('[role="tooltip"]');
-    expect(tooltip?.className).toContain('bottom-full');
+  it('has flex container for layout', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const flexContainer = root.querySelector('.flex');
+    expect(flexContainer).toBeTruthy();
   });
 
-  it('getPositionClasses returns correct classes for bottom', async () => {
-    const { root } = await render(<pid-tooltip text="Test" position="bottom"></pid-tooltip>);
+  it('flex container has items-center class', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const flexContainer = root.querySelector('.flex.items-center');
+    expect(flexContainer).toBeTruthy();
+  });
+
+  it('flex container has justify-between class', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const flexContainer = root.querySelector('.flex.items-center.justify-between');
+    expect(flexContainer).toBeTruthy();
+  });
+
+  it('button has focus ring classes', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const button = root.querySelector('button');
+    expect(button?.className).toContain('focus:ring-2');
+    expect(button?.className).toContain('focus:ring-blue-500');
+  });
+
+  it('button has focus outline hidden', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const button = root.querySelector('button');
+    expect(button?.className).toContain('focus:outline-hidden');
+  });
+
+  it('has absolute positioning for tooltip', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
     const tooltip = root.querySelector('[role="tooltip"]');
-    expect(tooltip?.className).toContain('top-full');
+    expect(tooltip?.className).toContain('absolute');
+  });
+
+  it('has z-50 for tooltip', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const tooltip = root.querySelector('[role="tooltip"]');
+    expect(tooltip?.className).toContain('z-50');
+  });
+
+  it('has w-full for tooltip', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const tooltip = root.querySelector('[role="tooltip"]');
+    expect(tooltip?.className).toContain('w-full');
+  });
+
+  it('has text-xs for tooltip', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const tooltip = root.querySelector('[role="tooltip"]');
+    expect(tooltip?.className).toContain('text-xs');
+  });
+
+  it('has whitespace-normal for tooltip', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const tooltip = root.querySelector('[role="tooltip"]');
+    expect(tooltip?.className).toContain('whitespace-normal');
+  });
+
+  it('has transition-opacity for tooltip', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const tooltip = root.querySelector('[role="tooltip"]');
+    expect(tooltip?.className).toContain('transition-opacity');
+  });
+
+  it('has duration-200 for tooltip', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const tooltip = root.querySelector('[role="tooltip"]');
+    expect(tooltip?.className).toContain('duration-200');
+  });
+
+  it('has ease-in-out for tooltip', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const tooltip = root.querySelector('[role="tooltip"]');
+    expect(tooltip?.className).toContain('ease-in-out');
+  });
+
+  it('has left-0 for tooltip positioning', async () => {
+    const { root } = await render(<pid-tooltip text="Test"></pid-tooltip>);
+    const tooltip = root.querySelector('[role="tooltip"]');
+    expect(tooltip?.className).toContain('left-0');
   });
 });

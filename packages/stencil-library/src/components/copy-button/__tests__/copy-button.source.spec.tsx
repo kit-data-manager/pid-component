@@ -44,6 +44,21 @@ describe('copy-button source', () => {
     expect(root.className).toBeTruthy();
   });
 
+  it('host has inline-block class', async () => {
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    expect(root.className).toContain('inline-block');
+  });
+
+  it('host has align-baseline class', async () => {
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    expect(root.className).toContain('align-baseline');
+  });
+
+  it('host has text-xs class', async () => {
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    expect(root.className).toContain('text-xs');
+  });
+
   it('renders with empty string value', async () => {
     const { root } = await render(<copy-button value=""></copy-button>);
     expect(root.value).toBe('');
@@ -68,10 +83,22 @@ describe('copy-button source', () => {
     expect(root.value).toBe('Test 😀🎉');
   });
 
+  it('renders with long DOI value', async () => {
+    const longDoi = '10.1234/' + 'a'.repeat(200);
+    const { root } = await render(<copy-button value={longDoi}></copy-button>);
+    expect(root.value).toBe(longDoi);
+  });
+
   it('has button element', async () => {
     const { root } = await render(<copy-button value="test"></copy-button>);
     const button = root.querySelector('button');
     expect(button).toBeTruthy();
+  });
+
+  it('button has correct type attribute', async () => {
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    const button = root.querySelector('button');
+    expect(button?.getAttribute('type')).toBe('button');
   });
 
   it('button has aria-label when label provided', async () => {
@@ -86,10 +113,10 @@ describe('copy-button source', () => {
     expect(button?.getAttribute('aria-label')).toContain('Copy content');
   });
 
-  it('button has type attribute', async () => {
-    const { root } = await render(<copy-button value="test"></copy-button>);
+  it('button aria-label uses custom label when provided', async () => {
+    const { root } = await render(<copy-button value="test" label="Custom Label"></copy-button>);
     const button = root.querySelector('button');
-    expect(button?.getAttribute('type')).toBe('button');
+    expect(button?.getAttribute('aria-label')).toBe('Copy Custom Label to clipboard');
   });
 
   it('button has title attribute', async () => {
@@ -98,9 +125,137 @@ describe('copy-button source', () => {
     expect(button?.getAttribute('title')).toContain('Copy Custom');
   });
 
+  it('button has default title when no label', async () => {
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    const button = root.querySelector('button');
+    expect(button?.getAttribute('title')).toBe('Copy content to clipboard');
+  });
+
+  it('button displays Copy text', async () => {
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    const button = root.querySelector('button');
+    expect(button?.textContent).toBe('Copy');
+  });
+
+  it('button has rounded-md class', async () => {
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    const button = root.querySelector('button');
+    expect(button?.className).toContain('rounded-md');
+  });
+
+  it('button has border class', async () => {
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    const button = root.querySelector('button');
+    expect(button?.className).toContain('border');
+  });
+
+  it('button has font-mono class', async () => {
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    const button = root.querySelector('button');
+    expect(button?.className).toContain('font-mono');
+  });
+
+  it('button has font-medium class', async () => {
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    const button = root.querySelector('button');
+    expect(button?.className).toContain('font-medium');
+  });
+
+  it('button has transition-colors class', async () => {
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    const button = root.querySelector('button');
+    expect(button?.className).toContain('transition-colors');
+  });
+
+  it('button has duration-200 class', async () => {
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    const button = root.querySelector('button');
+    expect(button?.className).toContain('duration-200');
+  });
+
+  it('button has focus-ring classes', async () => {
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    const button = root.querySelector('button');
+    expect(button?.className).toContain('focus:ring-2');
+    expect(button?.className).toContain('focus:ring-blue-500');
+  });
+
+  it('button has focus-ring-offset class', async () => {
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    const button = root.querySelector('button');
+    expect(button?.className).toContain('focus:ring-offset-1');
+  });
+
+  it('button has focus-outline-hidden class', async () => {
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    const button = root.querySelector('button');
+    expect(button?.className).toContain('focus:outline-hidden');
+  });
+
+  it('button has z-30 class', async () => {
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    const button = root.querySelector('button');
+    expect(button?.className).toContain('z-30');
+  });
+
+  it('button has flex class', async () => {
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    const button = root.querySelector('button');
+    expect(button?.className).toContain('flex');
+  });
+
+  it('button has items-center class', async () => {
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    const button = root.querySelector('button');
+    expect(button?.className).toContain('items-center');
+  });
+
+  it('button has max-h-min class', async () => {
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    const button = root.querySelector('button');
+    expect(button?.className).toContain('max-h-min');
+  });
+
+  it('button has flex-none class', async () => {
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    const button = root.querySelector('button');
+    expect(button?.className).toContain('flex-none');
+  });
+
   it('renders sr-only span when copied state is not directly testable', async () => {
     const { root } = await render(<copy-button value="test"></copy-button>);
     const srOnly = root.querySelector('.sr-only');
     expect(srOnly).toBeNull();
+  });
+
+  it('button has relative class', async () => {
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    const button = root.querySelector('button');
+    expect(button?.className).toContain('relative');
+  });
+
+  it('button has px-2 class', async () => {
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    const button = root.querySelector('button');
+    expect(button?.className).toContain('px-2');
+  });
+
+  it('button has py-0.5 class', async () => {
+    const { root } = await render(<copy-button value="test"></copy-button>);
+    const button = root.querySelector('button');
+    expect(button?.className).toContain('py-0.5');
+  });
+
+  it('renders with various label values', async () => {
+    const labels = ['DOI', 'URL', 'Handle', 'ORCID', 'ROR'];
+    for (const label of labels) {
+      const { root } = await render(<copy-button value="test" label={label}></copy-button>);
+      expect(root.label).toBe(label);
+    }
+  });
+
+  it('renders with empty label', async () => {
+    const { root } = await render(<copy-button value="test" label=""></copy-button>);
+    expect(root.label).toBe('');
   });
 });
