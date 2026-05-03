@@ -63,6 +63,7 @@ export default defineVitestConfig({
         'src/**/*.spec.tsx',
         'src/**/*.test.tsx',
         'src/**/*.source.spec.tsx',
+        'src/**/__tests__/**',
         'src/test/**',
         'src/components.d.ts',
         'src/utils/__tests__/axe-helper.ts',
