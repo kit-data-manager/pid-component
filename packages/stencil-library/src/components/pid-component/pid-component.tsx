@@ -633,163 +633,184 @@ export class PidComponent {
     return hasActions || hasPagination;
   }
 
+  private get shouldShowCollapsedPreview(): boolean {
+    return this.items.length === 0 && this.actions.length === 0 && !this.identifierObject?.renderBody() || this.hideSubcomponents;
+  }
+
+  private shouldShowCopyButtonOnTopLevel(): boolean {
+    return this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy && (this.emphasizeComponent || this.temporarilyEmphasized || this.isExpanded);
+  }
+
+  private getPreviewClasses(): string {
+    if (this.currentLevelOfSubcomponents === 0) {
+      const base = this.emphasizeComponent || this.temporarilyEmphasized
+        ? 'group rounded-md border py-0 shadow-sm ' + (this.isDarkMode ? 'border-gray-600 bg-gray-800' : 'border-gray-300 bg-white') + ' inline-flex cursor-pointer list-none flex-nowrap items-center overflow-hidden font-mono font-bold text-clip'
+        : (this.isDarkMode ? 'bg-gray-800/60' : '') + ' inline-flex cursor-pointer list-none flex-nowrap items-center font-mono font-bold';
+      return base + (!this.isExpanded ? ` h-[${this._lineHeight || 24}px] leading-[${this._lineHeight || 24}px]` : '');
+    }
+    return '';
+  }
+
+  private renderCollapsedPreviewContent() {
+    return (
+      <span
+        class={this.getPreviewClasses()}
+        tabIndex={0}
+        role="button"
+        aria-label={`Identifier preview for ${this.value}`}
+        aria-expanded={this.isExpanded}
+      >
+        <span
+          class={`inline-block font-mono font-medium select-all ${this.isExpanded ? 'text-xs' : 'text-sm'} ${this.isExpanded ? 'max-w-[60vw] overflow-x-auto whitespace-nowrap' : 'max-w-full truncate'}`}
+        >
+          {this.identifierObject?.renderPreview()}
+        </span>
+        {this.shouldShowCopyButtonOnTopLevel() ? (
+          <copy-button
+            value={this.identifierObject.value}
+            class="ml-auto shrink-0"
+            aria-label={`Copy value: ${this.identifierObject.value}`}
+            onClick={this.blockEventPropagation}
+          />
+        ) : null}
+      </span>
+    );
+  }
+
+  private renderStatusMessage() {
+    if (this.displayStatus === 'error') {
+      return (
+        <span class={'inline-flex items-center font-mono text-sm text-gray-600 dark:text-gray-300'} role="status">
+          {this.value}
+        </span>
+      );
+    }
+    return (
+      <span class={'inline-flex items-center font-mono text-sm text-gray-500'} role="status" aria-live="polite">
+        {this.value}
+      </span>
+    );
+  }
+
   /**
    * Renders the component.
    */
   render() {
-    // If unmatched (renderers prop was set but no listed renderer matched), render nothing
     if (this.displayStatus === 'unmatched') {
-      return <Host class={`relative font-sans`} style={{ display: 'none' }}></Host>;
+      return <Host class="relative font-sans" style={{ display: 'none' }}></Host>;
     }
 
+    if (this.shouldShowCollapsedPreview) {
+      if (this.identifierObject !== undefined && this.displayStatus === 'loaded') {
+        return (
+          <Host class="relative font-sans"
+                aria-label={`This component displays information about the identifier ${this.value}.`}>
+            {this.renderCollapsedPreviewContent()}
+          </Host>
+        );
+      }
+      return (
+        <Host class="relative font-sans"
+              aria-label={`This component displays information about the identifier ${this.value}.`}>
+          {this.renderStatusMessage()}
+        </Host>
+      );
+    }
+
+    return this.renderExpandedState();
+  }
+
+  private renderExpandedState() {
     return (
-      <Host class={`relative font-sans`}
-            aria-label={`This component displays information about the identifier ${this.value}. It can be expanded to show more details.`}>
-        {
-          // Check if there are any items or actions to show, or if there's a body to render
-          (this.items.length === 0 && this.actions.length === 0 && !this.identifierObject?.renderBody()) || this.hideSubcomponents ? (
-            this.identifierObject !== undefined && this.displayStatus === 'loaded' ? (
-              // If loaded but no items available render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
-              <span
-                class={
-                  this.currentLevelOfSubcomponents === 0
-                    ? //(w/o sub components)
-                    (
-                      this.emphasizeComponent || this.temporarilyEmphasized
-                        ? 'group rounded-md border py-0 shadow-sm '
-                        + (this.isDarkMode
-                            ? 'border-gray-600 bg-gray-800'
-                            : 'border-gray-300 bg-white'
-                        ) + ' inline-flex cursor-pointer list-none flex-nowrap items-center overflow-hidden font-mono font-bold text-clip'
-                        : (this.isDarkMode ? 'bg-gray-800/60' : '') + ' inline-flex cursor-pointer list-none flex-nowrap items-center font-mono font-bold'
-                    ) + (!this.isExpanded ? ` h-[${this._lineHeight || 24}px] leading-[${this._lineHeight || 24}px]` : '')
-                    : ''
-                }
-                tabIndex={0}
-                role="button"
-                aria-label={`Identifier preview for ${this.value}`}
-                aria-expanded={this.isExpanded}
-              >
-                <span
-                  class={`inline-block font-mono font-medium select-all ${this.isExpanded ? 'text-xs' : 'text-sm'} ${this.isExpanded ? 'max-w-[60vw] overflow-x-auto whitespace-nowrap' : 'max-w-full truncate'}`}
-                >
-                  { // Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
-                    this.identifierObject?.renderPreview()
-                  }
-                </span>
-                {
-                  // Show copy button on top level, but hide it in collapsed non-emphasized mode.
-                  // The copy button is always pinned to the right via ml-auto + shrink-0.
-                  this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy
-                  && (this.emphasizeComponent || this.temporarilyEmphasized || this.isExpanded) ? (
-                    <copy-button value={this.identifierObject.value} class="ml-auto shrink-0"
-                                 aria-label={`Copy value: ${this.identifierObject.value}`}
-                                 onClick={this.blockEventPropagation} />
-                  ) : (
-                    ''
-                  )
-                }
-              </span>
-            ) : this.displayStatus === 'error' ? (
-              <span class={'inline-flex items-center font-mono text-sm text-gray-600 dark:text-gray-300'}
-                    role="status">
-                {this.value}
-              </span>
-            ) : (
-              <span class={'inline-flex items-center font-mono text-sm text-gray-500'} role="status"
-                    aria-live="polite">
-                {this.value}
-              </span>
-            )
-          ) : (
-            <pid-collapsible
-              expanded={this.isExpanded}
-              open={this.isExpanded}
-              previewScrollable={this.isExpanded}
-              emphasize={this.emphasizeComponent || this.temporarilyEmphasized}
-              initialWidth={this.currentLevelOfSubcomponents > 0 ? '100%' : this.width}
-              initialHeight={this.height}
-              lineHeight={this._lineHeight}
-              showFooter={this.shouldShowFooter}
-              darkMode={this.darkMode}
-              onCollapsibleToggle={e => this.toggleSubcomponents(e)}
+      <Host
+        class="relative font-sans"
+        aria-label={`This component displays information about the identifier ${this.value}. It can be expanded to show more details.`}
+      >
+        <pid-collapsible
+          expanded={this.isExpanded}
+          open={this.isExpanded}
+          previewScrollable={this.isExpanded}
+          emphasize={this.emphasizeComponent || this.temporarilyEmphasized}
+          initialWidth={this.currentLevelOfSubcomponents > 0 ? '100%' : this.width}
+          initialHeight={this.height}
+          lineHeight={this._lineHeight}
+          showFooter={this.shouldShowFooter}
+          darkMode={this.darkMode}
+          onCollapsibleToggle={e => this.toggleSubcomponents(e)}
+          onClick={this.blockEventPropagation}
+          aria-label={`Collapsible section for ${this.value}`}
+          aria-describedby={`${this.el.id}-description`}
+        >
+          <span
+            slot="summary"
+            class={`font-mono font-medium select-all text-sm ${this.isExpanded ? 'overflow-x-auto whitespace-nowrap' : 'max-w-full truncate'}`}
+            aria-label={`Preview of ${this.value}`}
+          >
+            {this.identifierObject?.renderPreview()}
+          </span>
+
+          {this.shouldShowCopyButtonOnTopLevel() ? (
+            <copy-button
+              slot="summary-actions"
+              value={this.value}
+              class="ml-auto pl-2 shrink-0"
+              aria-label={`Copy value: ${this.value}`}
               onClick={this.blockEventPropagation}
-              aria-label={`Collapsible section for ${this.value}`}
-              aria-describedby={`${this.el.id}-description`}
-            >
-              <span
-                slot="summary"
-                class={`font-mono font-medium select-all text-sm ${this.isExpanded ? 'overflow-x-auto whitespace-nowrap' : 'max-w-full truncate'}`}
-                aria-label={`Preview of ${this.value}`}
-              >
-                {this.identifierObject?.renderPreview()}
-              </span>
+            />
+          ) : null}
 
-              {this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy
-              && (this.emphasizeComponent || this.temporarilyEmphasized || this.isExpanded) ? (
-                <copy-button
-                  slot="summary-actions"
-                  value={this.value}
-                  class="ml-auto pl-2 shrink-0"
-                  aria-label={`Copy value: ${this.value}`}
-                  onClick={this.blockEventPropagation}
-                />
-              ) : null}
+          {this.items.length > 0 ? (
+            <pid-data-table
+              items={this.items}
+              itemsPerPage={this.itemsPerPage}
+              currentPage={this.tablePage}
+              loadSubcomponents={this.loadSubcomponents}
+              hideSubcomponents={this.hideSubcomponents}
+              currentLevelOfSubcomponents={this.currentLevelOfSubcomponents}
+              levelOfSubcomponents={this.levelOfSubcomponents}
+              settings={this.settings}
+              darkMode={this.darkMode}
+              onPageChange={e => (this.tablePage = e.detail)}
+              class="w-full grow overflow-x-clip overflow-y-auto"
+              aria-label={`Data table for ${this.value}`}
+              aria-describedby={`${this.el.id}-table-description`}
+            />
+          ) : null}
 
-              {/* Table and content */}
-              {this.items.length > 0 ? (
-                <pid-data-table
-                  items={this.items}
-                  itemsPerPage={this.itemsPerPage}
-                  currentPage={this.tablePage}
-                  loadSubcomponents={this.loadSubcomponents}
-                  hideSubcomponents={this.hideSubcomponents}
-                  currentLevelOfSubcomponents={this.currentLevelOfSubcomponents}
-                  levelOfSubcomponents={this.levelOfSubcomponents}
-                  settings={this.settings}
-                  darkMode={this.darkMode}
-                  onPageChange={e => (this.tablePage = e.detail)}
-                  class="w-full grow overflow-x-clip overflow-y-auto"
-                  aria-label={`Data table for ${this.value}`}
-                  aria-describedby={`${this.el.id}-table-description`}
-                />
-              ) : null}
+          {this.items.length > 0 && (
+            <span id={`${this.el.id}-table-description`} class="sr-only fixed">
+              This table displays properties and values associated with the identifier {this.value}.
+            </span>
+          )}
 
-              {/* Hidden description for data table accessibility */}
-              {this.items.length > 0 && (
-                <span id={`${this.el.id}-table-description`} class="sr-only fixed">
-                  This table displays properties and values associated with the identifier {this.value}.
-                </span>
-              )}
+          {this.identifierObject?.renderBody()}
 
-              {this.identifierObject?.renderBody()}
+          {this.items.length > 0 && (
+            <div slot="footer"
+                 class={`relative z-50 w-full overflow-visible ${this.isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+              <pid-pagination
+                currentPage={this.tablePage}
+                totalItems={this.items.length}
+                itemsPerPage={this.itemsPerPage}
+                darkMode={this.darkMode}
+                onPageChange={e => (this.tablePage = e.detail)}
+                onItemsPerPageChange={e => (this.itemsPerPage = e.detail)}
+                aria-label={`Pagination controls for ${this.value} data`}
+                aria-controls={`${this.el.id}-table`}
+              />
+            </div>
+          )}
 
-              {/* Pagination in a separate line above actions */}
-              {this.items.length > 0 && (
-                <div slot="footer"
-                     class={`relative z-50 w-full overflow-visible ${this.isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-                  <pid-pagination
-                    currentPage={this.tablePage}
-                    totalItems={this.items.length}
-                    itemsPerPage={this.itemsPerPage}
-                    darkMode={this.darkMode}
-                    onPageChange={e => (this.tablePage = e.detail)}
-                    onItemsPerPageChange={e => (this.itemsPerPage = e.detail)}
-                    aria-label={`Pagination controls for ${this.value} data`}
-                    aria-controls={`${this.el.id}-table`}
-                  />
-                </div>
-              )}
-
-              {/* Footer Actions - in a separate line below pagination */}
-              {this.actions.length > 0 && (
-                <pid-actions slot="footer-actions" actions={this.actions} darkMode={this.darkMode}
-                             class="my-0 shrink-0 overflow-x-auto"
-                             aria-label={`Available actions for ${this.value}`} />
-              )}
-            </pid-collapsible>
-          )
-        }
+          {this.actions.length > 0 && (
+            <pid-actions
+              slot="footer-actions"
+              actions={this.actions}
+              darkMode={this.darkMode}
+              class="my-0 shrink-0 overflow-x-auto"
+              aria-label={`Available actions for ${this.value}`}
+            />
+          )}
+        </pid-collapsible>
       </Host>
     );
   }
