@@ -2,6 +2,7 @@
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property                      | Attribute                        | Description                                                                                                                                                                                                                                                                                                                                                                                                           | Type                            | Default               |
@@ -37,7 +38,6 @@
 - [pid-actions](../pid-actions)
 
 ### Graph
-
 ```mermaid
 graph TD;
   pid-component --> copy-button

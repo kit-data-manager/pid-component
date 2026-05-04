@@ -2,6 +2,7 @@
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property                  | Attribute                     | Description                                                                                  | Type                            | Default                |
@@ -12,6 +13,7 @@
 | `pageSizes`               | --                            | Available page sizes                                                                         | `number[]`                      | `[5, 10, 25, 50, 100]` |
 | `showItemsPerPageControl` | `show-items-per-page-control` | Whether to show the items per page control                                                   | `boolean`                       | `true`                 |
 | `totalItems`              | `total-items`                 | Total number of items                                                                        | `number`                        | `0`                    |
+
 
 ## Events
 
@@ -27,7 +29,6 @@
 - [pid-component](../pid-component)
 
 ### Graph
-
 ```mermaid
 graph TD;
   pid-component --> pid-pagination

@@ -2,6 +2,7 @@
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property    | Attribute    | Description                                                                                  | Type                            | Default     |
@@ -17,7 +18,6 @@
 - [pid-component](../pid-component)
 
 ### Graph
-
 ```mermaid
 graph TD;
   pid-component --> pid-actions

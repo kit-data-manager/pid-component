@@ -52,6 +52,7 @@ A collapsible component that can be toggled between expanded and collapsed state
 
 <!-- Auto Generated Below -->
 
+
 ## Overview
 
 Component for creating collapsible/expandable content sections
@@ -71,6 +72,7 @@ with resize capability and cross-browser compatibility
 | `previewScrollable` | `preview-scrollable` | Whether the preview should be scrollable (for subcomponents or expanded state).                                                    | `boolean`                       | `false`     |
 | `showFooter`        | `show-footer`        | Whether to show the footer section                                                                                                 | `boolean`                       | `false`     |
 
+
 ## Events
 
 | Event                 | Description                                                                                                 | Type                                  |
@@ -78,10 +80,10 @@ with resize capability and cross-browser compatibility
 | `collapsibleToggle`   | Event emitted when the collapsible is toggled                                                               | `CustomEvent<boolean>`                |
 | `contentHeightChange` | Event emitted when content dimensions need to be recalculated Useful for pagination to ensure proper height | `CustomEvent<{ maxHeight: number; }>` |
 
+
 ## Methods
 
 ###
-
 `recalculateContentDimensions() => Promise<{ contentWidth: number; contentHeight: number; maxWidth: number; maxHeight: number; }>`
 
 Public method to recalculate content dimensions
@@ -99,7 +101,6 @@ Type: `Promise<{ contentWidth: number; contentHeight: number; maxWidth: number; 
 - [pid-component](../pid-component)
 
 ### Graph
-
 ```mermaid
 graph TD;
   pid-component --> pid-collapsible

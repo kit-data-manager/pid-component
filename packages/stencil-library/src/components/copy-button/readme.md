@@ -2,6 +2,7 @@
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property             | Attribute | Description                                                                          | Type     | Default     |
@@ -17,7 +18,6 @@
 - [pid-data-table](../pid-data-table)
 
 ### Graph
-
 ```mermaid
 graph TD;
   pid-component --> copy-button

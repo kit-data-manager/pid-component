@@ -31,7 +31,7 @@ const config: StorybookConfig = {
     };
     config.plugins = config.plugins || [];
     config.plugins.push(vue());
-    config.plugins.push(codecovVitePlugin({ enableBundleAnalysis: true }));
+    config.plugins.push(codecovVitePlugin({ enableBundleAnalysis: true, bundleName: 'vue-library' }));
     return config;
   },
 };

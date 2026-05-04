@@ -26,7 +26,7 @@ const config: StorybookConfig = {
       '@kit-data-manager/pid-component': stencilRoot,
     };
     config.plugins = config.plugins || [];
-    config.plugins.push(codecovVitePlugin({ enableBundleAnalysis: true }));
+    config.plugins.push(codecovVitePlugin({ enableBundleAnalysis: true, bundleName: 'react-library' }));
     return config;
   },
 };

@@ -2,6 +2,7 @@
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property                      | Attribute                        | Description                                                                                  | Type                            | Default                |
@@ -16,6 +17,7 @@
 | `loadSubcomponents`           | `load-subcomponents`             | Whether to load subcomponents                                                                | `boolean`                       | `false`                |
 | `pageSizes`                   | --                               | Available page sizes                                                                         | `number[]`                      | `[5, 10, 25, 50, 100]` |
 | `settings`                    | `settings`                       | Settings to pass to subcomponents                                                            | `string`                        | `'[]'`                 |
+
 
 ## Events
 
@@ -37,7 +39,6 @@
 - [copy-button](../copy-button)
 
 ### Graph
-
 ```mermaid
 graph TD;
   pid-data-table --> pid-tooltip

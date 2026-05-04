@@ -2,6 +2,7 @@
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property            | Attribute     | Description                                               | Type                | Default     |
@@ -11,6 +12,7 @@
 | `maxWidth`          | `max-width`   | The maximum width of the tooltip                          | `string`            | `'250px'`   |
 | `position`          | `position`    | The preferred position of the tooltip (top or bottom)     | `"bottom" \| "top"` | `'top'`     |
 | `text` _(required)_ | `text`        | The text to display in the tooltip                        | `string`            | `undefined` |
+
 
 ## Events
 
@@ -25,7 +27,6 @@
 - [pid-data-table](../pid-data-table)
 
 ### Graph
-
 ```mermaid
 graph TD;
   pid-data-table --> pid-tooltip
