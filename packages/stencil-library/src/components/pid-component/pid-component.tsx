@@ -171,20 +171,14 @@ export class PidComponent {
    * Lists all the items to show in the table.
    */
   @State() items: FoldableItem[] = [];
-
-  // Media query for detecting system dark mode preference
-  private darkModeMediaQuery: MediaQueryList;
-
   /**
    * Lists all the actions to show in the table.
    */
   @State() actions: FoldableAction[] = [];
-
   /**
    * Determines whether the subcomponents should be loaded or not.
    */
   @State() loadSubcomponents: boolean = false;
-
   /**
    * The current status of the component.
    * Can be "loading", "loaded", "error", or "unmatched".
@@ -192,26 +186,42 @@ export class PidComponent {
    * Default to "loading".
    */
   @State() displayStatus: 'loading' | 'loaded' | 'error' | 'unmatched' = 'loading';
-
   /**
    * The current page of the table.
    */
   @State() tablePage: number = 0;
-
   /**
    * Determines whether the component should be temporarily visible or not.
    */
   @State() temporarilyEmphasized: boolean = false;
-
   /**
    * Tracks whether the component is expanded/unfolded or not
    */
   @State() isExpanded: boolean = false;
+  // Media query for detecting system dark mode preference
+  private darkModeMediaQuery: MediaQueryList;
+  // AbortController for canceling pending operations
+  private _abortController?: AbortController;
+  // Store computed line height for collapsed state
+  private _lineHeight: number = 24; // Default fallback
 
   constructor() {
     // Note: @Prop values may not be set yet in the constructor.
     // temporarilyEmphasized is properly initialized in componentWillLoad()
     // to ensure it reflects the actual prop value.
+  }
+
+  /**
+   * Determines if footer should be shown based on whether there are actions or items with pagination
+   */
+  private get shouldShowFooter(): boolean {
+    const hasActions = this.actions.length > 0;
+    const hasPagination = this.items.length > this.itemsPerPage;
+    return hasActions || hasPagination;
+  }
+
+  private get shouldShowCollapsedPreview(): boolean {
+    return this.items.length === 0 && this.actions.length === 0 && !this.identifierObject?.renderBody() || this.hideSubcomponents;
   }
 
   componentDidLoad() {
@@ -227,15 +237,6 @@ export class PidComponent {
         (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions();
       }
     }, 50);
-  }
-
-  /**
-   * Ensures the component has a unique ID for accessibility references
-   */
-  private ensureComponentId() {
-    if (!this.el.id) {
-      this.el.id = `pid-component-${Math.random().toString(36).substring(2, 9)}`;
-    }
   }
 
   /**
@@ -295,38 +296,6 @@ export class PidComponent {
       this.el.removeAttribute('expanded');
     }
   }
-
-  /**
-   * Toggles the loadSubcomponents property if the current level of subcomponents is not the total level of subcomponents.
-   * The open state is handled by the pid-collapsible component.
-   */
-  private toggleSubcomponents = (event?: CustomEvent<boolean>) => {
-    // Update open state based on collapsible event
-    if (event) {
-      // Stop propagation to prevent parent pid-components from collapsing
-      event.stopPropagation();
-
-      this.isExpanded = event.detail;
-
-      if (event.detail) {
-        // Opening: load subcomponents if allowed
-        if (!this.hideSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) {
-          this.loadSubcomponents = true;
-
-          // After loading subcomponents, ensure dimensions are recalculated
-          setTimeout(() => {
-            const collapsible = this.el.shadowRoot?.querySelector('pid-collapsible');
-            if (collapsible && typeof (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions === 'function') {
-              (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions();
-            }
-          }, 50);
-        }
-      } else {
-        // Collapsing: reset loadSubcomponents so temporarilyEmphasized reverts
-        this.loadSubcomponents = false;
-      }
-    }
-  };
 
   /**
    * Parses the value and settings, generates the items and actions and sets the displayStatus to "loaded".
@@ -555,11 +524,74 @@ export class PidComponent {
     this.cleanupDarkModeListener();
   }
 
-  // AbortController for canceling pending operations
-  private _abortController?: AbortController;
+  /**
+   * Renders the component.
+   */
+  render() {
+    if (this.displayStatus === 'unmatched') {
+      return <Host class="relative font-sans" style={{ display: 'none' }}></Host>;
+    }
 
-  // Store computed line height for collapsed state
-  private _lineHeight: number = 24; // Default fallback
+    if (this.shouldShowCollapsedPreview) {
+      if (this.identifierObject !== undefined && this.displayStatus === 'loaded') {
+        return (
+          <Host class="relative font-sans"
+                aria-label={`This component displays information about the identifier ${this.value}.`}>
+            {this.renderCollapsedPreviewContent()}
+          </Host>
+        );
+      }
+      return (
+        <Host class="relative font-sans"
+              aria-label={`This component displays information about the identifier ${this.value}.`}>
+          {this.renderStatusMessage()}
+        </Host>
+      );
+    }
+
+    return this.renderExpandedState();
+  }
+
+  /**
+   * Ensures the component has a unique ID for accessibility references
+   */
+  private ensureComponentId() {
+    if (!this.el.id) {
+      this.el.id = `pid-component-${Math.random().toString(36).substring(2, 9)}`;
+    }
+  }
+
+  /**
+   * Toggles the loadSubcomponents property if the current level of subcomponents is not the total level of subcomponents.
+   * The open state is handled by the pid-collapsible component.
+   */
+  private toggleSubcomponents = (event?: CustomEvent<boolean>) => {
+    // Update open state based on collapsible event
+    if (event) {
+      // Stop propagation to prevent parent pid-components from collapsing
+      event.stopPropagation();
+
+      this.isExpanded = event.detail;
+
+      if (event.detail) {
+        // Opening: load subcomponents if allowed
+        if (!this.hideSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) {
+          this.loadSubcomponents = true;
+
+          // After loading subcomponents, ensure dimensions are recalculated
+          setTimeout(() => {
+            const collapsible = this.el.shadowRoot?.querySelector('pid-collapsible');
+            if (collapsible && typeof (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions === 'function') {
+              (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions();
+            }
+          }, 50);
+        }
+      } else {
+        // Collapsing: reset loadSubcomponents so temporarilyEmphasized reverts
+        this.loadSubcomponents = false;
+      }
+    }
+  };
 
   /**
    * Initializes dark mode based on property and system preference
@@ -624,19 +656,6 @@ export class PidComponent {
     e.stopPropagation();
   };
 
-  /**
-   * Determines if footer should be shown based on whether there are actions or items with pagination
-   */
-  private get shouldShowFooter(): boolean {
-    const hasActions = this.actions.length > 0;
-    const hasPagination = this.items.length > this.itemsPerPage;
-    return hasActions || hasPagination;
-  }
-
-  private get shouldShowCollapsedPreview(): boolean {
-    return this.items.length === 0 && this.actions.length === 0 && !this.identifierObject?.renderBody() || this.hideSubcomponents;
-  }
-
   private shouldShowCopyButtonOnTopLevel(): boolean {
     return this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy && (this.emphasizeComponent || this.temporarilyEmphasized || this.isExpanded);
   }
@@ -690,34 +709,6 @@ export class PidComponent {
         {this.value}
       </span>
     );
-  }
-
-  /**
-   * Renders the component.
-   */
-  render() {
-    if (this.displayStatus === 'unmatched') {
-      return <Host class="relative font-sans" style={{ display: 'none' }}></Host>;
-    }
-
-    if (this.shouldShowCollapsedPreview) {
-      if (this.identifierObject !== undefined && this.displayStatus === 'loaded') {
-        return (
-          <Host class="relative font-sans"
-                aria-label={`This component displays information about the identifier ${this.value}.`}>
-            {this.renderCollapsedPreviewContent()}
-          </Host>
-        );
-      }
-      return (
-        <Host class="relative font-sans"
-              aria-label={`This component displays information about the identifier ${this.value}.`}>
-          {this.renderStatusMessage()}
-        </Host>
-      );
-    }
-
-    return this.renderExpandedState();
   }
 
   private renderExpandedState() {

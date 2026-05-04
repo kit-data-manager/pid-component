@@ -2,12 +2,12 @@ import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import {
   DOI_examples,
+  EMAIL_examples,
   HANDLE_examples,
   ORCID_examples,
   ROR_examples,
   SPDX_examples,
   URL_examples,
-  EMAIL_examples,
 } from '../examples';
 
 const meta: Meta = {

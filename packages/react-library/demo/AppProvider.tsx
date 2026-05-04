@@ -1,7 +1,6 @@
 'use client';
 
 import { type ReactNode } from 'react';
-import { MantineProvider } from '@mantine/core';
 import { DemoProvider } from './DemoProvider';
 
 interface AppProviderProps {

@@ -44,13 +44,6 @@ export class DOIInfo {
   }
 
   /**
-   * Gets the active metadata provider (DataCite or CrossRef)
-   */
-  private get activeInfo(): DataCiteInfo | CrossRefInfo | undefined {
-    return this._dataCiteInfo || this._crossRefInfo;
-  }
-
-  /**
    * Gets the DataCite info if available
    */
   get dataCiteInfo(): DataCiteInfo | undefined {
@@ -93,15 +86,10 @@ export class DOIInfo {
   }
 
   /**
-   * Generates FoldableItems based on the source
+   * Gets the active metadata provider (DataCite or CrossRef)
    */
-  generateItems(): FoldableItem[] {
-    if (this._dataCiteInfo) {
-      return this._dataCiteInfo.generateItems();
-    } else if (this._crossRefInfo) {
-      return this._crossRefInfo.generateItems();
-    }
-    return [];
+  private get activeInfo(): DataCiteInfo | CrossRefInfo | undefined {
+    return this._dataCiteInfo || this._crossRefInfo;
   }
 
   /**
@@ -136,18 +124,6 @@ export class DOIInfo {
   }
 
   /**
-   * Serializes to object for caching
-   */
-  toObject() {
-    return {
-      doi: JSON.stringify(this._doi.toObject()),
-      source: this._source,
-      dataCiteInfo: this._dataCiteInfo?.toObject(),
-      crossRefInfo: this._crossRefInfo?.toObject(),
-    };
-  }
-
-  /**
    * Deserializes from cached object
    */
   static fromJSON(serialized: string): DOIInfo {
@@ -166,5 +142,29 @@ export class DOIInfo {
     }
 
     return new DOIInfo(doiObj, data.source as DOISource, dataCiteInfo, crossRefInfo);
+  }
+
+  /**
+   * Generates FoldableItems based on the source
+   */
+  generateItems(): FoldableItem[] {
+    if (this._dataCiteInfo) {
+      return this._dataCiteInfo.generateItems();
+    } else if (this._crossRefInfo) {
+      return this._crossRefInfo.generateItems();
+    }
+    return [];
+  }
+
+  /**
+   * Serializes to object for caching
+   */
+  toObject() {
+    return {
+      doi: JSON.stringify(this._doi.toObject()),
+      source: this._source,
+      dataCiteInfo: this._dataCiteInfo?.toObject(),
+      crossRefInfo: this._crossRefInfo?.toObject(),
+    };
   }
 }

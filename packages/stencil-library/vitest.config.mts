@@ -41,6 +41,10 @@ export default defineVitestConfig({
           name: 'source',
           include: ['src/**/*.source.spec.tsx'],
           environment: 'stencil',
+          setupFiles: ['./vitest-setup-source.ts'],
+          globals: {
+            h: true,
+          },
         },
       },
       {

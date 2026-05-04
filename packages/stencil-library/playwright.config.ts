@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import { matchers, createConfig } from '@stencil/playwright';
+import { createConfig, matchers } from '@stencil/playwright';
 
 expect.extend(matchers);
 

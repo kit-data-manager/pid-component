@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { PidComponent } from '@kit-data-manager/react-pid-component';
 
 export default function Footer() {

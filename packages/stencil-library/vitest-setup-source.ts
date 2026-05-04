@@ -1,4 +1,7 @@
 import { beforeAll } from 'vitest';
+import { h } from '@stencil/vitest';
+
+(globalThis as any).h = h;
 
 if (typeof globalThis.self === 'undefined') {
   (globalThis as any).self = globalThis;

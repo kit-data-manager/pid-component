@@ -1,7 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { Paper, Modal, Button, Text, Group } from '@mantine/core';
+import { Button, Group, Modal, Paper, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconScale } from '@tabler/icons-react';
 import { PidComponent } from '../../lib';

@@ -199,6 +199,136 @@ export class PidCollapsible {
   }
 
   /**
+   * Public method to recalculate content dimensions
+   * Can be called externally, for example when pagination changes
+   * Optimized for better performance
+   */
+  @Method()
+  public async recalculateContentDimensions() {
+    if (this.open) {
+      // Use a small delay to avoid excessive recalculations
+      if (this.resizeDebounceTimer !== null) {
+        window.cancelAnimationFrame(this.resizeDebounceTimer);
+      }
+
+      return new Promise<{
+        contentWidth: number;
+        contentHeight: number;
+        maxWidth: number;
+        maxHeight: number
+      }>(resolve => {
+        this.resizeDebounceTimer = window.requestAnimationFrame(() => {
+          // Width: use stored user-resized width, configured initial width, or responsive default
+          if (this.lastExpandedWidth) {
+            this.currentWidth = this.lastExpandedWidth;
+          } else {
+            this.currentWidth = this.initialWidth || this.getResponsiveDefaultWidth();
+          }
+
+          this.el.style.width = this.currentWidth;
+
+          // Set height to auto to let content drive it, then measure
+          this.el.style.height = 'auto';
+          this.el.style.maxHeight = 'max-content';
+
+          requestAnimationFrame(() => {
+            // Capture the actual content height and set as concrete pixels
+            // so resize:both works in Safari
+            if (this.open) {
+              const actualHeight = this.el.scrollHeight;
+              this.el.style.height = `${actualHeight}px`;
+              this.el.style.maxHeight = `${actualHeight}px`;
+            }
+
+            this.lastExpandedWidth = this.currentWidth;
+
+            const dimensions = this.calculateContentDimensions();
+            this.contentHeightChange.emit({ maxHeight: dimensions.maxHeight });
+            this.resizeDebounceTimer = null;
+
+            resolve(dimensions);
+          });
+        });
+      });
+    }
+    return null;
+  }
+
+  render() {
+    const hostClasses = this.getHostClasses();
+    const detailsClasses = this.getDetailsClasses();
+    const summaryClasses = this.getSummaryClasses();
+    const contentClasses = this.getContentClasses();
+    const footerClasses = this.getFooterClasses();
+    const footerActionsClasses = this.getFooterActionsClasses();
+
+    return (
+      <Host class={hostClasses}>
+        <details
+          class={detailsClasses}
+          open={this.open}
+          onToggle={this.handleToggle}
+        >
+          <summary
+            class={summaryClasses}
+            onClick={this.handleSummaryClick}
+          >
+            {this.emphasize && (
+              <span>
+                  <svg
+                    class={`${this.isDarkMode ? 'text-gray-300' : 'text-gray-600'} transition-transform duration-200 group-open:rotate-180 mr-2 ml-1`}
+                    fill="none"
+                    height="12"
+                    width="12"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    viewBox="0 0 12 12"
+                    aria-hidden="true"
+                  >
+                    <path d="M 2 3 l 4 6 l 4 -6"></path>
+                  </svg>
+                </span>
+            )}
+            <span
+              class={`block ${this.previewScrollable ? 'shrink-0' : 'min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'}`}>
+                <slot name="summary"></slot>
+              </span>
+            <div class={`ml-auto shrink-0 ${this.previewScrollable ? 'sticky right-0' : ''}`}>
+              <slot name="summary-actions"></slot>
+            </div>
+          </summary>
+
+          <div class={`${contentClasses}`}>
+            <slot></slot>
+          </div>
+
+          {this.showFooter && this.open && (
+            <div class={footerClasses}>
+              {/* Main footer slot for pagination */}
+              <div
+                class={`z-50 overflow-visible border-b ${this.isDarkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-100 bg-white'}`}>
+                <slot name="footer"></slot>
+              </div>
+
+              {/* Actions row */}
+              <div class={footerActionsClasses}>
+                <div class="grow overflow-visible">
+                  <slot name="footer-left"></slot>
+                </div>
+                <div class="flex shrink-0 items-center gap-2 overflow-visible">
+                  <slot name="footer-actions"></slot>
+                </div>
+              </div>
+            </div>
+          )}
+        </details>
+      </Host>
+    );
+  }
+
+  /**
    * Initializes dark mode based on property and system preference
    */
   private initializeDarkMode() {
@@ -266,62 +396,6 @@ export class PidCollapsible {
     console.debug('Page changed to:', event.detail);
     this.recalculateContentDimensions();
   };
-
-  /**
-   * Public method to recalculate content dimensions
-   * Can be called externally, for example when pagination changes
-   * Optimized for better performance
-   */
-  @Method()
-  public async recalculateContentDimensions() {
-    if (this.open) {
-      // Use a small delay to avoid excessive recalculations
-      if (this.resizeDebounceTimer !== null) {
-        window.cancelAnimationFrame(this.resizeDebounceTimer);
-      }
-
-      return new Promise<{
-        contentWidth: number;
-        contentHeight: number;
-        maxWidth: number;
-        maxHeight: number
-      }>(resolve => {
-        this.resizeDebounceTimer = window.requestAnimationFrame(() => {
-          // Width: use stored user-resized width, configured initial width, or responsive default
-          if (this.lastExpandedWidth) {
-            this.currentWidth = this.lastExpandedWidth;
-          } else {
-            this.currentWidth = this.initialWidth || this.getResponsiveDefaultWidth();
-          }
-
-          this.el.style.width = this.currentWidth;
-
-          // Set height to auto to let content drive it, then measure
-          this.el.style.height = 'auto';
-          this.el.style.maxHeight = 'max-content';
-
-          requestAnimationFrame(() => {
-            // Capture the actual content height and set as concrete pixels
-            // so resize:both works in Safari
-            if (this.open) {
-              const actualHeight = this.el.scrollHeight;
-              this.el.style.height = `${actualHeight}px`;
-              this.el.style.maxHeight = `${actualHeight}px`;
-            }
-
-            this.lastExpandedWidth = this.currentWidth;
-
-            const dimensions = this.calculateContentDimensions();
-            this.contentHeightChange.emit({ maxHeight: dimensions.maxHeight });
-            this.resizeDebounceTimer = null;
-
-            resolve(dimensions);
-          });
-        });
-      });
-    }
-    return null;
-  }
 
   /**
    * Sets up the resize observer to track dimension changes
@@ -642,7 +716,6 @@ export class PidCollapsible {
 
     return { contentWidth, contentHeight, maxWidth, maxHeight };
   }
-
 
   /**
    * Applies styles for collapsed state
@@ -981,79 +1054,5 @@ export class PidCollapsible {
     }
 
     return baseClasses.join(' ');
-  }
-
-  render() {
-    const hostClasses = this.getHostClasses();
-    const detailsClasses = this.getDetailsClasses();
-    const summaryClasses = this.getSummaryClasses();
-    const contentClasses = this.getContentClasses();
-    const footerClasses = this.getFooterClasses();
-    const footerActionsClasses = this.getFooterActionsClasses();
-
-    return (
-      <Host class={hostClasses}>
-        <details
-          class={detailsClasses}
-          open={this.open}
-          onToggle={this.handleToggle}
-        >
-          <summary
-            class={summaryClasses}
-            onClick={this.handleSummaryClick}
-          >
-            {this.emphasize && (
-              <span>
-                  <svg
-                    class={`${this.isDarkMode ? 'text-gray-300' : 'text-gray-600'} transition-transform duration-200 group-open:rotate-180 mr-2 ml-1`}
-                    fill="none"
-                    height="12"
-                    width="12"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                    viewBox="0 0 12 12"
-                    aria-hidden="true"
-                  >
-                    <path d="M 2 3 l 4 6 l 4 -6"></path>
-                  </svg>
-                </span>
-            )}
-            <span
-              class={`block ${this.previewScrollable ? 'shrink-0' : 'min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'}`}>
-                <slot name="summary"></slot>
-              </span>
-            <div class={`ml-auto shrink-0 ${this.previewScrollable ? 'sticky right-0' : ''}`}>
-              <slot name="summary-actions"></slot>
-            </div>
-          </summary>
-
-          <div class={`${contentClasses}`}>
-            <slot></slot>
-          </div>
-
-          {this.showFooter && this.open && (
-            <div class={footerClasses}>
-              {/* Main footer slot for pagination */}
-              <div
-                class={`z-50 overflow-visible border-b ${this.isDarkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-100 bg-white'}`}>
-                <slot name="footer"></slot>
-              </div>
-
-              {/* Actions row */}
-              <div class={footerActionsClasses}>
-                <div class="grow overflow-visible">
-                  <slot name="footer-left"></slot>
-                </div>
-                <div class="flex shrink-0 items-center gap-2 overflow-visible">
-                  <slot name="footer-actions"></slot>
-                </div>
-              </div>
-            </div>
-          )}
-        </details>
-      </Host>
-    );
   }
 }

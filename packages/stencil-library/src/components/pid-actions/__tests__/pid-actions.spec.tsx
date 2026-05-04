@@ -1,9 +1,9 @@
-import { render, h } from '@stencil/vitest';
-import { describe, it, expect } from 'vitest';
-// h is the JSX factory required at runtime by TSX – do not remove
-void h;
+import { h, render } from '@stencil/vitest';
+import { describe, expect, it } from 'vitest';
 import { FoldableAction } from '../../../utils/FoldableAction';
 import { checkA11y } from '../../../utils/__tests__/axe-helper';
+// h is the JSX factory required at runtime by TSX – do not remove
+void h;
 
 describe('pid-actions', () => {
   it('renders with actions prop', async () => {

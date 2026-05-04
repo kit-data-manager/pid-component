@@ -1,6 +1,6 @@
 'use client';
 
-import { Paper, Title, Text, Badge, Group, Button, Stack } from '@mantine/core';
+import { Badge, Button, Group, Paper, Text, Title } from '@mantine/core';
 import { IconDownload, IconExternalLink } from '@tabler/icons-react';
 import { PidComponent } from '../../lib';
 import type { ReactNode } from 'react';

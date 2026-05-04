@@ -81,7 +81,6 @@ jobs:
             const path = require('path');
 
             const root = path.join(process.env.GITHUB_WORKSPACE || process.cwd(), 'coverage-summaries');
-            const expectedNodes = JSON.parse(process.env.NODE_VERSIONS_JSON);
 
             function findCoverageFiles(dir) {
               const files = [];

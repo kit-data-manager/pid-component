@@ -8,7 +8,8 @@ if (typeof globalThis.self === 'undefined') {
 // Polyfill HTMLTextAreaElement.select() for Stencil's mock DOM
 // (needed by copy-button.tsx's fallback clipboard code)
 if (typeof HTMLTextAreaElement !== 'undefined' && !HTMLTextAreaElement.prototype.select) {
-  HTMLTextAreaElement.prototype.select = function () {};
+  HTMLTextAreaElement.prototype.select = function() {
+  };
 }
 
 // Polyfill Element.prototype.getAttributeNames() for Stencil's mock-doc

@@ -1,12 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Paper, Badge, Text } from '@mantine/core';
-import {
-  initPidDetection,
-  type PidDetectionController,
-  type PidDetectionConfig,
-} from '@kit-data-manager/pid-component';
+import { Badge, Paper, Text } from '@mantine/core';
+import { initPidDetection, type PidDetectionConfig } from '@kit-data-manager/pid-component';
 
 interface ArticleSectionProps {
   config?: PidDetectionConfig;

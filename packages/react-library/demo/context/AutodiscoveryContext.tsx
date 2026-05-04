@@ -1,8 +1,8 @@
-import { createContext, useContext, useRef, useEffect, type ReactNode } from 'react';
+import { createContext, type ReactNode, useContext, useEffect, useRef } from 'react';
 import {
   initPidDetection,
-  type PidDetectionController,
   type PidDetectionConfig,
+  type PidDetectionController,
 } from '@kit-data-manager/pid-component';
 
 interface AutodiscoveryContextValue {

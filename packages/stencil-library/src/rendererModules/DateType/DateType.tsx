@@ -6,6 +6,9 @@ import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
  * @extends GenericIdentifierType
  */
 export class DateType extends GenericIdentifierType {
+  private static readonly FORMAT_REGEX = new RegExp(
+    '^([0-9]{4})-([0]?[1-9]|1[0-2])-([0-2][0-9]|3[0-1])(T([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9](.[0-9]*)?(Z|([+|-]([0-1][0-9]|2[0-3]):[0-5][0-9])){1}))$',
+  );
   /**
    * The date object.
    * @type {Date}
@@ -16,10 +19,6 @@ export class DateType extends GenericIdentifierType {
   getSettingsKey(): string {
     return 'DateType';
   }
-
-  private static readonly FORMAT_REGEX = new RegExp(
-    '^([0-9]{4})-([0]?[1-9]|1[0-2])-([0-2][0-9]|3[0-1])(T([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9](.[0-9]*)?(Z|([+|-]([0-1][0-9]|2[0-3]):[0-5][0-9])){1}))$',
-  );
 
   quickCheck(): boolean {
     return DateType.FORMAT_REGEX.test(this.value);

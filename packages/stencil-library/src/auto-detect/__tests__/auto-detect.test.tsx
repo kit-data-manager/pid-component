@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
-import { render, h } from '@stencil/vitest';
+import { h, render } from '@stencil/vitest';
+import { initPidDetection } from '../initPidDetection';
 // h is the JSX factory required at runtime by TSX – do not remove
 void h;
-import { initPidDetection } from '../../auto-detect/initPidDetection';
 
 const DOI_examples = {
   VALID_BARE: '10.52825/ocp.v5i.1411',

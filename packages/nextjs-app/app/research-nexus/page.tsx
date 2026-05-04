@@ -1,5 +1,5 @@
 import { Navigation } from './components/Navigation';
-import { HeroCard, DoiCard } from './components/HeroCard';
+import { DoiCard, HeroCard } from './components/HeroCard';
 import { DatasetTable } from './components/DatasetTable';
 import { AuthorGrid } from './components/AuthorCard';
 import { ArticleSection } from './components/ArticleSection';

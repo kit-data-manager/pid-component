@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { Database } from 'lucide-react';
 import { PidComponent } from '@kit-data-manager/react-pid-component';
-import { cn } from '../lib/utils';
 
 export function Navigation() {
   return (

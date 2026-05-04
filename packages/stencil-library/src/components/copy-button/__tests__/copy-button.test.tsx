@@ -1,9 +1,8 @@
-import { render, h } from '@stencil/vitest';
+import { h, render } from '@stencil/vitest';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { FoldableAction } from '../../../utils/FoldableAction';
 
 void h;
-
-import { FoldableAction } from '../../../utils/FoldableAction';
 
 const origCreateElement = document.createElement.bind(document);
 

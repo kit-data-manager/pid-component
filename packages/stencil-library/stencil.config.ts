@@ -12,7 +12,7 @@ export const config: Config = {
   globalStyle: 'src/tailwind.css',
   outputTargets: [
     {
-      type: 'dist'
+      type: 'dist',
     },
     {
       type: 'dist-hydrate-script',
@@ -47,17 +47,17 @@ export const config: Config = {
     },
     webTypesOutputTarget(),
   ],
-  plugins:[
+  plugins: [
     postcss({
-      plugins:[
+      plugins: [
         tailwindcss(),
-        cssnanoPlugin()
+        cssnanoPlugin(),
       ],
     }),
   ],
   sourceMap: true,
   extras: {
-    experimentalSlotFixes: true
+    experimentalSlotFixes: true,
   },
   preamble:
     '\n' +

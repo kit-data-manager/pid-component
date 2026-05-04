@@ -9,41 +9,41 @@ export interface ResourceTypeInfo {
 }
 
 const userFriendlyResourceType: { [key: string]: string } = {
-  'article': "📰 Article",
-  'book': "📚 Book",
-  'chapter': "📖 Chapter",
-  'software': "💻 Software",
-  'dataset': "📊 Dataset",
-  'image': "🖼️ Image",
-  'video': "🎥 Video",
-  'audio': "🎵 Audio",
-  'presentation': "🧑‍🏫 Presentation",
-  'preprint': "📝 Preprint",
-  'thesis': "🎓 Thesis",
-  'report': "📋 Report",
-  'standard': "📜 Standard",
-  'workflow': "🔄 Workflow",
-  'model': "🧮 Model",
-  'paper': "📄 Paper",
-  'journal': "📰 Journal",
-  'code': "💻 Code",
-  'institution': "🏛️ Institution",
-  'conferencepaper': "🎤 Conference Paper",
-  'database': "🗄️ Database",
-  'other': "❓ Other",
-  'journalarticle': "📄 Journal Article",
-  'proceedingsarticle': "🎤 Proceedings Article",
-  'reportseries': "📋 Report Series",
-  'bookchapter': "📖 Book Chapter",
-  'monograph': "📚 Monograph",
-  'editedbook': "📚 Edited Book",
-  'reportpaper': "📋 Report Paper",
+  'article': '📰 Article',
+  'book': '📚 Book',
+  'chapter': '📖 Chapter',
+  'software': '💻 Software',
+  'dataset': '📊 Dataset',
+  'image': '🖼️ Image',
+  'video': '🎥 Video',
+  'audio': '🎵 Audio',
+  'presentation': '🧑‍🏫 Presentation',
+  'preprint': '📝 Preprint',
+  'thesis': '🎓 Thesis',
+  'report': '📋 Report',
+  'standard': '📜 Standard',
+  'workflow': '🔄 Workflow',
+  'model': '🧮 Model',
+  'paper': '📄 Paper',
+  'journal': '📰 Journal',
+  'code': '💻 Code',
+  'institution': '🏛️ Institution',
+  'conferencepaper': '🎤 Conference Paper',
+  'database': '🗄️ Database',
+  'other': '❓ Other',
+  'journalarticle': '📄 Journal Article',
+  'proceedingsarticle': '🎤 Proceedings Article',
+  'reportseries': '📋 Report Series',
+  'bookchapter': '📖 Book Chapter',
+  'monograph': '📚 Monograph',
+  'editedbook': '📚 Edited Book',
+  'reportpaper': '📋 Report Paper',
 };
 
 export function beautifyResourceType(resourceType: string): string {
   const normalized = resourceType
     .toLowerCase()
-    .replace("_", "").replace("-", "");
+    .replace('_', '').replace('-', '');
   return userFriendlyResourceType[normalized] || resourceType;
 }
 
@@ -59,8 +59,10 @@ export const DataCiteLogo = () => (
         {`.cls-2{fill:#243b54;}`}
       </style>
     </defs>
-    <path class="cls-1" d="M5,73.38c.86.16,1.63.32,2.65.47,43.5,8.64,108.26-2.8,116.59-23.89,6.54-17.05-30-29.11-72.62-27.63a13.94,13.94,0,0,0-2.49.15c22.73,2.26,43.2,11.29,35,25.38C75.2,63.27,37.3,73.54,5,73.38"></path>
-    <path class="cls-2" d="M100.27,75.53C92.72,121.3,53.18,94,43.84,62.15,30.3,29.07,42.36-13.43,76.22,11.48c-28-12.85-31,24.36-19,50.82,10,22.11,31.59,36.35,42,13.54.47-.15.86-.15,1-.31"></path>
+    <path class="cls-1"
+          d="M5,73.38c.86.16,1.63.32,2.65.47,43.5,8.64,108.26-2.8,116.59-23.89,6.54-17.05-30-29.11-72.62-27.63a13.94,13.94,0,0,0-2.49.15c22.73,2.26,43.2,11.29,35,25.38C75.2,63.27,37.3,73.54,5,73.38"></path>
+    <path class="cls-2"
+          d="M100.27,75.53C92.72,121.3,53.18,94,43.84,62.15,30.3,29.07,42.36-13.43,76.22,11.48c-28-12.85-31,24.36-19,50.82,10,22.11,31.59,36.35,42,13.54.47-.15.86-.15,1-.31"></path>
   </svg>
 );
 

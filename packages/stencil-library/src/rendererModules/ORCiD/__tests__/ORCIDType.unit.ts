@@ -1,7 +1,7 @@
 // Polyfill `self` before any module imports (DataCache uses `self.caches`)
 (globalThis as any).self = globalThis;
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ORCIDType } from '../ORCIDType';
 import * as DataCache from '../../../utils/DataCache';
 

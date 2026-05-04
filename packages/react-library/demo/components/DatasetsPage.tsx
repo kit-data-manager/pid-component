@@ -1,9 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { Container, Grid, Badge, Title, Text, Card } from '@mantine/core';
-import { Table } from '@mantine/core';
-import { Tabs } from '@mantine/core';
+import { useState } from 'react';
+import { Badge, Card, Table, Title } from '@mantine/core';
 import { PidComponent } from '../../lib';
 
 interface DatasetsPageProps {

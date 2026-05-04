@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular';
+import { applicationConfig, moduleMetadata } from '@storybook/angular';
 import { ResearchDemoComponent } from '../src/app/research-demo.component';
-import { moduleMetadata, applicationConfig } from '@storybook/angular';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 
 const meta: Meta = {

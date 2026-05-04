@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from 'vitest';
-import { sanitizeToken, detectBestFit, detectionRegistry } from '../../auto-detect/detection-registry';
+import { describe, expect, it, vi } from 'vitest';
+import { detectBestFit, detectionRegistry, sanitizeToken } from '../../auto-detect/detection-registry';
 
 const DOI_examples = {
   VALID_BARE: '10.52825/ocp.v5i.1411',

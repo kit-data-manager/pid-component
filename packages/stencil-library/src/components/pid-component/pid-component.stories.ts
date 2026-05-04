@@ -2,16 +2,16 @@ import { html } from 'lit';
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 import { expect, waitFor } from 'storybook/test';
 import {
+  DATE_examples,
   DOI_examples,
+  EMAIL_examples,
   HANDLE_examples,
+  JSON_examples,
+  LOCALE_examples,
   ORCID_examples,
   ROR_examples,
   SPDX_examples,
   URL_examples,
-  EMAIL_examples,
-  DATE_examples,
-  JSON_examples,
-  LOCALE_examples,
 } from '../../../../../examples';
 
 
@@ -857,9 +857,9 @@ export const DOI_CitationStyles: Story = {
       {
         type: 'DOIType',
         values: [
-          { name: 'citationStyle', value: 'APA' }
-        ]
-      }
+          { name: 'citationStyle', value: 'APA' },
+        ],
+      },
     ]),
   },
   parameters: {

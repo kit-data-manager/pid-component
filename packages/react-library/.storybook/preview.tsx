@@ -33,6 +33,8 @@ import {
 import {
   defineCustomElement as defineLocaleVisualization,
 } from '@kit-data-manager/pid-component/dist/components/locale-visualization.js';
+// Import Mantine styles for ResearchDemo
+import '@mantine/core/styles.css';
 
 definePidComponent();
 defineCopyButton();
@@ -44,9 +46,6 @@ definePidPagination();
 definePidTooltip();
 defineColorHighlight();
 defineLocaleVisualization();
-
-// Import Mantine styles for ResearchDemo
-import '@mantine/core/styles.css';
 
 export default {
   tags: ['autodocs'],

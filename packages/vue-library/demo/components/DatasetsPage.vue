@@ -1,5 +1,5 @@
-<script setup lang="ts">
-import { ref, inject } from 'vue';
+<script lang="ts" setup>
+import { inject, ref } from 'vue';
 import type { PidDetectionController } from '@kit-data-manager/pid-component';
 
 defineProps<{
@@ -44,9 +44,9 @@ const datasets = ref([
 <template>
   <div class="mb-8">
     <h2 class="text-h6 font-weight-bold mb-4 d-flex align-center">
-      <v-icon color="primary" class="mr-2">mdi-database</v-icon>
+      <v-icon class="mr-2" color="primary">mdi-database</v-icon>
       Dataset Overview
-      <v-chip color="primary-lighten-5" text-color="primary-darken-2" size="small" class="ml-3">
+      <v-chip class="ml-3" color="primary-lighten-5" size="small" text-color="primary-darken-2">
         {{ articleRef?.isActive ? 'Scanning Active' : 'Scanning Inactive' }}
       </v-chip>
     </h2>
@@ -58,10 +58,10 @@ const datasets = ref([
         class="elevation-0"
       >
         <template v-slot:item.doi="{ item }">
-          <pid-component :value="item.doi" :open-by-default="false" />
+          <pid-component :open-by-default="false" :value="item.doi" />
         </template>
         <template v-slot:item.license="{ item }">
-          <pid-component :value="item.license" :open-by-default="false" />
+          <pid-component :open-by-default="false" :value="item.license" />
         </template>
       </v-data-table>
     </v-card>

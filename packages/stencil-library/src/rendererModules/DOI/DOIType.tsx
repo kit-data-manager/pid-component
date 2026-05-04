@@ -145,7 +145,7 @@ export class DOIType extends GenericIdentifierType {
     }
 
     // Format citation preview
-    const {citation, tooltip} = formatCitationPreview(
+    const { citation, tooltip } = formatCitationPreview(
       this._doiInfo.title,
       creators,
       year,

@@ -7,9 +7,9 @@ import { initPidDetection } from '@kit-data-manager/pid-component';
 // Helper component
 // ---------------------------------------------------------------------------
 function AutoDetectContainer({
-  config,
-  children,
-}: {
+                               config,
+                               children,
+                             }: {
   config?: Partial<PidDetectionConfig>;
   children: React.ReactNode;
 }) {
@@ -172,26 +172,26 @@ export const TableWithPIDs: Story = {
         <h3 style={{ marginBottom: 12 }}>Research Outputs</h3>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
-            <tr style={{ borderBottom: '2px solid #ddd' }}>
-              <th style={{ textAlign: 'left', padding: 8 }}>Title</th>
-              <th style={{ textAlign: 'left', padding: 8 }}>DOI</th>
-              <th style={{ textAlign: 'left', padding: 8 }}>Author ORCiD</th>
-              <th style={{ textAlign: 'left', padding: 8 }}>License</th>
-            </tr>
+          <tr style={{ borderBottom: '2px solid #ddd' }}>
+            <th style={{ textAlign: 'left', padding: 8 }}>Title</th>
+            <th style={{ textAlign: 'left', padding: 8 }}>DOI</th>
+            <th style={{ textAlign: 'left', padding: 8 }}>Author ORCiD</th>
+            <th style={{ textAlign: 'left', padding: 8 }}>License</th>
+          </tr>
           </thead>
           <tbody>
-            <tr style={{ borderBottom: '1px solid #eee' }}>
-              <td style={{ padding: 8 }}>Dataset A</td>
-              <td style={{ padding: 8 }}>10.5445/IR/1000185135</td>
-              <td style={{ padding: 8 }}>0009-0005-2800-4833</td>
-              <td style={{ padding: 8 }}>https://spdx.org/licenses/Apache-2.0</td>
-            </tr>
-            <tr style={{ borderBottom: '1px solid #eee' }}>
-              <td style={{ padding: 8 }}>Dataset B</td>
-              <td style={{ padding: 8 }}>10.5445/IR/1000178054</td>
-              <td style={{ padding: 8 }}>0009-0005-2800-4833</td>
-              <td style={{ padding: 8 }}>https://spdx.org/licenses/MIT</td>
-            </tr>
+          <tr style={{ borderBottom: '1px solid #eee' }}>
+            <td style={{ padding: 8 }}>Dataset A</td>
+            <td style={{ padding: 8 }}>10.5445/IR/1000185135</td>
+            <td style={{ padding: 8 }}>0009-0005-2800-4833</td>
+            <td style={{ padding: 8 }}>https://spdx.org/licenses/Apache-2.0</td>
+          </tr>
+          <tr style={{ borderBottom: '1px solid #eee' }}>
+            <td style={{ padding: 8 }}>Dataset B</td>
+            <td style={{ padding: 8 }}>10.5445/IR/1000178054</td>
+            <td style={{ padding: 8 }}>0009-0005-2800-4833</td>
+            <td style={{ padding: 8 }}>https://spdx.org/licenses/MIT</td>
+          </tr>
           </tbody>
         </table>
       </div>

@@ -1,12 +1,11 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { render, h } from '@stencil/vitest';
+import { describe, expect, it } from 'vitest';
+import { render } from '@stencil/vitest';
+import '../locale-visualization';
 
 Object.defineProperty(navigator, 'language', {
   value: 'en-US',
   writable: true,
 });
-
-import '../locale-visualization';
 
 describe('locale-visualization source', () => {
   it('renders with locale prop', async () => {

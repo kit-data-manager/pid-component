@@ -1,6 +1,6 @@
 'use client';
 
-import { Paper, Avatar, Group, Stack, Text } from '@mantine/core';
+import { Avatar, Group, Paper, Stack, Text } from '@mantine/core';
 import { PidComponent } from '../../lib';
 
 interface Author {

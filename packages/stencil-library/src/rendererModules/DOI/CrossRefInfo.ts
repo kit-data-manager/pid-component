@@ -64,31 +64,6 @@ export class CrossRefInfo {
   }
 
   /**
-   * Parses JATS syntax in text
-   * JATS (Journal Article Tag Suite) is an XML format used by CrossRef
-   */
-  private parseJATS(text: string): string {
-    if (!text) return text;
-
-    // Remove common JATS tags
-    return text
-      .replace(/<jats:p>/g, '')
-      .replace(/<\/jats:p>/g, '\n')
-      .replace(/<jats:italic>/g, '<i>')
-      .replace(/<\/jats:italic>/g, '</i>')
-      .replace(/<jats:bold>/g, '<b>')
-      .replace(/<\/jats:bold>/g, '</b>')
-      .replace(/<jats:sub>/g, '<sub>')
-      .replace(/<\/jats:sub>/g, '</sub>')
-      .replace(/<jats:sup>/g, '<sup>')
-      .replace(/<\/jats:sup>/g, '</sup>')
-      .replace(/<jats:title>/g, '<strong>')
-      .replace(/<\/jats:title>/g, '</strong>')
-      .replace(/\n\n+/g, '\n\n')
-      .trim();
-  }
-
-  /**
    * Gets all creators with enhanced metadata
    */
   get creators(): Creator[] {
@@ -252,6 +227,13 @@ export class CrossRefInfo {
   }
 
   /**
+   * Deserializes from cached object
+   */
+  static fromObject(doiObj: DOI, obj: ReturnType<CrossRefInfo['toObject']>): CrossRefInfo {
+    return new CrossRefInfo(doiObj, obj.rawMetadata as CrossRefResponse);
+  }
+
+  /**
    * Generates FoldableItems for CrossRef metadata
    */
   generateItems(): FoldableItem[] {
@@ -380,9 +362,27 @@ export class CrossRefInfo {
   }
 
   /**
-   * Deserializes from cached object
+   * Parses JATS syntax in text
+   * JATS (Journal Article Tag Suite) is an XML format used by CrossRef
    */
-  static fromObject(doiObj: DOI, obj: ReturnType<CrossRefInfo['toObject']>): CrossRefInfo {
-    return new CrossRefInfo(doiObj, obj.rawMetadata as CrossRefResponse);
+  private parseJATS(text: string): string {
+    if (!text) return text;
+
+    // Remove common JATS tags
+    return text
+      .replace(/<jats:p>/g, '')
+      .replace(/<\/jats:p>/g, '\n')
+      .replace(/<jats:italic>/g, '<i>')
+      .replace(/<\/jats:italic>/g, '</i>')
+      .replace(/<jats:bold>/g, '<b>')
+      .replace(/<\/jats:bold>/g, '</b>')
+      .replace(/<jats:sub>/g, '<sub>')
+      .replace(/<\/jats:sub>/g, '</sub>')
+      .replace(/<jats:sup>/g, '<sup>')
+      .replace(/<\/jats:sup>/g, '</sup>')
+      .replace(/<jats:title>/g, '<strong>')
+      .replace(/<\/jats:title>/g, '</strong>')
+      .replace(/\n\n+/g, '\n\n')
+      .trim();
   }
 }

@@ -24,6 +24,8 @@ interface SPDXLicense {
  * @extends GenericIdentifierType
  */
 export class SPDXType extends GenericIdentifierType {
+  private static readonly ID_REGEX = /^[\w.\-+]+$/;
+  private static readonly URL_REGEX = /^https?:\/\/spdx\.org\/licenses\/[\w.\-+]+\/?$/i;
   private licenseData: SPDXLicense | null = null;
   private licenseId: string = '';
   private readonly corsFallback: boolean = true;
@@ -32,12 +34,17 @@ export class SPDXType extends GenericIdentifierType {
   private readonly fileFormat: string = 'json';
   private readonly requestTimeout: number = 10000; // 10 seconds
 
+  /**
+   * Returns the license data that is being rendered in the component
+   * @returns The license data
+   */
+  get data(): SPDXLicense | null {
+    return this.licenseData;
+  }
+
   getSettingsKey(): string {
     return 'SPDXType';
   }
-
-  private static readonly ID_REGEX = /^[\w.\-+]+$/;
-  private static readonly URL_REGEX = /^https?:\/\/spdx\.org\/licenses\/[\w.\-+]+\/?$/i;
 
   quickCheck(): boolean | undefined {
     if (SPDXType.URL_REGEX.test(this.value)) return true;
@@ -71,6 +78,53 @@ export class SPDXType extends GenericIdentifierType {
     }
   }
 
+  /**
+   * Debugging method to log the current license data
+   */
+  logLicenseData(): void {
+    console.log('Current license data:', {
+      licenseId: this.licenseId,
+      licenseData: this.licenseData,
+      hasData: Boolean(this.licenseData && this.licenseData.licenseId && this.licenseData.name),
+    });
+  }
+
+  /**
+   * Main initialization method that fetches data if needed and populates the view
+   */
+  async init(): Promise<void> {
+    // Fetch data if not already available (for backwards compatibility)
+    if (!this.licenseData) {
+      const success = await this.hasMeaningfulInformation();
+      if (!success) {
+        this.handleInitError(new Error('Failed to fetch SPDX license data'));
+        return;
+      }
+    }
+    this.populateLicenseData();
+    this.addActionButtons();
+  }
+
+  /**
+   * Renders a preview of the SPDX license
+   */
+  renderPreview(): FunctionalComponent {
+    // If data is not yet loaded, show the SPDX ID
+    if (!this.licenseData) {
+      return <span class={`font-mono text-sm`}>SPDX: {this.licenseId || this.value}</span>;
+    }
+
+    // If data is loaded, show license name and ID with badges
+    return (
+      <span class={`inline-flex flex-nowrap items-baseline font-mono min-w-0 max-w-full`}>
+          <span
+            class={`font-medium min-w-0 overflow-hidden text-ellipsis whitespace-nowrap`}>{this.licenseData.name || this.licenseId}</span>
+        {this.licenseData.licenseId &&
+          <span class={`flex-none pl-1 text-gray-500`}>({this.licenseData.licenseId})</span>}
+      </span>
+    );
+  }
+
   private extractLicenseId(): string {
     if (!this.value.includes('/') && !this.value.includes('://')) {
       return this.value.trim();
@@ -92,39 +146,6 @@ export class SPDXType extends GenericIdentifierType {
       : `${this.spdxBaseUrl}/${licenseId}.${this.fileFormat}`;
 
     return baseUrl;
-  }
-  /**
-   * Returns the license data that is being rendered in the component
-   * @returns The license data
-   */
-  get data(): SPDXLicense | null {
-    return this.licenseData;
-  }
-
-  /**
-   * Debugging method to log the current license data
-   */
-  logLicenseData(): void {
-    console.log('Current license data:', {
-      licenseId: this.licenseId,
-      licenseData: this.licenseData,
-      hasData: Boolean(this.licenseData && this.licenseData.licenseId && this.licenseData.name),
-    });
-  }
-  /**
-   * Main initialization method that fetches data if needed and populates the view
-   */
-  async init(): Promise<void> {
-    // Fetch data if not already available (for backwards compatibility)
-    if (!this.licenseData) {
-      const success = await this.hasMeaningfulInformation();
-      if (!success) {
-        this.handleInitError(new Error('Failed to fetch SPDX license data'));
-        return;
-      }
-    }
-    this.populateLicenseData();
-    this.addActionButtons();
   }
 
   /**
@@ -304,26 +325,6 @@ export class SPDXType extends GenericIdentifierType {
         'The SPDX API could not be reached. This may be due to network connectivity issues or the SPDX service being unavailable.',
         'Try again when you have internet connectivity',
       ),
-    );
-  }
-
-  /**
-   * Renders a preview of the SPDX license
-   */
-  renderPreview(): FunctionalComponent {
-    // If data is not yet loaded, show the SPDX ID
-    if (!this.licenseData) {
-      return <span class={`font-mono text-sm`}>SPDX: {this.licenseId || this.value}</span>;
-    }
-
-    // If data is loaded, show license name and ID with badges
-    return (
-      <span class={`inline-flex flex-nowrap items-baseline font-mono min-w-0 max-w-full`}>
-          <span
-            class={`font-medium min-w-0 overflow-hidden text-ellipsis whitespace-nowrap`}>{this.licenseData.name || this.licenseId}</span>
-        {this.licenseData.licenseId &&
-          <span class={`flex-none pl-1 text-gray-500`}>({this.licenseData.licenseId})</span>}
-      </span>
     );
   }
 }

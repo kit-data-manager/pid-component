@@ -1,18 +1,18 @@
-import { Component, signal, inject, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
-  NavigationComponent,
-  HeroCardComponent,
-  DoiCardComponent,
-  DatasetTableComponent,
-  Dataset,
-  AuthorGridComponent,
-  Author,
-  ArticleSectionComponent,
-  LicenseDialogComponent,
-  FooterComponent,
-  DatasetsPageComponent,
   AboutPageComponent,
+  ArticleSectionComponent,
+  Author,
+  AuthorGridComponent,
+  Dataset,
+  DatasetsPageComponent,
+  DatasetTableComponent,
+  DoiCardComponent,
+  FooterComponent,
+  HeroCardComponent,
+  LicenseDialogComponent,
+  NavigationComponent,
 } from './components';
 import { initPidDetection, type PidDetectionController } from '@kit-data-manager/pid-component';
 
@@ -106,8 +106,6 @@ export class ResearchDemoComponent implements AfterViewInit, OnDestroy {
 
   activePage = signal('home');
   isAutodiscoveryActive = signal(false);
-  private controller?: PidDetectionController;
-
   datasets: Dataset[] = [
     {
       id: '1',
@@ -128,12 +126,12 @@ export class ResearchDemoComponent implements AfterViewInit, OnDestroy {
       license: 'https://spdx.org/licenses/CC-BY-4.0',
     },
   ];
-
   authors: Author[] = [
     { orcid: '0009-0005-2800-4833', name: 'Maximilian Inckmann', institution: 'Karlsruhe Institute of Technology' },
     { orcid: '0009-0003-2196-9187', name: 'Christopher Raquet', institution: 'Karlsruhe Institute of Technology' },
     { orcid: '0000-0001-6575-1022', name: 'Andreas Pfeil', institution: 'Karlsruhe Institute of Technology' },
   ];
+  private controller?: PidDetectionController;
 
   ngAfterViewInit() {
     if (this.articleSection?.nativeElement) {

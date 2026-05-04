@@ -1,20 +1,20 @@
 import { describe, expect, it } from 'vitest';
 import {
-  CONSTANTS,
-  Z_INDICES,
-  getResponsiveDefaultWidth,
   calculateContentDimensions,
-  isSafariBrowser,
-  isInteractiveElement,
-  shouldSkipClick,
-  getHostClasses,
-  getDetailsClasses,
-  getSummaryClasses,
-  getContentClasses,
-  getFooterClasses,
-  getFooterActionsClasses,
-  getChevronRotationClasses,
+  CONSTANTS,
   getChevronColorClass,
+  getChevronRotationClasses,
+  getContentClasses,
+  getDetailsClasses,
+  getFooterActionsClasses,
+  getFooterClasses,
+  getHostClasses,
+  getResponsiveDefaultWidth,
+  getSummaryClasses,
+  isInteractiveElement,
+  isSafariBrowser,
+  shouldSkipClick,
+  Z_INDICES,
 } from '../collapsibleUtils';
 
 describe('collapsibleUtils', () => {

@@ -2,11 +2,10 @@
 
 <!-- Auto Generated Below -->
 
-
 ## Properties
 
 | Property                      | Attribute                        | Description                                                                                  | Type                            | Default                |
-| ----------------------------- | -------------------------------- | -------------------------------------------------------------------------------------------- | ------------------------------- | ---------------------- |
+|-------------------------------|----------------------------------|----------------------------------------------------------------------------------------------|---------------------------------|------------------------|
 | `currentLevelOfSubcomponents` | `current-level-of-subcomponents` | Current level of subcomponents                                                               | `number`                        | `0`                    |
 | `currentPage`                 | `current-page`                   | Current page (0-based index)                                                                 | `number`                        | `0`                    |
 | `darkMode`                    | `dark-mode`                      | The dark mode setting for the component Options: "light", "dark", "system" Default: "system" | `"dark" \| "light" \| "system"` | `'system'`             |
@@ -18,20 +17,18 @@
 | `pageSizes`                   | --                               | Available page sizes                                                                         | `number[]`                      | `[5, 10, 25, 50, 100]` |
 | `settings`                    | `settings`                       | Settings to pass to subcomponents                                                            | `string`                        | `'[]'`                 |
 
-
 ## Events
 
 | Event                | Description                               | Type                  |
-| -------------------- | ----------------------------------------- | --------------------- |
+|----------------------|-------------------------------------------|-----------------------|
 | `itemsPerPageChange` | Event emitted when items per page changes | `CustomEvent<number>` |
 | `pageChange`         | Event emitted when page changes           | `CustomEvent<number>` |
-
 
 ## Dependencies
 
 ### Used by
 
- - [pid-component](../pid-component)
+- [pid-component](../pid-component)
 
 ### Depends on
 
@@ -40,6 +37,7 @@
 - [copy-button](../copy-button)
 
 ### Graph
+
 ```mermaid
 graph TD;
   pid-data-table --> pid-tooltip

@@ -33,6 +33,14 @@ import {
 import {
   defineCustomElement as defineLocaleVisualization,
 } from '@kit-data-manager/pid-component/dist/components/locale-visualization.js';
+// Import Vuetify styles and MDI icon font
+import 'vuetify/styles';
+import '@mdi/font/css/materialdesignicons.css';
+import { createVuetify } from 'vuetify';
+import * as components from 'vuetify/components';
+import * as directives from 'vuetify/directives';
+import type { Preview } from '@storybook/vue3-vite';
+import { setup } from '@storybook/vue3-vite';
 
 definePidComponent();
 defineCopyButton();
@@ -44,15 +52,6 @@ definePidPagination();
 definePidTooltip();
 defineColorHighlight();
 defineLocaleVisualization();
-
-// Import Vuetify styles and MDI icon font
-import 'vuetify/styles';
-import '@mdi/font/css/materialdesignicons.css';
-import { createVuetify } from 'vuetify';
-import * as components from 'vuetify/components';
-import * as directives from 'vuetify/directives';
-import { setup } from '@storybook/vue3-vite';
-import type { Preview } from '@storybook/vue3-vite';
 
 const vuetify = createVuetify({
   components,

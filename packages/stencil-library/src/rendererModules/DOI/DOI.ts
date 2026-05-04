@@ -64,6 +64,16 @@ export class DOI {
   }
 
   /**
+   * Creates a DOI from JSON.
+   * @param serialized The serialized DOI.
+   * @returns {DOI} The DOI object.
+   */
+  static fromJSON(serialized: string): DOI {
+    const data: ReturnType<DOI['toObject']> = JSON.parse(serialized);
+    return new DOI(data.doi);
+  }
+
+  /**
    * Returns the DOI as a resolvable URL.
    * @returns {string} The DOI URL.
    */
@@ -77,16 +87,6 @@ export class DOI {
    */
   toString(): string {
     return this._doi;
-  }
-
-  /**
-   * Creates a DOI from JSON.
-   * @param serialized The serialized DOI.
-   * @returns {DOI} The DOI object.
-   */
-  static fromJSON(serialized: string): DOI {
-    const data: ReturnType<DOI['toObject']> = JSON.parse(serialized);
-    return new DOI(data.doi);
   }
 
   /**

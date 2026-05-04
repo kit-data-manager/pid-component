@@ -13,38 +13,6 @@ interface ParsedJsonResult {
 export class JSONType extends GenericIdentifierType {
   private _parsedJsonResult: ParsedJsonResult | undefined = undefined;
 
-  private getParsedJson(): ParsedJsonResult {
-    if (this._parsedJsonResult === undefined) {
-      try {
-        if (typeof this.value === 'object' && this.value !== null) {
-          // If the value is already an object, we can use it directly
-          this._parsedJsonResult = { data: this.value };
-          return this._parsedJsonResult;
-        }
-
-        // Handle potential edge cases with the input value
-        if (typeof this.value !== 'string') {
-          throw new Error('Input value is not a string or object');
-        }
-
-        // Trim whitespace before parsing to handle common input issues
-        const trimmedValue = this.value.trim();
-
-        // Handle empty strings
-        if (trimmedValue === '') {
-          this._parsedJsonResult = { error: new Error('Empty JSON string') };
-          return this._parsedJsonResult;
-        }
-
-        const parsed = JSON.parse(trimmedValue);
-        this._parsedJsonResult = { data: parsed };
-      } catch (e) {
-        this._parsedJsonResult = { error: e instanceof Error ? e : new Error(String(e)) };
-      }
-    }
-    return this._parsedJsonResult;
-  }
-
   getSettingsKey(): string {
     return 'JSONType';
   }
@@ -106,7 +74,8 @@ export class JSONType extends GenericIdentifierType {
     // For simple JSON values (strings, numbers, booleans, null), show the stringified value
     return (
       <div class="w-full">
-        <pre class={`max-w-full overflow-x-auto rounded-md font-mono text-xs whitespace-pre-wrap`}>{JSON.stringify(jsonObj, null, 2)}</pre>
+        <pre
+          class={`max-w-full overflow-x-auto rounded-md font-mono text-xs whitespace-pre-wrap`}>{JSON.stringify(jsonObj, null, 2)}</pre>
       </div>
     );
   }
@@ -131,5 +100,37 @@ export class JSONType extends GenericIdentifierType {
         </json-viewer>
       </div>
     );
+  }
+
+  private getParsedJson(): ParsedJsonResult {
+    if (this._parsedJsonResult === undefined) {
+      try {
+        if (typeof this.value === 'object' && this.value !== null) {
+          // If the value is already an object, we can use it directly
+          this._parsedJsonResult = { data: this.value };
+          return this._parsedJsonResult;
+        }
+
+        // Handle potential edge cases with the input value
+        if (typeof this.value !== 'string') {
+          throw new Error('Input value is not a string or object');
+        }
+
+        // Trim whitespace before parsing to handle common input issues
+        const trimmedValue = this.value.trim();
+
+        // Handle empty strings
+        if (trimmedValue === '') {
+          this._parsedJsonResult = { error: new Error('Empty JSON string') };
+          return this._parsedJsonResult;
+        }
+
+        const parsed = JSON.parse(trimmedValue);
+        this._parsedJsonResult = { data: parsed };
+      } catch (e) {
+        this._parsedJsonResult = { error: e instanceof Error ? e : new Error(String(e)) };
+      }
+    }
+    return this._parsedJsonResult;
   }
 }

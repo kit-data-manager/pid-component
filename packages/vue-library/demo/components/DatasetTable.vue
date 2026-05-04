@@ -1,6 +1,6 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { PidComponent } from '../../lib';
-import { ref, reactive } from 'vue';
+import { reactive } from 'vue';
 
 interface Dataset {
   id: string;
@@ -49,7 +49,7 @@ function onResizeEnd() {
 <template>
   <v-card elevation="1" style="overflow: hidden">
     <v-card-title class="d-flex align-center pa-4 border-b">
-      <v-icon color="grey-darken-2" class="mr-2">mdi-file-document</v-icon>
+      <v-icon class="mr-2" color="grey-darken-2">mdi-file-document</v-icon>
       <span class="text-h6">Related Datasets</span>
     </v-card-title>
     <div style="overflow-x: auto">
@@ -78,13 +78,13 @@ function onResizeEnd() {
         <tr v-for="item in datasets" :key="item.id">
           <td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{ item.title }}</td>
           <td style="overflow: hidden">
-            <pid-component :value="item.doi" :emphasize-component="false" style="display: inline-block;" />
+            <pid-component :emphasize-component="false" :value="item.doi" style="display: inline-block;" />
           </td>
           <td style="overflow: hidden">
-            <pid-component :value="item.license" :emphasize-component="false" style="display: inline-block;" />
+            <pid-component :emphasize-component="false" :value="item.license" style="display: inline-block;" />
           </td>
           <td style="overflow: hidden">
-            <v-btn size="small" variant="text" color="primary">View</v-btn>
+            <v-btn color="primary" size="small" variant="text">View</v-btn>
           </td>
         </tr>
         </tbody>

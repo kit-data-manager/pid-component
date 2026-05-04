@@ -98,9 +98,9 @@ export const Default: Story = {
 <script>
   document.querySelector('pid-actions').actions = ${JSON.stringify(
           mockActions.map(a => ({ priority: a.priority, title: a.title, link: a.link, style: a.style })),
-    null,
-    2,
-  )};
+          null,
+          2,
+        )};
 </script>
         `,
       },

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DOIInfo, DOISource } from '../DOIInfo';
 import { DOI } from '../DOI';
 import * as DataCiteInfoModule from '../DataCiteInfo';

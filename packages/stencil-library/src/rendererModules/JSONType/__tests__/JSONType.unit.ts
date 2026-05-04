@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+import { JSONType } from '../JSONType';
 
 vi.mock('../../../components/json-viewer/json-viewer', () => ({
   default: class JsonViewer {
@@ -6,8 +7,6 @@ vi.mock('../../../components/json-viewer/json-viewer', () => ({
     }
   },
 }));
-
-import { JSONType } from '../JSONType';
 
 describe('JSONType', () => {
   describe('quickCheck()', () => {

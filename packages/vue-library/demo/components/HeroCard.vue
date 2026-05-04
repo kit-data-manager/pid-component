@@ -1,5 +1,4 @@
-<script setup lang="ts">
-import { PidComponent } from '../../lib';
+<script lang="ts" setup>
 
 defineProps<{
   title?: string;
@@ -13,8 +12,8 @@ defineProps<{
     <v-card-item>
       <template #prepend>
         <div class="d-flex gap-2">
-          <v-chip color="blue-lighten-5" text-color="blue-darken-2" size="small">DOI</v-chip>
-          <v-chip color="green-lighten-5" text-color="green-darken-2" size="small">Research Data</v-chip>
+          <v-chip color="blue-lighten-5" size="small" text-color="blue-darken-2">DOI</v-chip>
+          <v-chip color="green-lighten-5" size="small" text-color="green-darken-2">Research Data</v-chip>
         </div>
       </template>
     </v-card-item>
@@ -29,7 +28,7 @@ defineProps<{
     </v-card-text>
     <v-card-actions>
       <v-btn color="primary" prepend-icon="mdi-download">Download Dataset</v-btn>
-      <v-btn variant="outlined" prepend-icon="mdi-open-in-new">View Source</v-btn>
+      <v-btn prepend-icon="mdi-open-in-new" variant="outlined">View Source</v-btn>
     </v-card-actions>
   </v-card>
 </template>

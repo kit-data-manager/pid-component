@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import {
-  sanitizeData,
   expandNodeRecursive,
-  getNodeType,
-  getNodeInfo,
   formatCodeLine,
   getItemCountText,
+  getNodeInfo,
+  getNodeType,
   getValueDisplay,
   parseJsonSafe,
+  sanitizeData,
 } from '../jsonViewerUtils';
 
 describe('jsonViewerUtils', () => {

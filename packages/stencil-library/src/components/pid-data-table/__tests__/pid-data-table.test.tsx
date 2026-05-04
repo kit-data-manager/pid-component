@@ -1,9 +1,8 @@
-import { render, h } from '@stencil/vitest';
+import { h, render } from '@stencil/vitest';
 import { describe, expect, it } from 'vitest';
+import { FoldableItem } from '../../../utils/FoldableItem';
 // h is the JSX factory required at runtime by TSX – do not remove
 void h;
-
-import { FoldableItem } from '../../../utils/FoldableItem';
 
 describe('pid-data-table CSS classes', () => {
   const createItems = (count: number): FoldableItem[] => {

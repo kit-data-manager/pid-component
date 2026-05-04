@@ -26,6 +26,43 @@ export class CopyButton {
    */
   @Prop() label?: string;
 
+  render() {
+    // Determine button text based on state
+    const buttonText = this.copied ? '✓ Copied!' : 'Copy';
+
+    // Get appropriate aria-label
+    const ariaLabel = this.getAriaLabel();
+
+    // Check if dark mode is active by looking at the closest pid-component
+    const parentComponent = this.el.closest('pid-component');
+    const isDarkMode = parentComponent?.classList.contains('bg-gray-800');
+
+    return (
+      <Host class={'inline-block align-baseline text-xs'}>
+        {/* Hidden live region for screen readers */}
+        {this.copied && (
+          <span class="sr-only" aria-live="assertive">
+            Content copied to clipboard
+          </span>
+        )}
+
+        <button
+          class={`${
+            this.copied ? (isDarkMode ? 'bg-green-700' : 'bg-green-200') : isDarkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-white hover:bg-blue-200'
+          } relative z-30 max-h-min flex-none items-center rounded-md border ${
+            isDarkMode ? 'border-gray-600 text-gray-200 hover:text-white' : 'border-slate-500 text-slate-800 hover:text-slate-900'
+          } px-2 py-0.5 font-mono font-medium transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-hidden`}
+          onClick={e => this.copyValue(e)}
+          aria-label={ariaLabel}
+          title={ariaLabel}
+          type="button"
+        >
+          {buttonText}
+        </button>
+      </Host>
+    );
+  }
+
   /**
    * Copies the given value to the clipboard and updates the state to show success message.
    *
@@ -94,42 +131,5 @@ export class CopyButton {
   private getAriaLabel(): string {
     const baseLabel = this.label || 'content';
     return this.copied ? `${baseLabel} copied to clipboard` : `Copy ${baseLabel} to clipboard`;
-  }
-
-  render() {
-    // Determine button text based on state
-    const buttonText = this.copied ? '✓ Copied!' : 'Copy';
-
-    // Get appropriate aria-label
-    const ariaLabel = this.getAriaLabel();
-
-    // Check if dark mode is active by looking at the closest pid-component
-    const parentComponent = this.el.closest('pid-component');
-    const isDarkMode = parentComponent?.classList.contains('bg-gray-800');
-
-    return (
-      <Host class={'inline-block align-baseline text-xs'}>
-        {/* Hidden live region for screen readers */}
-        {this.copied && (
-          <span class="sr-only" aria-live="assertive">
-            Content copied to clipboard
-          </span>
-        )}
-
-        <button
-          class={`${
-            this.copied ? (isDarkMode ? 'bg-green-700' : 'bg-green-200') : isDarkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-white hover:bg-blue-200'
-          } relative z-30 max-h-min flex-none items-center rounded-md border ${
-            isDarkMode ? 'border-gray-600 text-gray-200 hover:text-white' : 'border-slate-500 text-slate-800 hover:text-slate-900'
-          } px-2 py-0.5 font-mono font-medium transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-hidden`}
-          onClick={e => this.copyValue(e)}
-          aria-label={ariaLabel}
-          title={ariaLabel}
-          type="button"
-        >
-          {buttonText}
-        </button>
-      </Host>
-    );
   }
 }

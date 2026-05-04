@@ -1,5 +1,6 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { render, h } from '@stencil/vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { render } from '@stencil/vitest';
+import '../json-viewer';
 
 beforeEach(() => {
   vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({
@@ -8,8 +9,6 @@ beforeEach(() => {
     removeEventListener: vi.fn(),
   }));
 });
-
-import '../json-viewer';
 
 describe('json-viewer source', () => {
   it('renders with data prop as string', async () => {

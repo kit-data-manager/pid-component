@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { initPidDetection } from '../../auto-detect/initPidDetection';
 
 const {
@@ -126,13 +126,13 @@ describe('initPidDetection', () => {
       const root = document.createElement('div');
       const mockDisconnect = vi.fn();
       vi.stubGlobal('MutationObserver', class MutationObserver {
+        disconnect = mockDisconnect;
+
         constructor(_callback: Function) {
         }
 
         observe() {
         }
-
-        disconnect = mockDisconnect;
       });
 
       const controller = initPidDetection({ root, observe: true });
@@ -159,13 +159,13 @@ describe('initPidDetection', () => {
       const root = document.createElement('div');
       const mockDisconnect = vi.fn();
       vi.stubGlobal('MutationObserver', class MutationObserver {
+        disconnect = mockDisconnect;
+
         constructor(_callback: Function) {
         }
 
         observe() {
         }
-
-        disconnect = mockDisconnect;
       });
 
       mockReplaceMatches.mockReturnValue([
@@ -194,13 +194,13 @@ describe('initPidDetection', () => {
       const root = document.createElement('div');
       const mockDisconnect = vi.fn();
       vi.stubGlobal('MutationObserver', class MutationObserver {
+        disconnect = mockDisconnect;
+
         constructor(_callback: Function) {
         }
 
         observe() {
         }
-
-        disconnect = mockDisconnect;
       });
 
       mockReplaceMatches.mockReturnValue([

@@ -6,11 +6,11 @@ import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
  * @extends GenericIdentifierType
  */
 export class EmailType extends GenericIdentifierType {
+  private static readonly FORMAT_REGEX = /^(([\w\-.]+@([\w-]+\.)+[\w-]{2,})(\s*,\s*)?)+$/gm;
+
   getSettingsKey(): string {
     return 'EmailType';
   }
-
-  private static readonly FORMAT_REGEX = /^(([\w\-.]+@([\w-]+\.)+[\w-]{2,})(\s*,\s*)?)+$/gm;
 
   quickCheck(): boolean {
     EmailType.FORMAT_REGEX.lastIndex = 0;

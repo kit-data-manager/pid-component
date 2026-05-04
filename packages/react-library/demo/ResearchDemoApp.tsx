@@ -1,18 +1,18 @@
 'use client';
 
-import { useState, useRef, useEffect, createContext, useContext } from 'react';
-import { Container, Grid, Text } from '@mantine/core';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { Container, Grid } from '@mantine/core';
 import {
-  Navigation,
-  HeroCard,
-  DoiCard,
-  DatasetTable,
-  AuthorGrid,
-  ArticleSection,
-  LicenseDialog,
-  Footer,
-  DatasetsPage,
   AboutPage,
+  ArticleSection,
+  AuthorGrid,
+  DatasetsPage,
+  DatasetTable,
+  DoiCard,
+  Footer,
+  HeroCard,
+  LicenseDialog,
+  Navigation,
 } from './components';
 import { initPidDetection, type PidDetectionController } from '@kit-data-manager/pid-component';
 

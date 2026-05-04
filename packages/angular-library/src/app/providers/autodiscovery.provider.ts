@@ -1,8 +1,8 @@
-import { Injectable, ElementRef, inject, Optional, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, Optional } from '@angular/core';
 import {
   initPidDetection,
-  type PidDetectionController,
   type PidDetectionConfig,
+  type PidDetectionController,
 } from '@kit-data-manager/pid-component';
 
 @Injectable()

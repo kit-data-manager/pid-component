@@ -6,7 +6,7 @@ export interface Author {
 }
 </script>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 defineProps<{
   author: Author;
 }>();
@@ -20,7 +20,7 @@ const getInitials = (name: string): string => {
   <v-card elevation="1">
     <v-card-text>
       <div class="d-flex align-start ga-4">
-        <v-avatar color="indigo-lighten-5" size="48" class="flex-shrink-0">
+        <v-avatar class="flex-shrink-0" color="indigo-lighten-5" size="48">
           <span class="text-indigo-darken-2 font-weight-bold">{{ getInitials(author.name) }}</span>
         </v-avatar>
         <div class="flex-grow-1">
@@ -28,7 +28,7 @@ const getInitials = (name: string): string => {
           <div v-if="author.institution" class="text-caption text-grey-lighten-1 mb-2">
             {{ author.institution }}
           </div>
-          <pid-component :value="author.orcid" :emphasize-component="false" style="display: block;" />
+          <pid-component :emphasize-component="false" :value="author.orcid" style="display: block;" />
         </div>
       </div>
     </v-card-text>

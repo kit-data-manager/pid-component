@@ -1,16 +1,16 @@
-<script setup lang="ts">
-import { ref, provide, onMounted, onUnmounted, nextTick } from 'vue';
+<script lang="ts" setup>
+import { nextTick, onMounted, onUnmounted, provide, ref } from 'vue';
 import {
-  AppNavigation,
-  HeroCard,
-  DoiCard,
-  DatasetTable,
-  AuthorGrid,
-  ArticleSection,
-  LicenseDialog,
-  AppFooter,
-  DatasetsPage,
   AboutPage,
+  AppFooter,
+  AppNavigation,
+  ArticleSection,
+  AuthorGrid,
+  DatasetsPage,
+  DatasetTable,
+  DoiCard,
+  HeroCard,
+  LicenseDialog,
 } from './components';
 import { initPidDetection, type PidDetectionController } from '@kit-data-manager/pid-component';
 
@@ -83,20 +83,20 @@ const authors = [
     <AppNavigation :active-page="activePage" @navigate="handleNavigate" />
 
     <v-main style="background: #f5f5f5;">
-      <v-container fluid class="pa-8">
+      <v-container class="pa-8" fluid>
 
         <template v-if="activePage === 'home'">
           <v-row class="mb-6">
             <v-col cols="8">
               <HeroCard
-                title="Comprehensive Analysis of Persistent Identifier Systems in FAIR Digital Objects"
                 description="This dataset contains the complete analysis of PID systems including Handle, DOI, and ORCID integrations across major research institutions. Published in IEEE eScience 2025."
+                title="Comprehensive Analysis of Persistent Identifier Systems in FAIR Digital Objects"
               />
             </v-col>
             <v-col cols="4">
               <DoiCard
-                value="10.1109/eScience65000.2025.00022"
                 license="https://spdx.org/licenses/Apache-2.0"
+                value="10.1109/eScience65000.2025.00022"
               />
             </v-col>
           </v-row>

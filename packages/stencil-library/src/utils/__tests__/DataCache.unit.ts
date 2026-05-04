@@ -1,11 +1,10 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { cachedFetch, clearCache } from '../../utils/DataCache';
 
 // DataCache.ts uses `self.caches` (a browser/worker global). In Vitest's Node
 // environment `self` is not defined, so we need to polyfill it on `globalThis`
 // before importing the module.
 (globalThis as any).self = globalThis;
-
-import { cachedFetch, clearCache } from '../../utils/DataCache';
 
 describe('DataCache', () => {
   let originalFetch: typeof global.fetch;

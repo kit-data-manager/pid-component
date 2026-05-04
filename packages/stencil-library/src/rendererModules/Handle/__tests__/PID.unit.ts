@@ -1,4 +1,5 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import { PID } from '../PID';
 
 // Mock PID module dependencies before importing PID
 vi.mock('../../../utils/utils', () => ({
@@ -11,8 +12,6 @@ vi.mock('../../../utils/utils', () => ({
 vi.mock('../../../utils/DataCache', () => ({
   cachedFetch: vi.fn(),
 }));
-
-import { PID } from '../PID';
 
 describe('PID', () => {
   describe('constructor', () => {

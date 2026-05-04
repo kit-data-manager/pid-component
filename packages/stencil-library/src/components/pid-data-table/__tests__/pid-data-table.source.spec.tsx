@@ -1,5 +1,5 @@
-import { describe, expect, it, vi } from 'vitest';
-import { render, h } from '@stencil/vitest';
+import { describe, expect, it } from 'vitest';
+import { render } from '@stencil/vitest';
 import { FoldableItem } from '../../../utils/FoldableItem';
 
 import '../pid-data-table';

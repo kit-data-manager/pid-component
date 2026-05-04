@@ -1,6 +1,6 @@
 'use client';
 
-import { Container, Group, Text, Button } from '@mantine/core';
+import { Button, Container, Group, Text } from '@mantine/core';
 import { IconDatabase } from '@tabler/icons-react';
 
 export function Footer() {

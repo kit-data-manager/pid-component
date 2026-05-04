@@ -1,9 +1,9 @@
-<script setup lang="ts">
-import { ref, provide, onMounted, onUnmounted, nextTick } from 'vue';
+<script lang="ts" setup>
+import { nextTick, onMounted, onUnmounted, provide, ref } from 'vue';
 import {
   initPidDetection,
-  type PidDetectionController,
   type PidDetectionConfig,
+  type PidDetectionController,
 } from '@kit-data-manager/pid-component';
 
 const props = withDefaults(defineProps<{
@@ -73,13 +73,13 @@ defineExpose({
 <template>
   <div class="mb-8">
     <h2 class="text-h6 font-weight-bold mb-4 d-flex align-center">
-      <v-icon color="success" class="mr-2">mdi-file-document</v-icon>
+      <v-icon class="mr-2" color="success">mdi-file-document</v-icon>
       Article Content
       <v-chip
         :color="isInitialized ? 'success-lighten-5' : 'error-lighten-5'"
         :text-color="isInitialized ? 'success-darken-2' : 'error-darken-2'"
-        size="small"
         class="ml-3"
+        size="small"
       >
         {{ isInitialized ? 'Autodetection Active' : 'Autodetection Inactive' }}
       </v-chip>

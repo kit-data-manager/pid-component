@@ -11,75 +11,63 @@ export class PidDataTable {
    */
   @Element() el: HTMLElement;
   /**
-   * Unique ID for the table element
-   */
-  private tableId: string = `pid-data-table-${Math.random().toString(36).substring(2, 9)}`;
-  /**
    * Array of items to display in the table
    */
   @Prop() items: FoldableItem[] = [];
-
   /**
    * Number of items to show per page
    */
   @Prop({ mutable: true }) itemsPerPage: number = 10;
-
   /**
    * Current page (0-based index)
    */
   @Prop({ mutable: true }) currentPage: number = 0;
-
   /**
    * Available page sizes
    */
   @Prop() pageSizes: number[] = [5, 10, 25, 50, 100];
-
   /**
    * Whether to load subcomponents
    */
   @Prop() loadSubcomponents: boolean = false;
-
   /**
    * Whether to hide subcomponents
    */
   @Prop() hideSubcomponents: boolean = false;
-
   /**
    * Current level of subcomponents
    */
   @Prop() currentLevelOfSubcomponents: number = 0;
-
   /**
    * Total level of subcomponents
    */
   @Prop() levelOfSubcomponents: number = 1;
-
   /**
    * Settings to pass to subcomponents
    */
   @Prop() settings: string = '[]';
-
   /**
    * The dark mode setting for the component
    * Options: "light", "dark", "system"
    * Default: "system"
    */
   @Prop() darkMode: 'light' | 'dark' | 'system' = 'system';
-
   /**
    * Event emitted when page changes
    */
   @Event() pageChange: EventEmitter<number>;
-
   /**
    * Event emitted when items per page changes
    */
   @Event() itemsPerPageChange: EventEmitter<number>;
-
   /**
    * Filtered items based on current page
    */
   @State() filteredItems: FoldableItem[] = [];
+  /**
+   * Unique ID for the table element
+   */
+  private tableId: string = `pid-data-table-${Math.random().toString(36).substring(2, 9)}`;
 
   /**
    * Watch for changes in items
@@ -100,23 +88,6 @@ export class PidDataTable {
 
     // Immediately recalculate content dimensions to prevent resizing beyond content
     this.recalculateContentDimensions();
-  }
-
-  /**
-   * Separate method to recalculate content dimensions after DOM updates
-   * This ensures content dimensions are updated on every page change
-   */
-  private recalculateContentDimensions() {
-    // Use double requestAnimationFrame to ensure DOM has fully updated before measuring
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        const collapsible = this.el.closest('pid-collapsible');
-        if (collapsible && typeof (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions === 'function') {
-          // Call the method on collapsible to calculate proper dimensions based on content
-          (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions();
-        }
-      });
-    });
   }
 
   componentWillLoad() {
@@ -250,5 +221,22 @@ export class PidDataTable {
         </tbody>
       </table>
     );
+  }
+
+  /**
+   * Separate method to recalculate content dimensions after DOM updates
+   * This ensures content dimensions are updated on every page change
+   */
+  private recalculateContentDimensions() {
+    // Use double requestAnimationFrame to ensure DOM has fully updated before measuring
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const collapsible = this.el.closest('pid-collapsible');
+        if (collapsible && typeof (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions === 'function') {
+          // Call the method on collapsible to calculate proper dimensions based on content
+          (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions();
+        }
+      });
+    });
   }
 }

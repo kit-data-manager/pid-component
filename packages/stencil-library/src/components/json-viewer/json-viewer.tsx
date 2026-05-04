@@ -125,6 +125,196 @@ export class JsonViewer {
   }
 
   /**
+   * Cleanup when component is removed from the DOM
+   */
+  disconnectedCallback() {
+    this.cleanupDarkModeListener();
+  }
+
+  /**
+   * Expand all nodes in the tree view
+   */
+  @Method()
+  async expandAllNodes() {
+    this.expandNodeRecursive(this.parsedData, 'root');
+  }
+
+  /**
+   * Collapse all nodes in the tree view
+   */
+  @Method()
+  async collapseAllNodes() {
+    this.expandedNodes = new Set();
+  }
+
+  render() {
+    // Show error if JSON is invalid
+    if (this.error) {
+      return (
+        <div class="p-4 text-center text-red-500" role="alert" aria-live="assertive">
+          <p>Invalid JSON: {this.error}</p>
+          <slot></slot>
+        </div>
+      );
+    }
+
+    // Show message if no data
+    if (!this.parsedData) {
+      return (
+        <div class="p-4 text-center text-gray-500" role="status" aria-live="polite">
+          <p>No data provided</p>
+          <slot></slot>
+        </div>
+      );
+    }
+
+    // Format JSON for code view
+    const formattedJson = JSON.stringify(this.parsedData, null, 2);
+    const containerStyle = this.maxHeight > 0 ? { maxHeight: `${this.maxHeight}px` } : {};
+
+    // Generate unique IDs for ARIA relationships
+    const viewerId = `json-viewer-${Math.random().toString(36).substring(2, 11)}`;
+    const contentId = `${viewerId}-content`;
+
+    return (
+      <div
+        class={`overflow-hidden rounded-lg border shadow-sm ${this.isDarkMode ? 'border-gray-600 bg-gray-800 text-gray-50' : 'border-gray-200 bg-white text-gray-800'}`}
+        role="region"
+        aria-labelledby={`${viewerId}-title`}
+      >
+        <div
+          class={`flex items-center justify-between border-b p-3 ${this.isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
+          <div class="flex items-center gap-2">
+            <span id={`${viewerId}-title`}
+                  class={`text-sm font-medium ${this.isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+              JSON Viewer
+            </span>
+            <span class={`text-xs ${this.isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} aria-live="polite">
+              ({Object.keys(this.parsedData).length} {Object.keys(this.parsedData).length === 1 ? 'property' : 'properties'})
+            </span>
+          </div>
+
+          <button
+            onClick={this.toggleView}
+            class={`flex cursor-pointer items-center gap-1 rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-200 ${
+              this.isDarkMode
+                ? 'border border-gray-600 bg-gray-900 text-gray-50 hover:border-blue-600 hover:bg-gray-700'
+                : 'border border-gray-200 bg-gray-100 text-gray-800 hover:border-blue-400 hover:bg-gray-50'
+            } focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-hidden`}
+            aria-controls={contentId}
+            aria-label={`Switch to ${this.currentViewMode === 'tree' ? 'code' : 'tree'} view`}
+            type="button"
+          >
+            {this.currentViewMode === 'tree' ? 'Code View' : 'Tree View'}
+          </button>
+        </div>
+
+        <div
+          id={contentId}
+          class={`relative overflow-auto ${this.isDarkMode ? 'bg-gray-800' : 'bg-white'}`}
+          style={containerStyle}
+          role="group"
+          aria-label={`JSON data in ${this.currentViewMode} view`}
+        >
+          {/* Overlay copy button */}
+          <button
+            onClick={this.copyToClipboard}
+            class={`absolute top-2 right-2 z-10 rounded-md p-1 transition-all duration-200 ${
+              this.copied
+                ? this.isDarkMode
+                  ? 'bg-green-600 text-white'
+                  : 'bg-green-100 text-green-800'
+                : this.isDarkMode
+                  ? 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-800'
+            } opacity-75 hover:opacity-100 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-hidden`}
+            title={this.copied ? 'Copied!' : 'Copy JSON to clipboard'}
+            aria-label={this.copied ? 'JSON copied to clipboard' : 'Copy JSON to clipboard'}
+            type="button"
+          >
+            {/* Screen reader text */}
+            <span class="sr-only">{this.copied ? 'Copied!' : 'Copy JSON'}</span>
+
+            {/* Visual icon */}
+            {this.copied ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-4 w-4"
+                aria-hidden="true"
+              >
+                <title>Check mark</title>
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-4 w-4"
+                aria-hidden="true"
+              >
+                <title>Copy icon</title>
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path>
+              </svg>
+            )}
+          </button>
+
+          {/* Tree View */}
+          {this.currentViewMode === 'tree' && (
+            <div class={`p-4 pr-12 ${this.isDarkMode ? '' : 'bg-gray-50'}`}>
+              {Object.entries(this.parsedData).map(([key, value], index) => (
+                <div key={`root-${index}`}>{this.renderTreeNode(key, value, 0, 'root')}</div>
+              ))}
+            </div>
+          )}
+
+          {/* Code View */}
+          {this.currentViewMode === 'code' && (
+            <div class={`pr-12 font-mono text-sm ${this.isDarkMode ? '' : 'bg-gray-50'}`}>
+              {this.showLineNumbers ? (
+                <div class="flex">
+                  <div
+                    class={`border-r px-2 py-4 text-right select-none ${this.isDarkMode ? 'border-gray-600 bg-gray-900 text-gray-400' : 'border-gray-200 bg-gray-100 text-gray-500'}`}
+                  >
+                    {formattedJson.split('\n').map((_, i) => (
+                      <div class="min-h-5" key={`line-${i}`}>
+                        {i + 1}
+                      </div>
+                    ))}
+                  </div>
+                  <pre
+                    class={`grow overflow-x-auto p-4 whitespace-pre-wrap ${this.isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+                    {formattedJson.split('\n').map((line, i) => (
+                      <div class="min-h-5" key={`code-${i}`} innerHTML={this.formatCodeLine(line)} />
+                    ))}
+                  </pre>
+                </div>
+              ) : (
+                <pre class="grow overflow-x-auto p-4 whitespace-pre-wrap">
+                  {formattedJson.split('\n').map((line, i) => (
+                    <div class="min-h-5" key={`code-${i}`} innerHTML={this.formatCodeLine(line)} />
+                  ))}
+                </pre>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  /**
    * Parse the input data into a JavaScript object
    * and remove Stencil/other private helper props.
    */
@@ -244,13 +434,6 @@ export class JsonViewer {
   }
 
   /**
-   * Cleanup when component is removed from the DOM
-   */
-  disconnectedCallback() {
-    this.cleanupDarkModeListener();
-  }
-
-  /**
    * Cleans up dark mode media query listener
    */
   private cleanupDarkModeListener() {
@@ -262,22 +445,6 @@ export class JsonViewer {
         this.darkModeMediaQuery.removeListener(this.handleDarkModeChange);
       }
     }
-  }
-
-  /**
-   * Expand all nodes in the tree view
-   */
-  @Method()
-  async expandAllNodes() {
-    this.expandNodeRecursive(this.parsedData, 'root');
-  }
-
-  /**
-   * Collapse all nodes in the tree view
-   */
-  @Method()
-  async collapseAllNodes() {
-    this.expandedNodes = new Set();
   }
 
   /**
@@ -425,7 +592,8 @@ export class JsonViewer {
               aria-label={`Contents of ${key} ${nodeType}`}
             >
               {entries.map(([k, v], index) => (
-                <div key={`${nodeId}-${index}`}>{this.renderTreeNode(isArray ? `${k}` : k, v, depth + 1, currentPath)}</div>
+                <div
+                  key={`${nodeId}-${index}`}>{this.renderTreeNode(isArray ? `${k}` : k, v, depth + 1, currentPath)}</div>
               ))}
             </div>
           </details>
@@ -478,168 +646,4 @@ export class JsonViewer {
       .replace(/: (null)([,}\]\s])/g, `: <span class="${nullClass}">$1</span>$2`) // null
       .replace(/: ([0-9]+(\.[0-9]+)?)([,}\]\s])/g, `: <span class="${numberClass}">$1</span>$3`); // numbers
   };
-
-  render() {
-    // Show error if JSON is invalid
-    if (this.error) {
-      return (
-        <div class="p-4 text-center text-red-500" role="alert" aria-live="assertive">
-          <p>Invalid JSON: {this.error}</p>
-          <slot></slot>
-        </div>
-      );
-    }
-
-    // Show message if no data
-    if (!this.parsedData) {
-      return (
-        <div class="p-4 text-center text-gray-500" role="status" aria-live="polite">
-          <p>No data provided</p>
-          <slot></slot>
-        </div>
-      );
-    }
-
-    // Format JSON for code view
-    const formattedJson = JSON.stringify(this.parsedData, null, 2);
-    const containerStyle = this.maxHeight > 0 ? { maxHeight: `${this.maxHeight}px` } : {};
-
-    // Generate unique IDs for ARIA relationships
-    const viewerId = `json-viewer-${Math.random().toString(36).substring(2, 11)}`;
-    const contentId = `${viewerId}-content`;
-
-    return (
-      <div
-        class={`overflow-hidden rounded-lg border shadow-sm ${this.isDarkMode ? 'border-gray-600 bg-gray-800 text-gray-50' : 'border-gray-200 bg-white text-gray-800'}`}
-        role="region"
-        aria-labelledby={`${viewerId}-title`}
-      >
-        <div class={`flex items-center justify-between border-b p-3 ${this.isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
-          <div class="flex items-center gap-2">
-            <span id={`${viewerId}-title`} class={`text-sm font-medium ${this.isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
-              JSON Viewer
-            </span>
-            <span class={`text-xs ${this.isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} aria-live="polite">
-              ({Object.keys(this.parsedData).length} {Object.keys(this.parsedData).length === 1 ? 'property' : 'properties'})
-            </span>
-          </div>
-
-          <button
-            onClick={this.toggleView}
-            class={`flex cursor-pointer items-center gap-1 rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-200 ${
-              this.isDarkMode
-                ? 'border border-gray-600 bg-gray-900 text-gray-50 hover:border-blue-600 hover:bg-gray-700'
-                : 'border border-gray-200 bg-gray-100 text-gray-800 hover:border-blue-400 hover:bg-gray-50'
-            } focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-hidden`}
-            aria-controls={contentId}
-            aria-label={`Switch to ${this.currentViewMode === 'tree' ? 'code' : 'tree'} view`}
-            type="button"
-          >
-            {this.currentViewMode === 'tree' ? 'Code View' : 'Tree View'}
-          </button>
-        </div>
-
-        <div
-          id={contentId}
-          class={`relative overflow-auto ${this.isDarkMode ? 'bg-gray-800' : 'bg-white'}`}
-          style={containerStyle}
-          role="group"
-          aria-label={`JSON data in ${this.currentViewMode} view`}
-        >
-          {/* Overlay copy button */}
-          <button
-            onClick={this.copyToClipboard}
-            class={`absolute top-2 right-2 z-10 rounded-md p-1 transition-all duration-200 ${
-              this.copied
-                ? this.isDarkMode
-                  ? 'bg-green-600 text-white'
-                  : 'bg-green-100 text-green-800'
-                : this.isDarkMode
-                  ? 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-800'
-            } opacity-75 hover:opacity-100 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:outline-hidden`}
-            title={this.copied ? 'Copied!' : 'Copy JSON to clipboard'}
-            aria-label={this.copied ? 'JSON copied to clipboard' : 'Copy JSON to clipboard'}
-            type="button"
-          >
-            {/* Screen reader text */}
-            <span class="sr-only">{this.copied ? 'Copied!' : 'Copy JSON'}</span>
-
-            {/* Visual icon */}
-            {this.copied ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="h-4 w-4"
-                aria-hidden="true"
-              >
-                <title>Check mark</title>
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-            ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="h-4 w-4"
-                aria-hidden="true"
-              >
-                <title>Copy icon</title>
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path>
-              </svg>
-            )}
-          </button>
-
-          {/* Tree View */}
-          {this.currentViewMode === 'tree' && (
-            <div class={`p-4 pr-12 ${this.isDarkMode ? '' : 'bg-gray-50'}`}>
-              {Object.entries(this.parsedData).map(([key, value], index) => (
-                <div key={`root-${index}`}>{this.renderTreeNode(key, value, 0, 'root')}</div>
-              ))}
-            </div>
-          )}
-
-          {/* Code View */}
-          {this.currentViewMode === 'code' && (
-            <div class={`pr-12 font-mono text-sm ${this.isDarkMode ? '' : 'bg-gray-50'}`}>
-              {this.showLineNumbers ? (
-                <div class="flex">
-                  <div
-                    class={`border-r px-2 py-4 text-right select-none ${this.isDarkMode ? 'border-gray-600 bg-gray-900 text-gray-400' : 'border-gray-200 bg-gray-100 text-gray-500'}`}
-                  >
-                    {formattedJson.split('\n').map((_, i) => (
-                      <div class="min-h-5" key={`line-${i}`}>
-                        {i + 1}
-                      </div>
-                    ))}
-                  </div>
-                  <pre class={`grow overflow-x-auto p-4 whitespace-pre-wrap ${this.isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
-                    {formattedJson.split('\n').map((line, i) => (
-                      <div class="min-h-5" key={`code-${i}`} innerHTML={this.formatCodeLine(line)} />
-                    ))}
-                  </pre>
-                </div>
-              ) : (
-                <pre class="grow overflow-x-auto p-4 whitespace-pre-wrap">
-                  {formattedJson.split('\n').map((line, i) => (
-                    <div class="min-h-5" key={`code-${i}`} innerHTML={this.formatCodeLine(line)} />
-                  ))}
-                </pre>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
 }

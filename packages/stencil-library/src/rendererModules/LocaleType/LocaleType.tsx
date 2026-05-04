@@ -6,11 +6,11 @@ import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
  * @extends GenericIdentifierType
  */
 export class LocaleType extends GenericIdentifierType {
+  private static readonly FORMAT_REGEX = /^([a-zA-Z]{2})(-[A-Z]{2})?$/;
+
   getSettingsKey(): string {
     return 'LocaleType';
   }
-
-  private static readonly FORMAT_REGEX = /^([a-zA-Z]{2})(-[A-Z]{2})?$/;
 
   quickCheck(): boolean {
     return LocaleType.FORMAT_REGEX.test(this.value);

@@ -1,8 +1,8 @@
-import { ref, provide, onUnmounted, type Ref } from 'vue';
+import { provide, ref, type Ref } from 'vue';
 import {
   initPidDetection,
-  type PidDetectionController,
   type PidDetectionConfig,
+  type PidDetectionController,
 } from '@kit-data-manager/pid-component';
 
 export interface AutodiscoveryProvider {

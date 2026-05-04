@@ -1,9 +1,9 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import {
   CitationStyle,
   formatCitationPreview,
-  getDefaultCitationStyle,
   getCitationStyleFromSettings,
+  getDefaultCitationStyle,
 } from '../CitationStyles';
 import { Creator } from '../DataCiteInfo';
 

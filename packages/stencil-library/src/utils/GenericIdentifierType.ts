@@ -16,13 +16,6 @@ export abstract class GenericIdentifierType {
   private readonly _value: string;
 
   /**
-   * Tracks the effective dark mode state (true for dark, false for light)
-   * @private
-   * @type {boolean}
-   */
-  private _isDarkMode: boolean = false;
-
-  /**
    * Creates a new GenericIdentifierType object
    * @param value The value that should be parsed and rendered
    * @constructor
@@ -39,6 +32,21 @@ export abstract class GenericIdentifierType {
     this._value = value;
     this._settings = settings ? settings : [];
     this.updateDarkMode();
+  }
+
+  /**
+   * Tracks the effective dark mode state (true for dark, false for light)
+   * @private
+   * @type {boolean}
+   */
+  private _isDarkMode: boolean = false;
+
+  /**
+   * Returns whether the component is in dark mode or not
+   * @returns {boolean} Whether the component is in dark mode or not
+   */
+  get isDarkMode(): boolean {
+    return this._isDarkMode;
   }
 
   /**
@@ -193,14 +201,6 @@ export abstract class GenericIdentifierType {
    */
   renderBody(): FunctionalComponent<unknown> | undefined {
     return undefined;
-  }
-
-  /**
-   * Returns whether the component is in dark mode or not
-   * @returns {boolean} Whether the component is in dark mode or not
-   */
-  get isDarkMode(): boolean {
-    return this._isDarkMode;
   }
 
   /**

@@ -1,13 +1,12 @@
 import { describe, expect, it, vi } from 'vitest';
-import { render, h } from '@stencil/vitest';
+import { render } from '@stencil/vitest';
+import '../color-highlight';
 
 vi.mock('./HSLColor', () => ({
   HSLColor: {
     generateColor: vi.fn().mockResolvedValue({ hue: 120, sat: 50, lum: 50 }),
   },
 }));
-
-import '../color-highlight';
 
 describe('color-highlight source', () => {
   it('renders with text prop', async () => {

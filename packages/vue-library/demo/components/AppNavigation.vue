@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { ref } from 'vue';
 import { PidComponent } from '../../lib';
 
@@ -19,7 +19,7 @@ const handleNavigate = (page: string) => {
 </script>
 
 <template>
-  <v-app-bar color="white" flat border="b">
+  <v-app-bar border="b" color="white" flat>
     <template #prepend>
       <v-btn icon variant="text">
         <v-icon color="indigo-darken-1">mdi-database</v-icon>
@@ -27,7 +27,7 @@ const handleNavigate = (page: string) => {
     </template>
     <v-app-bar-title class="text-grey-darken-3 font-weight-bold">
       ResearchDemo
-      <v-chip color="warning" size="x-small" class="ml-2">Demo</v-chip>
+      <v-chip class="ml-2" color="warning" size="x-small">Demo</v-chip>
     </v-app-bar-title>
     <v-spacer></v-spacer>
     <div class="d-flex align-center ga-2 mr-4">
@@ -55,8 +55,8 @@ const handleNavigate = (page: string) => {
       <span class="text-grey">|</span>
       <div class="d-flex align-center ga-1">
         <span class="text-body-2 text-grey">Powered by</span>
-        <pid-component value="https://ror.org/04t3en479" :emphasize-component="false" :hide-subcomponents="true"
-                       style="display: inline-block;" />
+        <pid-component :emphasize-component="false" :hide-subcomponents="true" style="display: inline-block;"
+                       value="https://ror.org/04t3en479" />
       </div>
     </div>
   </v-app-bar>

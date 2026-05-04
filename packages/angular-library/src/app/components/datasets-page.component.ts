@@ -1,12 +1,10 @@
-import { Component, signal, inject, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
-import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { PidComponent } from '@kit-data-manager/angular-pid-component';
-import { initPidDetection, type PidDetectionController } from '@kit-data-manager/pid-component';
 
 @Component({
   selector: 'app-datasets-page',

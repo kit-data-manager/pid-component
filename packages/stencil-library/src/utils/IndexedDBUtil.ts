@@ -154,13 +154,13 @@ export class Database {
       const db = await this.dbPromise;
       const entity:
         | {
-            value: string;
-            rendererKey: string;
+        value: string;
+        rendererKey: string;
         orderedRendererKeys: string[] | null;
-            context: string;
-            lastAccess: Date;
-            lastData: unknown;
-          }
+        context: string;
+        lastAccess: Date;
+        lastData: unknown;
+      }
         | undefined = await db.get('entities', entityKey);
 
       if (entity !== undefined) {
@@ -256,6 +256,17 @@ export class Database {
     await tx.done;
   }
 
+  /**
+   * Clears all entities from the database.
+   * @returns {Promise<void>} A promise that resolves when all entities have been deleted.
+   */
+  async clearEntities() {
+    const db = await this.dbPromise;
+    await db.clear('entities');
+    await db.clear('relations');
+    console.log('cleared entities');
+  }
+
   private normalizeKey(value: string) {
     let entityKey = value;
     if (typeof entityKey !== 'string' && typeof entityKey !== 'number') {
@@ -267,16 +278,5 @@ export class Database {
       console.warn('Converted entity value to string for IndexedDB key (delete):', entityKey);
     }
     return entityKey;
-  }
-
-  /**
-   * Clears all entities from the database.
-   * @returns {Promise<void>} A promise that resolves when all entities have been deleted.
-   */
-  async clearEntities() {
-    const db = await this.dbPromise;
-    await db.clear('entities');
-    await db.clear('relations');
-    console.log('cleared entities');
   }
 }

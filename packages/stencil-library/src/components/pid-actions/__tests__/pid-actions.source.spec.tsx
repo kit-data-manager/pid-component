@@ -1,5 +1,5 @@
-import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
-import { render, h } from '@stencil/vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { render } from '@stencil/vitest';
 
 import '../pid-actions';
 

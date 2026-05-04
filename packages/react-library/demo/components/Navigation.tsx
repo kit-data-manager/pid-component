@@ -1,6 +1,6 @@
 'use client';
 
-import { Container, Group, Text, Button, Anchor, Badge } from '@mantine/core';
+import { Anchor, Badge, Button, Container, Group, Text } from '@mantine/core';
 import { IconDatabase } from '@tabler/icons-react';
 import { PidComponent } from '../../lib';
 

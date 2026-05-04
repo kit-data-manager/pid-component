@@ -1,5 +1,6 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { render, h } from '@stencil/vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { render } from '@stencil/vitest';
+import '../pid-collapsible';
 
 beforeEach(() => {
   (global as any).ResizeObserver = class {
@@ -18,8 +19,6 @@ beforeEach(() => {
     removeEventListener: vi.fn(),
   }));
 });
-
-import '../pid-collapsible';
 
 describe('pid-collapsible source', () => {
   it('renders', async () => {

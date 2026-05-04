@@ -1,7 +1,6 @@
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import DatasetCard from '../components/DatasetCard';
-import { PidComponent } from '@kit-data-manager/react-pid-component';
 
 const datasets = [
   {

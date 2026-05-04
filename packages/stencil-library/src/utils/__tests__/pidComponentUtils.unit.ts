@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
-  shouldShowFooter,
-  getPreviewClasses,
-  getPreviewTextClasses,
+  calculateItemRange,
   getHostElementClasses,
   getItemRangeText,
-  calculateItemRange,
+  getPreviewClasses,
+  getPreviewTextClasses,
+  shouldShowFooter,
 } from '../pidComponentUtils';
 
 describe('pidComponentUtils', () => {

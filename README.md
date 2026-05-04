@@ -4,7 +4,7 @@
 [![Node 22](https://img.shields.io/badge/Node-22-339933?logo=nodedotjs&logoColor=white)](https://github.com/kit-data-manager/pid-component/actions/workflows/npm-ci.yml)
 [![Node 24](https://img.shields.io/badge/Node-24-339933?logo=nodedotjs&logoColor=white)](https://github.com/kit-data-manager/pid-component/actions/workflows/npm-ci.yml)
 [![Node 25](https://img.shields.io/badge/Node-25-339933?logo=nodedotjs&logoColor=white)](https://github.com/kit-data-manager/pid-component/actions/workflows/npm-ci.yml)
-[![Coverage](https://codecov.io/gh/kit-data-manager/pid-component/branch/main/graph/badge.svg)](https://codecov.io/gh/kit-data-manager/pid-component)
+[![codecov](https://codecov.io/gh/kit-data-manager/pid-component/graph/badge.svg?token=9S3gLRfKIc)](https://codecov.io/gh/kit-data-manager/pid-component)
 [![CodeQL](https://github.com/kit-data-manager/pid-component/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/kit-data-manager/pid-component/actions/workflows/github-code-scanning/codeql)
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13629109.svg)](https://doi.org/10.5281/zenodo.13629109)
@@ -17,7 +17,10 @@ The `pid-component` is an easily extensible web component that can be used to di
 identifiers in a user-friendly way.
 It is easily extensible to support other identifier types.
 
-> Framework wrappers are available for [React](https://www.npmjs.com/package/@kit-data-manager/react-pid-component), [Vue](https://www.npmjs.com/package/@kit-data-manager/vue-pid-component), and [Angular](https://www.npmjs.com/package/@kit-data-manager/angular-pid-component).
+> Framework wrappers are available
+>
+for [React](https://www.npmjs.com/package/@kit-data-manager/react-pid-component), [Vue](https://www.npmjs.com/package/@kit-data-manager/vue-pid-component),
+> and [Angular](https://www.npmjs.com/package/@kit-data-manager/angular-pid-component).
 
 The `pid-component` dynamically renders a component based on the value of the `value` property.
 Depending on the value, it decides which component to render, what priority to give it, and what props to pass to it.
@@ -32,7 +35,9 @@ the `level-of-subcomponents` property.
 You can load the component directly from [unpkg](https://unpkg.com/) with a single script tag:
 
 ```html
-<script type="module" src="https://unpkg.com/@kit-data-manager/pid-component/dist/pid-component/pid-component.esm.js"></script>
+
+<script type="module"
+        src="https://unpkg.com/@kit-data-manager/pid-component/dist/pid-component/pid-component.esm.js"></script>
 
 <pid-component value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"></pid-component>
 ```
@@ -53,6 +58,7 @@ npm install @kit-data-manager/pid-component
 Then use the component in your HTML:
 
 ```html
+
 <pid-component value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"></pid-component>
 ```
 
@@ -148,6 +154,7 @@ controller.destroy();  // remove all components, restore original text
 Or with a plain `<script>` tag (no bundler):
 
 ```html
+
 <script type="module">
   import { initPidDetection } from 'https://unpkg.com/@kit-data-manager/pid-component/dist/esm/index.js';
 
@@ -199,7 +206,8 @@ detailed examples and interactive demos.
 
 ## PID Resolver
 
-The `pid-component` package exports a useful helper class for resolving PIDs. These are `PID`, `PIDDataType` and `PIDRecord` and can be
+The `pid-component` package exports a useful helper class for resolving PIDs. These are `PID`, `PIDDataType` and
+`PIDRecord` and can be
 imported like this:
 
 ```typescript

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { defineComponent, onMounted, onUnmounted, ref, h } from 'vue';
+import { defineComponent, h, onMounted, onUnmounted, ref } from 'vue';
 import type { PidDetectionConfig, PidDetectionController } from '@kit-data-manager/pid-component';
 import { initPidDetection } from '@kit-data-manager/pid-component';
 

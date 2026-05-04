@@ -1,7 +1,7 @@
 'use client';
 
 import { type ReactNode } from 'react';
-import { MantineProvider, createTheme } from '@mantine/core';
+import { createTheme, MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
 
 export const theme = createTheme({

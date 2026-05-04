@@ -1,5 +1,6 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { render, h } from '@stencil/vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { render } from '@stencil/vitest';
+import '../copy-button';
 
 beforeEach(() => {
   vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({
@@ -8,8 +9,6 @@ beforeEach(() => {
     removeEventListener: vi.fn(),
   }));
 });
-
-import '../copy-button';
 
 describe('copy-button source', () => {
   it('renders with value prop', async () => {

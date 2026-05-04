@@ -6,11 +6,11 @@ import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
  * @extends GenericIdentifierType
  */
 export class URLType extends GenericIdentifierType {
+  private static readonly FORMAT_REGEX = new RegExp('^http(s)?:(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?$');
+
   getSettingsKey(): string {
     return 'URLType';
   }
-
-  private static readonly FORMAT_REGEX = new RegExp('^http(s)?:(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?$');
 
   quickCheck(): boolean {
     return URLType.FORMAT_REGEX.test(this.value);

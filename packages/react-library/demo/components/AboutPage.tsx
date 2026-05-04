@@ -1,7 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { Title, Text, Card, Tabs, Badge } from '@mantine/core';
+import { Badge, Card, Tabs, Text, Title } from '@mantine/core';
 import { PidComponent } from '../../lib';
 
 interface AboutPageProps {

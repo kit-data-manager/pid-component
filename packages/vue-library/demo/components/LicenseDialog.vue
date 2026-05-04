@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { ref } from 'vue';
 import { PidComponent } from '../../lib';
 
@@ -32,12 +32,12 @@ const openDialog = () => {
         <p class="text-body-2 text-grey mb-4">
           This dataset is published under the Apache 2.0 license, allowing free reuse with appropriate attribution.
         </p>
-        <pid-component value="https://spdx.org/licenses/Apache-2.0" open-by-default="true" width="100%"
-                       style="display: block;" />
+        <pid-component open-by-default="true" style="display: block;" value="https://spdx.org/licenses/Apache-2.0"
+                       width="100%" />
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn variant="outlined" color="grey" @click="dialogOpen = false">Close</v-btn>
+        <v-btn color="grey" variant="outlined" @click="dialogOpen = false">Close</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

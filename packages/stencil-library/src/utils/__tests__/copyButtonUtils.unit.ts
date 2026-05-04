@@ -1,15 +1,15 @@
 import { describe, expect, it, vi } from 'vitest';
 import {
+  COPY_SUCCESS_DURATION_MS,
+  DEFAULT_LABEL,
+  FALLBACK_TEXTAREA_STYLE,
   getAriaLabel,
+  getButtonClasses,
   getButtonText,
   getButtonTitle,
-  getButtonClasses,
   getHostClasses,
   getSrOnlyText,
   isDarkModeEnabled,
-  DEFAULT_LABEL,
-  COPY_SUCCESS_DURATION_MS,
-  FALLBACK_TEXTAREA_STYLE,
 } from '../copyButtonUtils';
 
 describe('copyButtonUtils', () => {

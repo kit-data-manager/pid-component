@@ -24,7 +24,7 @@ export function formatCitationPreview(
   tooltip: string;
 } {
   if (!title || creators.length === 0) {
-    return { citation: title || 'Untitled', tooltip: title || 'Untitled'};
+    return { citation: title || 'Untitled', tooltip: title || 'Untitled' };
   }
 
   const firstAuthor = creators[0];
@@ -73,7 +73,7 @@ export function formatCitationPreview(
 /**
  * APA style: Author, A. A. (Year). Title...
  */
-function formatAPA(author: Creator, count: number, title: string, year?: string, truncate?:boolean): string {
+function formatAPA(author: Creator, count: number, title: string, year?: string, truncate?: boolean): string {
   const authorName = author.familyName || author.name.split(' ').pop() || author.name;
   const etAl = count > 1 ? ' et al.' : '';
   const yearPart = year ? ` (${year.split('-')[0]})` : '';
@@ -85,7 +85,7 @@ function formatAPA(author: Creator, count: number, title: string, year?: string,
 /**
  * Chicago style: Author, First Last. Year. "Title..."
  */
-function formatChicago(author: Creator, count: number, title: string, year?: string, truncate?:boolean): string {
+function formatChicago(author: Creator, count: number, title: string, year?: string, truncate?: boolean): string {
   const authorName = author.familyName || author.name.split(' ').pop() || author.name;
   const firstName = author.givenName || author.name.split(' ')[0] || '';
   const etAl = count > 1 ? ' et al.' : '';
@@ -98,7 +98,7 @@ function formatChicago(author: Creator, count: number, title: string, year?: str
 /**
  * IEEE style: [1] A. Author et al., "Title..."
  */
-function formatIEEE(author: Creator, count: number, title: string, year?: string, truncate?:boolean): string {
+function formatIEEE(author: Creator, count: number, title: string, year?: string, truncate?: boolean): string {
   const initial = author.givenName ? author.givenName.charAt(0) + '.' : '';
   const authorName = author.familyName || author.name.split(' ').pop() || author.name;
   const etAl = count > 1 ? ' et al.' : '';
@@ -111,7 +111,7 @@ function formatIEEE(author: Creator, count: number, title: string, year?: string
 /**
  * Harvard style: Author, A.A., Year. Title...
  */
-function formatHarvard(author: Creator, count: number, title: string, year?: string, truncate?:boolean): string {
+function formatHarvard(author: Creator, count: number, title: string, year?: string, truncate?: boolean): string {
   const authorName = author.familyName || author.name.split(' ').pop() || author.name;
   const initials = author.givenName
     ? author.givenName.split(' ').map(n => n.charAt(0) + '.').join('')
@@ -126,7 +126,7 @@ function formatHarvard(author: Creator, count: number, title: string, year?: str
 /**
  * Anglia Ruskin style: AUTHOR, Year. Title...
  */
-function formatAngliaRuskin(author: Creator, count: number, title: string, year?: string, truncate?:boolean): string {
+function formatAngliaRuskin(author: Creator, count: number, title: string, year?: string, truncate?: boolean): string {
   const authorName = (author.familyName || author.name.split(' ').pop() || author.name).toUpperCase();
   const etAl = count > 1 ? ' ET AL.' : '';
   const yearPart = year ? ` ${year.split('-')[0]}.` : '';

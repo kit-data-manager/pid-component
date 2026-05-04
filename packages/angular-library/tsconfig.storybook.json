@@ -3,7 +3,11 @@
     "outDir": "./dist-storybook",
     "target": "ES2020",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "esnext",
     "moduleResolution": "bundler",
     "skipLibCheck": true,
@@ -15,13 +19,31 @@
     "rootDir": ".",
     "types": [],
     "paths": {
-      "@kit-data-manager/pid-component/dist/*": ["../stencil-library/dist/*"],
-      "@kit-data-manager/pid-component/components/*.js": ["../stencil-library/dist/components/*.js"],
-      "@kit-data-manager/pid-component/components": ["../stencil-library/dist/components"],
-      "@kit-data-manager/pid-component": ["../stencil-library"],
-      "@kit-data-manager/pid-component/loader": ["../stencil-library/dist/loader"]
+      "@kit-data-manager/pid-component/dist/*": [
+        "../stencil-library/dist/*"
+      ],
+      "@kit-data-manager/pid-component/components/*.js": [
+        "../stencil-library/dist/components/*.js"
+      ],
+      "@kit-data-manager/pid-component/components": [
+        "../stencil-library/dist/components"
+      ],
+      "@kit-data-manager/pid-component": [
+        "../stencil-library"
+      ],
+      "@kit-data-manager/pid-component/loader": [
+        "../stencil-library/dist/loader"
+      ]
     }
   },
-  "include": ["lib", "stories", "src", ".storybook/**/*.ts"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "lib",
+    "stories",
+    "src",
+    ".storybook/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

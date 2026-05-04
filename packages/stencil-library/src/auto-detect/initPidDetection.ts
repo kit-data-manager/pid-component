@@ -29,11 +29,7 @@
  * ```
  */
 
-import type {
-  DetectionMatch,
-  PidDetectionConfig,
-  PidDetectionController, ReplacementRecord,
-} from './types';
+import type { DetectionMatch, PidDetectionConfig, PidDetectionController, ReplacementRecord } from './types';
 import { scanDom } from './DomScanner';
 import { replaceMatches, restoreOriginalText } from './TextReplacer';
 import { detectBestFit, sanitizeToken } from './detection-registry';

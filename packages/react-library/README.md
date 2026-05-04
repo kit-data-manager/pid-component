@@ -8,9 +8,10 @@ React wrapper for [@kit-data-manager/pid-component](https://github.com/kit-data-
 
 ## Usage
 
-Refer to the documentation of [@kit-data-manager/pid-component](https://github.com/kit-data-manager/pid-component). 
+Refer to the documentation of [@kit-data-manager/pid-component](https://github.com/kit-data-manager/pid-component).
 
-> **Important:** When using the React wrapper you have to use camelCase. Component names must be capitalized in React, see below.
+> **Important:** When using the React wrapper you have to use camelCase. Component names must be capitalized in React,
+> see below.
 
 ### Example
 

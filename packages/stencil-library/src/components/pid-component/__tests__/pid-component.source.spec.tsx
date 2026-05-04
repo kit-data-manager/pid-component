@@ -1,5 +1,6 @@
-import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
-import { render, h } from '@stencil/vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { render } from '@stencil/vitest';
+import '../pid-component';
 
 vi.mock('../../utils/IndexedDBUtil', () => ({
   Database: vi.fn(),
@@ -30,8 +31,6 @@ beforeEach(() => {
 afterEach(() => {
   vi.clearAllMocks();
 });
-
-import '../pid-component';
 
 describe('pid-component source', () => {
   it('renders with value prop', async () => {
@@ -89,7 +88,6 @@ describe('pid-component source', () => {
     const { root } = await render(<pid-component value="test" show-top-level-copy></pid-component>);
     expect(root.showTopLevelCopy).toBe(true);
   });
-
 
 
   it('renders with custom width', async () => {
