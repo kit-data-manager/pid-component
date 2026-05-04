@@ -40,14 +40,18 @@ export default [
   {
     files: [
       'src/test/**',
+      'src/**/__tests__/**',
       '**/*.spec.{ts,tsx}',
       '**/*.e2e.{ts,tsx}',
+      '**/*.unit.{ts,tsx}',
       'vitest-setup.ts',
+      'vitest-setup-source.ts',
       'vitest.config.ts',
     ],
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unsafe-function-type': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
     },
   },
 ];

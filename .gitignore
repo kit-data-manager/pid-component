@@ -6,6 +6,7 @@ test-results/
 coverage/
 playwright-report/
 .nx
+packages/examples
 
 *~
 *.sw[mnpcod]
