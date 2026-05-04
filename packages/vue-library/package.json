@@ -42,9 +42,8 @@
     "@stencil/vue-output-target": "^0.13.1"
   },
   "devDependencies": {
+    "@codecov/vite-plugin": "^2.0.1",
     "@mdi/font": "^7.4.47",
-    "vue": "^3.5.33",
-    "vuetify": "^3.12.5",
     "@storybook/addon-a11y": "^10.3.6",
     "@storybook/addon-docs": "^10.3.6",
     "@storybook/vue3-vite": "^10.3.6",
@@ -53,7 +52,9 @@
     "ast-types": "^0.16.1",
     "storybook": "^10.3.6",
     "typescript": "^6.0.3",
-    "vite": "^8.0.10"
+    "vite": "^8.0.10",
+    "vue": "^3.5.33",
+    "vuetify": "^3.12.5"
   },
   "peerDependencies": {
     "vue": "^3.0.0"

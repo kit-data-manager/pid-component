@@ -2,6 +2,7 @@
 import type { StorybookConfig } from '@storybook/react-vite';
 import path, { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { codecovVitePlugin } from '@codecov/vite-plugin';
 
 const __filename = fileURLToPath(import.meta.url);
 
@@ -24,6 +25,8 @@ const config: StorybookConfig = {
       '@kit-data-manager/pid-component/dist': path.join(stencilRoot, 'dist'),
       '@kit-data-manager/pid-component': stencilRoot,
     };
+    config.plugins = config.plugins || [];
+    config.plugins.push(codecovVitePlugin({ enableBundleAnalysis: true }));
     return config;
   },
 };

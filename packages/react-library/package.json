@@ -50,6 +50,7 @@
     "@stencil/react-output-target": "^1.5.2"
   },
   "devDependencies": {
+    "@codecov/vite-plugin": "^2.0.1",
     "@mantine/core": "^9.1.1",
     "@mantine/hooks": "^9.1.1",
     "@storybook/addon-a11y": "^10.3.6",

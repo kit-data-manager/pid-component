@@ -84,5 +84,7 @@ export default defineVitestConfig({
         'src/utils/__tests__/setup-axe.ts',
       ],
     },
+    reporters: ['default', 'junit'],
+    outputFile: './test-results.junit.xml',
   },
 });

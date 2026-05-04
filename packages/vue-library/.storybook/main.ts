@@ -3,6 +3,7 @@ import type { StorybookConfig } from '@storybook/vue3-vite';
 import path, { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
+import { codecovVitePlugin } from '@codecov/vite-plugin';
 
 const __filename = fileURLToPath(import.meta.url);
 
@@ -30,6 +31,7 @@ const config: StorybookConfig = {
     };
     config.plugins = config.plugins || [];
     config.plugins.push(vue());
+    config.plugins.push(codecovVitePlugin({ enableBundleAnalysis: true }));
     return config;
   },
 };

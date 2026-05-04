@@ -35,12 +35,18 @@ jobs:
       - name: Run all tests (Stencil spec + E2E + Storybook)
         id: test
         run: npm test
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          report-type: test_results
+          files: packages/stencil-library/test-results.junit.xml
       - name: Upload coverage to Codecov
         if: matrix.node == 24
         uses: codecov/codecov-action@v4
         with:
           files: packages/stencil-library/coverage/coverage-summary.json # Upload coverage report for Stencil library
-          # flags: unittests
           name: stencil-library
           fail_ci_if_error: false
           verbose: true
