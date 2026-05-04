@@ -1,5 +1,8 @@
 name: NPM CI
 
+env:
+  NODE_VERSIONS_JSON: '[22,24,25]'
+
 permissions:
   contents: read
   pull-requests: write
@@ -14,8 +17,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        node: [ 22, 24, 25 ]
+        node: ${{ fromJSON(env.NODE_VERSIONS_JSON) }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -38,11 +42,19 @@ jobs:
         if: matrix.node == 24
         uses: codecov/codecov-action@v4
         with:
-          files: packages/stencil-library/coverage/coverage-summary.json
-          flags: unittests
+          files: packages/stencil-library/coverage/coverage-summary.json # Upload coverage report for Stencil library
+          # flags: unittests
           name: stencil-library
           fail_ci_if_error: false
           verbose: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: ${{ github.repository }}
+      - name: Upload coverage summary artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-summary-node-${{ matrix.node }}
+          path: packages/stencil-library/coverage/coverage-summary.json
       - name: Upload coverage report
         if: always()
         uses: actions/upload-artifact@v4
@@ -50,32 +62,91 @@ jobs:
           name: coverage-report-node-${{ matrix.node }}
           path: '**/coverage'
           retention-days: 7
-      - name: Comment PR with test and coverage results
-        if: always() && github.event_name == 'pull_request' && matrix.node == 24
+
+  comment:
+    runs-on: ubuntu-latest
+    needs: build
+    if: always() && github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Download coverage summaries
+        uses: actions/download-artifact@v4
+        with:
+          path: coverage-summaries
+          pattern: coverage-summary-node-*
+      - name: Comment PR with combined test and coverage results
         uses: actions/github-script@v7
         with:
           script: |
-            // Determine test status
-            const testPassed = '${{ job.status }}' === 'success';
-            const testStatus = testPassed ? '✅ Tests passed' : '❌ Tests failed';
-            // Create comment with links
-            const comment = `## Test Results
+            const fs = require('fs');
+            const path = require('path');
 
-            ${testStatus}
+            const root = path.join(process.env.GITHUB_WORKSPACE || process.cwd(), 'coverage-summaries');
+            const expectedNodes = JSON.parse(process.env.NODE_VERSIONS_JSON);
 
-            ### Test Environment
-            - Node.js: ${{ matrix.node }}
+            function findCoverageFiles(dir) {
+              const files = [];
+              if (!fs.existsSync(dir)) return files;
 
-            ### Coverage & Quality Reports
-            📊 **[Codecov Report](https://codecov.io/gh/${{ github.repository }}/pull/${{ github.event.pull_request.number }})**
-            🎨 **[Chromatic Status](https://www.chromatic.com/builds?appId=${{ secrets.CHROMATIC_APP_ID }})**
+              for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+                const fullPath = path.join(dir, entry.name);
+                if (entry.isDirectory()) {
+                  files.push(...findCoverageFiles(fullPath));
+                } else if (entry.isFile() && entry.name === 'coverage-summary.json') {
+                  files.push(fullPath);
+                }
+              }
 
-            ---
-            For more details, check the [workflow run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
-            github.rest.issues.createComment({
+              return files;
+            }
+
+            const coverageFiles = findCoverageFiles(root);
+            const coverageByNode = new Map();
+
+            for (const filePath of coverageFiles) {
+              const match = filePath.match(/coverage-summary-node-(\d+)/);
+              if (!match) continue;
+
+              const node = Number(match[1]);
+              const summary = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+              const totals = summary.total ?? {};
+
+              coverageByNode.set(node, {
+                lines: totals.lines?.pct ?? null,
+                statements: totals.statements?.pct ?? null,
+                branches: totals.branches?.pct ?? null,
+                functions: totals.functions?.pct ?? null,
+              });
+            }
+
+            const formatPct = (value) => (typeof value === 'number' ? `${value.toFixed(2)}%` : 'n/a');
+
+            const rows = expectedNodes.map((node) => {
+              const stats = coverageByNode.get(node);
+              return `| ${node} | ${formatPct(stats?.lines)} | ${formatPct(stats?.statements)} | ${formatPct(stats?.branches)} | ${formatPct(stats?.functions)} |`;
+            });
+
+            const comment = [
+              '## Test Results',
+              '',
+              '### Coverage Summary',
+              '| Node | Lines | Statements | Branches | Functions |',
+              '| --- | ---: | ---: | ---: | ---: |',
+              ...rows,
+              '',
+              '### Coverage & Quality Reports',
+              `📊 **[Codecov Report](https://codecov.io/gh/${{ github.repository }}/pull/${{ github.event.pull_request.number }})**`,
+              `🎨 **[Chromatic Status](https://www.chromatic.com/builds?appId=${{ secrets.CHROMATIC_APP_ID }})**`,
+              '',
+              '---',
+              `For more details, check the [workflow run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`,
+            ].join('\n');
+
+            await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: comment
+              body: comment,
             });
-        continue-on-error: true
