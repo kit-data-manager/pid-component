@@ -41,7 +41,7 @@ jobs:
           files: packages/stencil-library/coverage/coverage-summary.json
           flags: unittests
           name: stencil-library
-          fail_ci_if_error: true
+          fail_ci_if_error: false
           verbose: true
       - name: Upload coverage report
         if: always()

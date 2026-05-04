@@ -1,7 +1,12 @@
 # PID Component
 
 [![Build](https://github.com/kit-data-manager/pid-component/actions/workflows/npm-ci.yml/badge.svg?branch=main)](https://github.com/kit-data-manager/pid-component/actions/workflows/npm-ci.yml)
+[![Node 22](https://img.shields.io/badge/Node-22-339933?logo=nodedotjs&logoColor=white)](https://github.com/kit-data-manager/pid-component/actions/workflows/npm-ci.yml)
+[![Node 24](https://img.shields.io/badge/Node-24-339933?logo=nodedotjs&logoColor=white)](https://github.com/kit-data-manager/pid-component/actions/workflows/npm-ci.yml)
+[![Node 25](https://img.shields.io/badge/Node-25-339933?logo=nodedotjs&logoColor=white)](https://github.com/kit-data-manager/pid-component/actions/workflows/npm-ci.yml)
+[![Coverage](https://codecov.io/gh/kit-data-manager/pid-component/branch/main/graph/badge.svg)](https://codecov.io/gh/kit-data-manager/pid-component)
 [![CodeQL](https://github.com/kit-data-manager/pid-component/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/kit-data-manager/pid-component/actions/workflows/github-code-scanning/codeql)
+
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13629109.svg)](https://doi.org/10.5281/zenodo.13629109)
 [![npm version](https://img.shields.io/npm/v/@kit-data-manager/pid-component.svg)](https://www.npmjs.com/package/@kit-data-manager/pid-component)
 [![npm downloads](https://img.shields.io/npm/dm/@kit-data-manager/pid-component.svg)](https://www.npmjs.com/package/@kit-data-manager/pid-component)
