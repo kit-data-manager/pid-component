@@ -1,7 +1,10 @@
+// This file has been automatically migrated to valid ESM format by Storybook.
 import type { StorybookConfig } from '@storybook/vue3-vite';
-import path from 'node:path';
+import path, { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
+
+const __filename = fileURLToPath(import.meta.url);
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
@@ -9,9 +12,9 @@ const stencilRoot = path.resolve(__dirname, '../../stencil-library');
 
 const config: StorybookConfig = {
   stories: ['../stories/**/*.stories.@(js|jsx|ts|tsx)'],
-  framework: '@storybook/vue3-vite',
+  framework: getAbsolutePath('@storybook/vue3-vite'),
   core: { disableTelemetry: true },
-  addons: ['@storybook/addon-docs', '@storybook/addon-a11y'],
+  addons: [getAbsolutePath('@storybook/addon-docs'), getAbsolutePath('@storybook/addon-a11y')],
   viteFinal: async (config) => {
     // Dynamic import to avoid ESM resolution failure in npm workspaces
     // (the package is hoisted to root node_modules but ESM resolves
@@ -31,3 +34,7 @@ const config: StorybookConfig = {
   },
 };
 export default config;
+
+function getAbsolutePath(value: string): any {
+  return dirname(fileURLToPath(import.meta.resolve(`${value}/package.json`)));
+}

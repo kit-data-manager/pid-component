@@ -1,3 +1,5 @@
+import { fileURLToPath } from 'node:url';
+import { dirname } from 'node:path';
 import type { StorybookConfig } from '@storybook/web-components-vite';
 import type { PluginOption } from 'vite';
 
@@ -51,14 +53,14 @@ const config: StorybookConfig = {
     '*.mdx',
   ],
   addons: [
-    '@storybook/addon-links',
-    '@storybook/addon-docs',
-    '@chromatic-com/storybook',
-    '@storybook/addon-a11y',
-    '@storybook/addon-vitest',
-    '@storybook/addon-themes',
+    getAbsolutePath('@storybook/addon-links'),
+    getAbsolutePath('@storybook/addon-docs'),
+    getAbsolutePath('@chromatic-com/storybook'),
+    getAbsolutePath('@storybook/addon-a11y'),
+    getAbsolutePath('@storybook/addon-vitest'),
+    getAbsolutePath('@storybook/addon-themes'),
   ],
-  framework: '@storybook/web-components-vite',
+  framework: getAbsolutePath('@storybook/web-components-vite'),
   docs: {
     source: {
       type: 'code',
@@ -105,3 +107,7 @@ const config: StorybookConfig = {
 };
 
 export default config;
+
+function getAbsolutePath(value: string): any {
+  return dirname(fileURLToPath(import.meta.resolve(`${value}/package.json`)));
+}

@@ -1,15 +1,18 @@
+// This file has been automatically migrated to valid ESM format by Storybook.
 import type { StorybookConfig } from '@storybook/angular';
-import path from 'node:path';
+import path, { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const stencilRoot = path.resolve(__dirname, '../../stencil-library');
 
 const config: StorybookConfig = {
   stories: ['../stories/**/*.stories.@(js|jsx|ts|tsx)'],
-  framework: '@storybook/angular',
+  framework: getAbsolutePath('@storybook/angular'),
   core: { disableTelemetry: true },
-  addons: ['@storybook/addon-docs', '@storybook/addon-a11y'],
+  addons: [getAbsolutePath('@storybook/addon-docs'), getAbsolutePath('@storybook/addon-a11y')],
   webpackFinal: async (config) => {
     // Angular Storybook uses webpack, which cannot resolve the Stencil
     // library's package.json "exports" subpaths. We add webpack aliases
@@ -30,3 +33,7 @@ const config: StorybookConfig = {
   },
 };
 export default config;
+
+function getAbsolutePath(value: string): any {
+  return dirname(fileURLToPath(import.meta.resolve(`${value}/package.json`)));
+}
