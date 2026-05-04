@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Component, Element, Event, EventEmitter, h, Prop } from '@stencil/core';
 
 @Component({
@@ -53,41 +52,6 @@ export class PidPagination {
   @Event() itemsPerPageChange: EventEmitter<number>;
 
   /**
-   * Handle page change
-   */
-  private handlePageChange = (page: number) => {
-    if (page >= 0 && page <= this.totalPages - 1) {
-      this.pageChange.emit(page);
-
-      // The recalculation will be handled by the pid-data-table component
-      // which watches for page changes and recalculates accordingly
-      // But we'll trigger it here as well to ensure it happens
-      requestAnimationFrame(() => {
-        const collapsible = this.el.closest('pid-collapsible');
-        if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
-          (collapsible as any).recalculateContentDimensions();
-        }
-      });
-    }
-  };
-
-  /**
-   * Handle items per page change
-   */
-  private handleItemsPerPageChange = (size: number) => {
-    this.itemsPerPageChange.emit(size);
-
-    // The pid-data-table component will recalculate dimensions when itemsPerPage changes
-    // as it watches for these changes, but we'll trigger it here as well to be certain
-    requestAnimationFrame(() => {
-      const collapsible = this.el.closest('pid-collapsible');
-      if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
-        (collapsible as any).recalculateContentDimensions();
-      }
-    });
-  };
-
-  /**
    * Get total number of pages
    */
   private get totalPages() {
@@ -104,55 +68,6 @@ export class PidPagination {
     const start = this.currentPage * this.itemsPerPage + 1;
     const end = Math.min((this.currentPage + 1) * this.itemsPerPage, this.totalItems);
     return { start, end };
-  }
-
-  /**
-   * Get visible page numbers (with truncation if needed)
-   */
-  private getVisiblePageNumbers() {
-    const maxPages = 7; // Max number of pages to show (not including ellipsis)
-    const pages: (number | string)[] = [];
-
-    if (this.totalPages <= maxPages) {
-      // Show all pages if there are few enough
-      return Array.from({ length: this.totalPages }, (_, i) => i);
-    }
-
-    // Always show first page
-    pages.push(0);
-
-    // Calculate range around current page
-    let rangeStart = Math.max(1, this.currentPage - 1);
-    let rangeEnd = Math.min(this.totalPages - 2, this.currentPage + 1);
-
-    // Adjust range to show at least 3 pages
-    if (rangeEnd - rangeStart < 2) {
-      if (this.currentPage < this.totalPages / 2) {
-        rangeEnd = Math.min(this.totalPages - 2, rangeStart + 2);
-      } else {
-        rangeStart = Math.max(1, rangeEnd - 2);
-      }
-    }
-
-    // Add ellipsis before range if needed
-    if (rangeStart > 1) {
-      pages.push('...');
-    }
-
-    // Add range pages
-    for (let i = rangeStart; i <= rangeEnd; i++) {
-      pages.push(i);
-    }
-
-    // Add ellipsis after range if needed
-    if (rangeEnd < this.totalPages - 2) {
-      pages.push('...');
-    }
-
-    // Always show last page
-    pages.push(this.totalPages - 1);
-
-    return pages;
   }
 
   render() {
@@ -185,7 +100,8 @@ export class PidPagination {
           {/* Horizontal page size selector - Only shown when not in adaptive mode and when control is enabled */}
           {this.showItemsPerPageControl && (
             <div class="flex items-center gap-1" role="group" aria-label="Items per page options">
-              <span class={`text-xs whitespace-nowrap ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`} id={`${paginationId}-itemsperpage-label`}>
+              <span class={`text-xs whitespace-nowrap ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}
+                    id={`${paginationId}-itemsperpage-label`}>
                 Items per page:
               </span>
               <div
@@ -213,7 +129,8 @@ export class PidPagination {
           )}
 
           {/* Item range display */}
-          <span class={`hidden text-xs whitespace-nowrap ${isDarkMode ? 'text-gray-300' : 'text-gray-600'} sm:block`} role="status" aria-live="polite">
+          <span class={`hidden text-xs whitespace-nowrap ${isDarkMode ? 'text-gray-300' : 'text-gray-600'} sm:block`}
+                role="status" aria-live="polite">
             Showing {this.displayRange.start}-{this.displayRange.end} of {this.totalItems}
           </span>
         </div>
@@ -221,7 +138,8 @@ export class PidPagination {
         {/* Right side: Pagination controls - ONLY SHOWN WHEN NEEDED */}
         {needsPagination && (
           <div class="flex items-center">
-            <nav class="isolate inline-flex resize-none -space-x-px rounded-md shadow-xs" aria-label="Pagination" role="navigation">
+            <nav class="isolate inline-flex resize-none -space-x-px rounded-md shadow-xs" aria-label="Pagination"
+                 role="navigation">
               {/* Previous button */}
               <button
                 onClick={() => this.handlePageChange(this.currentPage - 1)}
@@ -277,8 +195,8 @@ export class PidPagination {
                       isCurrentPage
                         ? 'relative z-10 inline-flex resize-none items-center rounded bg-blue-600 px-2 py-0.5 text-xs font-semibold text-white focus:z-20 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
                         : `relative inline-flex resize-none items-center rounded px-2 py-0 text-xs ${
-                            isDarkMode ? 'text-gray-200 ring-1 ring-gray-600 ring-inset hover:bg-gray-700' : 'text-gray-900 ring-1 ring-gray-300 ring-inset hover:bg-gray-50'
-                          } focus:z-20 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500`
+                          isDarkMode ? 'text-gray-200 ring-1 ring-gray-600 ring-inset hover:bg-gray-700' : 'text-gray-900 ring-1 ring-gray-300 ring-inset hover:bg-gray-50'
+                        } focus:z-20 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500`
                     }
                     aria-label={`Page ${humanPageNum}`}
                     aria-current={isCurrentPage ? 'page' : undefined}
@@ -316,5 +234,89 @@ export class PidPagination {
         )}
       </div>
     );
+  }
+
+  /**
+   * Handle page change
+   */
+  private handlePageChange = (page: number) => {
+    if (page >= 0 && page <= this.totalPages - 1) {
+      this.pageChange.emit(page);
+
+      // The recalculation will be handled by the pid-data-table component
+      // which watches for page changes and recalculates accordingly
+      // But we'll trigger it here as well to ensure it happens
+      requestAnimationFrame(() => {
+        const collapsible = this.el.closest('pid-collapsible');
+        if (collapsible && typeof (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions === 'function') {
+          (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions();
+        }
+      });
+    }
+  };
+
+  /**
+   * Handle items per page change
+   */
+  private handleItemsPerPageChange = (size: number) => {
+    this.itemsPerPageChange.emit(size);
+
+    // The pid-data-table component will recalculate dimensions when itemsPerPage changes
+    // as it watches for these changes, but we'll trigger it here as well to be certain
+    requestAnimationFrame(() => {
+      const collapsible = this.el.closest('pid-collapsible');
+      if (collapsible && typeof (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions === 'function') {
+        (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions();
+      }
+    });
+  };
+
+  /**
+   * Get visible page numbers (with truncation if needed)
+   */
+  private getVisiblePageNumbers() {
+    const maxPages = 7; // Max number of pages to show (not including ellipsis)
+    const pages: (number | string)[] = [];
+
+    if (this.totalPages <= maxPages) {
+      // Show all pages if there are few enough
+      return Array.from({ length: this.totalPages }, (_, i) => i);
+    }
+
+    // Always show first page
+    pages.push(0);
+
+    // Calculate range around current page
+    let rangeStart = Math.max(1, this.currentPage - 1);
+    let rangeEnd = Math.min(this.totalPages - 2, this.currentPage + 1);
+
+    // Adjust range to show at least 3 pages
+    if (rangeEnd - rangeStart < 2) {
+      if (this.currentPage < this.totalPages / 2) {
+        rangeEnd = Math.min(this.totalPages - 2, rangeStart + 2);
+      } else {
+        rangeStart = Math.max(1, rangeEnd - 2);
+      }
+    }
+
+    // Add ellipsis before range if needed
+    if (rangeStart > 1) {
+      pages.push('...');
+    }
+
+    // Add range pages
+    for (let i = rangeStart; i <= rangeEnd; i++) {
+      pages.push(i);
+    }
+
+    // Add ellipsis after range if needed
+    if (rangeEnd < this.totalPages - 2) {
+      pages.push('...');
+    }
+
+    // Always show last page
+    pages.push(this.totalPages - 1);
+
+    return pages;
   }
 }

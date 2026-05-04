@@ -12,17 +12,17 @@ const meta: Meta = {
       },
     },
     position: {
-      description: 'The position of the tooltip',
+      description: 'The preferred position of the tooltip (the component auto-adjusts based on available space)',
       control: {
         type: 'select',
-        options: ['top', 'bottom', 'left', 'right'],
       },
+      options: ['top', 'bottom'],
       table: {
         defaultValue: {
           summary: 'top',
         },
         type: {
-          summary: 'string',
+          summary: '"top" | "bottom"',
         },
       },
     },
@@ -54,18 +54,34 @@ const meta: Meta = {
         },
       },
     },
+    fitContent: {
+      description: 'Whether the tooltip should fit its content height exactly',
+      control: {
+        type: 'boolean',
+      },
+      table: {
+        defaultValue: {
+          summary: 'true',
+        },
+        type: {
+          summary: 'boolean',
+        },
+      },
+    },
   },
   args: {
     text: 'This is a tooltip',
     position: 'top',
     maxWidth: '250px',
     maxHeight: '150px',
+    fitContent: true,
   },
 };
 export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
+  id: 'tooltip-default',
   args: {
     text: 'This is a tooltip',
     position: 'top',
@@ -91,6 +107,7 @@ export const Default: Story = {
 };
 
 export const BottomPosition: Story = {
+  id: 'tooltip-bottom-position',
   args: {
     text: 'This tooltip appears at the bottom',
     position: 'bottom',
@@ -115,57 +132,8 @@ export const BottomPosition: Story = {
   },
 };
 
-export const LeftPosition: Story = {
-  args: {
-    text: 'This tooltip appears on the left',
-    position: 'left',
-  },
-  render: args => html`
-    <div class="p-10">
-      <pid-tooltip text=${args.text} position=${args.position} maxWidth=${args.maxWidth} maxHeight=${args.maxHeight}>
-        <span slot="trigger">Hover me (left)</span>
-      </pid-tooltip>
-    </div>
-  `,
-  parameters: {
-    docs: {
-      source: {
-        code: `
-<pid-tooltip text="This tooltip appears on the left" position="left">
-  <span slot="trigger">Hover me (left)</span>
-</pid-tooltip>
-        `,
-      },
-    },
-  },
-};
-
-export const RightPosition: Story = {
-  args: {
-    text: 'This tooltip appears on the right',
-    position: 'right',
-  },
-  render: args => html`
-    <div class="p-10">
-      <pid-tooltip text=${args.text} position=${args.position} maxWidth=${args.maxWidth} maxHeight=${args.maxHeight}>
-        <span slot="trigger">Hover me (right)</span>
-      </pid-tooltip>
-    </div>
-  `,
-  parameters: {
-    docs: {
-      source: {
-        code: `
-<pid-tooltip text="This tooltip appears on the right" position="right">
-  <span slot="trigger">Hover me (right)</span>
-</pid-tooltip>
-        `,
-      },
-    },
-  },
-};
-
 export const LongText: Story = {
+  id: 'tooltip-long-text',
   args: {
     text: 'This is a tooltip with a very long text. It should wrap and be limited by the maxWidth and maxHeight properties. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, quis aliquam nisl nunc quis nisl. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, quis aliquam nisl nunc quis nisl.',
     position: 'top',
@@ -191,6 +159,7 @@ export const LongText: Story = {
 };
 
 export const CustomSizes: Story = {
+  id: 'tooltip-custom-sizes',
   args: {
     text: 'This tooltip has custom maxWidth and maxHeight',
     position: 'top',

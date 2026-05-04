@@ -276,7 +276,7 @@ export class ORCIDInfo {
    * @returns {boolean} True if the string could be an ORCiD, false if not.
    */
   static isORCiD(text: string): boolean {
-    const regex = new RegExp('^(https://orcid.org/)?[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]$');
+    const regex = new RegExp('^(https://orcid.org/)?[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]');
     return regex.test(text);
   }
 
@@ -288,7 +288,22 @@ export class ORCIDInfo {
   static async getORCiDInfo(orcid: string): Promise<ORCIDInfo> {
     if (!ORCIDInfo.isORCiD(orcid)) throw new Error('Invalid input');
 
-    if (orcid.match('^(https://orcid.org/)?[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]$') !== null) orcid = orcid.replace('https://orcid.org/', '');
+    if (orcid.match('^(https://orcid.org/)?[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]') !== null) orcid = orcid.replace('https://orcid.org/', '');
+    // Remove other common things that might be around an ORCiD in a text, like "orcid:", "http://orcid.org/", quotes, dots, etc.
+    orcid = orcid
+      .replace(/^orcid:/i, '')
+      .replace(/^https?:\/\/orcid.org\//i, '')
+      .replace(/\/+$/, '') // Remove trailing slashes
+      .replace(/\.+$/, '') // Remove trailing dots
+      .replace(/"+/g, '') // Remove quotes
+      .replace(/'+/g, '') // Remove single quotes
+      .replace(/\s+/g, '') // Remove whitespace
+      .replace(/,+$/, '') // Remove trailing commas
+      .replace(/;+$/, '') // Remove trailing semicolons
+      .replace(/:+$/, '') // Remove trailing colons
+      .trim();
+
+
     const rawOrcidJSON = await cachedFetch(`https://pub.orcid.org/v3.0/${orcid}`, {
       headers: {
         Accept: 'application/json',

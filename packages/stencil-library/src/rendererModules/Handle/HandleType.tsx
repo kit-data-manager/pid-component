@@ -1,7 +1,6 @@
 import { PIDRecord } from './PIDRecord';
 import { PID } from './PID';
 import { PIDDataType } from './PIDDataType';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FunctionalComponent, h } from '@stencil/core';
 import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
 import { FoldableItem } from '../../utils/FoldableItem';
@@ -39,11 +38,17 @@ export class HandleType extends GenericIdentifierType {
   private _pidRecord: PIDRecord;
 
   get data(): string {
-    return JSON.stringify(this._pidRecord.toObject());
+    return JSON.stringify(this._pidRecord?.toObject() ?? {});
   }
 
-  async hasCorrectFormat(): Promise<boolean> {
+  quickCheck(): boolean {
     return PID.isPID(this.value);
+  }
+
+  async hasMeaningfulInformation(): Promise<boolean> {
+    const pid = PID.getPIDFromString(this.value);
+    this._pidRecord = await pid.resolve();
+    return this._pidRecord.values.length > 0;
   }
 
   async init(data?: string): Promise<void> {
@@ -75,9 +80,13 @@ export class HandleType extends GenericIdentifierType {
         },
       ];
 
-      // Resolve the PID
-      this._pidRecord = await pid.resolve();
-      console.debug('load PIDRecord from API', this._pidRecord);
+      // Use cached data if available, otherwise fetch
+      if (!this._pidRecord) {
+        this._pidRecord = await pid.resolve();
+        console.debug('load PIDRecord from API', this._pidRecord);
+      } else {
+        console.debug('using cached PIDRecord');
+      }
     }
 
     for (const value of this._pidRecord.values) {
@@ -98,12 +107,12 @@ export class HandleType extends GenericIdentifierType {
 
   renderPreview(): FunctionalComponent {
     return (
-      <span class={'rounded-md bg-inherit font-mono font-bold'}>
+      <span class={'font-mono font-bold align-baseline'}>
         {this._parts.map(element => {
           return (
-            <span class={'font-mono font-bold'}>
+            <span>
               <color-highlight text={element.text} />
-              <span class={`mx-0.5 font-mono font-bold`}>{element.nextExists ? '/' : ''}</span>
+              {element.nextExists ? <span class={`mx-0.5`}>/</span> : ''}
             </span>
           );
         })}

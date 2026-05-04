@@ -4,7 +4,11 @@
     "outDir": "./dist",
     "target": "ES2020",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "esnext",
     "moduleResolution": "bundler",
     "skipLibCheck": true,
@@ -18,6 +22,10 @@
       ]
     }
   },
-  "include": ["lib"],
-  "exclude": ["node_modules"]
+  "include": [
+    "lib"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

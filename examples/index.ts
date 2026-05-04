@@ -1,0 +1,11 @@
+export { DOI_examples, doi_texts } from './doi';
+export { ORCID_examples, orcid_texts } from './orcid';
+export { HANDLE_examples, handle_texts } from './handle';
+export { ROR_examples, ror_texts } from './ror';
+export { SPDX_examples, spdx_texts } from './spdx';
+export { URL_examples, url_texts } from './url';
+export { EMAIL_examples, email_texts } from './email';
+export { DATE_examples, date_texts } from './date';
+export { JSON_examples } from './json';
+export { LOCALE_examples } from './locale';
+export { demo_datasets, demo_authors } from './data';

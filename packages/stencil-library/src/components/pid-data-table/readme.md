@@ -6,7 +6,7 @@
 ## Properties
 
 | Property                      | Attribute                        | Description                                                                                  | Type                            | Default                |
-| ----------------------------- | -------------------------------- | -------------------------------------------------------------------------------------------- | ------------------------------- | ---------------------- |
+|-------------------------------|----------------------------------|----------------------------------------------------------------------------------------------|---------------------------------|------------------------|
 | `currentLevelOfSubcomponents` | `current-level-of-subcomponents` | Current level of subcomponents                                                               | `number`                        | `0`                    |
 | `currentPage`                 | `current-page`                   | Current page (0-based index)                                                                 | `number`                        | `0`                    |
 | `darkMode`                    | `dark-mode`                      | The dark mode setting for the component Options: "light", "dark", "system" Default: "system" | `"dark" \| "light" \| "system"` | `'system'`             |
@@ -22,16 +22,15 @@
 ## Events
 
 | Event                | Description                               | Type                  |
-| -------------------- | ----------------------------------------- | --------------------- |
+|----------------------|-------------------------------------------|-----------------------|
 | `itemsPerPageChange` | Event emitted when items per page changes | `CustomEvent<number>` |
 | `pageChange`         | Event emitted when page changes           | `CustomEvent<number>` |
-
 
 ## Dependencies
 
 ### Used by
 
- - [pid-component](../pid-component)
+- [pid-component](../pid-component)
 
 ### Depends on
 

@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FunctionalComponent, h } from '@stencil/core';
 import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
 import { DOI } from './DOI';
@@ -29,11 +28,17 @@ export class DOIType extends GenericIdentifierType {
   private _doiInfo: DOIInfo;
 
   get data(): string {
-    return JSON.stringify(this._doiInfo.toObject());
+    return JSON.stringify(this._doiInfo?.toObject() ?? {});
   }
 
-  async hasCorrectFormat(): Promise<boolean> {
+  quickCheck(): boolean {
     return DOI.isDOI(this.value);
+  }
+
+  async hasMeaningfulInformation(): Promise<boolean> {
+    this._doi = DOI.getDOIFromString(this.value);
+    this._doiInfo = await DOIInfo.getDOIInfo(this._doi);
+    return this._doiInfo !== undefined && this._doiInfo !== null && this._doiInfo.title !== '';
   }
 
   async init(data?: string): Promise<void> {
@@ -140,7 +145,7 @@ export class DOIType extends GenericIdentifierType {
     }
 
     // Format citation preview
-    const {citation, tooltip} = formatCitationPreview(
+    const { citation, tooltip } = formatCitationPreview(
       this._doiInfo.title,
       creators,
       year,
@@ -152,9 +157,10 @@ export class DOIType extends GenericIdentifierType {
     const logoNode = this._doiInfo.source === DOISource.DATACITE ? DataCiteLogo() : CrossRefLogo();
 
     return (
-      <span class={`inline-flex flex-nowrap items-center align-top font-mono ${this.isDarkMode ? 'text-gray-200' : ''}`}>
-        <span class={'flex-none items-center p-0.5 mr-1'}>{logoNode}</span>
-        <span class={'flex-none items-center pr-1 truncate'} title={tooltip}>
+      <span
+        class={`inline-flex flex-nowrap items-baseline font-mono min-w-0 max-w-full ${this.isDarkMode ? 'text-gray-200' : ''}`}>
+        <span class={'flex-none px-0.5 h-4 self-center'}>{logoNode}</span>
+        <span class={'min-w-0 pl-2 overflow-hidden text-ellipsis whitespace-nowrap'} title={tooltip}>
           {citation}
         </span>
       </span>

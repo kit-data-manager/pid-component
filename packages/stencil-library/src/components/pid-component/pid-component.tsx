@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Component, Element, h, Host, Prop, State, Watch } from '@stencil/core';
 import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
 import { FoldableItem } from '../../utils/FoldableItem';
@@ -9,7 +8,7 @@ import { clearCache } from '../../utils/DataCache';
 @Component({
   tag: 'pid-component',
   styleUrl: 'pid-component.css',
-  shadow: true
+  shadow: true,
 })
 export class PidComponent {
   /**
@@ -56,7 +55,7 @@ export class PidComponent {
    * (optional)
    * @type {number}
    */
-  @Prop() amountOfItems: number = 10;
+  @Prop() itemsPerPage: number = 10;
 
   /**
    * The total number of levels of subcomponents to show.
@@ -135,6 +134,30 @@ export class PidComponent {
   @Prop() darkMode: 'light' | 'dark' | 'system' = 'light';
 
   /**
+   * An ordered list of renderer keys to try first (JSON string array).
+   * These renderers are tried in the specified order as a non-binding preselection.
+   * If none match, the component falls back to the full default renderer registry
+   * (unless fallbackToAll is explicitly set to false).
+   * Not forwarded to child subcomponents — their types are independent.
+   * (optional)
+   *
+   * Example: '["DOIType", "ORCIDType", "HandleType"]'
+   * @type {string}
+   */
+  @Prop() renderers?: string;
+
+  /**
+   * When renderers is set and no listed renderer matches the value, this flag
+   * controls whether to fall back to the full default renderer registry.
+   * Default: true (always falls back to try all renderers).
+   * Set to false to strictly restrict detection to only the listed renderers.
+   * Not forwarded to child subcomponents.
+   * (optional)
+   * @type {boolean}
+   */
+  @Prop() fallbackToAll: boolean = true;
+
+  /**
    * Stores the parsed identifier object.
    */
   @State() identifierObject: GenericIdentifierType;
@@ -148,67 +171,72 @@ export class PidComponent {
    * Lists all the items to show in the table.
    */
   @State() items: FoldableItem[] = [];
-
-  // Media query for detecting system dark mode preference
-  private darkModeMediaQuery: MediaQueryList;
-
   /**
    * Lists all the actions to show in the table.
    */
   @State() actions: FoldableAction[] = [];
-
   /**
    * Determines whether the subcomponents should be loaded or not.
    */
   @State() loadSubcomponents: boolean = false;
-
   /**
    * The current status of the component.
-   * Can be "loading", "loaded" or "error".
+   * Can be "loading", "loaded", "error", or "unmatched".
+   * "unmatched" means the renderers prop was set but no listed renderer matched the value.
    * Default to "loading".
    */
-  @State() displayStatus: 'loading' | 'loaded' | 'error' = 'loading';
-
+  @State() displayStatus: 'loading' | 'loaded' | 'error' | 'unmatched' = 'loading';
   /**
    * The current page of the table.
    */
   @State() tablePage: number = 0;
-
   /**
    * Determines whether the component should be temporarily visible or not.
    */
   @State() temporarilyEmphasized: boolean = false;
-
   /**
    * Tracks whether the component is expanded/unfolded or not
    */
   @State() isExpanded: boolean = false;
+  // Media query for detecting system dark mode preference
+  private darkModeMediaQuery: MediaQueryList;
+  // AbortController for canceling pending operations
+  private _abortController?: AbortController;
+  // Store computed line height for collapsed state
+  private _lineHeight: number = 24; // Default fallback
 
   constructor() {
-    this.temporarilyEmphasized = this.emphasizeComponent;
+    // Note: @Prop values may not be set yet in the constructor.
+    // temporarilyEmphasized is properly initialized in componentWillLoad()
+    // to ensure it reflects the actual prop value.
+  }
+
+  /**
+   * Determines if footer should be shown based on whether there are actions or items with pagination
+   */
+  private get shouldShowFooter(): boolean {
+    const hasActions = this.actions.length > 0;
+    const hasPagination = this.items.length > this.itemsPerPage;
+    return hasActions || hasPagination;
+  }
+
+  private get shouldShowCollapsedPreview(): boolean {
+    return this.items.length === 0 && this.actions.length === 0 && !this.identifierObject?.renderBody() || this.hideSubcomponents;
   }
 
   componentDidLoad() {
     // Initialize component ID for references
     this.ensureComponentId();
 
-    // Ensure collapsible gets proper initial width and open state after load
-    // Use a longer delay to ensure DOM is fully rendered before recalculating
+    // Ensure collapsible gets proper initial width and open state after load.
+    // Use shadowRoot.querySelector because pid-collapsible is rendered inside
+    // this component's shadow DOM.
     setTimeout(() => {
-      const collapsible = this.el.querySelector('pid-collapsible');
-      if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
-        (collapsible as any).recalculateContentDimensions();
+      const collapsible = this.el.shadowRoot?.querySelector('pid-collapsible');
+      if (collapsible && typeof (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions === 'function') {
+        (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions();
       }
     }, 50);
-  }
-
-  /**
-   * Ensures the component has a unique ID for accessibility references
-   */
-  private ensureComponentId() {
-    if (!this.el.id) {
-      this.el.id = `pid-component-${Math.random().toString(36).substring(2, 9)}`;
-    }
   }
 
   /**
@@ -223,9 +251,9 @@ export class PidComponent {
 
     // After value updates, ensure dimensions are properly recalculated
     setTimeout(() => {
-      const collapsible = this.el.querySelector('pid-collapsible');
-      if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
-        (collapsible as any).recalculateContentDimensions();
+      const collapsible = this.el.shadowRoot?.querySelector('pid-collapsible');
+      if (collapsible && typeof (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions === 'function') {
+        (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions();
       }
     }, 10);
   }
@@ -270,54 +298,22 @@ export class PidComponent {
   }
 
   /**
-   * Toggles the loadSubcomponents property if the current level of subcomponents is not the total level of subcomponents.
-   * The open state is handled by the pid-collapsible component.
-   */
-  private toggleSubcomponents = (event?: CustomEvent<boolean>) => {
-    // Update open state based on collapsible event
-    if (event) {
-      // Stop propagation to prevent parent pid-components from collapsing
-      event.stopPropagation();
-
-      this.isExpanded = event.detail;
-
-      if (event.detail) {
-        // Opening: load subcomponents if allowed
-        if (!this.hideSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) {
-          this.loadSubcomponents = true;
-
-          // After loading subcomponents, ensure dimensions are recalculated
-          setTimeout(() => {
-            const collapsible = this.el.querySelector('pid-collapsible');
-            if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
-              (collapsible as any).recalculateContentDimensions();
-            }
-          }, 50);
-        }
-      } else {
-        // Collapsing: reset loadSubcomponents so temporarilyEmphasized reverts
-        this.loadSubcomponents = false;
-      }
-    }
-  };
-
-  /**
    * Parses the value and settings, generates the items and actions and sets the displayStatus to "loaded".
    */
   @Watch('items')
   onItemsChange(): void {
     // Reset page if we're beyond the available pages
-    const maxPage = Math.ceil(this.items.length / this.amountOfItems) - 1;
+    const maxPage = Math.ceil(this.items.length / this.itemsPerPage) - 1;
     if (this.tablePage > maxPage && maxPage >= 0) {
       this.tablePage = maxPage;
     }
   }
 
-  @Watch('amountOfItems')
-  validateAmountOfItems(newValue: number): void {
+  @Watch('itemsPerPage')
+  validateItemsPerPage(newValue: number): void {
     if (newValue <= 0) {
-      console.warn(`pid-component: amountOfItems prop must be positive. Received ${newValue}, defaulting to 10.`);
-      this.amountOfItems = 10;
+      console.warn(`pid-component: itemsPerPage prop must be positive. Received ${newValue}, defaulting to 10.`);
+      this.itemsPerPage = 10;
     }
   }
 
@@ -355,8 +351,25 @@ export class PidComponent {
     // Ensure component has an ID for accessibility references
     this.ensureComponentId();
 
-    // Validate amountOfItems to prevent division by zero
-    this.validateAmountOfItems(this.amountOfItems);
+    // Validate itemsPerPage to prevent division by zero
+    this.validateItemsPerPage(this.itemsPerPage);
+
+    // Initialize temporarilyEmphasized from the actual prop value.
+    // This cannot be done in the constructor because @Prop values
+    // are not yet bound when the constructor runs, causing
+    // emphasizeComponent=false to be ignored on initial load.
+    this.temporarilyEmphasized = this.emphasizeComponent || this.loadSubcomponents;
+
+    // Set initial expanded state based on openByDefault.
+    // This must happen here (once) rather than in render(), because setting
+    // @State in render() triggers re-renders and prevents the user from
+    // ever collapsing the component.
+    if (this.openByDefault) {
+      if (!this.hideSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) {
+        this.isExpanded = true;
+        this.loadSubcomponents = true;
+      }
+    }
 
     // Initialize dark mode
     this.initializeDarkMode();
@@ -411,10 +424,36 @@ export class PidComponent {
       });
     }
 
+    // Parse the optional ordered renderer list
+    let orderedRendererKeys: string[] | undefined;
+    if (typeof this.renderers === 'string' && this.renderers.trim().length > 0) {
+      try {
+        orderedRendererKeys = JSON.parse(this.renderers);
+        if (!Array.isArray(orderedRendererKeys)) {
+          console.error('renderers prop must be a JSON array of strings, got:', this.renderers);
+          orderedRendererKeys = undefined;
+        }
+      } catch (e) {
+        console.error('Failed to parse renderers prop:', e);
+        orderedRendererKeys = undefined;
+      }
+    }
+
     // Get the renderer for the value
     try {
       const db = new Database();
-      this.identifierObject = await db.getEntity(this.value, settings);
+      const result = await db.getEntity(this.value, settings, orderedRendererKeys, this.fallbackToAll);
+
+      if (result === null) {
+        // No renderer matched (renderers prop was set but none fit)
+        this.displayStatus = 'unmatched';
+        this.identifierObject = undefined;
+        this.items = [];
+        this.actions = [];
+        return;
+      }
+
+      this.identifierObject = result;
     } catch (e) {
       console.error('Failed to get entity from db', e);
       this.displayStatus = 'error';
@@ -485,11 +524,74 @@ export class PidComponent {
     this.cleanupDarkModeListener();
   }
 
-  // AbortController for canceling pending operations
-  private _abortController?: AbortController;
+  /**
+   * Renders the component.
+   */
+  render() {
+    if (this.displayStatus === 'unmatched') {
+      return <Host class="relative font-sans" style={{ display: 'none' }}></Host>;
+    }
 
-  // Store computed line height for collapsed state
-  private _lineHeight: number = 24; // Default fallback
+    if (this.shouldShowCollapsedPreview) {
+      if (this.identifierObject !== undefined && this.displayStatus === 'loaded') {
+        return (
+          <Host class="relative font-sans"
+                aria-label={`This component displays information about the identifier ${this.value}.`}>
+            {this.renderCollapsedPreviewContent()}
+          </Host>
+        );
+      }
+      return (
+        <Host class="relative font-sans"
+              aria-label={`This component displays information about the identifier ${this.value}.`}>
+          {this.renderStatusMessage()}
+        </Host>
+      );
+    }
+
+    return this.renderExpandedState();
+  }
+
+  /**
+   * Ensures the component has a unique ID for accessibility references
+   */
+  private ensureComponentId() {
+    if (!this.el.id) {
+      this.el.id = `pid-component-${Math.random().toString(36).substring(2, 9)}`;
+    }
+  }
+
+  /**
+   * Toggles the loadSubcomponents property if the current level of subcomponents is not the total level of subcomponents.
+   * The open state is handled by the pid-collapsible component.
+   */
+  private toggleSubcomponents = (event?: CustomEvent<boolean>) => {
+    // Update open state based on collapsible event
+    if (event) {
+      // Stop propagation to prevent parent pid-components from collapsing
+      event.stopPropagation();
+
+      this.isExpanded = event.detail;
+
+      if (event.detail) {
+        // Opening: load subcomponents if allowed
+        if (!this.hideSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) {
+          this.loadSubcomponents = true;
+
+          // After loading subcomponents, ensure dimensions are recalculated
+          setTimeout(() => {
+            const collapsible = this.el.shadowRoot?.querySelector('pid-collapsible');
+            if (collapsible && typeof (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions === 'function') {
+              (collapsible as HTMLPidCollapsibleElement).recalculateContentDimensions();
+            }
+          }, 50);
+        }
+      } else {
+        // Collapsing: reset loadSubcomponents so temporarilyEmphasized reverts
+        this.loadSubcomponents = false;
+      }
+    }
+  };
 
   /**
    * Initializes dark mode based on property and system preference
@@ -552,195 +654,154 @@ export class PidComponent {
 
   private blockEventPropagation = (e: Event) => {
     e.stopPropagation();
-    e.stopImmediatePropagation();
-    e.preventDefault()
+  };
+
+  private shouldShowCopyButtonOnTopLevel(): boolean {
+    return this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy && (this.emphasizeComponent || this.temporarilyEmphasized || this.isExpanded);
   }
 
-  /**
-   * Determines if footer should be shown based on whether there are actions or items with pagination
-   */
-  private get shouldShowFooter(): boolean {
-    const hasActions = this.actions.length > 0;
-    const hasPagination = this.items.length > this.amountOfItems;
-    return hasActions || hasPagination;
-  }
-
-  /**
-   * Renders the component.
-   */
-  render() {
-    // Set initial expanded state based on openByDefault
-    if (this.openByDefault) {
-      if (!this.hideSubcomponents && this.levelOfSubcomponents - this.currentLevelOfSubcomponents > 0) {
-        this.isExpanded = this.openByDefault;
-        this.loadSubcomponents = true;
-
-        // After loading subcomponents, ensure dimensions are recalculated
-        setTimeout(() => {
-          const collapsible = this.el.querySelector('pid-collapsible');
-          if (collapsible && typeof (collapsible as any).recalculateContentDimensions === 'function') {
-            (collapsible as any).recalculateContentDimensions();
-          }
-          console.log(
-            `Loaded subcomponents and recalculated dimensions. expanded: ${this.isExpanded}, loadSubcomponents: ${this.loadSubcomponents}, currentLevel: ${this.currentLevelOfSubcomponents}, totalLevels: ${this.levelOfSubcomponents}`,
-          );
-        }, 50); // Give it a bit more time for the DOM to update with new content
-      }
+  private getPreviewClasses(): string {
+    if (this.currentLevelOfSubcomponents === 0) {
+      const base = this.emphasizeComponent || this.temporarilyEmphasized
+        ? 'group rounded-md border py-0 shadow-sm ' + (this.isDarkMode ? 'border-gray-600 bg-gray-800' : 'border-gray-300 bg-white') + ' inline-flex cursor-pointer list-none flex-nowrap items-center overflow-hidden font-mono font-bold text-clip'
+        : (this.isDarkMode ? 'bg-gray-800/60' : '') + ' inline-flex cursor-pointer list-none flex-nowrap items-center font-mono font-bold';
+      return base + (!this.isExpanded ? ` h-[${this._lineHeight || 24}px] leading-[${this._lineHeight || 24}px]` : '');
     }
+    return '';
+  }
 
+  private renderCollapsedPreviewContent() {
     return (
-      <Host class={`relative font-sans`}>
-        {/* Hidden description for accessibility */}
-        <span id={`${this.el.id}-description`} class="sr-only">
-          This component displays information about the identifier {this.value}. It can be expanded to show more details.
+      <span
+        class={this.getPreviewClasses()}
+        tabIndex={0}
+        role="button"
+        aria-label={`Identifier preview for ${this.value}`}
+        aria-expanded={this.isExpanded}
+      >
+        <span
+          class={`inline-block font-mono font-medium select-all ${this.isExpanded ? 'text-xs' : 'text-sm'} ${this.isExpanded ? 'max-w-[60vw] overflow-x-auto whitespace-nowrap' : 'max-w-full truncate'}`}
+        >
+          {this.identifierObject?.renderPreview()}
         </span>
-        {
-          // Check if there are any items or actions to show, or if there's a body to render
-          (this.items.length === 0 && this.actions.length === 0 && !this.identifierObject?.renderBody()) || this.hideSubcomponents ? (
-            this.identifierObject !== undefined && this.displayStatus === 'loaded' ? (
-              // If loaded but no items available render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
-              <span
-                class={
-                  this.currentLevelOfSubcomponents === 0
-                    ? //(w/o sub components)
-                      'group rounded-md border px-2 py-0 shadow-sm' +
-                      (this.emphasizeComponent || this.temporarilyEmphasized
-                        ? this.isDarkMode
-                          ? 'border-gray-600 bg-gray-800'
-                          : 'border-gray-300 bg-white'
-                        : this.isDarkMode
-                          ? 'bg-gray-800/60'
-                          : 'bg-white/60') +
-                    ' inline-flex cursor-pointer list-none flex-nowrap items-center overflow-hidden font-mono font-bold text-clip' +
-                      (!this.isExpanded ? ` h-[${this._lineHeight || 24}px] leading-[${this._lineHeight || 24}px]` : '')
-                    : ''
-                }
-                tabIndex={0}
-                role="button"
-                aria-label={`Identifier preview for ${this.value}`}
-                aria-expanded={this.isExpanded}
-              >
-                <span
-                  class={`inline-flex max-w-full flex-nowrap overflow-x-auto font-mono font-medium text-ellipsis whitespace-nowrap select-all ${this.isExpanded ? 'text-xs' : 'text-sm'}`}
-                >
-                  { // Render the preview of the identifier object defined in the specific implementation of GenericIdentifierType
-                    this.identifierObject?.renderPreview()
-                  }
-                </span>
-                {
-                  // When this component is on the top level, show the copy button in the summary, in all the other cases show it in the table (implemented farther down)
-                  this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy ? (
-                    <copy-button value={this.identifierObject.value} class="shrink-0"
-                                 aria-label={`Copy value: ${this.identifierObject.value}`}
-                                 onClick={this.blockEventPropagation} />
-                  ) : (
-                    ''
-                  )
-                }
-              </span>
-            ) : this.displayStatus === 'error' ? (
-              <span class={'inline-flex items-center font-medium text-red-600'} role="alert" aria-live="assertive">
-                <svg class="mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-2h2v2h-2zm0-10v6h2V7h-2z" clip-rule="evenodd" />
-                </svg>
-                Error loading data for: {this.value}
-              </span>
-            ) : (
-              <span class={'inline-flex items-center transition ease-in-out'} role="status" aria-live="polite">
-                <svg class="mr-3 ml-1 h-5 w-5 animate-spin text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
-                  <path
-                    class="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  />
-                </svg>
-                <span>Loading... {this.value}</span>
-              </span>
-            )
-          ) : (
-            <pid-collapsible
-              open={this.isExpanded}
-              emphasize={this.emphasizeComponent || this.temporarilyEmphasized}
-              initialWidth={this.width}
-              initialHeight={this.height}
-              lineHeight={this._lineHeight}
-              showFooter={this.shouldShowFooter}
-              darkMode={this.darkMode}
-              onCollapsibleToggle={e => this.toggleSubcomponents(e)}
+        {this.shouldShowCopyButtonOnTopLevel() ? (
+          <copy-button
+            value={this.identifierObject.value}
+            class="ml-auto shrink-0"
+            aria-label={`Copy value: ${this.identifierObject.value}`}
+            onClick={this.blockEventPropagation}
+          />
+        ) : null}
+      </span>
+    );
+  }
+
+  private renderStatusMessage() {
+    if (this.displayStatus === 'error') {
+      return (
+        <span class={'inline-flex items-center font-mono text-sm text-gray-600 dark:text-gray-300'} role="status">
+          {this.value}
+        </span>
+      );
+    }
+    return (
+      <span class={'inline-flex items-center font-mono text-sm text-gray-500'} role="status" aria-live="polite">
+        {this.value}
+      </span>
+    );
+  }
+
+  private renderExpandedState() {
+    return (
+      <Host
+        class="relative font-sans"
+        aria-label={`This component displays information about the identifier ${this.value}. It can be expanded to show more details.`}
+      >
+        <pid-collapsible
+          expanded={this.isExpanded}
+          open={this.isExpanded}
+          previewScrollable={this.isExpanded}
+          emphasize={this.emphasizeComponent || this.temporarilyEmphasized}
+          initialWidth={this.currentLevelOfSubcomponents > 0 ? '100%' : this.width}
+          initialHeight={this.height}
+          lineHeight={this._lineHeight}
+          showFooter={this.shouldShowFooter}
+          darkMode={this.darkMode}
+          onCollapsibleToggle={e => this.toggleSubcomponents(e)}
+          onClick={this.blockEventPropagation}
+          aria-label={`Collapsible section for ${this.value}`}
+          aria-describedby={`${this.el.id}-description`}
+        >
+          <span
+            slot="summary"
+            class={`font-mono font-medium select-all text-sm ${this.isExpanded ? 'overflow-x-auto whitespace-nowrap' : 'max-w-full truncate'}`}
+            aria-label={`Preview of ${this.value}`}
+          >
+            {this.identifierObject?.renderPreview()}
+          </span>
+
+          {this.shouldShowCopyButtonOnTopLevel() ? (
+            <copy-button
+              slot="summary-actions"
+              value={this.value}
+              class="ml-auto pl-2 shrink-0"
+              aria-label={`Copy value: ${this.value}`}
               onClick={this.blockEventPropagation}
-              aria-label={`Collapsible section for ${this.value}`}
-              aria-describedby={`${this.el.id}-description`}
-            >
-              <span
-                slot="summary"
-                class={`inline-flex items-center overflow-x-auto font-mono text-sm font-medium select-all ${this.isExpanded ? 'flex-wrap overflow-visible wrap-break-word' : 'flex-nowrap whitespace-nowrap'}`}
-                aria-label={`Preview of ${this.value}`}
-              >
-                {this.identifierObject?.renderPreview()}
-              </span>
+            />
+          ) : null}
 
-              {this.currentLevelOfSubcomponents === 0 && this.showTopLevelCopy && (this.emphasizeComponent || this.temporarilyEmphasized) ? (
-                <copy-button
-                  slot="summary-actions"
-                  value={this.value}
-                  class="self-end shrink-0"
-                  aria-label={`Copy value: ${this.value}`}
-                  onClick={this.blockEventPropagation}
-                />
-              ) : null}
+          {this.items.length > 0 ? (
+            <pid-data-table
+              items={this.items}
+              itemsPerPage={this.itemsPerPage}
+              currentPage={this.tablePage}
+              loadSubcomponents={this.loadSubcomponents}
+              hideSubcomponents={this.hideSubcomponents}
+              currentLevelOfSubcomponents={this.currentLevelOfSubcomponents}
+              levelOfSubcomponents={this.levelOfSubcomponents}
+              settings={this.settings}
+              darkMode={this.darkMode}
+              onPageChange={e => (this.tablePage = e.detail)}
+              class="w-full grow overflow-x-clip overflow-y-auto"
+              aria-label={`Data table for ${this.value}`}
+              aria-describedby={`${this.el.id}-table-description`}
+            />
+          ) : null}
 
-              {/* Table and content */}
-              {this.items.length > 0 ? (
-                <pid-data-table
-                  items={this.items}
-                  itemsPerPage={this.amountOfItems}
-                  currentPage={this.tablePage}
-                  loadSubcomponents={this.loadSubcomponents}
-                  hideSubcomponents={this.hideSubcomponents}
-                  currentLevelOfSubcomponents={this.currentLevelOfSubcomponents}
-                  levelOfSubcomponents={this.levelOfSubcomponents}
-                  settings={this.settings}
-                  darkMode={this.darkMode}
-                  onPageChange={e => (this.tablePage = e.detail)}
-                  class="w-full grow overflow-auto"
-                  aria-label={`Data table for ${this.value}`}
-                  aria-describedby={`${this.el.id}-table-description`}
-                />
-              ) : null}
+          {this.items.length > 0 && (
+            <span id={`${this.el.id}-table-description`} class="sr-only fixed">
+              This table displays properties and values associated with the identifier {this.value}.
+            </span>
+          )}
 
-              {/* Hidden description for data table accessibility */}
-              {this.items.length > 0 && (
-                <span id={`${this.el.id}-table-description`} class="sr-only">
-                  This table displays properties and values associated with the identifier {this.value}.
-                </span>
-              )}
+          {this.identifierObject?.renderBody()}
 
-              {this.identifierObject?.renderBody()}
+          {this.items.length > 0 && (
+            <div slot="footer"
+                 class={`relative z-50 w-full overflow-visible ${this.isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+              <pid-pagination
+                currentPage={this.tablePage}
+                totalItems={this.items.length}
+                itemsPerPage={this.itemsPerPage}
+                darkMode={this.darkMode}
+                onPageChange={e => (this.tablePage = e.detail)}
+                onItemsPerPageChange={e => (this.itemsPerPage = e.detail)}
+                aria-label={`Pagination controls for ${this.value} data`}
+                aria-controls={`${this.el.id}-table`}
+              />
+            </div>
+          )}
 
-              {/* Pagination in a separate line above actions */}
-              {this.items.length > 0 && (
-                <div slot="footer" class={`relative z-50 w-full overflow-visible ${this.isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-                  <pid-pagination
-                    currentPage={this.tablePage}
-                    totalItems={this.items.length}
-                    itemsPerPage={this.amountOfItems}
-                    darkMode={this.darkMode}
-                    onPageChange={e => (this.tablePage = e.detail)}
-                    onItemsPerPageChange={e => (this.amountOfItems = e.detail)}
-                    aria-label={`Pagination controls for ${this.value} data`}
-                    aria-controls={`${this.el.id}-table`}
-                  />
-                </div>
-              )}
-
-              {/* Footer Actions - in a separate line below pagination */}
-              {this.actions.length > 0 && (
-                <pid-actions slot="footer-actions" actions={this.actions} darkMode={this.darkMode} class="my-0 shrink-0" aria-label={`Available actions for ${this.value}`} />
-              )}
-            </pid-collapsible>
-          )
-        }
+          {this.actions.length > 0 && (
+            <pid-actions
+              slot="footer-actions"
+              actions={this.actions}
+              darkMode={this.darkMode}
+              class="my-0 shrink-0 overflow-x-auto"
+              aria-label={`Available actions for ${this.value}`}
+            />
+          )}
+        </pid-collapsible>
       </Host>
     );
   }

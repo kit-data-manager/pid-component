@@ -122,7 +122,7 @@ export class DataCiteInfo {
 
       // Extract ORCID
       const orcidIdentifier = creator.nameIdentifiers?.find(
-        (id) => id.nameIdentifierScheme?.toLowerCase() === 'orcid'
+        (id) => id.nameIdentifierScheme?.toLowerCase() === 'orcid',
       );
       if (orcidIdentifier?.nameIdentifier) {
         // Clean up ORCID to just the ID
@@ -152,7 +152,7 @@ export class DataCiteInfo {
   get correspondingAuthor(): Creator | undefined {
     const contributors = this._attributes.contributors || [];
     const corresponding = contributors.find(
-      (c) => c.contributorType?.toLowerCase() === 'contactperson'
+      (c) => c.contributorType?.toLowerCase() === 'contactperson',
     );
 
     if (!corresponding) return undefined;
@@ -170,7 +170,7 @@ export class DataCiteInfo {
 
     // Extract ORCID
     const orcidIdentifier = corresponding.nameIdentifiers?.find(
-      (id) => id.nameIdentifierScheme?.toLowerCase() === 'orcid'
+      (id) => id.nameIdentifierScheme?.toLowerCase() === 'orcid',
     );
     if (orcidIdentifier?.nameIdentifier) {
       result.orcid = orcidIdentifier.nameIdentifier
@@ -289,6 +289,13 @@ export class DataCiteInfo {
       console.debug('DataCite API error:', error);
       return null;
     }
+  }
+
+  /**
+   * Deserializes from cached object
+   */
+  static fromObject(doiObj: DOI, obj: ReturnType<DataCiteInfo['toObject']>): DataCiteInfo {
+    return new DataCiteInfo(doiObj, obj.rawMetadata as DataCiteResponse);
   }
 
   /**
@@ -418,12 +425,5 @@ export class DataCiteInfo {
       doi: JSON.stringify(this._doi.toObject()),
       rawMetadata: this._rawMetadata,
     };
-  }
-
-  /**
-   * Deserializes from cached object
-   */
-  static fromObject(doiObj: DOI, obj: ReturnType<DataCiteInfo['toObject']>): DataCiteInfo {
-    return new DataCiteInfo(doiObj, obj.rawMetadata as DataCiteResponse);
   }
 }

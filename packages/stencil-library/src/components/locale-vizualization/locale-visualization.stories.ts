@@ -1,22 +1,31 @@
 import { Meta, StoryObj } from '@storybook/web-components-vite';
 
+/**
+ * The locale-visualization component renders a locale code (e.g. "de-DE", "en-US")
+ * with its human-readable language name and an optional country flag emoji.
+ */
 const meta: Meta = {
-  title: 'Renderer/Locale Visualization',
+  title: 'Internal/Locale Visualization',
   component: 'locale-visualization',
+  tags: ['autodocs'],
   argTypes: {
     locale: {
-      description: 'The locale to visualize.',
+      description: 'The locale code to visualize (e.g. "de-DE", "en-US", "fr-FR")',
       control: {
-        required: true,
         type: 'text',
+      },
+      table: {
+        type: { summary: 'string' },
       },
     },
     showFlag: {
-      description: 'Whether to show the flag of the region.',
+      description: 'Whether to show the country flag emoji alongside the locale name',
       control: {
-        required: false,
         type: 'boolean',
-        default: true,
+      },
+      table: {
+        defaultValue: { summary: 'true' },
+        type: { summary: 'boolean' },
       },
     },
   },
@@ -28,7 +37,11 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+/**
+ * Default locale visualization showing a German locale with flag
+ */
 export const Default: Story = {
+  id: 'locale-visualization-default',
   args: {
     locale: 'de-DE',
   },
@@ -43,7 +56,11 @@ export const Default: Story = {
   },
 };
 
+/**
+ * Locale visualization without the country flag
+ */
 export const WithoutFlag: Story = {
+  id: 'locale-visualization-without-flag',
   args: {
     locale: 'en-US',
     showFlag: false,
@@ -52,7 +69,7 @@ export const WithoutFlag: Story = {
     docs: {
       source: {
         code: `
-<locale-visualization locale="de-DE" show-flag="false"></locale-visualization>
+<locale-visualization locale="en-US" show-flag="false"></locale-visualization>
         `,
       },
     },

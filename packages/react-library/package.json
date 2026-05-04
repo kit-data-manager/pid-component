@@ -1,6 +1,6 @@
 {
   "name": "@kit-data-manager/react-pid-component",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "React wrapper for the package @kit-data-manager/pid-component",
   "author": {
     "name": "Christopher Raquet",
@@ -35,7 +35,9 @@
   },
   "scripts": {
     "build": "npm run tsc",
-    "tsc": "tsc -p . --outDir ./dist"
+    "tsc": "tsc -p . --outDir ./dist",
+    "storybook": "storybook dev -p 6007 --no-open",
+    "build-storybook": "storybook build -o storybook-static"
   },
   "bugs": {
     "url": "https://github.com/kit-data-manager/pid-component/issues"
@@ -44,11 +46,23 @@
     "access": "public"
   },
   "dependencies": {
-    "@kit-data-manager/pid-component": "^0.3.0",
-    "@stencil/react-output-target": "^1.5.0"
+    "@kit-data-manager/pid-component": "^0.4.0",
+    "@stencil/react-output-target": "^1.5.2"
   },
   "devDependencies": {
-    "typescript": "^6.0.2"
+    "@codecov/vite-plugin": "^2.0.1",
+    "@mantine/core": "^9.1.1",
+    "@mantine/hooks": "^9.1.1",
+    "@storybook/addon-a11y": "^10.3.6",
+    "@storybook/addon-docs": "^10.3.6",
+    "@storybook/react-vite": "^10.3.6",
+    "@tabler/icons-react": "^3.41.1",
+    "@vitejs/plugin-react": "^6.0.1",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "storybook": "^10.3.6",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.10"
   },
   "keywords": [
     "react",

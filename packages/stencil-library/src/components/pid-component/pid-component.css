@@ -10,10 +10,113 @@ details summary::-webkit-details-marker {
  * where tag-name selectors cannot target the host element.
  *
  * display:inline-block lets the component sit inline with text while still being a
- * proper box (supporting width/height/resize when expanded). vertical-align:top
- * aligns the top of the component with the surrounding text line.
+ * proper box (supporting width/height/resize when expanded). vertical-align:middle
+ * aligns the midpoint of the component with the surrounding text midpoint,
+ * keeping the preview visually on the same line as adjacent text.
  */
 :host {
   display: inline-block;
-  vertical-align: top;
+  vertical-align: baseline;
+}
+
+/* Preview content: fill available space, cap at 50% of viewport width */
+::slotted(slot[name="summary"]) {
+  max-width: 50vw;
+}
+
+/* Ensure preview content doesn't cause layout overflow in constrained contexts */
+:host([expanded]) {
+  max-width: 100%;
+  overflow: visible;
+}
+
+/* Preview wrappers: fill available space, cap at 50% viewport width */
+.pid-preview-wrapper {
+  max-width: 50vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pid-preview-scroll {
+  max-width: 50vw;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: thin;
+}
+
+.pid-preview-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+
+.pid-preview-scroll::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 2px;
+}
+
+/*
+ * Tailwind utility classes for pid-collapsible emphasized mode.
+ *
+ * REASON: pid-collapsible uses shadow:false and renders inside pid-component's
+ * shadow DOM (shadow:true). The Tailwind global stylesheet is injected into the
+ * document <head>, which cannot penetrate the shadow boundary. These classes are
+ * applied by pid-collapsible's getHostClasses() when emphasize=true, so the
+ * corresponding CSS rules must be available inside this shadow root.
+ */
+.border {
+  border-width: 1px;
+  border-style: solid;
+}
+
+.border-gray-300 {
+  border-color: #d1d5db;
+}
+
+.border-gray-600 {
+  border-color: #4b5563;
+}
+
+.rounded-md {
+  border-radius: 0.375rem;
+}
+
+.shadow-xs {
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+/* Background for expanded emphasized state */
+.bg-white {
+  background-color: #fff;
+}
+
+/* Bottom border on summary when open + emphasized */
+.border-b {
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+
+.border-gray-100 {
+  border-color: #f3f4f6;
+}
+
+.border-gray-700 {
+  border-color: #374151;
+}
+
+/* Thin scrollbar for preview overflow */
+.overflow-x-auto {
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.overflow-x-auto::-webkit-scrollbar {
+  height: 3px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 2px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track {
+  background: transparent;
 }

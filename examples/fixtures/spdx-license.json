@@ -1,0 +1,13 @@
+{
+  "licenseId": "Apache-2.0",
+  "name": "Apache License 2.0",
+  "seeAlso": [
+    "https://www.apache.org/licenses/LICENSE-2.0"
+  ],
+  "isOsiApproved": true,
+  "isFsfLibre": true,
+  "isDeprecatedLicenseId": false,
+  "detailsUrl": "https://spdx.org/licenses/Apache-2.0.json",
+  "referenceNumber": 456,
+  "reference": "https://spdx.org/licenses/Apache-2.0.html"
+}

@@ -1,0 +1,33 @@
+{
+  "id": "https://ror.org/04t3en479",
+  "name": "Karlsruhe Institute of Technology",
+  "types": [
+    "Education"
+  ],
+  "acronyms": [
+    "KIT"
+  ],
+  "links": [
+    "https://www.kit.edu"
+  ],
+  "country": {
+    "country_name": "Germany",
+    "country_code": "DE"
+  },
+  "addresses": [
+    {
+      "city": "Karlsruhe",
+      "state": "Baden-Württemberg",
+      "country_geonames_id": 2921044
+    }
+  ],
+  "relationships": [
+    {
+      "label": "Forschungszentrum Karlsruhe",
+      "type": "Predecessor",
+      "id": "https://ror.org/02vbkpn33"
+    }
+  ],
+  "established": 2009,
+  "status": "active"
+}

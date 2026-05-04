@@ -3,6 +3,10 @@ dist/
 www/
 loader/
 test-results/
+coverage/
+playwright-report/
+.nx
+packages/examples
 
 *~
 *.sw[mnpcod]
@@ -157,5 +161,3 @@ fabric.properties
 !.idea/runConfigurations
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,webstorm+all,storybookjs
-
-.nx

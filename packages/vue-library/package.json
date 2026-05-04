@@ -1,0 +1,78 @@
+{
+  "name": "@kit-data-manager/vue-pid-component",
+  "version": "0.4.0",
+  "description": "Vue wrapper for the package @kit-data-manager/pid-component",
+  "author": {
+    "name": "Maximilian Inckmann",
+    "url": "https://orcid.org/0009-0005-2800-4833",
+    "email": "maximilian.inckmann@kit.edu"
+  },
+  "homepage": "https://kit-data-manager.github.io/pid-component",
+  "type": "module",
+  "license": "Apache-2.0",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kit-data-manager/pid-component"
+  },
+  "scripts": {
+    "build": "tsc -p . --outDir ./dist",
+    "storybook": "storybook dev -p 6008 --no-open",
+    "build-storybook": "storybook build -o storybook-static"
+  },
+  "bugs": {
+    "url": "https://github.com/kit-data-manager/pid-component/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@kit-data-manager/pid-component": "^0.4.0",
+    "@stencil/vue-output-target": "^0.13.1"
+  },
+  "devDependencies": {
+    "@codecov/vite-plugin": "^2.0.1",
+    "@mdi/font": "^7.4.47",
+    "@storybook/addon-a11y": "^10.3.6",
+    "@storybook/addon-docs": "^10.3.6",
+    "@storybook/vue3-vite": "^10.3.6",
+    "@vitejs/plugin-vue": "^6.0.6",
+    "@vue/server-renderer": "^3.5.33",
+    "ast-types": "^0.16.1",
+    "storybook": "^10.3.6",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.10",
+    "vue": "^3.5.33",
+    "vuetify": "^3.12.5"
+  },
+  "peerDependencies": {
+    "vue": "^3.0.0"
+  },
+  "keywords": [
+    "vue",
+    "pid",
+    "datatyperegistry",
+    "handle.net",
+    "orcid",
+    "identifier",
+    "kit-data-manager",
+    "typescript",
+    "storybook",
+    "tailwindcss",
+    "fair",
+    "fairdata",
+    "fairdo",
+    "fairdigitalobject"
+  ]
+}

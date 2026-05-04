@@ -16,13 +16,6 @@ export abstract class GenericIdentifierType {
   private readonly _value: string;
 
   /**
-   * Tracks the effective dark mode state (true for dark, false for light)
-   * @private
-   * @type {boolean}
-   */
-  private _isDarkMode: boolean = false;
-
-  /**
    * Creates a new GenericIdentifierType object
    * @param value The value that should be parsed and rendered
    * @constructor
@@ -37,8 +30,23 @@ export abstract class GenericIdentifierType {
    */
   constructor(value: string, settings?: { name: string; value: unknown }[]) {
     this._value = value;
-    this._settings = settings;
+    this._settings = settings ? settings : [];
     this.updateDarkMode();
+  }
+
+  /**
+   * Tracks the effective dark mode state (true for dark, false for light)
+   * @private
+   * @type {boolean}
+   */
+  private _isDarkMode: boolean = false;
+
+  /**
+   * Returns whether the component is in dark mode or not
+   * @returns {boolean} Whether the component is in dark mode or not
+   */
+  get isDarkMode(): boolean {
+    return this._isDarkMode;
   }
 
   /**
@@ -127,13 +135,44 @@ export abstract class GenericIdentifierType {
   abstract init(data?: unknown): Promise<void>;
 
   /**
-   * This method indicates if a value has the correct format or not.
-   * It is heavily recommended to use a regular expression to check the format.
-   * It must be implemented by the child classes as it is abstract.
-   * @returns {boolean} Whether the value has the correct format or not.
+   * Stage 1: Quick, synchronous format check using only local data (no network I/O).
+   * Returns:
+   * - `true` if the format is definitively correct
+   * - `false` if the format is definitively incorrect
+   *
+   * Subclasses MUST override this with a definitive synchronous check.
+   * @returns {boolean} Whether the format is definitively correct.
+   */
+  abstract quickCheck(): boolean | undefined;
+
+  /**
+   * Stage 2: Checks if the renderer has meaningful information to display.
+   * This method resolves the remote resource, validates it, and interprets the data.
+   * It is called after quickCheck() returns false or for candidates that need resolution.
+   *
+   * - For types requiring network data (DOI, ORCiD, Handle, ROR, SPDX):
+   *   Fetches data from external APIs and validates that meaningful data was retrieved.
+   *   The fetched data is stored in the instance for later use by init().
+   *
+   * - For simple types (Date, Email, URL, Locale, JSON, Fallback):
+   *   Returns true since syntax is already validated by quickCheck().
+   *
+   * @returns {Promise<boolean>} True if meaningful information is available, false otherwise.
    * @abstract
    */
-  abstract hasCorrectFormat(): Promise<boolean>;
+  abstract hasMeaningfulInformation(): Promise<boolean>;
+
+  /**
+   * Returns whether the renderer has resolved successfully and can render
+   * a meaningful preview. Used to decide whether to cache in IndexedDB.
+   * Subclasses with external data dependencies (DOI, Handle, ORCiD, etc.)
+   * SHOULD override this to check whether their data was fetched successfully.
+   * Default: true (simple renderers like DateType, EmailType always resolve).
+   * @returns {boolean} Whether the renderer is resolvable.
+   */
+  isResolvable(): boolean {
+    return true;
+  }
 
   /**
    * This method returns the key that is used to identify the settings for this component.
@@ -162,14 +201,6 @@ export abstract class GenericIdentifierType {
    */
   renderBody(): FunctionalComponent<unknown> | undefined {
     return undefined;
-  }
-
-  /**
-   * Returns whether the component is in dark mode or not
-   * @returns {boolean} Whether the component is in dark mode or not
-   */
-  get isDarkMode(): boolean {
-    return this._isDarkMode;
   }
 
   /**

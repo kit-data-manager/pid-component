@@ -56,12 +56,20 @@ const meta: Meta = {
         type: { summary: 'boolean' },
       },
     },
+    expanded: {
+      description: 'Whether to apply floating/overlay styling when expanded. When true, applies absolute positioning and z-index for overlay behavior.',
+      control: { type: 'boolean' },
+      table: {
+        defaultValue: { summary: 'false' },
+        type: { summary: 'boolean' },
+      },
+    },
     darkMode: {
       description: 'The dark mode setting for the component',
       control: 'select',
       options: ['light', 'dark', 'system'],
       table: {
-        type: { summary: 'string' },
+        type: { summary: '"light" | "dark" | "system"' },
         defaultValue: { summary: 'system' },
       },
     },
@@ -71,6 +79,7 @@ const meta: Meta = {
     emphasize: true,
     lineHeight: 24,
     showFooter: false,
+    expanded: false,
     darkMode: 'light',
   },
 };
@@ -82,6 +91,7 @@ type Story = StoryObj;
  * Default collapsible component in closed state
  */
 export const Default: Story = {
+  id: 'collapsible-default',
   args: {
     open: false,
     emphasize: true,
@@ -130,6 +140,7 @@ export const Default: Story = {
  * Collapsible component that starts in the open state
  */
 export const OpenByDefault: Story = {
+  id: 'collapsible-open-by-default',
   args: {
     open: true,
     emphasize: true,
@@ -178,6 +189,7 @@ export const OpenByDefault: Story = {
  * Collapsible component with footer and resize capability
  */
 export const WithFooterAndResize: Story = {
+  id: 'collapsible-footer-and-resize',
   args: {
     open: true,
     emphasize: true,
@@ -249,6 +261,7 @@ export const WithFooterAndResize: Story = {
  * Demonstrates the dark mode appearance
  */
 export const DarkMode: Story = {
+  id: 'collapsible-dark-mode',
   args: {
     open: true,
     emphasize: true,
@@ -303,6 +316,7 @@ export const DarkMode: Story = {
  * Demonstrates the light mode appearance
  */
 export const LightMode: Story = {
+  id: 'collapsible-light-mode',
   args: {
     open: true,
     emphasize: true,
@@ -357,6 +371,7 @@ export const LightMode: Story = {
  * Showcase of different collapsible states
  */
 export const CollapsibleStates: Story = {
+  id: 'collapsible-states',
   render: () => {
     // Define the different states to showcase
     const states = [

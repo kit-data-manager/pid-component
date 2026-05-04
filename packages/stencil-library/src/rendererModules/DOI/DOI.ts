@@ -20,7 +20,10 @@ export class DOI {
     this._doi = doi
       .replace(/^https?:\/\/doi\.org\//i, '')
       .replace(/^https?:\/\/dx\.doi\.org\//i, '')
-      .replace(/^doi:/i, '');
+      .replace(/^doi:/i, '')
+      .replace(/\/+$/, '') // Remove trailing slashes
+      .replace(/\.+$/, '') // Remove trailing dots
+      .trim();
   }
 
   /**
@@ -43,7 +46,7 @@ export class DOI {
       .replace(/^https?:\/\/doi\.org\//i, '')
       .replace(/^https?:\/\/dx\.doi\.org\//i, '')
       .replace(/^doi:/i, '');
-    
+
     // DOI regex: starts with "10.", followed by registrant code, slash, and suffix
     // The suffix can contain various characters
     return /^10\.\d{4,9}\/[-._;()/:A-Za-z0-9]+$/.test(cleaned);
@@ -61,6 +64,16 @@ export class DOI {
   }
 
   /**
+   * Creates a DOI from JSON.
+   * @param serialized The serialized DOI.
+   * @returns {DOI} The DOI object.
+   */
+  static fromJSON(serialized: string): DOI {
+    const data: ReturnType<DOI['toObject']> = JSON.parse(serialized);
+    return new DOI(data.doi);
+  }
+
+  /**
    * Returns the DOI as a resolvable URL.
    * @returns {string} The DOI URL.
    */
@@ -74,16 +87,6 @@ export class DOI {
    */
   toString(): string {
     return this._doi;
-  }
-
-  /**
-   * Creates a DOI from JSON.
-   * @param serialized The serialized DOI.
-   * @returns {DOI} The DOI object.
-   */
-  static fromJSON(serialized: string): DOI {
-    const data: ReturnType<DOI['toObject']> = JSON.parse(serialized);
-    return new DOI(data.doi);
   }
 
   /**

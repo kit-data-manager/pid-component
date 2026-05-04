@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Component, Element, Event, EventEmitter, h, Host, Method, Prop, State, Watch } from '@stencil/core';
 
 /**
@@ -87,6 +86,17 @@ export class PidCollapsible {
   @Prop() showFooter: boolean = false;
 
   /**
+   * Whether to apply floating/overlay styling when expanded.
+   * When true, applies absolute positioning and z-index for overlay behavior.
+   */
+  @Prop() expanded: boolean = false;
+
+  /**
+   * Whether the preview should be scrollable (for subcomponents or expanded state).
+   */
+  @Prop() previewScrollable: boolean = false;
+
+  /**
    * Event emitted when the collapsible is toggled
    */
   @Event() collapsibleToggle: EventEmitter<boolean>;
@@ -120,6 +130,8 @@ export class PidCollapsible {
 
   // Flag to prevent recursive toggle calls
   private isToggling = false;
+  private lastClickTime = 0;
+  private pendingClickTimer: ReturnType<typeof setTimeout> | null = null;
 
   // Debounce timer for resize optimization
   private resizeDebounceTimer: number = null;
@@ -147,8 +159,8 @@ export class PidCollapsible {
   }
 
   componentWillLoad() {
-    // Default to 75% width if no initial width is provided
-    this.currentWidth = this.initialWidth || '75%'; // Changed from DEFAULT_WIDTH to use 75% (w-3/4)
+    // Default width if no initial width is provided
+    this.currentWidth = this.initialWidth || CONSTANTS.DEFAULT_WIDTH;
     this.currentHeight = this.initialHeight || CONSTANTS.DEFAULT_HEIGHT;
 
     // Initialize dark mode
@@ -184,6 +196,136 @@ export class PidCollapsible {
 
     // Clean up dark mode media query listener
     this.cleanupDarkModeListener();
+  }
+
+  /**
+   * Public method to recalculate content dimensions
+   * Can be called externally, for example when pagination changes
+   * Optimized for better performance
+   */
+  @Method()
+  public async recalculateContentDimensions() {
+    if (this.open) {
+      // Use a small delay to avoid excessive recalculations
+      if (this.resizeDebounceTimer !== null) {
+        window.cancelAnimationFrame(this.resizeDebounceTimer);
+      }
+
+      return new Promise<{
+        contentWidth: number;
+        contentHeight: number;
+        maxWidth: number;
+        maxHeight: number
+      }>(resolve => {
+        this.resizeDebounceTimer = window.requestAnimationFrame(() => {
+          // Width: use stored user-resized width, configured initial width, or responsive default
+          if (this.lastExpandedWidth) {
+            this.currentWidth = this.lastExpandedWidth;
+          } else {
+            this.currentWidth = this.initialWidth || this.getResponsiveDefaultWidth();
+          }
+
+          this.el.style.width = this.currentWidth;
+
+          // Set height to auto to let content drive it, then measure
+          this.el.style.height = 'auto';
+          this.el.style.maxHeight = 'max-content';
+
+          requestAnimationFrame(() => {
+            // Capture the actual content height and set as concrete pixels
+            // so resize:both works in Safari
+            if (this.open) {
+              const actualHeight = this.el.scrollHeight;
+              this.el.style.height = `${actualHeight}px`;
+              this.el.style.maxHeight = `${actualHeight}px`;
+            }
+
+            this.lastExpandedWidth = this.currentWidth;
+
+            const dimensions = this.calculateContentDimensions();
+            this.contentHeightChange.emit({ maxHeight: dimensions.maxHeight });
+            this.resizeDebounceTimer = null;
+
+            resolve(dimensions);
+          });
+        });
+      });
+    }
+    return null;
+  }
+
+  render() {
+    const hostClasses = this.getHostClasses();
+    const detailsClasses = this.getDetailsClasses();
+    const summaryClasses = this.getSummaryClasses();
+    const contentClasses = this.getContentClasses();
+    const footerClasses = this.getFooterClasses();
+    const footerActionsClasses = this.getFooterActionsClasses();
+
+    return (
+      <Host class={hostClasses}>
+        <details
+          class={detailsClasses}
+          open={this.open}
+          onToggle={this.handleToggle}
+        >
+          <summary
+            class={summaryClasses}
+            onClick={this.handleSummaryClick}
+          >
+            {this.emphasize && (
+              <span>
+                  <svg
+                    class={`${this.isDarkMode ? 'text-gray-300' : 'text-gray-600'} transition-transform duration-200 group-open:rotate-180 mr-2 ml-1`}
+                    fill="none"
+                    height="12"
+                    width="12"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    viewBox="0 0 12 12"
+                    aria-hidden="true"
+                  >
+                    <path d="M 2 3 l 4 6 l 4 -6"></path>
+                  </svg>
+                </span>
+            )}
+            <span
+              class={`block ${this.previewScrollable ? 'shrink-0' : 'min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'}`}>
+                <slot name="summary"></slot>
+              </span>
+            <div class={`ml-auto shrink-0 ${this.previewScrollable ? 'sticky right-0' : ''}`}>
+              <slot name="summary-actions"></slot>
+            </div>
+          </summary>
+
+          <div class={`${contentClasses}`}>
+            <slot></slot>
+          </div>
+
+          {this.showFooter && this.open && (
+            <div class={footerClasses}>
+              {/* Main footer slot for pagination */}
+              <div
+                class={`z-50 overflow-visible border-b ${this.isDarkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-100 bg-white'}`}>
+                <slot name="footer"></slot>
+              </div>
+
+              {/* Actions row */}
+              <div class={footerActionsClasses}>
+                <div class="grow overflow-visible">
+                  <slot name="footer-left"></slot>
+                </div>
+                <div class="flex shrink-0 items-center gap-2 overflow-visible">
+                  <slot name="footer-actions"></slot>
+                </div>
+              </div>
+            </div>
+          )}
+        </details>
+      </Host>
+    );
   }
 
   /**
@@ -254,86 +396,6 @@ export class PidCollapsible {
     console.debug('Page changed to:', event.detail);
     this.recalculateContentDimensions();
   };
-
-  /**
-   * Public method to recalculate content dimensions
-   * Can be called externally, for example when pagination changes
-   * Optimized for better performance
-   */
-  @Method()
-  public async recalculateContentDimensions() {
-    if (this.open) {
-      // Add a class to optimize rendering during recalculation
-      this.el.classList.add('resizing');
-
-      // Use a small delay to avoid excessive recalculations
-      // when multiple events happen in quick succession
-      if (this.resizeDebounceTimer !== null) {
-        window.cancelAnimationFrame(this.resizeDebounceTimer);
-      }
-
-      return new Promise<any>(resolve => {
-        this.resizeDebounceTimer = window.requestAnimationFrame(() => {
-          const dimensions = this.calculateContentDimensions();
-
-          // Batch all style changes in a single rendering frame
-          // to avoid forced reflows and optimize performance
-          requestAnimationFrame(() => {
-            // Set max dimensions first - add a buffer to prevent too tight constraints
-            const maxWidth = Math.max(dimensions.maxWidth, dimensions.contentWidth + CONSTANTS.PADDING_WIDTH);
-            const maxHeight = Math.max(dimensions.maxHeight, dimensions.contentHeight + CONSTANTS.PADDING_HEIGHT + (this.showFooter ? CONSTANTS.FOOTER_HEIGHT : 0));
-
-            this.el.style.maxWidth = `${maxWidth}px`;
-            this.el.style.maxHeight = `${maxHeight}px`;
-
-            // Update current dimensions to match content exactly
-            // Ensure width is at least 75% of container if no width is explicitly provided
-            const optimalWidth = dimensions.contentWidth + CONSTANTS.PADDING_WIDTH;
-            const optimalHeight = dimensions.contentHeight + CONSTANTS.PADDING_HEIGHT + (this.showFooter ? CONSTANTS.FOOTER_HEIGHT : 0);
-
-            // If initial width/height is specified, prefer that for first calculation
-            if (this.lastExpandedWidth) {
-              this.currentWidth = this.lastExpandedWidth;
-            } else if (!this.currentWidth || this.currentWidth === 'auto') {
-              // Default to 75% width if no initial width is provided
-              this.currentWidth = this.initialWidth || '75%';
-            } else if (!this.initialWidth) {
-              // If no initial width was specified but we have a current width,
-              // preserve the 75% width setting rather than calculating a pixel value
-              this.currentWidth = '75%';
-            } else {
-              // Otherwise use the calculated optimal width with extra space for content
-              this.currentWidth = `${Math.max(optimalWidth, dimensions.contentWidth * 1)}px`;
-            }
-
-            if (!this.currentHeight || this.currentHeight === `${this.lineHeight}px`) {
-              this.currentHeight = this.initialHeight || `${optimalHeight}px`;
-            } else {
-              this.currentHeight = `${optimalHeight}px`;
-            }
-
-            // Apply the content-based dimensions
-            this.el.style.width = this.currentWidth;
-            this.el.style.height = this.currentHeight;
-
-            // Store these as the last expanded dimensions
-            this.lastExpandedWidth = this.currentWidth;
-            this.lastExpandedHeight = this.currentHeight;
-
-            // Emit event with calculated dimensions for external components
-            this.contentHeightChange.emit({ maxHeight });
-
-            // Remove optimization class
-            this.el.classList.remove('resizing');
-            this.resizeDebounceTimer = null;
-
-            resolve(dimensions);
-          });
-        });
-      });
-    }
-    return null;
-  }
 
   /**
    * Sets up the resize observer to track dimension changes
@@ -412,23 +474,26 @@ export class PidCollapsible {
   }
 
   /**
-   * Handles Safari-specific compatibility issues
+   * Handles Safari-specific compatibility issues.
+   * Skips if the click originated from an interactive element (e.g. copy-button)
+   * to avoid stealing the click from the intended target.
    */
   private handleSafariCompatibility = (e: Event) => {
     // Only apply for Safari
     if (!this.isSafari() || this.isToggling) return;
 
-    this.isToggling = true;
+    // Don't intercept clicks on interactive elements inside the summary
+    const target = e.target as HTMLElement;
+    if (target?.closest('copy-button') || target?.closest('[slot="summary-actions"]') ||
+      target?.closest('button') || target?.closest('a')) {
+      return;
+    }
+
     e.preventDefault();
     e.stopPropagation();
 
-    // Manually handle the toggle
-    this.toggleCollapsible(e);
-
-    // Reset toggle flag after short delay
-    setTimeout(() => {
-      this.isToggling = false;
-    }, 100);
+    // Manually handle the toggle via performToggle
+    this.performToggle(!this.open);
   };
 
   /**
@@ -517,6 +582,7 @@ export class PidCollapsible {
     this.el.style.maxHeight = '';
     this.el.style.resize = '';
     this.el.style.lineHeight = '';
+    this.el.style.overflow = '';
   }
 
   /**
@@ -525,20 +591,32 @@ export class PidCollapsible {
   private applyExpandedStyles() {
     try {
       // Apply Tailwind classes for expanded state
-      this.el.classList.add('resize-both', 'overflow-auto', 'relative', 'block');
+      this.el.classList.add(
+        'resize-both',
+        // 'overflow-auto',
+        'relative',
+        'block');
       if (this.emphasize) {
         this.el.classList.add('bg-white');
       }
 
-      // Calculate optimal dimensions based on content
-      const dimensions = this.calculateContentDimensions();
+      // Width: use stored user-resized width, configured initial width, or responsive default
+      if (this.lastExpandedWidth) {
+        this.currentWidth = this.lastExpandedWidth;
+      } else if (this.initialWidth) {
+        this.currentWidth = this.initialWidth;
+      } else {
+        this.currentWidth = this.getResponsiveDefaultWidth();
+      }
 
-      // Apply size constraints
-      this.el.style.maxWidth = `${dimensions.maxWidth}px`;
-      this.el.style.maxHeight = `${dimensions.maxHeight}px`;
+      this.el.style.width = this.currentWidth;
 
-      // Set dimensions - use stored dimensions if available
-      this.updateDimensions(dimensions);
+      // Height: set to auto first so the browser lays out the content,
+      // then after one paint, measure the actual height and set it as a
+      // concrete pixel value. Safari requires a concrete height for
+      // resize:both to work; auto alone makes the resize handle inert.
+      this.el.style.height = 'auto';
+      this.el.style.maxHeight = 'max-content';
 
       // Ensure we're not adding extra padding to the summary
       const summary = this.el.querySelector('summary');
@@ -552,6 +630,18 @@ export class PidCollapsible {
       this.el.style.resize = 'both';
       this.addResizeIndicator();
 
+      // After the browser has laid out the content with height:auto,
+      // capture the actual height and set it as a concrete pixel value.
+      // This makes resize:both work in Safari and also limits the
+      // component height to exactly what the content needs.
+      requestAnimationFrame(() => {
+        if (this.open) {
+          const actualHeight = this.el.scrollHeight;
+          this.el.style.height = `${actualHeight}px`;
+          this.el.style.maxHeight = `${actualHeight}px`;
+        }
+      });
+
       // Observe for resize events
       if (this.resizeObserver) {
         this.resizeObserver.observe(this.el);
@@ -559,6 +649,56 @@ export class PidCollapsible {
     } catch (error) {
       console.error('Failed to apply expanded styles:', error);
     }
+  }
+
+  /**
+   * Returns a responsive default width based on the actual available width
+   * of the container that holds this component.
+   *
+   * Walks from the pid-collapsible host through shadow roots and
+   * pid-component wrappers until it reaches the real layout ancestor
+   * in the user's document, then measures its clientWidth.
+   *
+   *  - Narrow (< 600px, e.g. sidebar, mobile, table cell): 100%
+   *  - Medium (600–1024px, e.g. tablet, card in a grid):   50%
+   *  - Wide   (> 1024px, e.g. full-width content area):    30%
+   */
+  private getResponsiveDefaultWidth(): string {
+    let node: Node | null = this.el;
+
+    // Escape shadow roots and skip pid-component / pid-collapsible wrappers
+    // until we land on a real layout ancestor in the document.
+    while (node) {
+      // If we're inside a shadow root, jump to its host element
+      const root = node.getRootNode();
+      if (root instanceof ShadowRoot) {
+        node = root.host;
+        continue;
+      }
+
+      // Skip pid-component and pid-collapsible elements themselves
+      if (node instanceof HTMLElement) {
+        const tag = node.tagName.toLowerCase();
+        if (tag === 'pid-component' || tag === 'pid-collapsible') {
+          node = node.parentElement;
+          continue;
+        }
+      }
+
+      // Found a real layout ancestor
+      break;
+    }
+
+    const container = node instanceof HTMLElement ? node : null;
+    const availableWidth = container?.clientWidth ?? window.innerWidth;
+
+    if (availableWidth < 600) {
+      return '100%';
+    }
+    if (availableWidth <= 1024) {
+      return '70%';
+    }
+    return '50%';
   }
 
   /**
@@ -578,62 +718,6 @@ export class PidCollapsible {
   }
 
   /**
-   * Updates dimensions based on content and constraints
-   * Optimized for better resize performance
-   */
-  private updateDimensions(dimensions: { contentWidth: number; contentHeight: number; maxWidth: number; maxHeight: number }) {
-    // Add a rendering optimization class during dimension updates
-    this.el.classList.add('resizing');
-
-    const {contentHeight, maxHeight} = dimensions;
-
-    // Calculate optimal width based on content
-    // const optimalWidth = Math.min(Math.max(contentWidth + CONSTANTS.PADDING_WIDTH, CONSTANTS.MIN_WIDTH), maxWidth);
-
-    // Determine width to apply
-    if (this.lastExpandedWidth) {
-      // Restore user's last resized width
-      this.currentWidth = this.lastExpandedWidth;
-    } else if (this.initialWidth) {
-      // Use configured initial width
-      this.currentWidth = this.initialWidth;
-    } else {
-      // Default behavior: use optimal width but don't exceed typical screen bounds
-      // If no initial width is provided, we use optimal width to satisfy "perfect dimension"
-      // BUT we should avoid filling the complete page if content is huge.
-      // Since we can't easily check screen width here against optimalWidth in pixels vs %,
-      // we'll default to 75% which is safe, unless content is small.
-
-      // However, to fix "complete page filled", 75% is safer than optimalWidth (which equals contentWidth).
-      this.currentWidth = '75%';
-    }
-
-    // Calculate optimal height including padding and footer if needed
-    const footerHeight = this.showFooter ? CONSTANTS.FOOTER_HEIGHT : 0;
-    const optimalHeight = Math.min(Math.max(contentHeight + CONSTANTS.PADDING_HEIGHT + footerHeight, CONSTANTS.MIN_HEIGHT), maxHeight);
-
-    if (this.lastExpandedHeight) {
-      this.currentHeight = this.lastExpandedHeight;
-    } else {
-      this.currentHeight = `${optimalHeight}px`;
-    }
-
-    // Store these dimensions for future reference
-    this.lastExpandedWidth = this.currentWidth;
-    this.lastExpandedHeight = this.currentHeight;
-
-    // Use direct property setting for better performance
-    // Batch dimension changes in a single rendering frame
-    requestAnimationFrame(() => {
-      this.el.style.width = this.currentWidth;
-      this.el.style.height = this.currentHeight;
-
-      // Remove the optimization class after updates are applied
-      this.el.classList.remove('resizing');
-    });
-  }
-
-  /**
    * Applies styles for collapsed state
    */
   private applyCollapsedStyles() {
@@ -649,7 +733,10 @@ export class PidCollapsible {
 
     // Use the stored dimensions for logging/debugging
     if (this.lastExpandedWidth || this.lastExpandedHeight) {
-      console.debug('Storing dimensions for later restoration:', { width: this.lastExpandedWidth, height: this.lastExpandedHeight });
+      console.debug('Storing dimensions for later restoration:', {
+        width: this.lastExpandedWidth,
+        height: this.lastExpandedHeight,
+      });
     }
 
     // Clear size constraints
@@ -660,7 +747,11 @@ export class PidCollapsible {
     this.el.style.width = 'auto';
 
     // Apply Tailwind classes for collapsed state (inline with text, no float)
-    this.el.classList.add('w-auto', 'inline-block', 'align-top', 'overflow-hidden', 'py-0', 'my-0');
+    // NOTE: Using overflow:clip instead of overflow:hidden because overflow:hidden
+    // on an inline-block changes its baseline to the bottom margin edge (CSS spec),
+    // which breaks vertical alignment with surrounding text.
+    this.el.classList.add('w-auto', 'inline-block', 'py-0', 'my-0');
+    this.el.style.overflow = 'clip';
 
     // Set strict height and line height for text to ensure smooth text flow
     this.el.style.height = `${this.lineHeight}px`;
@@ -715,83 +806,128 @@ export class PidCollapsible {
   }
 
   /**
-   * Handles the toggle event
+   * Handles the toggle event from the native <details> element.
+   * We suppress native toggles entirely and drive the state ourselves
+   * from the summary click handler, which gives us double-click detection.
    */
   private handleToggle = (event: Event) => {
-    if (this.isToggling) return;
-    this.toggleCollapsible(event);
+    // Always suppress the native toggle — we drive state from handleSummaryClick
+    event.preventDefault();
+    event.stopPropagation();
+    const details = this.el.querySelector('details');
+    if (details) {
+      // Re-sync native state to our state (undo what the browser just did)
+      details.open = this.open;
+    }
   };
 
   /**
-   * Toggles the collapsible state
+   * Click handler installed on <summary>. Detects double-clicks by tracking
+   * the interval between consecutive clicks:
+   * - Single click: toggle open/closed as usual.
+   * - Double click (two clicks within 300 ms): close the collapsible.
    */
-  private toggleCollapsible(event: Event) {
-    // Set flag to prevent recursive calls
-    this.isToggling = true;
-
-    // Stop event propagation
-    event.stopPropagation();
-    event.preventDefault();
-    if (event.cancelable) {
-      event.stopImmediatePropagation();
-    }
-
-    // Get details element
-    const details = this.el.querySelector('details');
-    if (!details) {
-      this.isToggling = false;
+  private handleSummaryClick = (event: MouseEvent) => {
+    // Don't intercept clicks on interactive elements inside the summary
+    // (e.g. copy-button, links). Only handle clicks on the summary itself.
+    // Use composedPath() to reliably find the actual click target across
+    // shadow DOM boundaries.
+    const path = event.composedPath() as HTMLElement[];
+    const clickedInteractive = path.some(el =>
+        el instanceof HTMLElement && (
+          el.tagName === 'BUTTON' ||
+          el.tagName === 'A' ||
+          el.tagName === 'COPY-BUTTON' ||
+          el.tagName === 'PID-ACTIONS' ||
+          el.getAttribute?.('role') === 'button'
+        ),
+    );
+    if (clickedInteractive) {
       return;
     }
 
-    // Toggle expanded state
-    this.open = !this.open;
-    details.open = this.open;
+    event.preventDefault();
+    event.stopPropagation();
 
-    // Emit event
-    this.collapsibleToggle.emit(this.open);
+    if (this.isToggling) return;
 
-    // Update appearance
-    this.updateAppearance();
+    const now = Date.now();
+    const elapsed = now - this.lastClickTime;
+    this.lastClickTime = now;
 
-    // For Safari compatibility - ensure content recalculation when expanding
-    if (this.open && this.isSafari()) {
-      setTimeout(() => {
-        this.recalculateContentDimensions();
-      }, 50);
+    // Cancel any pending single-click action
+    if (this.pendingClickTimer !== null) {
+      clearTimeout(this.pendingClickTimer);
+      this.pendingClickTimer = null;
     }
 
-    // Ensure consistent state and reset flag
+    if (elapsed < 300 && this.open) {
+      // Double-click detected while open → close immediately
+      this.performToggle(false);
+    } else {
+      // Defer single-click toggle to give double-click a window
+      this.pendingClickTimer = setTimeout(() => {
+        this.pendingClickTimer = null;
+        this.performToggle(!this.open);
+      }, 200);
+    }
+  };
+
+  /**
+   * Applies the desired open/closed state, syncs the <details> element,
+   * emits the toggle event, and updates appearance.
+   */
+  private performToggle(newOpen: boolean) {
+    this.isToggling = true;
+
+    const details = this.el.querySelector('details');
+    this.open = newOpen;
+    if (details) {
+      details.open = newOpen;
+    }
+
+    this.collapsibleToggle.emit(this.open);
+    this.updateAppearance();
+
+    // For Safari compatibility
+    if (this.open && this.isSafari()) {
+      setTimeout(() => this.recalculateContentDimensions(), 50);
+    }
+
+    // Reset toggling flag
     setTimeout(() => {
-      details.open = this.open;
-      setTimeout(() => {
-        this.isToggling = false;
-      }, 100);
-    }, 0);
+      // Final sync to ensure consistency
+      if (details) details.open = this.open;
+      this.isToggling = false;
+    }, 50);
   }
 
   /**
    * Gets host classes based on current state
    */
   private getHostClasses() {
-    const baseClasses = ['relative', 'font-sans', 'box-border', 'leading-normal'];
+    const baseClasses = ['relative', 'font-sans', 'leading-normal'];
 
     // Add emphasis classes (border, shadow, and horizontal margin for spacing)
     if (this.emphasize) {
       // baseClasses.push('mx-2');
+      baseClasses.push('box-border', 'border', 'rounded-md', 'shadow-xs');
       if (this.isDarkMode) {
-        baseClasses.push('border', 'border-gray-600', 'rounded-md', 'shadow-xs');
+        baseClasses.push('border-gray-600');
       } else {
-        baseClasses.push('border', 'border-gray-300', 'rounded-md', 'shadow-xs');
+        baseClasses.push('border-gray-300');
       }
     }
 
     // Add state-specific classes
     if (this.open) {
-      // Expanded: block-level, resizable, with width
-      baseClasses.push('mb-2', 'max-w-full', 'text-xs', 'block', 'w-3/4');
+      // Expanded: block-level display, dimensions controlled via inline styles by recalculateContentDimensions()
+      baseClasses.push('mb-2', 'max-w-full', 'text-xs', 'block');
     } else {
       // Collapsed: inline with text, no float (float causes clear/line-break issues)
-      baseClasses.push('my-0', 'text-sm', 'inline-block', 'align-top');
+      // Use max-w-md for top-level (~30% width cap), max-w-full for subcomponents in constrained spaces
+      baseClasses.push(this.initialWidth === '100%' ? 'max-w-full' : 'max-w-md');
+      baseClasses.push('my-0', 'text-sm', 'inline-block');
     }
 
     // Add dark mode text color only (no background)
@@ -809,7 +945,7 @@ export class PidCollapsible {
     const baseClasses = ['group', 'w-full', 'font-sans', 'transition-all', 'duration-200', 'ease-in-out', 'flex', 'flex-col'];
 
     if (this.open) {
-      baseClasses.push('h-full', 'overflow-visible');
+      // baseClasses.push('h-full', 'overflow-visible');
     } else {
       baseClasses.push('text-clip', 'overflow-hidden');
     }
@@ -841,26 +977,25 @@ export class PidCollapsible {
       'marker:hidden',
       '[&::-webkit-details-marker]:hidden',
       'select-none',
-      'box-border',
-      'pl-1',
       'py-0',
+      'min-w-1/10',
     ];
 
     if (this.open) {
-      baseClasses.push('sticky', 'top-0', `z-${Z_INDICES.STICKY_ELEMENTS}`, 'overflow-visible', 'backdrop-blur-xs');
+      baseClasses.push('sticky', 'top-0', `z-${Z_INDICES.STICKY_ELEMENTS}`, 'overflow-x-auto', 'backdrop-blur-xs');
       if (this.isDarkMode) {
         baseClasses.push('bg-gray-800');
         if (this.emphasize) {
-          baseClasses.push('border-b', 'border-gray-700');
+          baseClasses.push('border-b', 'box-border', 'border-gray-700');
         }
       } else {
-        baseClasses.push('bg-white');
+        baseClasses.push('bg-white', 'text-ellipsis');
         if (this.emphasize) {
-          baseClasses.push('border-b', 'border-gray-100');
+          baseClasses.push('border-b', 'box-border', 'border-gray-100');
         }
       }
     } else {
-      baseClasses.push('whitespace-nowrap', 'overflow-hidden', 'text-ellipsis', 'max-w-full');
+      baseClasses.push('whitespace-nowrap', 'overflow-hidden', 'text-ellipsis', 'truncate', 'max-w-full');
     }
 
     // Apply consistent height for both states
@@ -876,7 +1011,7 @@ export class PidCollapsible {
     const baseClasses = ['grow', 'flex', 'flex-col', 'min-h-0'];
 
     if (this.open) {
-      baseClasses.push('overflow-auto', 'p-2');
+      // baseClasses.push('overflow-auto', 'p-2');
     } else {
       baseClasses.push('overflow-hidden', 'p-0');
     }
@@ -909,7 +1044,7 @@ export class PidCollapsible {
    * Gets classes for footer actions
    */
   private getFooterActionsClasses() {
-    const baseClasses = ['flex', 'items-center', 'justify-between', 'gap-2', 'p-2', 'min-h-12', 'shrink-0'];
+    const baseClasses = ['flex', 'items-center', 'justify-between', 'gap-2', 'p-1', 'min-h-12', 'shrink-0', 'overflow-x-auto'];
 
     // Add dark mode classes
     if (this.isDarkMode) {
@@ -919,88 +1054,5 @@ export class PidCollapsible {
     }
 
     return baseClasses.join(' ');
-  }
-
-  render() {
-    const hostClasses = this.getHostClasses();
-    const detailsClasses = this.getDetailsClasses();
-    const summaryClasses = this.getSummaryClasses();
-    const contentClasses = this.getContentClasses();
-    const footerClasses = this.getFooterClasses();
-    const footerActionsClasses = this.getFooterActionsClasses();
-
-    return (
-      <Host class={hostClasses}>
-        <details
-          class={detailsClasses}
-          open={this.open}
-          onToggle={this.handleToggle}
-          onClick={e => {
-            e.stopPropagation();
-            e.stopImmediatePropagation();
-          }}
-        >
-          <summary
-            class={summaryClasses}
-            style={{ lineHeight: `${this.lineHeight}px`, height: `${this.lineHeight}px` }}
-            onClick={e => {
-              e.stopPropagation();
-              e.stopImmediatePropagation();
-            }}
-          >
-            <span
-              class={`inline-flex h-full items-center ${this.open ? 'flex-nowrap whitespace-nowrap' : 'min-w-0 flex-nowrap overflow-hidden'}`}>
-              {this.emphasize && (
-                <span class="flex h-full shrink-0 items-center">
-                  <svg
-                    class={`${this.isDarkMode ? 'text-gray-300' : 'text-gray-600'} transition-transform duration-200 group-open:rotate-180`}
-                    fill="none"
-                    height="12"
-                    width="12"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                    viewBox="0 0 12 12"
-                    aria-hidden="true"
-                  >
-                    <path d="M 2 3 l 4 6 l 4 -6"></path>
-                  </svg>
-                </span>
-              )}
-              <span class={`${this.open ? 'overflow-visible' : 'min-w-0 truncate'} flex h-full items-center pl-2`}>
-                <slot name="summary"></slot>
-              </span>
-            </span>
-            <div class="ml-auto flex h-full shrink-0 items-center">
-              <slot name="summary-actions"></slot>
-            </div>
-          </summary>
-
-          <div class={`${contentClasses}`}>
-            <slot></slot>
-          </div>
-
-          {this.showFooter && this.open && (
-            <div class={footerClasses}>
-              {/* Main footer slot for pagination */}
-              <div class={`z-50 overflow-visible border-b ${this.isDarkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-100 bg-white'}`}>
-                <slot name="footer"></slot>
-              </div>
-
-              {/* Actions row */}
-              <div class={footerActionsClasses}>
-                <div class="grow overflow-visible">
-                  <slot name="footer-left"></slot>
-                </div>
-                <div class="flex shrink-0 items-center gap-2 overflow-visible">
-                  <slot name="footer-actions"></slot>
-                </div>
-              </div>
-            </div>
-          )}
-        </details>
-      </Host>
-    );
   }
 }

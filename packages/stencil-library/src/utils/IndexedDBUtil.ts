@@ -4,7 +4,7 @@ import { renderers } from './utils';
 import { DBSchema, openDB } from '@tempfix/idb';
 
 const dbName: string = 'pid-component';
-const dbVersion: number = undefined;
+const dbVersion: number = 1;
 
 /**
  * The database schema for the PID component.
@@ -17,6 +17,7 @@ export interface PIDComponentDB extends DBSchema {
     value: {
       value: string;
       rendererKey: string;
+      orderedRendererKeys: string[] | null;
       context: string;
       lastAccess: Date;
       lastData: unknown;
@@ -67,8 +68,9 @@ export class Database {
   /**
    * Adds an entity to the database.
    * @param {GenericIdentifierType} renderer The renderer to add to the database.
+   * @param {string[] | null} orderedRendererKeys The ordered list of renderer keys used when this entity was created.
    */
-  async addEntity(renderer: GenericIdentifierType) {
+  async addEntity(renderer: GenericIdentifierType, orderedRendererKeys?: string[] | null) {
     const context = document.documentURI;
     const db = await this.dbPromise;
 
@@ -80,6 +82,7 @@ export class Database {
       .add('entities', {
         value: entityKey,
         rendererKey: renderer.getSettingsKey(),
+        orderedRendererKeys: orderedRendererKeys ?? null,
         context: context,
         lastAccess: new Date(),
         lastData: renderer.data,
@@ -106,15 +109,17 @@ export class Database {
       // Check if the relation already exists
       const index = tx.store.index('by-start');
       let cursor = await index.openCursor();
+      let relationExists = false;
       while (cursor) {
         if (cursor.value.start === relation.start && cursor.value.end === relation.end && cursor.value.description === relation.description) {
-          // relation already exists
-          return;
+          relationExists = true;
+          break;
         }
         cursor = await cursor.continue();
       }
-      // Add the relation to the relations object store if it does not exist
-      promises.push(tx.store.add(relation));
+      if (!relationExists) {
+        promises.push(tx.store.add(relation));
+      }
     }
     promises.push(tx.done);
     await Promise.all(promises);
@@ -123,9 +128,12 @@ export class Database {
 
   /**
    * Gets an entity from the database. If the entity does not exist, it is created.
-   * @returns {Promise<GenericIdentifierType>} The renderer for the entity.
+   * @returns {Promise<GenericIdentifierType | null>} The renderer for the entity, or null if no renderer matched
+   *          (only possible when orderedRendererKeys is set and fallbackToAll is false).
    * @param {string} value The stringified value of the entity, e.g. the PID.
    * @param {{type: string, values: {name: string, value: any}[]}[]} settings The settings for all renderers.
+   * @param {string[]} orderedRendererKeys Optional ordered list of renderer keys to try.
+   * @param {boolean} fallbackToAll If true, falls back to full registry when no listed renderer matches.
    */
   async getEntity(
     value: string,
@@ -136,7 +144,9 @@ export class Database {
         value: unknown;
       }[];
     }[],
-  ): Promise<GenericIdentifierType> {
+    orderedRendererKeys?: string[],
+    fallbackToAll: boolean = true,
+  ): Promise<GenericIdentifierType | null> {
     // Ensure the value is a valid IndexedDB key (string, number, Date, or array of those)
     const entityKey = this.normalizeKey(value);
     // Try to get the entity from the database
@@ -144,44 +154,78 @@ export class Database {
       const db = await this.dbPromise;
       const entity:
         | {
-            value: string;
-            rendererKey: string;
-            context: string;
-            lastAccess: Date;
-            lastData: unknown;
-          }
+        value: string;
+        rendererKey: string;
+        orderedRendererKeys: string[] | null;
+        context: string;
+        lastAccess: Date;
+        lastData: unknown;
+      }
         | undefined = await db.get('entities', entityKey);
 
       if (entity !== undefined) {
-        // If the entity was found, check if the TTL has expired
-        console.debug('Found entity for value in db', entity, value);
-        const entitySettings = settings.find(value => value.type === entity.rendererKey)?.values;
-        const ttl = entitySettings?.find(value => value.name === 'ttl');
+        // Check if the orderedRendererKeys used when caching differs from the current one
+        const cachedOrderedKeys = entity.orderedRendererKeys;
+        const currentOrderedKeys = orderedRendererKeys ?? null;
+        const orderedKeysChanged = JSON.stringify(cachedOrderedKeys) !== JSON.stringify(currentOrderedKeys);
 
-        if (ttl != undefined && ttl.value != undefined && (new Date().getTime() - entity.lastAccess.getTime() > (ttl.value as number) || ttl.value === 0)) {
-          // If the TTL has expired, delete the entity from the database and move on to creating a new one (down below)
-          console.log('TTL expired! Deleting entry in db', ttl.value, new Date().getTime() - entity.lastAccess.getTime());
+        // If an ordered renderer list is specified, check that the cached renderer is in it
+        if (orderedKeysChanged || (orderedRendererKeys && orderedRendererKeys.length > 0 && !orderedRendererKeys.includes(entity.rendererKey))) {
+          // Cached renderer was created with different orderedRendererKeys or is not in the allowed list — delete and re-detect
+          console.debug('Ordered renderer keys changed or cached renderer not in ordered list, re-detecting', {
+            cached: cachedOrderedKeys,
+            current: currentOrderedKeys,
+            cachedRendererKey: entity.rendererKey,
+            currentAllowedKeys: orderedRendererKeys,
+          });
           await this.deleteEntity(value);
         } else {
-          // If the TTL has not expired, get a new renderer and return it
-          console.log('TTL not expired or undefined', new Date().getTime() - entity.lastAccess.getTime());
-          const renderer = new (renderers.find(renderer => renderer.key === entity.rendererKey).constructor)(value, entitySettings);
-          renderer.settings = entitySettings;
-          await renderer.init(entity.lastData);
-          return renderer;
+          // If the entity was found, check if the TTL has expired
+          console.debug('Found entity for value in db', entity, value);
+          const entitySettings = settings.find(value => value.type === entity.rendererKey)?.values;
+          const ttl = entitySettings?.find(value => value.name === 'ttl');
+
+          if (ttl != undefined && ttl.value != undefined && (new Date().getTime() - entity.lastAccess.getTime() > (ttl.value as number) || ttl.value === 0)) {
+            // If the TTL has expired, delete the entity from the database and move on to creating a new one (down below)
+            console.log('TTL expired! Deleting entry in db', ttl.value, new Date().getTime() - entity.lastAccess.getTime());
+            await this.deleteEntity(value);
+          } else {
+            // If the TTL has not expired, get a new renderer and return it
+            console.log('TTL not expired or undefined', new Date().getTime() - entity.lastAccess.getTime());
+            const renderer = new (renderers.find(renderer => renderer.key === entity.rendererKey).constructor)(value, entitySettings);
+            renderer.settings = entitySettings;
+            await renderer.init(entity.lastData);
+            return renderer;
+          }
         }
       }
     } catch (error) {
       console.error('Could not get entity from db', error);
     }
 
-    // If no entity was found, create a new one, initialize it and it to the database
+    // If no entity was found, create a new one, initialize it and add it to the database
     console.debug('No valid entity found for value in db', value);
-    const renderer = await Parser.getBestFit(value, settings);
+    const renderer = await Parser.getBestFit(value, settings, orderedRendererKeys, fallbackToAll);
+
+    // If no renderer matched (only when orderedRendererKeys is set and fallbackToAll is false), return null
+    if (renderer === null) {
+      console.debug('No renderer matched for value', value);
+      return null;
+    }
+
     renderer.settings = settings.find(value => value.type === renderer.getSettingsKey())?.values;
     await renderer.init();
-    await this.addEntity(renderer);
-    console.debug('added entity to db', value, renderer);
+
+    // Only cache in IndexedDB if the renderer resolved successfully.
+    // This prevents false positives (e.g. SPDX regex matching a random word)
+    // from being persisted and polluting the cache.
+    if (renderer.isResolvable()) {
+      await this.addEntity(renderer, orderedRendererKeys);
+      console.debug('added entity to db', value, renderer);
+    } else {
+      console.debug('renderer not resolvable, skipping IndexedDB cache', value, renderer.getSettingsKey());
+    }
+
     return renderer;
   }
 
@@ -212,6 +256,17 @@ export class Database {
     await tx.done;
   }
 
+  /**
+   * Clears all entities from the database.
+   * @returns {Promise<void>} A promise that resolves when all entities have been deleted.
+   */
+  async clearEntities() {
+    const db = await this.dbPromise;
+    await db.clear('entities');
+    await db.clear('relations');
+    console.log('cleared entities');
+  }
+
   private normalizeKey(value: string) {
     let entityKey = value;
     if (typeof entityKey !== 'string' && typeof entityKey !== 'number') {
@@ -223,16 +278,5 @@ export class Database {
       console.warn('Converted entity value to string for IndexedDB key (delete):', entityKey);
     }
     return entityKey;
-  }
-
-  /**
-   * Clears all entities from the database.
-   * @returns {Promise<void>} A promise that resolves when all entities have been deleted.
-   */
-  async clearEntities() {
-    const db = await this.dbPromise;
-    await db.clear('entities');
-    await db.clear('relations');
-    console.log('cleared entities');
   }
 }

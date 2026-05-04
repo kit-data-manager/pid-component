@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FunctionalComponent, h } from '@stencil/core';
 import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
 import { ORCIDInfo } from './ORCIDInfo';
@@ -34,11 +33,16 @@ export class ORCIDType extends GenericIdentifierType {
   private showAffiliation: boolean = true;
 
   get data(): string {
-    return JSON.stringify(this._orcidInfo.toObject());
+    return JSON.stringify(this._orcidInfo?.toObject() ?? {});
   }
 
-  async hasCorrectFormat(): Promise<boolean> {
+  quickCheck(): boolean {
     return ORCIDInfo.isORCiD(this.value);
+  }
+
+  async hasMeaningfulInformation(): Promise<boolean> {
+    this._orcidInfo = await ORCIDInfo.getORCiDInfo(this.value);
+    return this._orcidInfo.ORCiDJSON !== undefined;
   }
 
   async init(data?: string): Promise<void> {
@@ -116,15 +120,16 @@ export class ORCIDType extends GenericIdentifierType {
 
       for (const data of affiliationsThen) {
         const affiliation = this._orcidInfo.getAffiliationAsString(data);
-        this.items.push(
+
+        if (affiliation !== undefined && affiliation.length > 2) this.items.push(
           new FoldableItem(
             49,
             'Affiliation at ' +
-              this.affiliationAt.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'numeric',
-                day: 'numeric',
-              }),
+            this.affiliationAt.toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'numeric',
+              day: 'numeric',
+            }),
             affiliation,
             'The affiliation of the person at the given date.',
             undefined,
@@ -152,7 +157,7 @@ export class ORCIDType extends GenericIdentifierType {
         this.items.push(new FoldableItem(25, 'Preferred Language', this._orcidInfo.preferredLocale, 'The preferred locale/language of the person.'));
 
       for (const url of this._orcidInfo.researcherUrls) {
-        this.items.push(new FoldableItem(100, url.name, url.url, 'A link to a website specified by the person.'));
+        this.items.push(new FoldableItem(100, url.name.length > 1 ? url.name : 'User-specified reference', url.url, 'A link to a website specified by the person.'));
       }
 
       if (this._orcidInfo.keywords.length > 50)
@@ -172,13 +177,16 @@ export class ORCIDType extends GenericIdentifierType {
 
   renderPreview(): FunctionalComponent {
     return (
-      <span class={`inline-flex flex-nowrap items-center align-top font-mono ${this.isDarkMode ? 'text-gray-200' : ''}`}>
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" class={'mr-1 h-5 flex-none items-center p-0.5'}>
+      <span
+        class={`inline-flex flex-nowrap items-baseline font-mono min-w-0 max-w-full ${this.isDarkMode ? 'text-gray-200' : ''}`}>
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"
+             class={'mr-1 h-4 flex-none px-0.5 self-center'}>
           <style type="text/css">
             {`.st0{fill:#A6CE39;}`}
             {`.st1{fill:#FFFFFF;}`}
           </style>
-          <path class="st0" d="M256,128c0,70.7-57.3,128-128,128C57.3,256,0,198.7,0,128C0,57.3,57.3,0,128,0C198.7,0,256,57.3,256,128z" />
+          <path class="st0"
+                d="M256,128c0,70.7-57.3,128-128,128C57.3,256,0,198.7,0,128C0,57.3,57.3,0,128,0C198.7,0,256,57.3,256,128z" />
           <g>
             <path class="st1" d="M86.3,186.2H70.9V79.1h15.4v48.4V186.2z" />
             <path
@@ -193,16 +201,17 @@ export class ORCIDType extends GenericIdentifierType {
             />
           </g>
         </svg>
-        <span class={`flex-none items-center px-1 ${this.isDarkMode ? 'text-gray-200' : ''}`}>
+        <span
+          class={`min-w-0 overflow-hidden text-ellipsis whitespace-nowrap ${this.isDarkMode ? 'text-gray-200' : ''}`}>
           {this._orcidInfo.familyName}, {this._orcidInfo.givenNames}{' '}
           {this.showAffiliation && this._orcidInfo.getAffiliationsAt(new Date()).length > 0
             ? `(${this._orcidInfo.getAffiliationAsString(this._orcidInfo.getAffiliationsAt(new Date())[0], false)}${
-                this._orcidInfo.getAffiliationsAt(this.affiliationAt).length > 0 &&
-                this.affiliationAt.toLocaleDateString() !== new Date().toLocaleDateString() &&
-                this._orcidInfo.getAffiliationsAt(this.affiliationAt)[0].organization !== this._orcidInfo.getAffiliationsAt(new Date())[0].organization
-                  ? `, then: ${this._orcidInfo.getAffiliationsAt(this.affiliationAt)[0].organization}`
-                  : ''
-              })`
+              this._orcidInfo.getAffiliationsAt(this.affiliationAt).length > 0 &&
+              this.affiliationAt.toLocaleDateString() !== new Date().toLocaleDateString() &&
+              this._orcidInfo.getAffiliationsAt(this.affiliationAt)[0].organization !== this._orcidInfo.getAffiliationsAt(new Date())[0].organization
+                ? `, then: ${this._orcidInfo.getAffiliationsAt(this.affiliationAt)[0].organization}`
+                : ''
+            })`
             : ''}
         </span>
       </span>

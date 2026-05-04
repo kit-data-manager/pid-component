@@ -81,8 +81,8 @@ export class PID {
    */
   public static getPIDFromString(pid: string): PID {
     if (!PID.isPID(pid)) throw new Error('Invalid input');
-    const pidSplit = pid.split('/');
-    return new PID(pidSplit[0], pidSplit[1]);
+    const firstSlashIndex = pid.indexOf('/');
+    return new PID(pid.substring(0, firstSlashIndex), pid.substring(firstSlashIndex + 1));
   }
 
   static fromJSON(serialized: string): PID {
