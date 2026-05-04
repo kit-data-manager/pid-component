@@ -1,8 +1,5 @@
 name: NPM CI
 
-env:
-  NODE_VERSIONS_JSON: '[22,24,25]'
-
 permissions:
   contents: read
   pull-requests: write
@@ -11,7 +8,7 @@ on:
   push:
     branches: [ main ] # Only run on main branch
   pull_request:
-    branches: [ '*' ]
+    branches: [ '*' ] # Run on all branches
 
 jobs:
   build:
@@ -103,6 +100,15 @@ jobs:
             }
 
             const coverageFiles = findCoverageFiles(root);
+
+            const expectedNodes = coverageFiles
+              .map((filePath) => {
+                const match = filePath.match(/coverage-summary-node-(\d+)/);
+                return match ? Number(match[1]) : null;
+              })
+              .filter((node) => node !== null)
+              .sort((a, b) => a - b);
+
             const coverageByNode = new Map();
 
             for (const filePath of coverageFiles) {
