@@ -4,7 +4,11 @@ permissions:
   contents: read
   pull-requests: write
 
-on: [ push, pull_request ]
+on:
+  push:
+    branches: [ main ] # Only run on main branch
+  pull_request:
+    branches: [ * ] # Match all branches
 
 jobs:
   build:
@@ -20,7 +24,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install --with-deps
       - name: Build packages
         run: npm run build
       - name: Build Storybook
@@ -37,7 +41,7 @@ jobs:
           files: packages/stencil-library/coverage/coverage-summary.json
           flags: unittests
           name: stencil-library
-          fail_ci_if_error: false
+          fail_ci_if_error: true
           verbose: true
       - name: Upload coverage report
         if: always()
@@ -46,3 +50,32 @@ jobs:
           name: coverage-report-node-${{ matrix.node }}
           path: '**/coverage'
           retention-days: 7
+      - name: Comment PR with test and coverage results
+        if: always() && github.event_name == 'pull_request' && matrix.node == 24
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Determine test status
+            const testPassed = '${{ job.status }}' === 'success';
+            const testStatus = testPassed ? '✅ Tests passed' : '❌ Tests failed';
+            // Create comment with links
+            const comment = `## Test Results
+
+            ${testStatus}
+
+            ### Test Environment
+            - Node.js: ${{ matrix.node }}
+
+            ### Coverage & Quality Reports
+            📊 **[Codecov Report](https://codecov.io/gh/${{ github.repository }}/pull/${{ github.event.pull_request.number }})**
+            🎨 **[Chromatic Status](https://www.chromatic.com/builds?appId=${{ secrets.CHROMATIC_APP_ID }})**
+
+            ---
+            For more details, check the [workflow run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+        continue-on-error: true

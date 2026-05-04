@@ -1,9 +1,14 @@
 name: "Chromatic"
 
-on: [ push, pull_request ]
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 permissions:
   contents: read
+  pull-requests: write
 
 jobs:
   chromatic:
@@ -31,3 +36,26 @@ jobs:
           exitZeroOnChanges: true
           zip: true
           buildScriptName: build-storybook:root
+      - name: Comment PR with Chromatic results
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const buildUrl = '${{ steps.chromatic.outputs.buildUrl }}' || 'https://www.chromatic.com';
+            const changeCount = '${{ steps.chromatic.outputs.changeCount }}' || '0';
+            const hasChanges = changeCount > 0 ? '🔍' : '✅';
+            const comment = `## 🎨 Chromatic Visual Tests
+
+            ${hasChanges} ${changeCount > 0 ? 'Visual changes detected' : 'No visual changes'}
+
+            ### Review
+            [**View in Chromatic**](${buildUrl})
+
+            *Chromatic provides automated visual testing and review for component changes.*`;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+        continue-on-error: true
