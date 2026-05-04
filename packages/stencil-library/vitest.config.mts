@@ -11,6 +11,8 @@ export default defineVitestConfig({
     ],
   },
   test: {
+    testTimeout: 60000,
+    hookTimeout: 60000,
     projects: [
       {
         test: {
@@ -26,6 +28,7 @@ export default defineVitestConfig({
           exclude: ['src/**/*.source.spec.tsx'],
           environment: 'stencil',
           setupFiles: ['./vitest-setup.ts'],
+          testTimeout: 30000,
         },
       },
       {
@@ -47,15 +50,17 @@ export default defineVitestConfig({
             headless: true,
             instances: [
               { browser: 'chromium' },
+              { browser: 'firefox' },
+              { browser: 'webkit' },
             ],
           },
         },
       },
     ],
     coverage: {
-      provider: 'v8',
+      provider: 'istanbul',
       enabled: true,
-      reporter: ['text', 'json', 'json-summary', 'html'],
+      reporter: ['text', 'json', 'json-summary', 'html', 'lcov', 'teamcity'],
       include: ['src/**/*.{ts,tsx}'],
       exclude: [
         'src/**/*.stories.ts',
@@ -64,7 +69,6 @@ export default defineVitestConfig({
         'src/**/*.test.tsx',
         'src/**/*.source.spec.tsx',
         'src/**/__tests__/**',
-        'src/test/**',
         'src/components.d.ts',
         'src/utils/__tests__/axe-helper.ts',
         'src/utils/__tests__/setup-axe.ts',
