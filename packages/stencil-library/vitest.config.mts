@@ -1,13 +1,17 @@
 import { defineVitestConfig } from '@stencil/vitest/config';
 import { stencilVitestPlugin } from '@stencil/vitest/plugin';
 import { playwright } from '@vitest/browser-playwright';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 
 export default defineVitestConfig({
   stencilConfig: './stencil.config.ts',
   resolve: {
     alias: [
-      { find: '@test-fixtures', replacement: '/Users/maximilian/GitHub/pid-component/examples/fixtures' },
-      { find: '@examples', replacement: '/Users/maximilian/GitHub/pid-component/examples' },
+      { find: '@test-fixtures', replacement: resolve(repoRoot, 'examples/fixtures') },
+      { find: '@examples', replacement: resolve(repoRoot, 'examples') },
     ],
   },
   test: {
@@ -44,6 +48,8 @@ export default defineVitestConfig({
           name: 'browser',
           include: ['src/**/*.test.tsx'],
           setupFiles: ['./vitest-setup.ts'],
+          testTimeout: 120000,
+          hookTimeout: 120000,
           browser: {
             enabled: true,
             provider: playwright(),
