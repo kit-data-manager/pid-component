@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: ${{ fromJSON(env.NODE_VERSIONS_JSON) }}
+        node: [ 22, 24, 25 ]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
