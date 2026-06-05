@@ -28,7 +28,7 @@
     "wait-on": "^9.0.10"
   },
   "dependencies": {
-    "vite": "8.0.8"
+    "vite": "8.0.16"
   },
   "scripts": {
     "build": "lerna run build",
