@@ -17,7 +17,7 @@
     "@vitest/coverage-v8": "^4.1.6",
     "ajv": "^8.20.0",
     "chromatic": "^16.10.1",
-    "concurrently": "^9.2.1",
+    "concurrently": "^10.0.3",
     "eslint-plugin-storybook": "^10.4.0",
     "lerna": "^9.0.7",
     "lit": "^3.3.3",
