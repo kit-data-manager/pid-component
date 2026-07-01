@@ -15,12 +15,12 @@
   "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/index.js"
     },
     "./next": {
-      "types": "./dist/components.server.d.ts",
-      "import": "./dist/components.server.js"
+      "types": "./dist/types/components/stencil-generated/components.server.d.ts",
+      "import": "./dist/components/stencil-generated/components.server.js"
     }
   },
   "directories": {
