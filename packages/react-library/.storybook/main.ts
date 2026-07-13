@@ -2,7 +2,6 @@
 import type { StorybookConfig } from '@storybook/react-vite';
 import path, { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { codecovVitePlugin } from '@codecov/vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -26,7 +25,6 @@ const config: StorybookConfig = {
     };
     config.plugins = config.plugins || [];
     config.plugins.push(tailwindcss());
-    config.plugins.push(codecovVitePlugin({ enableBundleAnalysis: true, bundleName: 'react-library' }));
     return config;
   },
 };

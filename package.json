@@ -6,6 +6,7 @@
     "packages/*"
   ],
   "devDependencies": {
+    "@angular-devkit/build-angular": "^21.2.19",
     "@chromatic-com/storybook": "^5.2.1",
     "@storybook/addon-a11y": "^10.4.0",
     "@storybook/addon-docs": "^10.4.0",
