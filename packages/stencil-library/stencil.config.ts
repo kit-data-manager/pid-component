@@ -6,7 +6,6 @@ import { webTypesOutputTarget } from '@stencil-community/web-types-output-target
 import { postcss } from '@stencil-community/postcss';
 import tailwindcss from '@tailwindcss/postcss';
 import cssnanoPlugin from 'cssnano';
-import { codecovRollupPlugin } from '@codecov/rollup-plugin';
 
 export const config: Config = {
   namespace: 'pid-component',
@@ -56,15 +55,6 @@ export const config: Config = {
       ],
     }),
   ],
-  rollupPlugins: {
-    after: [
-      codecovRollupPlugin({
-        enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
-        bundleName: 'stencil-library',
-        uploadToken: process.env.CODECOV_TOKEN,
-      }),
-    ],
-  },
   sourceMap: true,
   extras: {
     experimentalSlotFixes: true,

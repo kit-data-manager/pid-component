@@ -29,25 +29,25 @@ export const serializeShadowRoot: SerializeShadowRootOptions = { default: "decla
 
 export type ColorHighlightEvents = NonNullable<unknown>;
 
-export const ColorHighlight: StencilReactComponent<ColorHighlightElement, ColorHighlightEvents, Components.ColorHighlight> = /*@__PURE__*/ createComponent<ColorHighlightElement, ColorHighlightEvents, Components.ColorHighlight>({
+export const ColorHighlight: StencilReactComponent<ColorHighlightElement, ColorHighlightEvents, Components.ColorHighlight, 'text'> = /*@__PURE__*/ createComponent<ColorHighlightElement, ColorHighlightEvents, Components.ColorHighlight, 'text'>({
     tagName: 'color-highlight',
     properties: { text: 'text' },
-    hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
-    clientModule: clientComponents.ColorHighlight as StencilReactComponent<ColorHighlightElement, ColorHighlightEvents, Components.ColorHighlight>,
+    hydrateModule: typeof window === 'undefined' ? (import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>) : undefined,
+    clientModule: clientComponents.ColorHighlight as StencilReactComponent<ColorHighlightElement, ColorHighlightEvents, Components.ColorHighlight, 'text'>,
     serializeShadowRoot
 });
 
 export type CopyButtonEvents = NonNullable<unknown>;
 
-export const CopyButton: StencilReactComponent<CopyButtonElement, CopyButtonEvents, Components.CopyButton> = /*@__PURE__*/ createComponent<CopyButtonElement, CopyButtonEvents, Components.CopyButton>({
+export const CopyButton: StencilReactComponent<CopyButtonElement, CopyButtonEvents, Components.CopyButton, 'value'> = /*@__PURE__*/ createComponent<CopyButtonElement, CopyButtonEvents, Components.CopyButton, 'value'>({
     tagName: 'copy-button',
     properties: {
         value: 'value',
         label: 'label',
         darkMode: 'dark-mode'
     },
-    hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
-    clientModule: clientComponents.CopyButton as StencilReactComponent<CopyButtonElement, CopyButtonEvents, Components.CopyButton>,
+    hydrateModule: typeof window === 'undefined' ? (import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>) : undefined,
+    clientModule: clientComponents.CopyButton as StencilReactComponent<CopyButtonElement, CopyButtonEvents, Components.CopyButton, 'value'>,
     serializeShadowRoot
 });
 
@@ -63,21 +63,21 @@ export const JsonViewer: StencilReactComponent<JsonViewerElement, JsonViewerEven
         expandAll: 'expand-all',
         theme: 'theme'
     },
-    hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
+    hydrateModule: typeof window === 'undefined' ? (import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>) : undefined,
     clientModule: clientComponents.JsonViewer as StencilReactComponent<JsonViewerElement, JsonViewerEvents, Components.JsonViewer>,
     serializeShadowRoot
 });
 
 export type LocaleVisualizationEvents = NonNullable<unknown>;
 
-export const LocaleVisualization: StencilReactComponent<LocaleVisualizationElement, LocaleVisualizationEvents, Components.LocaleVisualization> = /*@__PURE__*/ createComponent<LocaleVisualizationElement, LocaleVisualizationEvents, Components.LocaleVisualization>({
+export const LocaleVisualization: StencilReactComponent<LocaleVisualizationElement, LocaleVisualizationEvents, Components.LocaleVisualization, 'locale'> = /*@__PURE__*/ createComponent<LocaleVisualizationElement, LocaleVisualizationEvents, Components.LocaleVisualization, 'locale'>({
     tagName: 'locale-visualization',
     properties: {
         locale: 'locale',
         showFlag: 'show-flag'
     },
-    hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
-    clientModule: clientComponents.LocaleVisualization as StencilReactComponent<LocaleVisualizationElement, LocaleVisualizationEvents, Components.LocaleVisualization>,
+    hydrateModule: typeof window === 'undefined' ? (import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>) : undefined,
+    clientModule: clientComponents.LocaleVisualization as StencilReactComponent<LocaleVisualizationElement, LocaleVisualizationEvents, Components.LocaleVisualization, 'locale'>,
     serializeShadowRoot
 });
 
@@ -89,7 +89,7 @@ export const PidActions: StencilReactComponent<PidActionsElement, PidActionsEven
         actionsId: 'actions-id',
         darkMode: 'dark-mode'
     },
-    hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
+    hydrateModule: typeof window === 'undefined' ? (import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>) : undefined,
     clientModule: clientComponents.PidActions as StencilReactComponent<PidActionsElement, PidActionsEvents, Components.PidActions>,
     serializeShadowRoot
 });
@@ -112,7 +112,7 @@ export const PidCollapsible: StencilReactComponent<PidCollapsibleElement, PidCol
         expanded: 'expanded',
         previewScrollable: 'preview-scrollable'
     },
-    hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
+    hydrateModule: typeof window === 'undefined' ? (import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>) : undefined,
     clientModule: clientComponents.PidCollapsible as StencilReactComponent<PidCollapsibleElement, PidCollapsibleEvents, Components.PidCollapsible>,
     serializeShadowRoot
 });
@@ -138,7 +138,7 @@ export const PidComponent: StencilReactComponent<PidComponentElement, PidCompone
         renderers: 'renderers',
         fallbackToAll: 'fallback-to-all'
     },
-    hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
+    hydrateModule: typeof window === 'undefined' ? (import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>) : undefined,
     clientModule: clientComponents.PidComponent as StencilReactComponent<PidComponentElement, PidComponentEvents, Components.PidComponent>,
     serializeShadowRoot
 });
@@ -160,7 +160,7 @@ export const PidDataTable: StencilReactComponent<PidDataTableElement, PidDataTab
         settings: 'settings',
         darkMode: 'dark-mode'
     },
-    hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
+    hydrateModule: typeof window === 'undefined' ? (import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>) : undefined,
     clientModule: clientComponents.PidDataTable as StencilReactComponent<PidDataTableElement, PidDataTableEvents, Components.PidDataTable>,
     serializeShadowRoot
 });
@@ -179,14 +179,14 @@ export const PidPagination: StencilReactComponent<PidPaginationElement, PidPagin
         showItemsPerPageControl: 'show-items-per-page-control',
         darkMode: 'dark-mode'
     },
-    hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
+    hydrateModule: typeof window === 'undefined' ? (import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>) : undefined,
     clientModule: clientComponents.PidPagination as StencilReactComponent<PidPaginationElement, PidPaginationEvents, Components.PidPagination>,
     serializeShadowRoot
 });
 
 export type PidTooltipEvents = { onTooltipExpansionChange: EventName<PidTooltipCustomEvent<{ expand: boolean; requiredHeight: number }>> };
 
-export const PidTooltip: StencilReactComponent<PidTooltipElement, PidTooltipEvents, Components.PidTooltip> = /*@__PURE__*/ createComponent<PidTooltipElement, PidTooltipEvents, Components.PidTooltip>({
+export const PidTooltip: StencilReactComponent<PidTooltipElement, PidTooltipEvents, Components.PidTooltip, 'text'> = /*@__PURE__*/ createComponent<PidTooltipElement, PidTooltipEvents, Components.PidTooltip, 'text'>({
     tagName: 'pid-tooltip',
     properties: {
         text: 'text',
@@ -196,7 +196,7 @@ export const PidTooltip: StencilReactComponent<PidTooltipElement, PidTooltipEven
         fitContent: 'fit-content',
         darkMode: 'dark-mode'
     },
-    hydrateModule: import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>,
-    clientModule: clientComponents.PidTooltip as StencilReactComponent<PidTooltipElement, PidTooltipEvents, Components.PidTooltip>,
+    hydrateModule: typeof window === 'undefined' ? (import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>) : undefined,
+    clientModule: clientComponents.PidTooltip as StencilReactComponent<PidTooltipElement, PidTooltipEvents, Components.PidTooltip, 'text'>,
     serializeShadowRoot
 });

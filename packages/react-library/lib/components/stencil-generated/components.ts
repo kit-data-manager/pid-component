@@ -26,7 +26,7 @@ import { PidTooltip as PidTooltipElement, defineCustomElement as definePidToolti
 
 export type ColorHighlightEvents = NonNullable<unknown>;
 
-export const ColorHighlight: StencilReactComponent<ColorHighlightElement, ColorHighlightEvents, Components.ColorHighlight> = /*@__PURE__*/ createComponent<ColorHighlightElement, ColorHighlightEvents, Components.ColorHighlight>({
+export const ColorHighlight: StencilReactComponent<ColorHighlightElement, ColorHighlightEvents, Components.ColorHighlight, 'text'> = /*@__PURE__*/ createComponent<ColorHighlightElement, ColorHighlightEvents, Components.ColorHighlight, 'text'>({
     tagName: 'color-highlight',
     elementClass: ColorHighlightElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
@@ -37,7 +37,7 @@ export const ColorHighlight: StencilReactComponent<ColorHighlightElement, ColorH
 
 export type CopyButtonEvents = NonNullable<unknown>;
 
-export const CopyButton: StencilReactComponent<CopyButtonElement, CopyButtonEvents, Components.CopyButton> = /*@__PURE__*/ createComponent<CopyButtonElement, CopyButtonEvents, Components.CopyButton>({
+export const CopyButton: StencilReactComponent<CopyButtonElement, CopyButtonEvents, Components.CopyButton, 'value'> = /*@__PURE__*/ createComponent<CopyButtonElement, CopyButtonEvents, Components.CopyButton, 'value'>({
     tagName: 'copy-button',
     elementClass: CopyButtonElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
@@ -59,7 +59,7 @@ export const JsonViewer: StencilReactComponent<JsonViewerElement, JsonViewerEven
 
 export type LocaleVisualizationEvents = NonNullable<unknown>;
 
-export const LocaleVisualization: StencilReactComponent<LocaleVisualizationElement, LocaleVisualizationEvents, Components.LocaleVisualization> = /*@__PURE__*/ createComponent<LocaleVisualizationElement, LocaleVisualizationEvents, Components.LocaleVisualization>({
+export const LocaleVisualization: StencilReactComponent<LocaleVisualizationElement, LocaleVisualizationEvents, Components.LocaleVisualization, 'locale'> = /*@__PURE__*/ createComponent<LocaleVisualizationElement, LocaleVisualizationEvents, Components.LocaleVisualization, 'locale'>({
     tagName: 'locale-visualization',
     elementClass: LocaleVisualizationElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
@@ -143,7 +143,7 @@ export const PidPagination: StencilReactComponent<PidPaginationElement, PidPagin
 
 export type PidTooltipEvents = { onTooltipExpansionChange: EventName<PidTooltipCustomEvent<{ expand: boolean; requiredHeight: number }>> };
 
-export const PidTooltip: StencilReactComponent<PidTooltipElement, PidTooltipEvents, Components.PidTooltip> = /*@__PURE__*/ createComponent<PidTooltipElement, PidTooltipEvents, Components.PidTooltip>({
+export const PidTooltip: StencilReactComponent<PidTooltipElement, PidTooltipEvents, Components.PidTooltip, 'text'> = /*@__PURE__*/ createComponent<PidTooltipElement, PidTooltipEvents, Components.PidTooltip, 'text'>({
     tagName: 'pid-tooltip',
     elementClass: PidTooltipElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.

@@ -147,8 +147,8 @@ export declare interface PidActions extends Components.PidActions {}
 })
 export class PidCollapsible {
   protected el: HTMLPidCollapsibleElement;
-  @Output() collapsibleToggle = new EventEmitter<CustomEvent<boolean>>();
-  @Output() contentHeightChange = new EventEmitter<CustomEvent<{ maxHeight: number }>>();
+  @Output() collapsibleToggle = new EventEmitter<PidCollapsibleCustomEvent<boolean>>();
+  @Output() contentHeightChange = new EventEmitter<PidCollapsibleCustomEvent<{ maxHeight: number }>>();
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
@@ -156,16 +156,18 @@ export class PidCollapsible {
 }
 
 
+import type { PidCollapsibleCustomEvent } from '@kit-data-manager/pid-component/components';
+
 export declare interface PidCollapsible extends Components.PidCollapsible {
   /**
    * Event emitted when the collapsible is toggled
    */
-  collapsibleToggle: EventEmitter<CustomEvent<boolean>>;
+  collapsibleToggle: EventEmitter<PidCollapsibleCustomEvent<boolean>>;
   /**
    * Event emitted when content dimensions need to be recalculated
 Useful for pagination to ensure proper height
    */
-  contentHeightChange: EventEmitter<CustomEvent<{ maxHeight: number }>>;
+  contentHeightChange: EventEmitter<PidCollapsibleCustomEvent<{ maxHeight: number }>>;
 }
 
 
@@ -206,8 +208,8 @@ export declare interface PidComponent extends Components.PidComponent {}
 })
 export class PidDataTable {
   protected el: HTMLPidDataTableElement;
-  @Output() pageChange = new EventEmitter<CustomEvent<number>>();
-  @Output() itemsPerPageChange = new EventEmitter<CustomEvent<number>>();
+  @Output() pageChange = new EventEmitter<PidDataTableCustomEvent<number>>();
+  @Output() itemsPerPageChange = new EventEmitter<PidDataTableCustomEvent<number>>();
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
@@ -215,15 +217,17 @@ export class PidDataTable {
 }
 
 
+import type { PidDataTableCustomEvent } from '@kit-data-manager/pid-component/components';
+
 export declare interface PidDataTable extends Components.PidDataTable {
   /**
    * Event emitted when page changes
    */
-  pageChange: EventEmitter<CustomEvent<number>>;
+  pageChange: EventEmitter<PidDataTableCustomEvent<number>>;
   /**
    * Event emitted when items per page changes
    */
-  itemsPerPageChange: EventEmitter<CustomEvent<number>>;
+  itemsPerPageChange: EventEmitter<PidDataTableCustomEvent<number>>;
 }
 
 
@@ -241,8 +245,8 @@ export declare interface PidDataTable extends Components.PidDataTable {
 })
 export class PidPagination {
   protected el: HTMLPidPaginationElement;
-  @Output() pageChange = new EventEmitter<CustomEvent<number>>();
-  @Output() itemsPerPageChange = new EventEmitter<CustomEvent<number>>();
+  @Output() pageChange = new EventEmitter<PidPaginationCustomEvent<number>>();
+  @Output() itemsPerPageChange = new EventEmitter<PidPaginationCustomEvent<number>>();
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
@@ -250,15 +254,17 @@ export class PidPagination {
 }
 
 
+import type { PidPaginationCustomEvent } from '@kit-data-manager/pid-component/components';
+
 export declare interface PidPagination extends Components.PidPagination {
   /**
    * Event emitted when page changes
    */
-  pageChange: EventEmitter<CustomEvent<number>>;
+  pageChange: EventEmitter<PidPaginationCustomEvent<number>>;
   /**
    * Event emitted when items per page changes
    */
-  itemsPerPageChange: EventEmitter<CustomEvent<number>>;
+  itemsPerPageChange: EventEmitter<PidPaginationCustomEvent<number>>;
 }
 
 
@@ -276,7 +282,7 @@ export declare interface PidPagination extends Components.PidPagination {
 })
 export class PidTooltip {
   protected el: HTMLPidTooltipElement;
-  @Output() tooltipExpansionChange = new EventEmitter<CustomEvent<{ expand: boolean; requiredHeight: number }>>();
+  @Output() tooltipExpansionChange = new EventEmitter<PidTooltipCustomEvent<{ expand: boolean; requiredHeight: number }>>();
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
@@ -284,11 +290,13 @@ export class PidTooltip {
 }
 
 
+import type { PidTooltipCustomEvent } from '@kit-data-manager/pid-component/components';
+
 export declare interface PidTooltip extends Components.PidTooltip {
   /**
    * Event emitted when tooltip requires row expansion
    */
-  tooltipExpansionChange: EventEmitter<CustomEvent<{ expand: boolean; requiredHeight: number }>>;
+  tooltipExpansionChange: EventEmitter<PidTooltipCustomEvent<{ expand: boolean; requiredHeight: number }>>;
 }
 
 

@@ -42,7 +42,6 @@
     "@stencil/vue-output-target": "^0.13.1"
   },
   "devDependencies": {
-    "@codecov/vite-plugin": "^2.0.1",
     "@mdi/font": "^7.4.47",
     "@storybook/addon-a11y": "^10.4.0",
     "@storybook/addon-docs": "^10.4.0",
