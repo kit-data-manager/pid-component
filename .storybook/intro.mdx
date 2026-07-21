@@ -58,8 +58,9 @@ Drop a single HTML tag into your page and the component handles the rest -- fetc
 ### Via CDN (plain HTML)
 
 ```html
-<script type="module"
-  src="https://unpkg.com/@kit-data-manager/pid-component/dist/pid-component/pid-component.esm.js">
+<script type="module">
+  import { defineCustomElements } from 'https://cdn.jsdelivr.net/npm/@kit-data-manager/pid-component/dist/loader/index.js';
+  defineCustomElements();
 </script>
 
 <pid-component value="10.5445/IR/1000185135"></pid-component>
