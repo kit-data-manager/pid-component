@@ -1,6 +1,6 @@
 {
   "name": "@kit-data-manager/nextjs-pid-component-demo",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "private": true,
   "description": "Next.js demo app and Storybook for the PID Component (not published)",
   "type": "module",
@@ -13,8 +13,8 @@
     "build-storybook": "storybook build -o storybook-static"
   },
   "dependencies": {
-    "@kit-data-manager/pid-component": "^0.4.2",
-    "@kit-data-manager/react-pid-component": "^0.4.2",
+    "@kit-data-manager/pid-component": "^0.4.3",
+    "@kit-data-manager/react-pid-component": "^0.4.3",
     "@tailwindcss/postcss": "^4.3.0",
     "next": "^16.2.6",
     "react": "^19.2.6",
