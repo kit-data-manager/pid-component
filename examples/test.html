@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script type="module">
+    import {
+      defineCustomElements,
+    } from 'https://cdn.jsdelivr.net/npm/@kit-data-manager/pid-component/dist/loader/index.js';
+
+    defineCustomElements();
+  </script>
+</head>
+<body>
+<div id="content">
+  <p>This paper has DOI 10.1234/example and was authored by 0009-0005-2800-4833.</p>
+</div>
+
+<script type="module">
+  import { initPidDetection } from 'https://cdn.jsdelivr.net/npm/@kit-data-manager/pid-component/dist/esm/index.js';
+
+  const controller = initPidDetection({
+    root: document,
+    darkMode: 'system',
+  });
+</script>
+</body>
+</html>

@@ -21,8 +21,10 @@ via [unpkg](https://unpkg.com/):
 
 ```html
 <head>
-  <script type="module"
-          src="https://unpkg.com/@kit-data-manager/pid-component/dist/pid-component/pid-component.esm.js"></script>
+  <script type="module">
+    import { defineCustomElements } from 'https://cdn.jsdelivr.net/npm/@kit-data-manager/pid-component/dist/loader/index.js';
+    defineCustomElements();
+  </script>
 </head>
 ```
 
