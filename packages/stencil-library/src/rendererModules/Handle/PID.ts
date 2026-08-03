@@ -103,7 +103,7 @@ export class PID {
    * @returns {boolean} True if the PID is resolvable, false if not.
    */
   isResolvable(): boolean {
-    return !unresolvables.has(this) && !this.prefix.toUpperCase().match('^(0$|0\\.|HS_|10320$)');
+    return !unresolvables.has(this) && !this.prefix.toUpperCase().match('^(0$|0\\.(?!SIMPLE)|HS_|10320$)');
   }
 
   /**
@@ -115,7 +115,10 @@ export class PID {
   public async resolve(): Promise<PIDRecord | undefined> {
     if (unresolvables.has(this)) return undefined;
     else if (handleMap.has(this)) return handleMap.get(this);
-    else {
+    /*else if(this.prefix.toUpperCase().match('^0\\.SIMPLE')){
+      //load 0.SIMPLE types from FAIR DO MoMEnT specific GitHub DTR
+    }*/
+    else{
       const rawJson: HandleResponse = (await cachedFetch(`https://hdl.handle.net/api/handles/${this.prefix}/${this.suffix}#resolve`)) as HandleResponse;
       // .then(response => response.json);
       console.log(rawJson);

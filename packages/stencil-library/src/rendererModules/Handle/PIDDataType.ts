@@ -1,6 +1,7 @@
 import { locationType, PID } from './PID';
 import { typeMap, unresolvables } from '../../utils/utils';
 import { cachedFetch } from '../../utils/DataCache';
+import {GitHubRegistryUtil} from "../../utils/GitHubRegistryUtil";
 
 /**
  * This class represents a PID data type.
@@ -104,6 +105,10 @@ export class PIDDataType {
    * @param pid
    */
   public static async resolveDataType(pid: PID): Promise<PIDDataType | undefined> {
+
+    //Initialize GitHub-based DTR for FAIR DO MoMEnT at the first call
+    await GitHubRegistryUtil.initializeFromGitHub();
+
     // Check if PID is already resolved
     if (typeMap.has(pid)) return typeMap.get(pid);
 

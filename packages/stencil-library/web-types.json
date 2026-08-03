@@ -11,7 +11,7 @@
           "deprecated": false,
           "description": "",
           "source": {
-            "module": "src/components/color-highlight/color-highlight.tsx",
+            "module": "src\\components\\color-highlight\\color-highlight.tsx",
             "symbol": "ColorHighlight"
           },
           "attributes": [
@@ -32,7 +32,7 @@
           "deprecated": false,
           "description": "",
           "source": {
-            "module": "src/components/copy-button/copy-button.tsx",
+            "module": "src\\components\\copy-button\\copy-button.tsx",
             "symbol": "CopyButton"
           },
           "attributes": [
@@ -69,7 +69,7 @@
           "deprecated": false,
           "description": "",
           "source": {
-            "module": "src/components/json-viewer/json-viewer.tsx",
+            "module": "src\\components\\json-viewer\\json-viewer.tsx",
             "symbol": "JsonViewer"
           },
           "attributes": [
@@ -135,7 +135,7 @@
           "deprecated": false,
           "description": "",
           "source": {
-            "module": "src/components/locale-vizualization/locale-visualization.tsx",
+            "module": "src\\components\\locale-vizualization\\locale-visualization.tsx",
             "symbol": "LocaleVisualization"
           },
           "attributes": [
@@ -164,7 +164,7 @@
           "deprecated": false,
           "description": "",
           "source": {
-            "module": "src/components/pid-actions/pid-actions.tsx",
+            "module": "src\\components\\pid-actions\\pid-actions.tsx",
             "symbol": "PidActions"
           },
           "attributes": [
@@ -193,7 +193,7 @@
           "deprecated": false,
           "description": "Component for creating collapsible/expandable content sections\nwith resize capability and cross-browser compatibility",
           "source": {
-            "module": "src/components/pid-collapsible/pid-collapsible.tsx",
+            "module": "src\\components\\pid-collapsible\\pid-collapsible.tsx",
             "symbol": "PidCollapsible"
           },
           "attributes": [
@@ -278,7 +278,7 @@
           "deprecated": false,
           "description": "",
           "source": {
-            "module": "src/components/pid-component/pid-component.tsx",
+            "module": "src\\components\\pid-component\\pid-component.tsx",
             "symbol": "PidComponent"
           },
           "attributes": [
@@ -411,7 +411,7 @@
           "deprecated": false,
           "description": "",
           "source": {
-            "module": "src/components/pid-data-table/pid-data-table.tsx",
+            "module": "src\\components\\pid-data-table\\pid-data-table.tsx",
             "symbol": "PidDataTable"
           },
           "attributes": [
@@ -488,7 +488,7 @@
           "deprecated": false,
           "description": "",
           "source": {
-            "module": "src/components/pid-pagination/pid-pagination.tsx",
+            "module": "src\\components\\pid-pagination\\pid-pagination.tsx",
             "symbol": "PidPagination"
           },
           "attributes": [
@@ -541,7 +541,7 @@
           "deprecated": false,
           "description": "",
           "source": {
-            "module": "src/components/pid-tooltip/pid-tooltip.tsx",
+            "module": "src\\components\\pid-tooltip\\pid-tooltip.tsx",
             "symbol": "PidTooltip"
           },
           "attributes": [
