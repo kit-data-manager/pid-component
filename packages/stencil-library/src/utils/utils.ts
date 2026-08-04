@@ -1,4 +1,3 @@
-import { PID } from '../rendererModules/Handle/PID';
 import { PIDDataType } from '../rendererModules/Handle/PIDDataType';
 import { PIDRecord } from '../rendererModules/Handle/PIDRecord';
 import { GenericIdentifierType } from './GenericIdentifierType';
@@ -116,18 +115,21 @@ export const renderers: {
 
 /**
  * A map of all PID data types and their PIDs.
- * @type {Map<PID, PIDDataType>}
+ * Uses PID string representation as keys for reliable lookup.
+ * @type {Map<string, PIDDataType>}
  */
-export const typeMap: Map<PID, PIDDataType> = new Map();
+export const typeMap: Map<string, PIDDataType> = new Map();
 
 /**
  * A map of all PIDs and their PIDRecords.
- * @type {Map<PID, PIDRecord>}
+ * Uses PID string representation as keys for reliable lookup.
+ * @type {Map<string, PIDRecord>}
  */
-export const handleMap: Map<PID, PIDRecord> = new Map();
+export const handleMap: Map<string, PIDRecord> = new Map();
 
 /**
  * A set of all PIDs that are not resolvable.
- * @type {Set<PID>}
+ * Uses PID string representation for reliable lookup.
+ * @type {Set<string>}
  */
-export const unresolvables: Set<PID> = new Set();
+export const unresolvables: Set<string> = new Set();

@@ -110,7 +110,7 @@ export class PIDDataType {
     await GitHubRegistryUtil.initializeFromGitHub();
 
     // Check if PID is already resolved
-    if (typeMap.has(pid)) return typeMap.get(pid);
+    if (typeMap.has(pid.toString())) return typeMap.get(pid.toString());
 
     // Check if PID is resolvable
     if (!pid.isResolvable()) {
@@ -122,7 +122,7 @@ export class PIDDataType {
     const pidRecord = await pid.resolve();
     if (pidRecord === undefined) {
       console.debug(`PID ${pid.toString()} could not be resolved via the API`);
-      unresolvables.add(pid);
+      unresolvables.add(pid.toString());
       return undefined;
     }
 
@@ -192,7 +192,7 @@ export class PIDDataType {
     // Create a new PIDDataType object from the temp object
     try {
       const type = new PIDDataType(pid, tempDataType.name, tempDataType.description, tempDataType.redirectURL, tempDataType.regex);
-      typeMap.set(pid, type);
+      typeMap.set(pid.toString(), type);
       return type;
     } catch (e) {
       console.error(e);
