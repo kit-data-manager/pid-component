@@ -134,7 +134,7 @@ describe('PIDDataType', () => {
     it('returns cached PIDDataType if already in typeMap', async () => {
       const pid = new PID('21.T11148', 'cached');
       const cached = new PIDDataType(pid, 'Cached', 'Already cached', 'https://cached.com');
-      mockTypeMap.set(pid, cached);
+      mockTypeMap.set(`${pid.prefix}/${pid.suffix}`, cached);
 
       const result = await PIDDataType.resolveDataType(pid);
 
@@ -152,7 +152,7 @@ describe('PIDDataType', () => {
       const result = await PIDDataType.resolveDataType(pid);
 
       expect(result).toBeUndefined();
-      expect(mockUnresolvables.has(pid)).toBe(true);
+      expect(mockUnresolvables.has(`${pid.prefix}/${pid.suffix}`)).toBe(true);
     });
 
     it('resolves a PID with 10320/loc XML containing json and html locations', async () => {
@@ -194,8 +194,8 @@ describe('PIDDataType', () => {
       expect(result.pid).toBe(pid);
 
       // Should be cached in typeMap
-      expect(mockTypeMap.has(pid)).toBe(true);
-      expect(mockTypeMap.get(pid)).toBe(result);
+      expect(mockTypeMap.has(`${pid.prefix}/${pid.suffix}`)).toBe(true);
+      expect(mockTypeMap.get(`${pid.prefix}/${pid.suffix}`)).toBe(result);
     });
 
     it('resolves a PID with only an html location (no json)', async () => {
