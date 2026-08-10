@@ -1,5 +1,6 @@
 import { PIDRecord } from './PIDRecord';
 import { PIDDataType } from './PIDDataType';
+import { GitHubRegistryUtil } from '../../utils/GitHubRegistryUtil';
 import { handleMap, unresolvables } from '../../utils/utils';
 import { cachedFetch } from '../../utils/DataCache';
 
@@ -103,7 +104,7 @@ export class PID {
    * @returns {boolean} True if the PID is resolvable, false if not.
    */
   isResolvable(): boolean {
-    return !unresolvables.has(this) && !this.prefix.toUpperCase().match('^(0$|0\\.|HS_|10320$)');
+    return !unresolvables.has(this.toString()) && !this.prefix.toUpperCase().match('^(0$|0\\.(?!SIMPLE)|HS_|10320$)');
   }
 
   /**
@@ -113,35 +114,47 @@ export class PID {
    * Otherwise, undefined is returned.
    */
   public async resolve(): Promise<PIDRecord | undefined> {
-    if (unresolvables.has(this)) return undefined;
-    else if (handleMap.has(this)) return handleMap.get(this);
-    else {
-      const rawJson: HandleResponse = (await cachedFetch(`https://hdl.handle.net/api/handles/${this.prefix}/${this.suffix}#resolve`)) as HandleResponse;
-      // .then(response => response.json);
-      console.log(rawJson);
-      const valuePromises = rawJson.values.map(async value => {
-        const type: Promise<PIDDataType | PID | string> = (async () => {
-          if (PID.isPID(value.type)) {
-            const pid = PID.getPIDFromString(value.type);
-            const dataType = await PIDDataType.resolveDataType(pid);
-            return dataType instanceof PIDDataType ? dataType : pid;
-          }
-          return value.type;
-        })();
-        return {
-          index: value.index,
-          type: await type,
-          data: value.data,
-          ttl: value.ttl,
-          timestamp: Date.parse(value.timestamp),
-        };
-      });
-      const values = await Promise.all(valuePromises);
-
-      const record = new PIDRecord(this, values);
-      handleMap.set(this, record);
-      return record;
+    if (unresolvables.has(this.toString())) {
+      console.log("Cannot be resolved.");
+      return undefined;
     }
+    else if (handleMap.has(this.toString())){
+      console.log("Return from handleMap for PID ", this);
+      return handleMap.get(this.toString());
+    }
+    else if(this.prefix.toUpperCase().match('^0\\.SIMPLE')){
+      await GitHubRegistryUtil.initializeFromGitHub();
+      if (handleMap.has(this.toString())) {
+        console.log("Return from handleMap for PID ", this);
+        return handleMap.get(this.toString());
+      }
+      console.log(`0.SIMPLE PID ${this} not found in GitHub registry`);
+      return undefined;
+    }
+    const rawJson: HandleResponse = (await cachedFetch(`https://hdl.handle.net/api/handles/${this.prefix}/${this.suffix}#resolve`)) as HandleResponse;
+    console.log(rawJson);
+    const valuePromises = rawJson.values.map(async value => {
+      const type: Promise<PIDDataType | PID | string> = (async () => {
+        if (PID.isPID(value.type)) {
+          const pid = PID.getPIDFromString(value.type);
+          const dataType = await PIDDataType.resolveDataType(pid);
+          return dataType instanceof PIDDataType ? dataType : pid;
+        }
+        return value.type;
+      })();
+      return {
+        index: value.index,
+        type: await type,
+        data: value.data,
+        ttl: value.ttl,
+        timestamp: Date.parse(value.timestamp),
+      };
+    });
+    const values = await Promise.all(valuePromises);
+
+    const record = new PIDRecord(this, values);
+    handleMap.set(this.toString(), record);
+    return record;
   }
 
   toObject() {
