@@ -133,7 +133,7 @@
     "@stencil/playwright": "^0.4.3",
     "@stencil/react-output-target": "^1.5.2",
     "@stencil/vitest": "^1.11.6",
-    "@stencil/vue-output-target": "^0.13.1",
+    "@stencil/vue-output-target": "^0.14.0",
     "@tailwindcss/postcss": "^4.3.0",
     "@types/eslint-config-prettier": "^6.11.3",
     "@types/node": "^25.8.0",

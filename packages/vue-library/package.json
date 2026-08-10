@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@kit-data-manager/pid-component": "^0.4.3",
-    "@stencil/vue-output-target": "^0.13.1"
+    "@stencil/vue-output-target": "^0.14.0"
   },
   "devDependencies": {
     "@mdi/font": "^7.4.47",
