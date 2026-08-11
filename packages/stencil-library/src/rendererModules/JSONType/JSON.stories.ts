@@ -6,7 +6,7 @@ const meta: Meta = {
   component: 'pid-component',
   tags: ['autodocs'],
   args: {
-    value: JSON.stringify(JSON_examples.NESTED),
+    value: JSON_examples.NESTED,
     openByDefault: false,
   },
   argTypes: {
@@ -30,35 +30,35 @@ type Story = StoryObj;
 
 export const Default: Story = {
   args: {
-    value: JSON.stringify(JSON_examples.NESTED),
+    value: JSON_examples.NESTED,
   },
 };
 
 export const Simple: Story = {
   name: 'Simple Object',
   args: {
-    value: JSON.stringify(JSON_examples.SIMPLE),
+    value: JSON_examples.SIMPLE,
   },
 };
 
 export const Array: Story = {
   name: 'Array',
   args: {
-    value: JSON.stringify(JSON_examples.ARRAY),
+    value: JSON_examples.ARRAY,
   },
 };
 
 export const Dataset: Story = {
   name: 'Dataset',
   args: {
-    value: JSON.stringify(JSON_examples.DATASET),
+    value: JSON_examples.DATASET,
   },
 };
 
 export const Expanded: Story = {
   name: 'Expanded View',
   args: {
-    value: JSON.stringify(JSON_examples.NESTED),
+    value: JSON_examples.NESTED,
     openByDefault: true,
   },
 };
@@ -66,7 +66,7 @@ export const Expanded: Story = {
 export const DarkMode: Story = {
   name: 'Dark Mode',
   args: {
-    value: JSON.stringify(JSON_examples.NESTED),
+    value: JSON_examples.NESTED,
     openByDefault: true,
     darkMode: 'dark',
   },
