@@ -29,7 +29,7 @@
     "@storybook/addon-a11y": "^10.4.0",
     "@storybook/addon-docs": "^10.4.0",
     "@storybook/nextjs-vite": "^10.4.0",
-    "@types/react": "19.2.14",
+    "@types/react": "19.2.18",
     "autoprefixer": "^10.5.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
