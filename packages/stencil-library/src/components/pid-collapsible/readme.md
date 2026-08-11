@@ -93,8 +93,16 @@ Optimized for better performance
 
 Type: `Promise<{ contentWidth: number; contentHeight: number; maxWidth: number; maxHeight: number; }>`
 
+## Slots
 
-
+| Slot                | Description      |
+|---------------------|------------------|
+|                     | The default slot |
+| `"footer"`          |                  |
+| `"footer-actions"`  |                  |
+| `"footer-left"`     |                  |
+| `"summary"`         |                  |
+| `"summary-actions"` |                  |
 
 ## Dependencies
 
