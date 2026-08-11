@@ -26,6 +26,9 @@ export default defineVitestConfig({
         },
       },
       {
+        oxc: {
+          jsx: { runtime: 'classic', pragma: 'h', pragmaFrag: 'Fragment' },
+        },
         test: {
           name: 'spec',
           include: ['src/**/*.spec.tsx'],
@@ -36,6 +39,9 @@ export default defineVitestConfig({
         },
       },
       {
+        oxc: {
+          jsx: { runtime: 'classic', pragma: 'h', pragmaFrag: 'Fragment' },
+        },
         plugins: [stencilVitestPlugin()],
         test: {
           name: 'source',
@@ -48,6 +54,9 @@ export default defineVitestConfig({
         },
       },
       {
+        oxc: {
+          jsx: { runtime: 'classic', pragma: 'h', pragmaFrag: 'Fragment' },
+        },
         test: {
           name: 'browser',
           include: ['src/**/*.test.tsx'],

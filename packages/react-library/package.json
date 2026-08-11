@@ -52,9 +52,9 @@
   "devDependencies": {
     "@mantine/core": "^9.2.1",
     "@mantine/hooks": "^9.2.1",
-    "@storybook/addon-a11y": "^10.4.0",
-    "@storybook/addon-docs": "^10.4.0",
-    "@storybook/react-vite": "^10.4.0",
+    "@storybook/addon-a11y": "^10.5.7",
+    "@storybook/addon-docs": "^10.5.7",
+    "@storybook/react-vite": "^10.5.7",
     "@tabler/icons-react": "^3.44.0",
     "@tailwindcss/postcss": "^4.3.0",
     "@tailwindcss/vite": "^4.3.0",
@@ -62,10 +62,11 @@
     "postcss": "^8.5.14",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
-    "storybook": "^10.4.0",
+    "storybook": "^10.5.7",
     "tailwindcss": "^4.3.0",
     "typescript": "^6.0.3",
-    "vite": "^8.0.13"
+    "vite": "^8.2.1",
+    "@storybook/addon-mcp": "^0.7.0"
   },
   "keywords": [
     "react",

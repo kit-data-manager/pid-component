@@ -16,22 +16,28 @@ This is useful when you have pages with PIDs embedded in running text (research 
 <head>
   <script type="module">
     import { defineCustomElements } from 'https://cdn.jsdelivr.net/npm/@kit-data-manager/pid-component/dist/loader/index.js';
-    defineCustomElements();
+    defineCustomElements(); // registers <pid-component> as a custom element
+
+    import { initPidDetection } from 'https://cdn.jsdelivr.net/npm/@kit-data-manager/pid-component/dist/esm/index.js';
+
+    const controller = initPidDetection({ // returns a controller object with stop(), rescan(), and destroy() methods
+      root: document.getRootNode() // or document.body
+      darkMode: 'system',
+    });
+
+    function rescan() { // ensures that new content is detected after dynamic updates
+        console.log("scanning...")
+        controller.rescan()
+        setTimeout(() => {
+          rescan()
+        }, 5000)
+    }
+
+    rescan()
   </script>
 </head>
 <body>
-  <div id="content">
-    <p>This paper has DOI 10.1234/example and was authored by 0009-0005-2800-4833.</p>
-  </div>
-
-  <script type="module">
-    import { initPidDetection } from 'https://cdn.jsdelivr.net/npm/@kit-data-manager/pid-component/dist/esm/index.js';
-
-    const controller = initPidDetection({
-      root: document.getElementById('content'),
-      darkMode: 'system',
-    });
-  </script>
+  <p>This paper has DOI 10.1234/example and was authored by 0009-0005-2800-4833.</p>
 </body>
 ```
 

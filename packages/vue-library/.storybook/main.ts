@@ -12,7 +12,11 @@ const config: StorybookConfig = {
   stories: ['../stories/**/*.stories.@(js|jsx|ts|tsx)'],
   framework: getAbsolutePath('@storybook/vue3-vite'),
   core: { disableTelemetry: true },
-  addons: [getAbsolutePath('@storybook/addon-docs'), getAbsolutePath('@storybook/addon-a11y')],
+  addons: [
+    getAbsolutePath('@storybook/addon-docs'),
+    getAbsolutePath('@storybook/addon-a11y'),
+    getAbsolutePath('@storybook/addon-mcp'),
+  ],
   viteFinal: async (config) => {
     // Dynamic import to avoid ESM resolution failure in npm workspaces
     // (the package is hoisted to root node_modules but ESM resolves

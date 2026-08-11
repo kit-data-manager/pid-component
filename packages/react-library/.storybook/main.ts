@@ -11,7 +11,11 @@ const config: StorybookConfig = {
   stories: ['../stories/**/*.stories.@(js|jsx|ts|tsx)'],
   framework: getAbsolutePath('@storybook/react-vite'),
   core: { disableTelemetry: true },
-  addons: [getAbsolutePath('@storybook/addon-docs'), getAbsolutePath('@storybook/addon-a11y')],
+  addons: [
+    getAbsolutePath('@storybook/addon-docs'),
+    getAbsolutePath('@storybook/addon-a11y'),
+    getAbsolutePath('@storybook/addon-mcp'),
+  ],
   viteFinal: async (config) => {
     // Stencil's dist-custom-elements output lives under dist/components/.
     // Vite needs aliases so that imports like
