@@ -47,25 +47,25 @@
   },
   "dependencies": {
     "@kit-data-manager/pid-component": "^0.4.4",
-    "@stencil/react-output-target": "^1.6.1"
+    "@stencil/react-output-target": "^1.6.2"
   },
   "devDependencies": {
     "@mantine/core": "^9.5.1",
     "@mantine/hooks": "^9.5.1",
-    "@storybook/addon-a11y": "^10.5.7",
-    "@storybook/addon-docs": "^10.5.7",
-    "@storybook/react-vite": "^10.5.7",
+    "@storybook/addon-a11y": "^10.5.10",
+    "@storybook/addon-docs": "^10.5.10",
+    "@storybook/react-vite": "^10.5.10",
     "@tabler/icons-react": "^3.46.0",
     "@tailwindcss/postcss": "^4.3.3",
     "@tailwindcss/vite": "^4.3.3",
-    "@vitejs/plugin-react": "^6.0.5",
+    "@vitejs/plugin-react": "^6.1.0",
     "postcss": "^8.5.26",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "storybook": "^10.5.7",
+    "storybook": "^10.5.10",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
-    "vite": "^8.2.1",
+    "vite": "^8.2.2",
     "@storybook/addon-mcp": "^0.7.0"
   },
   "keywords": [
