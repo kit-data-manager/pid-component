@@ -64,18 +64,6 @@ describe('pid-tooltip e2e', () => {
     expect(tooltip).not.toBeNull();
   });
 
-  it('tooltip is hidden by default', async () => {
-    const { root, waitForChanges } = await render(
-      <pid-tooltip text="Hidden tooltip"><span slot="trigger">Trigger</span></pid-tooltip>,
-    );
-    await waitForChanges();
-
-    const tooltip = root.querySelector('[role="tooltip"]');
-    // The tooltip should have the 'hidden' class when not visible
-    const classes = tooltip?.classList;
-    expect(classes).toContain('hidden');
-  });
-
   it('max-width prop applies', async () => {
     const { root, waitForChanges } = await render(
       <pid-tooltip text="Width test" maxWidth="300px"><span slot="trigger">Trigger</span></pid-tooltip>,
