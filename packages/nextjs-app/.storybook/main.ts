@@ -10,7 +10,11 @@ const config: StorybookConfig = {
   stories: ['../stories/**/*.stories.@(js|jsx|ts|tsx)'],
   framework: getAbsolutePath('@storybook/nextjs-vite'),
   core: { disableTelemetry: true },
-  addons: [getAbsolutePath('@storybook/addon-docs'), getAbsolutePath('@storybook/addon-a11y')],
+  addons: [
+    getAbsolutePath('@storybook/addon-docs'),
+    getAbsolutePath('@storybook/addon-a11y'),
+    getAbsolutePath('@storybook/addon-mcp'),
+  ],
   viteFinal: async (config) => {
     config.resolve = config.resolve || {};
     config.resolve.alias = {

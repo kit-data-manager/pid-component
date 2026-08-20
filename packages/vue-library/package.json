@@ -38,22 +38,23 @@
     "access": "public"
   },
   "dependencies": {
-    "@kit-data-manager/pid-component": "^0.4.3",
-    "@stencil/vue-output-target": "^0.13.1"
+    "@kit-data-manager/pid-component": "^0.4.4",
+    "@stencil/vue-output-target": "^0.14.1"
   },
   "devDependencies": {
     "@mdi/font": "^7.4.47",
-    "@storybook/addon-a11y": "^10.4.0",
-    "@storybook/addon-docs": "^10.4.0",
-    "@storybook/vue3-vite": "^10.4.0",
-    "@vitejs/plugin-vue": "^6.0.7",
-    "@vue/server-renderer": "^3.5.34",
+    "@storybook/addon-a11y": "^10.5.10",
+    "@storybook/addon-docs": "^10.5.10",
+    "@storybook/vue3-vite": "^10.5.10",
+    "@vitejs/plugin-vue": "^6.0.8",
+    "@vue/server-renderer": "^3.5.41",
     "ast-types": "^0.16.1",
-    "storybook": "^10.4.0",
-    "typescript": "^6.0.3",
-    "vite": "^8.0.13",
-    "vue": "^3.5.34",
-    "vuetify": "^4.0.7"
+    "storybook": "^10.5.10",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.2",
+    "vue": "^3.5.41",
+    "vuetify": "^4.1.11",
+    "@storybook/addon-mcp": "^0.7.0"
   },
   "peerDependencies": {
     "vue": "^3.0.0"

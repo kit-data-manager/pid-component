@@ -42,7 +42,7 @@ You can load the component directly from [unpkg](https://unpkg.com/) with a sing
     defineCustomElements
   } from 'https://cdn.jsdelivr.net/npm/@kit-data-manager/pid-component/dist/loader/index.js';
 
-  defineCustomElements();
+  defineCustomElements(); // registers <pid-component> as a custom element
 </script>
 
 <pid-component value="21.T11981/be908bd1-e049-4d35-975e-8e27d40117e6"></pid-component>

@@ -59,6 +59,7 @@ const config: StorybookConfig = {
     getAbsolutePath('@storybook/addon-a11y'),
     getAbsolutePath('@storybook/addon-vitest'),
     getAbsolutePath('@storybook/addon-themes'),
+    getAbsolutePath('@storybook/addon-mcp'),
   ],
   framework: getAbsolutePath('@storybook/web-components-vite'),
   docs: {

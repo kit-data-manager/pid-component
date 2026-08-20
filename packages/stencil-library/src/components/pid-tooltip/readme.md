@@ -22,6 +22,12 @@
 | `tooltipExpansionChange` | Event emitted when tooltip requires row expansion | `CustomEvent<{ expand: boolean; requiredHeight: number; }>` |
 
 
+## Slots
+
+| Slot        | Description |
+|-------------|-------------|
+| `"trigger"` |             |
+
 ## Dependencies
 
 ### Used by

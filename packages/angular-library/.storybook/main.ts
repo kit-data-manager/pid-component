@@ -10,7 +10,11 @@ const config: StorybookConfig = {
   stories: ['../stories/**/*.stories.@(js|jsx|ts|tsx)'],
   framework: getAbsolutePath('@storybook/angular'),
   core: { disableTelemetry: true },
-  addons: [getAbsolutePath('@storybook/addon-docs'), getAbsolutePath('@storybook/addon-a11y')],
+  addons: [
+    getAbsolutePath('@storybook/addon-docs'),
+    getAbsolutePath('@storybook/addon-a11y'),
+    getAbsolutePath('@storybook/addon-mcp'),
+  ],
   webpackFinal: async (config) => {
     const angularLibRoot = path.resolve(__dirname, '..');
     config.resolve = config.resolve || {};
