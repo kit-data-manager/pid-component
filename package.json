@@ -16,7 +16,7 @@
     "@storybook/web-components-vite": "^10.5.10",
     "@angular-devkit/build-angular": "^21.2.21",
     "@angular/compiler-cli": "21.2.19",
-    "@angular/compiler": "21.2.19",
+    "@angular/compiler": "21.2.22",
     "@angular/platform-browser-dynamic": "21.2.19",
     "@angular/animations": "21.2.19",
     "@types/node": "^25.9.5",
@@ -39,7 +39,7 @@
   "overrides": {
     "@angular/core": "21.2.19",
     "@angular/common": "21.2.19",
-    "@angular/compiler": "21.2.19",
+    "@angular/compiler": "21.2.22",
     "@angular/forms": "21.2.19",
     "@angular/platform-browser": "21.2.19",
     "@angular/platform-browser-dynamic": "21.2.19",
