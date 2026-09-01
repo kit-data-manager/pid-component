@@ -37,7 +37,7 @@
     "vite": "8.2.1"
   },
   "overrides": {
-    "@angular/core": "21.2.19",
+    "@angular/core": "21.2.22",
     "@angular/common": "21.2.19",
     "@angular/compiler": "21.2.19",
     "@angular/forms": "21.2.19",
