@@ -16,7 +16,7 @@
     "@kit-data-manager/pid-component": "^0.4.4",
     "@kit-data-manager/react-pid-component": "^0.4.4",
     "@tailwindcss/postcss": "^4.3.3",
-    "next": "^16.3.1",
+    "next": "^16.3.3",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
@@ -28,6 +28,7 @@
     "@radix-ui/react-tooltip": "^1.2.16",
     "@storybook/addon-a11y": "^10.5.10",
     "@storybook/addon-docs": "^10.5.10",
+    "@storybook/addon-mcp": "^0.7.0",
     "@storybook/nextjs-vite": "^10.5.10",
     "@types/react": "19.2.18",
     "autoprefixer": "^10.5.4",
@@ -39,7 +40,6 @@
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
-    "vite": "^8.2.2",
-    "@storybook/addon-mcp": "^0.7.0"
+    "vite": "^8.2.2"
   }
 }
