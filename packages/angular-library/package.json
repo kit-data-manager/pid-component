@@ -61,7 +61,7 @@
     "postcss": "^8.5.28",
     "storybook": "^10.6.0",
     "tailwindcss": "^4.3.3",
-    "typescript": "^6.0.3",
+    "typescript": "~6.0.3",
     "zone.js": "^0.16.3",
     "@storybook/addon-mcp": "^10.6.0"
   },
