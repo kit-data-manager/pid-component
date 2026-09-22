@@ -21,7 +21,7 @@ export namespace Components {
         /**
           * Dark mode setting for the button. When provided, this takes precedence over DOM-based dark mode detection.
           * @type {'light' | 'dark' | 'system'}
-         * @public
+          * @public 
           * @default 'light'
          */
         "darkMode": 'light' | 'dark' | 'system';
@@ -87,7 +87,7 @@ export namespace Components {
         /**
           * Whether to show the flag of the region.
           * @type {boolean}
-         * @public
+          * @public 
           * @default true
          */
         "showFlag": boolean;
@@ -506,9 +506,7 @@ declare global {
     }
 }
 declare namespace LocalJSX {
-  type OneOf<K extends string, PropT, AttrT = PropT> =
-    { [P in K]: PropT } & { [P in `attr:${K}`]?: never }
-    | { [P in `attr:${K}`]: AttrT } & { [P in K]?: never };
+    type OneOf<K extends string, PropT, AttrT = PropT> = { [P in K]: PropT } & { [P in `attr:${K}`]?: never } | { [P in `attr:${K}`]: AttrT } & { [P in K]?: never };
 
     interface ColorHighlight {
         /**
@@ -521,7 +519,7 @@ declare namespace LocalJSX {
         /**
           * Dark mode setting for the button. When provided, this takes precedence over DOM-based dark mode detection.
           * @type {'light' | 'dark' | 'system'}
-         * @public
+          * @public 
           * @default 'light'
          */
         "darkMode"?: 'light' | 'dark' | 'system';
@@ -579,7 +577,7 @@ declare namespace LocalJSX {
         /**
           * Whether to show the flag of the region.
           * @type {boolean}
-         * @public
+          * @public 
           * @default true
          */
         "showFlag"?: boolean;
