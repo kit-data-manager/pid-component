@@ -5,6 +5,13 @@ repos:
     rev: v3.2.0
     hooks:
       - id: trailing-whitespace
+        # Stencil emits a trailing space after @public on props that declare
+        # a @default. Stripping it here only makes the next build re-add it.
+        exclude: |
+          (?x)^(
+            packages/stencil-library/src/components\.d\.ts|
+            packages/.*/lib/stencil-generated/.*
+          )$
       - id: check-yaml
       - id: check-added-large-files
   - repo: https://github.com/Materials-Data-Science-and-Informatics/somesy
