@@ -22,8 +22,9 @@
     "@angular/compiler": "22.1.7",
     "@angular/platform-browser-dynamic": "22.1.7",
     "@angular/animations": "22.1.7",
-    "@types/node": "^25.9.8",
+    "@types/node": "^26.6.2",
     "@vitest/coverage-v8": "^4.1.11",
+    "@vitest/coverage-istanbul": "^4.1.11",
     "ajv": "^8.20.0",
     "chromatic": "^18.9.4",
     "concurrently": "^10.0.5",
@@ -37,7 +38,7 @@
     "wait-on": "^9.1.0"
   },
   "dependencies": {
-    "vite": "8.2.1"
+    "vite": "^8.3.0"
   },
   "overrides": {
     "@angular/core": "22.1.7",
