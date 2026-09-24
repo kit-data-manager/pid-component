@@ -1,0 +1,89 @@
+/**
+ * Shared types and helpers for the ISBN book metadata providers.
+ */
+
+export interface BookMetadata {
+  title?: string;
+  subtitle?: string;
+  authors?: string[];
+  publishers?: string[];
+  publishDate?: string;
+  pages?: number;
+  description?: string;
+  coverUrl?: string;
+  sourceUrl?: string;
+  language?: string;
+  subjects?: string[];
+}
+
+/**
+ * Input for a book metadata lookup.
+ * - `isbn`: normalized ISBN (digits only, uppercase X allowed).
+ * - `hyphenated`: the original hyphenated form of the identifier, when
+ *   available. Some sources (notably Wikidata) store ISBNs in their
+ *   hyphenated form and cannot be queried with plain digits.
+ */
+export interface IsbnLookup {
+  isbn: string;
+  hyphenated?: string;
+}
+
+export interface BookSourceProvider {
+  readonly name: string;
+  fetch(lookup: IsbnLookup): Promise<Partial<BookMetadata> | null>;
+}
+
+export interface BookSourceResult {
+  name: string;
+  url?: string;
+  metadata: Partial<BookMetadata>;
+}
+
+export interface AggregatedBookMetadata {
+  merged: BookMetadata;
+  sources: BookSourceResult[];
+}
+
+const FETCH_TIMEOUT_MS = 5000;
+
+export async function fetchWithTimeout(url: string, init?: RequestInit): Promise<Response> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  try {
+    return await fetch(url, { ...init, signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+export function toHttps(url: string): string {
+  return url.replace(/^http:\/\//i, 'https://');
+}
+
+export function hasAnyField(metadata: Partial<BookMetadata>): boolean {
+  return Boolean(
+    metadata.title ||
+    metadata.subtitle ||
+    (metadata.authors && metadata.authors.length > 0) ||
+    (metadata.publishers && metadata.publishers.length > 0) ||
+    metadata.publishDate ||
+    metadata.description ||
+    metadata.coverUrl,
+  );
+}
+
+export function hyphenateForSearch(isbn: string): string {
+  if (isbn.length === 13) {
+    return `${isbn.slice(0, 3)}-${isbn.slice(3)}`;
+  }
+  return isbn;
+}
+
+export function decodeXmlEntities(value: string): string {
+  return value
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&amp;/g, '&');
+}

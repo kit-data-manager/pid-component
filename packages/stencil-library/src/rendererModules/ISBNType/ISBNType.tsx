@@ -50,9 +50,7 @@ export class ISBNType extends GenericIdentifierType {
 
   quickCheck(): boolean {
     const normalized = this.normalizeInput(this.value);
-    if (ISBNType.ISBN10_FORMAT.test(normalized)) return this.isValidIsbn10(normalized);
-    if (ISBNType.ISBN13_FORMAT.test(normalized)) return this.isValidIsbn13(normalized);
-    return false;
+    return this.isValid(normalized);
   }
 
   async hasMeaningfulInformation(): Promise<boolean> {
