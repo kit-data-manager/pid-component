@@ -2,60 +2,23 @@ import { FunctionalComponent, h } from '@stencil/core';
 import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
 import { FoldableItem } from '../../utils/FoldableItem';
 import { FoldableAction } from '../../utils/FoldableAction';
-
-interface OpenLibraryPerson {
-  name?: string;
-}
-
-interface OpenLibraryTextObject {
-  value?: string;
-}
-
-interface OpenLibraryExcerpt {
-  text?: string;
-}
-
-interface OpenLibraryBookData {
-  title?: string;
-  subtitle?: string;
-  authors?: OpenLibraryPerson[];
-  publish_date?: string;
-  publishers?: OpenLibraryPerson[];
-  number_of_pages?: number;
-  identifiers?: Record<string, string[]>;
-  url?: string;
-  info_url?: string;
-  preview_url?: string;
-  thumbnail_url?: string;
-  cover?: {
-    small?: string;
-    medium?: string;
-    large?: string;
-  };
-  notes?: string | OpenLibraryTextObject;
-  description?: string | OpenLibraryTextObject;
-  excerpts?: OpenLibraryExcerpt[];
-}
+import { AggregatedBookMetadata, BookSourceResult, DEFAULT_ISBN_SOURCE_PRIORITY, aggregateBookMetadata, createDefaultIsbnProviders, selectIsbnProviders } from './bookSources';
 
 interface ISBNCachedData {
   isbn?: string;
-  bookData?: OpenLibraryBookData;
+  aggregated?: {
+    merged: AggregatedBookMetadata['merged'];
+    sources: BookSourceResult[];
+  };
+  bookData?: AggregatedBookMetadata['merged'];
 }
 
-/**
- * Response shape of the Open Library ISBN endpoint
- * (https://openlibrary.org/isbn/{isbn}.json).
- */
-interface OpenLibraryEdition {
-  title?: string;
-  subtitle?: string;
-  publish_date?: string;
-  publishers?: string[];
-  number_of_pages?: number;
-  covers?: number[];
-  authors?: { key?: string }[];
-  works?: { key?: string }[];
-}
+const SOURCE_LINKS: Record<string, { label: string; url: string }> = {
+  'OpenLibrary': { label: 'View on OpenLibrary', url: 'https://openlibrary.org' },
+  'Google Books': { label: 'View on Google Books', url: 'https://books.google.com' },
+  'DNB': { label: 'View in DNB catalog', url: 'https://portal.dnb.de' },
+  'Wikidata': { label: 'View on Wikidata', url: 'https://www.wikidata.org' },
+};
 
 /**
  * Renderer for ISBN-10 and ISBN-13 identifiers.
@@ -67,12 +30,17 @@ export class ISBNType extends GenericIdentifierType {
   private static readonly ISBN13_FORMAT = /^\d{13}$/;
 
   private normalizedIsbn: string = '';
-  private bookData: OpenLibraryBookData | null = null;
+  private aggregated: AggregatedBookMetadata | null = null;
 
   get data(): string {
     return JSON.stringify({
       isbn: this.normalizedIsbn,
-      bookData: this.bookData ?? {},
+      aggregated: this.aggregated
+        ? {
+            merged: this.aggregated.merged,
+            sources: this.aggregated.sources,
+          }
+        : undefined,
     });
   }
 
@@ -92,70 +60,16 @@ export class ISBNType extends GenericIdentifierType {
     if (!this.isValid(normalized)) return false;
 
     this.normalizedIsbn = normalized;
-    // The legacy Books API (openlibrary.org/api/books) has been discontinued.
-    // The ISBN endpoint redirects to the matching edition document.
-    const apiUrl = `https://openlibrary.org/isbn/${encodeURIComponent(normalized)}.json`;
+    const allProviders = createDefaultIsbnProviders();
+    const enabled = this.getEnabledSourceNames();
+    const providers = selectIsbnProviders(allProviders, enabled);
+    const aggregated = await aggregateBookMetadata({ isbn: normalized, hyphenated: this.extractHyphenatedForm(normalized) }, providers);
+    if (!aggregated) return false;
+    if (!this.hasUsefulBookMetadata(aggregated.merged)) return false;
 
-    try {
-      const response = await fetch(apiUrl);
-      if (!response.ok) return false;
-      const edition = (await response.json()) as OpenLibraryEdition;
-      const book = await this.mapEditionToBookData(edition, normalized);
-      if (!this.hasUsefulBookMetadata(book)) return false;
+    this.aggregated = aggregated;
 
-      this.bookData = book;
-
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
-  private async mapEditionToBookData(edition: OpenLibraryEdition, isbn: string): Promise<OpenLibraryBookData> {
-    const book: OpenLibraryBookData = {
-      title: edition.title,
-      subtitle: edition.subtitle,
-      publish_date: edition.publish_date,
-      number_of_pages: edition.number_of_pages,
-      url: `https://openlibrary.org/isbn/${isbn}`,
-      authors: [],
-      publishers: (edition.publishers || []).map(name => ({ name })),
-    };
-
-    if (edition.covers && edition.covers.length > 0) {
-      book.cover = { medium: `https://covers.openlibrary.org/b/id/${edition.covers[0]}-M.jpg` };
-    }
-
-    const authorNames = await Promise.all(
-      (edition.authors || [])
-        .map(author => author.key)
-        .map(async key => {
-          try {
-            const response = await fetch(`https://openlibrary.org${key}.json`);
-            if (!response.ok) return null;
-            const author = (await response.json()) as { name?: string };
-            return author.name || null;
-          } catch {
-            return null;
-          }
-        }),
-    );
-    book.authors = authorNames.filter((name): name is string => Boolean(name)).map(name => ({ name }));
-
-    const workKey = (edition.works || []).find(work => work.key)?.key;
-    if (workKey) {
-      try {
-        const response = await fetch(`https://openlibrary.org${workKey}.json`);
-        if (response.ok) {
-          const work = (await response.json()) as { description?: string | OpenLibraryTextObject };
-          if (work.description) book.description = work.description;
-        }
-      } catch {
-        // Description is optional, ignore failures.
-      }
-    }
-
-    return book;
+    return true;
   }
 
   async init(data?: string): Promise<void> {
@@ -163,7 +77,7 @@ export class ISBNType extends GenericIdentifierType {
       this.loadFromCache(data);
     }
 
-    if (!this.bookData) {
+    if (!this.aggregated) {
       const success = await this.hasMeaningfulInformation();
       if (!success) {
         console.info(`ISBNType: No meaningful data found for ISBN ${this.normalizedIsbn}.`);
@@ -176,27 +90,27 @@ export class ISBNType extends GenericIdentifierType {
   }
 
   isResolvable(): boolean {
-    return this.bookData !== null;
+    return this.aggregated !== null;
   }
 
   renderPreview(): FunctionalComponent {
     return (
       <span class={`inline-flex max-w-full min-w-0 flex-nowrap items-baseline font-mono ${this.isDarkMode ? 'text-gray-200' : ''}`}>
         <span class={'flex-none pr-2'}>📚</span>
-        <span class={'min-w-0 overflow-hidden text-ellipsis whitespace-nowrap'}>{this.bookData?.title || `ISBN ${this.normalizedIsbn || this.value}`}</span>
+        <span class={'min-w-0 overflow-hidden text-ellipsis whitespace-nowrap'}>{this.aggregated?.merged.title || `ISBN ${this.normalizedIsbn || this.value}`}</span>
       </span>
     );
   }
 
   renderBody(): FunctionalComponent | undefined {
-    const coverUrl = this.bookData?.cover?.medium || this.bookData?.cover?.small || this.bookData?.thumbnail_url;
+    const coverUrl = this.aggregated?.merged.coverUrl;
     if (!coverUrl) return undefined;
 
     return (
       <div class="flex w-full justify-center">
         <img
           src={coverUrl}
-          alt={`Cover preview for ${this.bookData?.title || this.normalizedIsbn}`}
+          alt={`Cover preview for ${this.aggregated?.merged.title || this.normalizedIsbn}`}
           class="max-h-64 rounded border border-gray-200 object-contain"
           loading="lazy"
         />
@@ -206,6 +120,18 @@ export class ISBNType extends GenericIdentifierType {
 
   private normalizeInput(value: string): string {
     return value.trim().replace(ISBNType.PREFIX_REGEX, '').replace(ISBNType.NOISE_REGEX, '').toUpperCase();
+  }
+
+  /**
+   * Extracts the hyphenated form of the identifier from the raw input value,
+   * e.g. "978-0-262-03384-8" from "ISBN 978-0-262-03384-8". Returns undefined
+   * if the raw value contains no hyphens or does not match the normalized ISBN.
+   */
+  private extractHyphenatedForm(normalized: string): string | undefined {
+    const raw = this.value.trim().replace(ISBNType.PREFIX_REGEX, '').replace(/\s+/g, '').toUpperCase();
+    if (!raw.includes('-')) return undefined;
+    if (raw.replace(ISBNType.NOISE_REGEX, '') !== normalized) return undefined;
+    return raw;
   }
 
   private isValid(normalized: string): boolean {
@@ -237,22 +163,43 @@ export class ISBNType extends GenericIdentifierType {
     return checksum === Number(isbn[12]);
   }
 
-  private hasUsefulBookMetadata(book: OpenLibraryBookData): boolean {
-    return Boolean(book.title || book.publish_date || (book.authors && book.authors.length > 0) || (book.publishers && book.publishers.length > 0));
+  private getEnabledSourceNames(): string[] | undefined {
+    const setting = this.settings.find(entry => entry.name === 'isbnSources');
+    const value = setting?.value;
+    if (Array.isArray(value)) {
+      const names = value.filter((name): name is string => typeof name === 'string');
+      if (names.length > 0) return names;
+    }
+    if (typeof value === 'string' && value.trim().length > 0) {
+      return value
+        .split(',')
+        .map(name => name.trim())
+        .filter(Boolean);
+    }
+    return undefined;
+  }
+
+  private hasUsefulBookMetadata(merged: AggregatedBookMetadata['merged']): boolean {
+    return Boolean(merged.title || merged.publishDate || (merged.authors && merged.authors.length > 0) || (merged.publishers && merged.publishers.length > 0));
   }
 
   private loadFromCache(data: string): void {
     try {
       const parsed = JSON.parse(data) as ISBNCachedData;
       this.normalizedIsbn = parsed.isbn || this.normalizeInput(this.value);
-      this.bookData = parsed.bookData || null;
+      if (parsed.aggregated && parsed.aggregated.sources.length > 0) {
+        this.aggregated = { merged: parsed.aggregated.merged, sources: parsed.aggregated.sources };
+      } else if (parsed.bookData) {
+        this.aggregated = { merged: parsed.bookData, sources: [{ name: 'OpenLibrary', url: parsed.bookData.sourceUrl, metadata: parsed.bookData }] };
+      }
     } catch {
       this.normalizedIsbn = this.normalizeInput(this.value);
     }
   }
 
   private populateItems(): void {
-    if (!this.bookData) return;
+    const merged = this.aggregated?.merged;
+    if (!merged) return;
 
     this.items.push(
       new FoldableItem(
@@ -265,53 +212,48 @@ export class ISBNType extends GenericIdentifierType {
         false,
       ),
     );
-    this.items.push(new FoldableItem(1, 'Metadata Source', 'OpenLibrary', 'Metadata provided by OpenLibrary', 'https://openlibrary.org/developers/api'));
 
-    if (this.bookData.title) this.items.push(new FoldableItem(2, 'Title', this.bookData.title, 'Title of the publication'));
-    if (this.bookData.subtitle) this.items.push(new FoldableItem(3, 'Subtitle', this.bookData.subtitle, 'Subtitle of the publication'));
-    if (this.bookData.publish_date) this.items.push(new FoldableItem(4, 'Date', new Date(this.bookData.publish_date).toDateString(), 'Publication date'));
-    if (this.bookData.number_of_pages) this.items.push(new FoldableItem(5, 'Pages', String(this.bookData.number_of_pages), 'Number of pages'));
+    this.aggregated.sources.forEach((source, index) => {
+      const url = source.url || SOURCE_LINKS[source.name]?.url;
+      this.items.push(new FoldableItem(1 + index, 'Metadata Source', source.name, `Metadata fields provided by ${source.name}`, url));
+    });
+    let itemOrder = 1 + this.aggregated.sources.length;
 
-    (this.bookData.authors || [])
-      .map(author => author.name)
-      .filter((name): name is string => Boolean(name))
-      .map(name => new FoldableItem(6, 'Author', name))
-      .forEach(item => this.items.push(item));
+    if (merged.title) this.items.push(new FoldableItem(itemOrder++, 'Title', merged.title, 'Title of the publication'));
+    if (merged.subtitle) this.items.push(new FoldableItem(itemOrder++, 'Subtitle', merged.subtitle, 'Subtitle of the publication'));
+    if (merged.publishDate) {
+      const parsedDate = new Date(merged.publishDate);
+      const displayDate = Number.isNaN(parsedDate.getTime()) ? merged.publishDate : parsedDate.toDateString();
+      this.items.push(new FoldableItem(itemOrder++, 'Date', displayDate, 'Publication date'));
+    }
+    if (merged.pages) this.items.push(new FoldableItem(itemOrder++, 'Pages', String(merged.pages), 'Number of pages'));
 
-    const publisherNames = (this.bookData.publishers || []).map(publisher => publisher.name).filter((name): name is string => Boolean(name));
-    if (publisherNames.length > 0) this.items.push(new FoldableItem(7, 'Publisher', publisherNames.join(', '), 'Publisher(s) of the publication'));
+    (merged.authors || []).forEach(name => this.items.push(new FoldableItem(itemOrder, 'Author', name)));
+    if (merged.authors && merged.authors.length > 0) itemOrder++;
 
-    const summary = this.extractSummary();
-    if (summary) this.items.push(new FoldableItem(8, 'Abstract', summary, 'Brief description of the publication', undefined, undefined, false));
+    if (merged.publishers && merged.publishers.length > 0) {
+      this.items.push(new FoldableItem(itemOrder++, 'Publisher', merged.publishers.join(', '), 'Publisher(s) of the publication'));
+    }
+
+    if (merged.description) this.items.push(new FoldableItem(itemOrder, 'Abstract', merged.description, 'Brief description of the publication', undefined, undefined, false));
   }
 
   private populateActions(): void {
-    if (!this.bookData) return;
+    if (!this.aggregated) return;
 
-    const openLibraryUrl = this.bookData.url ? this.bookData.url : `https://openlibrary.org/isbn/${this.normalizedIsbn}`;
-    this.actions.push(new FoldableAction(0, 'View on OpenLibrary', openLibraryUrl, 'primary'));
-
-    if (this.bookData.preview_url) {
-      this.actions.push(new FoldableAction(2, 'Open Preview', this.bookData.preview_url, 'secondary'));
+    const firstAction = this.aggregated.sources[0];
+    if (firstAction) {
+      const link = SOURCE_LINKS[firstAction.name];
+      const url = firstAction.url || link?.url;
+      if (url) this.actions.push(new FoldableAction(0, link?.label || `View on ${firstAction.name}`, url, 'primary'));
     }
-  }
 
-  private extractSummary(): string | null {
-    if (!this.bookData) return null;
-
-    const fromDescription = this.extractText(this.bookData.description);
-    if (fromDescription) return fromDescription;
-
-    const fromNotes = this.extractText(this.bookData.notes);
-    if (fromNotes) return fromNotes;
-
-    const excerpt = this.bookData.excerpts?.find(item => item.text)?.text;
-    return excerpt || null;
-  }
-
-  private extractText(value: string | OpenLibraryTextObject | undefined): string | null {
-    if (!value) return null;
-    if (typeof value === 'string') return value;
-    return value.value || null;
+    this.aggregated.sources.slice(1).forEach((source, index) => {
+      const link = SOURCE_LINKS[source.name];
+      const url = source.url || link?.url;
+      if (url) this.actions.push(new FoldableAction(index + 1, link?.label || `View on ${source.name}`, url, 'secondary'));
+    });
   }
 }
+
+export { DEFAULT_ISBN_SOURCE_PRIORITY };
