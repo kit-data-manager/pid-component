@@ -112,6 +112,7 @@
     "test:watch": "stencil-test --watch",
     "test:spec": "stencil-test --project spec",
     "test:e2e": "stencil-test --project browser",
+    "test:integration": "RUN_API_INTEGRATION_TESTS=1 stencil-test --project integration",
     "generate": "stencil generate",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",

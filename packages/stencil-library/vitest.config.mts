@@ -26,6 +26,13 @@ export default defineVitestConfig({
         },
       },
       {
+        test: {
+          name: 'integration',
+          include: ['src/**/*.integration.ts'],
+          environment: 'node',
+        },
+      },
+      {
         oxc: {
           jsx: { runtime: 'classic', pragma: 'h', pragmaFrag: 'Fragment' },
         },
@@ -67,11 +74,7 @@ export default defineVitestConfig({
             enabled: true,
             provider: playwright(),
             headless: true,
-            instances: [
-              { browser: 'chromium' },
-              { browser: 'firefox' },
-              { browser: 'webkit' },
-            ],
+            instances: [{ browser: 'chromium' }, { browser: 'firefox' }, { browser: 'webkit' }],
           },
         },
       },
