@@ -64,4 +64,33 @@ describe('ISBN book source integration', () => {
       expect(metadata?.sourceUrl).toMatch(/^https:\/\/d-nb\.info\/\d+$/);
     });
   });
+
+  describe.skipIf(!RUN_INTEGRATION_TESTS)('action links resolve', () => {
+    it('provider ISBN action URLs return a successful response', { timeout: 60000 }, async () => {
+      for (const provider of createDefaultIsbnProviders()) {
+        const url = provider.isbnUrl(CLRS_ISBN);
+        const response = await fetch(url, { redirect: 'follow' });
+        // Google Books search may answer 429 under heavy anonymous quota use;
+        // every other source must resolve.
+        if (provider.name === 'Google Books') {
+          expect([200, 301, 302, 429]).toContain(response.status);
+        } else {
+          expect(response.ok).toBe(true);
+        }
+      }
+    });
+
+    it('aggregated deep links resolve', { timeout: 60000 }, async () => {
+      const result = await aggregateBookMetadata({ isbn: CLRS_ISBN, hyphenated: CLRS_ISBN_HYPHENATED }, createDefaultIsbnProviders());
+      expect(result).not.toBeNull();
+
+      for (const source of result?.sources ?? []) {
+        expect(source.actionUrl).toBeTruthy();
+        const response = await fetch(source.actionUrl, { redirect: 'follow' });
+        if (source.name !== 'Google Books') {
+          expect(response.ok).toBe(true);
+        }
+      }
+    });
+  });
 });
