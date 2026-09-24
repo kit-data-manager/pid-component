@@ -2,6 +2,39 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ISBNType } from '../ISBNType';
 import { ISBN_examples } from '../../../../../../examples';
 
+const OPENLIBRARY_EDITION = {
+  title: 'Designing Data-Intensive Applications',
+  subtitle: 'The Big Ideas Behind Reliable, Scalable, and Maintainable Systems',
+  publish_date: '2017',
+  publishers: ["O'Reilly Media"],
+  number_of_pages: 624,
+  covers: [8434671],
+  authors: [{ key: '/authors/OL7477772A' }],
+  works: [{ key: '/works/OL19293745W' }],
+};
+
+/**
+ * Mocks the Open Library ISBN endpoint and its author/work follow-up
+ * requests with URL-based routing.
+ */
+function mockOpenLibrary(edition: Record<string, unknown>): void {
+  (global.fetch as unknown as ReturnType<typeof vi.fn>).mockImplementation(async (input: RequestInfo | URL) => {
+    const url = String(input);
+    const body = url.includes('/authors/')
+      ? { name: 'Martin Kleppmann' }
+      : url.includes('/works/')
+        ? { description: { value: 'A practical guide to modern data systems.' } }
+        : url.includes('/isbn/')
+          ? edition
+          : null;
+    return {
+      ok: body !== null,
+      status: body !== null ? 200 : 404,
+      json: vi.fn().mockResolvedValue(body ?? {}),
+    };
+  });
+}
+
 describe('ISBNType', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -48,18 +81,7 @@ describe('ISBNType', () => {
 
   describe('hasMeaningfulInformation()', () => {
     it('returns true when OpenLibrary provides meaningful metadata', async () => {
-      (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({
-        ok: true,
-        json: vi.fn().mockResolvedValue({
-          'ISBN:9781449373320': {
-            title: 'Designing Data-Intensive Applications',
-            authors: [{ name: 'Martin Kleppmann' }],
-            publish_date: '2017',
-            publishers: [{ name: 'O’Reilly Media' }],
-            thumbnail_url: 'https://covers.openlibrary.org/b/id/8434671-S.jpg',
-          },
-        }),
-      });
+      mockOpenLibrary(OPENLIBRARY_EDITION);
 
       const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
       const result = await renderer.hasMeaningfulInformation();
@@ -68,10 +90,10 @@ describe('ISBNType', () => {
     });
 
     it('returns false when OpenLibrary response is empty', async () => {
-      (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({
+      (global.fetch as unknown as ReturnType<typeof vi.fn>).mockImplementation(async () => ({
         ok: true,
         json: vi.fn().mockResolvedValue({}),
-      });
+      }));
 
       const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
       const result = await renderer.hasMeaningfulInformation();
@@ -82,31 +104,16 @@ describe('ISBNType', () => {
 
   describe('init()', () => {
     it('creates foldable items and actions for valid metadata', async () => {
-      (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({
-        ok: true,
-        json: vi.fn().mockResolvedValue({
-          'ISBN:9781449373320': {
-            title: 'Designing Data-Intensive Applications',
-            subtitle: 'The Big Ideas Behind Reliable, Scalable, and Maintainable Systems',
-            authors: [{ name: 'Martin Kleppmann' }],
-            publish_date: '2017',
-            publishers: [{ name: 'O’Reilly Media' }],
-            preview_url: '/books/OL26780701M',
-            thumbnail_url: 'https://covers.openlibrary.org/b/id/8434671-S.jpg',
-            description: { value: 'A practical guide to modern data systems.' },
-          },
-        }),
-      });
+      mockOpenLibrary(OPENLIBRARY_EDITION);
 
       const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
       await renderer.init();
 
       expect(renderer.items.find(i => i.keyTitle === 'Title')?.value).toBe('Designing Data-Intensive Applications');
       expect(renderer.items.find(i => i.keyTitle === 'Author')?.value).toContain('Martin Kleppmann');
+      expect(renderer.items.find(i => i.keyTitle === 'Abstract')?.value).toBe('A practical guide to modern data systems.');
       expect(renderer.actions.find(a => a.title === 'View on OpenLibrary')).toBeDefined();
-      expect(renderer.actions.find(a => a.title === 'Open Preview')).toBeDefined();
     });
-
   });
 
   describe('render methods', () => {
@@ -116,16 +123,7 @@ describe('ISBNType', () => {
     });
 
     it('returns a body component when cover image is present', async () => {
-      (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({
-        ok: true,
-        json: vi.fn().mockResolvedValue({
-          'ISBN:9781449373320': {
-            title: 'Designing Data-Intensive Applications',
-            authors: [{ name: 'Martin Kleppmann' }],
-            thumbnail_url: 'https://covers.openlibrary.org/b/id/8434671-S.jpg',
-          },
-        }),
-      });
+      mockOpenLibrary(OPENLIBRARY_EDITION);
 
       const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
       await renderer.init();
@@ -135,17 +133,7 @@ describe('ISBNType', () => {
 
   describe('data getter', () => {
     it('returns serialized isbn metadata after init', async () => {
-      (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({
-        ok: true,
-        json: vi.fn().mockResolvedValue({
-          'ISBN:9781449373320': {
-            title: 'Designing Data-Intensive Applications',
-            authors: [{ name: 'Martin Kleppmann' }],
-            publish_date: '2017',
-            publishers: [{ name: 'O’Reilly Media' }],
-          },
-        }),
-      });
+      mockOpenLibrary(OPENLIBRARY_EDITION);
 
       const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
       await renderer.init();

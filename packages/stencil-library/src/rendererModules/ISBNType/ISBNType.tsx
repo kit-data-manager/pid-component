@@ -43,6 +43,21 @@ interface ISBNCachedData {
 }
 
 /**
+ * Response shape of the Open Library ISBN endpoint
+ * (https://openlibrary.org/isbn/{isbn}.json).
+ */
+interface OpenLibraryEdition {
+  title?: string;
+  subtitle?: string;
+  publish_date?: string;
+  publishers?: string[];
+  number_of_pages?: number;
+  covers?: number[];
+  authors?: { key?: string }[];
+  works?: { key?: string }[];
+}
+
+/**
  * Renderer for ISBN-10 and ISBN-13 identifiers.
  */
 export class ISBNType extends GenericIdentifierType {
@@ -77,14 +92,15 @@ export class ISBNType extends GenericIdentifierType {
     if (!this.isValid(normalized)) return false;
 
     this.normalizedIsbn = normalized;
-    const apiUrl = `https://openlibrary.org/api/books?bibkeys=ISBN:${encodeURIComponent(normalized)}&format=json&jscmd=data`;
+    // The legacy Books API (openlibrary.org/api/books) has been discontinued.
+    // The ISBN endpoint redirects to the matching edition document.
+    const apiUrl = `https://openlibrary.org/isbn/${encodeURIComponent(normalized)}.json`;
 
     try {
       const response = await fetch(apiUrl);
       if (!response.ok) return false;
-      const payload = (await response.json()) as Record<string, OpenLibraryBookData | undefined>;
-      const book = payload[`ISBN:${normalized}`];
-      if (!book) return false;
+      const edition = (await response.json()) as OpenLibraryEdition;
+      const book = await this.mapEditionToBookData(edition, normalized);
       if (!this.hasUsefulBookMetadata(book)) return false;
 
       this.bookData = book;
@@ -93,6 +109,53 @@ export class ISBNType extends GenericIdentifierType {
     } catch {
       return false;
     }
+  }
+
+  private async mapEditionToBookData(edition: OpenLibraryEdition, isbn: string): Promise<OpenLibraryBookData> {
+    const book: OpenLibraryBookData = {
+      title: edition.title,
+      subtitle: edition.subtitle,
+      publish_date: edition.publish_date,
+      number_of_pages: edition.number_of_pages,
+      url: `https://openlibrary.org/isbn/${isbn}`,
+      authors: [],
+      publishers: (edition.publishers || []).map(name => ({ name })),
+    };
+
+    if (edition.covers && edition.covers.length > 0) {
+      book.cover = { medium: `https://covers.openlibrary.org/b/id/${edition.covers[0]}-M.jpg` };
+    }
+
+    const authorNames = await Promise.all(
+      (edition.authors || [])
+        .map(author => author.key)
+        .map(async key => {
+          try {
+            const response = await fetch(`https://openlibrary.org${key}.json`);
+            if (!response.ok) return null;
+            const author = (await response.json()) as { name?: string };
+            return author.name || null;
+          } catch {
+            return null;
+          }
+        }),
+    );
+    book.authors = authorNames.filter((name): name is string => Boolean(name)).map(name => ({ name }));
+
+    const workKey = (edition.works || []).find(work => work.key)?.key;
+    if (workKey) {
+      try {
+        const response = await fetch(`https://openlibrary.org${workKey}.json`);
+        if (response.ok) {
+          const work = (await response.json()) as { description?: string | OpenLibraryTextObject };
+          if (work.description) book.description = work.description;
+        }
+      } catch {
+        // Description is optional, ignore failures.
+      }
+    }
+
+    return book;
   }
 
   async init(data?: string): Promise<void> {
@@ -118,11 +181,9 @@ export class ISBNType extends GenericIdentifierType {
 
   renderPreview(): FunctionalComponent {
     return (
-      <span class={`inline-flex flex-nowrap items-baseline font-mono min-w-0 max-w-full ${this.isDarkMode ? 'text-gray-200' : ''}`}>
+      <span class={`inline-flex max-w-full min-w-0 flex-nowrap items-baseline font-mono ${this.isDarkMode ? 'text-gray-200' : ''}`}>
         <span class={'flex-none pr-2'}>📚</span>
-        <span class={'min-w-0 overflow-hidden text-ellipsis whitespace-nowrap'}>
-          {this.bookData?.title || `ISBN ${this.normalizedIsbn || this.value}`}
-        </span>
+        <span class={'min-w-0 overflow-hidden text-ellipsis whitespace-nowrap'}>{this.bookData?.title || `ISBN ${this.normalizedIsbn || this.value}`}</span>
       </span>
     );
   }
@@ -177,12 +238,7 @@ export class ISBNType extends GenericIdentifierType {
   }
 
   private hasUsefulBookMetadata(book: OpenLibraryBookData): boolean {
-    return Boolean(
-      book.title ||
-      book.publish_date ||
-      (book.authors && book.authors.length > 0) ||
-      (book.publishers && book.publishers.length > 0),
-    );
+    return Boolean(book.title || book.publish_date || (book.authors && book.authors.length > 0) || (book.publishers && book.publishers.length > 0));
   }
 
   private loadFromCache(data: string): void {
@@ -199,7 +255,15 @@ export class ISBNType extends GenericIdentifierType {
     if (!this.bookData) return;
 
     this.items.push(
-      new FoldableItem(0, 'ISBN', this.normalizedIsbn, 'International Standard Book Number used to identify this publication', 'https://en.wikipedia.org/wiki/ISBN', undefined, false),
+      new FoldableItem(
+        0,
+        'ISBN',
+        this.normalizedIsbn,
+        'International Standard Book Number used to identify this publication',
+        'https://en.wikipedia.org/wiki/ISBN',
+        undefined,
+        false,
+      ),
     );
     this.items.push(new FoldableItem(1, 'Metadata Source', 'OpenLibrary', 'Metadata provided by OpenLibrary', 'https://openlibrary.org/developers/api'));
 
@@ -212,7 +276,7 @@ export class ISBNType extends GenericIdentifierType {
       .map(author => author.name)
       .filter((name): name is string => Boolean(name))
       .map(name => new FoldableItem(6, 'Author', name))
-      .forEach((item) => this.items.push(item));
+      .forEach(item => this.items.push(item));
 
     const publisherNames = (this.bookData.publishers || []).map(publisher => publisher.name).filter((name): name is string => Boolean(name));
     if (publisherNames.length > 0) this.items.push(new FoldableItem(7, 'Publisher', publisherNames.join(', '), 'Publisher(s) of the publication'));
