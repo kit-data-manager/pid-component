@@ -13,7 +13,16 @@ export async function aggregateBookMetadata(lookup: IsbnLookup, providers: BookS
     ordered.map(async (provider): Promise<BookSourceResult | null> => {
       try {
         const metadata = await provider.fetch(lookup);
-        return metadata ? { name: provider.name, url: metadata.sourceUrl, metadata } : null;
+        if (!metadata) return null;
+        return {
+          name: provider.name,
+          actionLabel: provider.actionLabel,
+          // Prefer the deep link returned by the source; fall back to an
+          // ISBN-based URL so the action always opens this book.
+          actionUrl: metadata.sourceUrl || provider.isbnUrl(lookup.isbn),
+          url: metadata.sourceUrl,
+          metadata,
+        };
       } catch {
         return null;
       }

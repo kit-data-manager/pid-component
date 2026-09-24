@@ -1,4 +1,4 @@
-import { BookMetadata, BookSourceProvider, IsbnLookup, fetchWithTimeout, hasAnyField } from './BookMetadata';
+import { BookMetadata, BookSourceProvider, IsbnLookup, fetchWithTimeout, hasAnyField, hyphenateForSearch } from './BookMetadata';
 
 interface WikidataSearchResponse {
   query?: {
@@ -22,6 +22,11 @@ interface WikidataEntityResponse {
  */
 export class WikidataProvider implements BookSourceProvider {
   readonly name = 'Wikidata';
+  readonly actionLabel = 'View on Wikidata';
+
+  isbnUrl(isbn: string): string {
+    return `https://www.wikidata.org/w/index.php?search=${encodeURIComponent(`haswbstatement:P212=${hyphenateForSearch(isbn)}`)}`;
+  }
 
   async fetch(lookup: IsbnLookup): Promise<Partial<BookMetadata> | null> {
     // ISBN-13 is stored as P212, ISBN-10 as P957.

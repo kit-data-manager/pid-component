@@ -18,6 +18,11 @@ interface GoogleBooksVolume {
 
 export class GoogleBooksProvider implements BookSourceProvider {
   readonly name = 'Google Books';
+  readonly actionLabel = 'View on Google Books';
+
+  isbnUrl(isbn: string): string {
+    return `https://www.google.com/search?tbm=bks&q=isbn:${isbn}`;
+  }
 
   async fetch(lookup: IsbnLookup): Promise<Partial<BookMetadata> | null> {
     try {

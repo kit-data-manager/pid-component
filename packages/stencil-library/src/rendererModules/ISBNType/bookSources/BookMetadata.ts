@@ -30,11 +30,19 @@ export interface IsbnLookup {
 
 export interface BookSourceProvider {
   readonly name: string;
+  /** Label for the action that opens this ISBN in the source's UI. */
+  readonly actionLabel: string;
+  /** URL that opens the given ISBN in the source's catalog/UI. */
+  isbnUrl(isbn: string): string;
   fetch(lookup: IsbnLookup): Promise<Partial<BookMetadata> | null>;
 }
 
 export interface BookSourceResult {
   name: string;
+  /** Label for the action that opens this ISBN in the source's UI. */
+  actionLabel: string;
+  /** URL that opens this ISBN in the source (deep link if known, ISBN-based otherwise). */
+  actionUrl: string;
   url?: string;
   metadata: Partial<BookMetadata>;
 }

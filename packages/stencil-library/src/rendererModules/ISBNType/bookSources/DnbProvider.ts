@@ -2,6 +2,11 @@ import { BookMetadata, BookSourceProvider, IsbnLookup, decodeXmlEntities, fetchW
 
 export class DnbProvider implements BookSourceProvider {
   readonly name = 'DNB';
+  readonly actionLabel = 'View in DNB catalog';
+
+  isbnUrl(isbn: string): string {
+    return `https://portal.dnb.de/opac.htm?query=isbn:${isbn}`;
+  }
 
   async fetch(lookup: IsbnLookup): Promise<Partial<BookMetadata> | null> {
     // DNB normalizes hyphens itself, any ISBN spelling works.

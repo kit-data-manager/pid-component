@@ -2,6 +2,11 @@ import { BookMetadata, BookSourceProvider, IsbnLookup, fetchWithTimeout, hasAnyF
 
 export class OpenLibraryProvider implements BookSourceProvider {
   readonly name = 'OpenLibrary';
+  readonly actionLabel = 'View on OpenLibrary';
+
+  isbnUrl(isbn: string): string {
+    return `https://openlibrary.org/isbn/${isbn}`;
+  }
 
   async fetch(lookup: IsbnLookup): Promise<Partial<BookMetadata> | null> {
     const { isbn } = lookup;

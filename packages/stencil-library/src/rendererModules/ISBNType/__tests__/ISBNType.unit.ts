@@ -233,7 +233,40 @@ describe('ISBNType', () => {
 
       const primary = renderer.actions.find(a => a.style === 'primary');
       expect(primary?.title).toBe('View on OpenLibrary');
+      expect(primary?.link).toBe('https://openlibrary.org/isbn/9781449373320');
       expect(renderer.actions.find(a => a.title === 'View on Wikidata')).toBeDefined();
+    });
+
+    it('opens the ISBN in sources that do not provide a deep link', async () => {
+      installFetchMock(url => {
+        if (url.startsWith('https://www.googleapis.com/books/')) {
+          const payload = { items: [{ volumeInfo: { title: 'No Deep Link Book', publisher: "O'Reilly Media" } }] };
+          return { ok: true, body: payload };
+        }
+        if (url.startsWith('https://services.dnb.de/')) return { ok: true, text: DNB_XML };
+        return undefined;
+      });
+
+      const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
+      await renderer.init();
+
+      const googleAction = renderer.actions.find(a => a.title === 'View on Google Books');
+      expect(googleAction?.link).toBe('https://www.google.com/search?tbm=bks&q=isbn:9781449373320');
+      const dnbAction = renderer.actions.find(a => a.title === 'View in DNB catalog');
+      expect(dnbAction?.link).toBe('https://d-nb.info/944033466');
+    });
+
+    it('prefers the deep link returned by a source over the ISBN-based URL', async () => {
+      installFetchMock(url => {
+        if (url.startsWith('https://www.googleapis.com/books/')) return { ok: true, body: GOOGLE_BOOKS_PAYLOAD };
+        return undefined;
+      });
+
+      const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
+      await renderer.init();
+
+      const googleAction = renderer.actions.find(a => a.title === 'View on Google Books');
+      expect(googleAction?.link).toBe(GOOGLE_BOOKS_PAYLOAD.items[0].volumeInfo.infoLink);
     });
 
     it('populates nothing when no source returns data', async () => {
@@ -303,6 +336,7 @@ describe('ISBNType', () => {
 
       expect(renderer.isResolvable()).toBe(true);
       expect(renderer.items.find(i => i.keyTitle === 'Title')?.value).toBe('Designing Data-Intensive Applications');
+      expect(renderer.actions.find(a => a.title === 'View on OpenLibrary')?.link).toBe('https://openlibrary.org/isbn/9781449373320');
       expect(mock).not.toHaveBeenCalled();
     });
 
@@ -327,10 +361,14 @@ describe('ISBNType', () => {
       const providers: BookSourceProvider[] = [
         {
           name: 'OpenLibrary',
+          actionLabel: 'View on OpenLibrary',
+          isbnUrl: () => 'https://openlibrary.org/isbn/x',
           fetch: async () => ({ title: 'OL Title', pages: 624, authors: ['Martin Kleppmann'] }),
         },
         {
           name: 'Google Books',
+          actionLabel: 'View on Google Books',
+          isbnUrl: () => 'https://www.google.com/search?tbm=bks&q=isbn:x',
           fetch: async () => ({
             title: 'GB Title',
             subtitle: 'GB Subtitle',
@@ -350,9 +388,11 @@ describe('ISBNType', () => {
 
     it('returns null when no provider has data', async () => {
       const providers: BookSourceProvider[] = [
-        { name: 'OpenLibrary', fetch: async () => null },
+        { name: 'OpenLibrary', actionLabel: 'View on OpenLibrary', isbnUrl: () => '', fetch: async () => null },
         {
           name: 'Google Books',
+          actionLabel: 'View on Google Books',
+          isbnUrl: () => '',
           fetch: async () => {
             throw new Error('network down');
           },
@@ -365,8 +405,8 @@ describe('ISBNType', () => {
 
     it('merges list fields without duplicates, case-insensitively', async () => {
       const providers: BookSourceProvider[] = [
-        { name: 'OpenLibrary', fetch: async () => ({ authors: ['Martin Kleppmann'] }) },
-        { name: 'Google Books', fetch: async () => ({ authors: ['martin kleppmann', 'Someone Else'] }) },
+        { name: 'OpenLibrary', actionLabel: 'View on OpenLibrary', isbnUrl: () => '', fetch: async () => ({ authors: ['Martin Kleppmann'] }) },
+        { name: 'Google Books', actionLabel: 'View on Google Books', isbnUrl: () => '', fetch: async () => ({ authors: ['martin kleppmann', 'Someone Else'] }) },
       ];
 
       const result = await aggregateBookMetadata({ isbn: '9781449373320' }, providers);

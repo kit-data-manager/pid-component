@@ -2,7 +2,15 @@ import { FunctionalComponent, h } from '@stencil/core';
 import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
 import { FoldableItem } from '../../utils/FoldableItem';
 import { FoldableAction } from '../../utils/FoldableAction';
-import { AggregatedBookMetadata, BookSourceResult, DEFAULT_ISBN_SOURCE_PRIORITY, aggregateBookMetadata, createDefaultIsbnProviders, selectIsbnProviders } from './bookSources';
+import {
+  AggregatedBookMetadata,
+  BookSourceResult,
+  DEFAULT_ISBN_SOURCE_PRIORITY,
+  aggregateBookMetadata,
+  createDefaultIsbnProviders,
+  getProviderAction,
+  selectIsbnProviders,
+} from './bookSources';
 
 interface ISBNCachedData {
   isbn?: string;
@@ -12,13 +20,6 @@ interface ISBNCachedData {
   };
   bookData?: AggregatedBookMetadata['merged'];
 }
-
-const SOURCE_LINKS: Record<string, { label: string; url: string }> = {
-  'OpenLibrary': { label: 'View on OpenLibrary', url: 'https://openlibrary.org' },
-  'Google Books': { label: 'View on Google Books', url: 'https://books.google.com' },
-  'DNB': { label: 'View in DNB catalog', url: 'https://portal.dnb.de' },
-  'Wikidata': { label: 'View on Wikidata', url: 'https://www.wikidata.org' },
-};
 
 /**
  * Renderer for ISBN-10 and ISBN-13 identifiers.
@@ -188,11 +189,32 @@ export class ISBNType extends GenericIdentifierType {
       if (parsed.aggregated && parsed.aggregated.sources.length > 0) {
         this.aggregated = { merged: parsed.aggregated.merged, sources: parsed.aggregated.sources };
       } else if (parsed.bookData) {
-        this.aggregated = { merged: parsed.bookData, sources: [{ name: 'OpenLibrary', url: parsed.bookData.sourceUrl, metadata: parsed.bookData }] };
+        const source: BookSourceResult = {
+          name: 'OpenLibrary',
+          actionLabel: '',
+          actionUrl: '',
+          url: parsed.bookData.sourceUrl,
+          metadata: parsed.bookData,
+        };
+        const action = this.resolveSourceAction(source);
+        this.aggregated = { merged: parsed.bookData, sources: [{ ...source, ...action }] };
       }
     } catch {
       this.normalizedIsbn = this.normalizeInput(this.value);
     }
+  }
+
+  /**
+   * Resolves the action label and ISBN-based URL for a source. Cache entries
+   * written before action labels/URLs existed fall back to the provider
+   * registry.
+   */
+  private resolveSourceAction(source: BookSourceResult): { actionLabel: string; actionUrl: string } {
+    const fallback = getProviderAction(source.name, this.normalizedIsbn);
+    return {
+      actionLabel: source.actionLabel || fallback?.actionLabel || `View on ${source.name}`,
+      actionUrl: source.actionUrl || fallback?.actionUrl || source.url || '',
+    };
   }
 
   private populateItems(): void {
@@ -212,8 +234,8 @@ export class ISBNType extends GenericIdentifierType {
     );
 
     this.aggregated.sources.forEach((source, index) => {
-      const url = source.url || SOURCE_LINKS[source.name]?.url;
-      this.items.push(new FoldableItem(1 + index, 'Metadata Source', source.name, `Metadata fields provided by ${source.name}`, url));
+      const { actionUrl } = this.resolveSourceAction(source);
+      this.items.push(new FoldableItem(1 + index, 'Metadata Source', source.name, `Metadata fields provided by ${source.name}`, actionUrl || undefined));
     });
     let itemOrder = 1 + this.aggregated.sources.length;
 
@@ -239,17 +261,11 @@ export class ISBNType extends GenericIdentifierType {
   private populateActions(): void {
     if (!this.aggregated) return;
 
-    const firstAction = this.aggregated.sources[0];
-    if (firstAction) {
-      const link = SOURCE_LINKS[firstAction.name];
-      const url = firstAction.url || link?.url;
-      if (url) this.actions.push(new FoldableAction(0, link?.label || `View on ${firstAction.name}`, url, 'primary'));
-    }
-
-    this.aggregated.sources.slice(1).forEach((source, index) => {
-      const link = SOURCE_LINKS[source.name];
-      const url = source.url || link?.url;
-      if (url) this.actions.push(new FoldableAction(index + 1, link?.label || `View on ${source.name}`, url, 'secondary'));
+    this.aggregated.sources.forEach((source, index) => {
+      const { actionLabel, actionUrl } = this.resolveSourceAction(source);
+      if (actionUrl) {
+        this.actions.push(new FoldableAction(index, actionLabel, actionUrl, index === 0 ? 'primary' : 'secondary'));
+      }
     });
   }
 }
