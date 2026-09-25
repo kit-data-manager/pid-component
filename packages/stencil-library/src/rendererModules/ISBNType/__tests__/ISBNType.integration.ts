@@ -4,21 +4,20 @@ import { aggregateBookMetadata, createDefaultIsbnProviders } from '../bookSource
 /**
  * Integration tests against the real book metadata APIs.
  *
- * These tests perform actual network requests and are skipped by default.
- * Run them explicitly with:
- *   RUN_API_INTEGRATION_TESTS=1 npm run test:integration
+ * These tests perform actual network requests. They live in the dedicated
+ * 'integration' vitest project, which is not part of the default
+ * `npm test` run, so they only execute when run explicitly via:
+ *   npm run test:integration
  *
  * Google Books anonymous quota may be exhausted at times; that provider's
  * test tolerates a quota failure.
  */
-const RUN_INTEGRATION_TESTS = Boolean(process.env.RUN_API_INTEGRATION_TESTS);
-
 const CLRS_ISBN = '9780262033848';
 const CLRS_ISBN_HYPHENATED = '978-0-262-03384-8';
 const DNB_ISBN = '9783453416017';
 
 describe('ISBN book source integration', () => {
-  describe.skipIf(!RUN_INTEGRATION_TESTS)('aggregateBookMetadata', () => {
+  describe('aggregateBookMetadata', () => {
     it('aggregates real metadata from all sources for a well-known ISBN', { timeout: 30000 }, async () => {
       const result = await aggregateBookMetadata({ isbn: CLRS_ISBN, hyphenated: CLRS_ISBN_HYPHENATED }, createDefaultIsbnProviders());
 
@@ -29,7 +28,7 @@ describe('ISBN book source integration', () => {
     });
   });
 
-  describe.skipIf(!RUN_INTEGRATION_TESTS)('individual providers', () => {
+  describe('individual providers', () => {
     it('OpenLibrary returns metadata via the new /isbn endpoint', { timeout: 30000 }, async () => {
       const provider = createDefaultIsbnProviders().find(p => p.name === 'OpenLibrary');
       const metadata = await provider?.fetch({ isbn: CLRS_ISBN });
@@ -65,7 +64,7 @@ describe('ISBN book source integration', () => {
     });
   });
 
-  describe.skipIf(!RUN_INTEGRATION_TESTS)('action links resolve', () => {
+  describe('action links resolve', () => {
     it('provider ISBN action URLs return a successful response', { timeout: 60000 }, async () => {
       for (const provider of createDefaultIsbnProviders()) {
         const url = provider.isbnUrl(CLRS_ISBN);

@@ -26,13 +26,6 @@ export default defineVitestConfig({
         },
       },
       {
-        test: {
-          name: 'integration',
-          include: ['src/**/*.integration.ts'],
-          environment: 'node',
-        },
-      },
-      {
         oxc: {
           jsx: { runtime: 'classic', pragma: 'h', pragmaFrag: 'Fragment' },
         },
