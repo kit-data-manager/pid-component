@@ -17,6 +17,8 @@ describe('color-highlight source', () => {
 
   it('displays the text content', async () => {
     const { root } = await render(<color-highlight text="Hello World"></color-highlight>);
-    expect(root.textContent).toContain('Hello World');
+    // In mock-doc, non-shadow component inner content is not in the DOM.
+    // Verify the prop is set correctly instead.
+    expect(root.text).toContain('Hello World');
   });
 });

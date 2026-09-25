@@ -1,6 +1,6 @@
 {
   "name": "@kit-data-manager/angular-pid-component",
-  "version": "0.4.5",
+  "version": "0.5.0",
   "description": "Angular wrapper for the package @kit-data-manager/pid-component",
   "author": {
     "name": "Maximilian Inckmann",
@@ -41,7 +41,7 @@
     "@angular/cdk": "^22.1.7",
     "@angular/forms": "^22.1.7",
     "@angular/material": "^22.1.7",
-    "@kit-data-manager/pid-component": "^0.4.5",
+    "@kit-data-manager/pid-component": "^0.5.0",
     "@stencil/angular-output-target": "^1.5.0"
   },
   "devDependencies": {

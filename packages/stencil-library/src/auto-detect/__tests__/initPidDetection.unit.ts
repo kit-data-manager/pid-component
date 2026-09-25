@@ -213,4 +213,72 @@ describe('initPidDetection', () => {
       expect(mockRestoreOriginalText).toHaveBeenCalled();
     });
   });
+
+  describe('detectMatches tokenization', () => {
+    // runScan processes batches through a requestIdleCallback setTimeout fallback,
+    // so several real timer ticks are required to drain the microtask+macrotask chain.
+    async function flush(times = 5) {
+      for (let i = 0; i < times; i++) {
+        await new Promise<void>(resolve => setTimeout(resolve, 0));
+      }
+    }
+
+    function textNode(text: string) {
+      return { textNode: { parentNode: {}, nodeValue: text }, text };
+    }
+
+    it('replaces tokenized matches detected from scanned text nodes', async () => {
+      const root = document.createElement('div');
+      mockScanDom.mockResolvedValue([textNode('See DOI 10.1000/xyz and 20.1000/abc')]);
+      mockDetectBestFit.mockImplementation((value: string) => (value.startsWith('10.') ? 'URLType' : null));
+
+      initPidDetection({ root });
+      await flush();
+
+      expect(mockReplaceMatches).toHaveBeenCalled();
+      const calls = mockReplaceMatches.mock.calls;
+      expect(calls.length).toBeGreaterThan(0);
+      const matchArg = calls[0][1] as { value: string }[];
+      expect(matchArg.some(m => m.value === '10.1000/xyz')).toBe(true);
+    });
+
+    it('skips tokens shorter than two characters and produces no matches', async () => {
+      const root = document.createElement('div');
+      mockScanDom.mockResolvedValue([textNode('a b 10.1000/xyz')]);
+      mockDetectBestFit.mockReturnValue(null);
+
+      initPidDetection({ root });
+      await flush();
+
+      expect(mockReplaceMatches).not.toHaveBeenCalled();
+    });
+
+    it('does not call replaceMatches when no renderer matches', async () => {
+      const root = document.createElement('div');
+      mockScanDom.mockResolvedValue([textNode('just some ordinary prose here')]);
+      mockDetectBestFit.mockReturnValue(null);
+
+      initPidDetection({ root });
+      await flush();
+
+      expect(mockReplaceMatches).not.toHaveBeenCalled();
+    });
+
+    it('passes sanitized tokens to detection for punctuation-wrapped values', async () => {
+      const root = document.createElement('div');
+      mockScanDom.mockResolvedValue([textNode('see (10.1000/xyz) for details')]);
+      mockDetectBestFit.mockImplementation((value: string) => (value === '10.1000/xyz' ? 'URLType' : null));
+      mockSanitizeToken.mockImplementation((token: string) => {
+        const cleaned = token.replace(/^[^\w.]+/, '').replace(/[^A-Za-z0-9./]+$/, '');
+        return { sanitized: cleaned, leadingStripped: token.indexOf(cleaned) };
+      });
+
+      initPidDetection({ root });
+      await flush();
+
+      expect(mockReplaceMatches).toHaveBeenCalled();
+      const matchArg = mockReplaceMatches.mock.calls[0][1] as { value: string }[];
+      expect(matchArg.some(m => m.value === '10.1000/xyz')).toBe(true);
+    });
+  });
 });
