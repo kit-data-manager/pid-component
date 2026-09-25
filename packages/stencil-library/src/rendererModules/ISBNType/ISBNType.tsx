@@ -205,7 +205,10 @@ export class ISBNType extends GenericIdentifierType {
     if (merged.title) this.items.push(new FoldableItem(itemOrder++, 'Title', merged.title, 'Title of the publication'));
     if (merged.subtitle) this.items.push(new FoldableItem(itemOrder++, 'Subtitle', merged.subtitle, 'Subtitle of the publication'));
     if (merged.publishDate) {
-      this.items.push(new FoldableItem(itemOrder++, 'Date', toIsoDate(merged.publishDate), 'Publication date'));
+      const isoDate = toIsoDate(merged.publishDate);
+      if (isoDate) {
+        this.items.push(new FoldableItem(itemOrder++, 'Date', isoDate, 'Publication date'));
+      }
     }
     if (merged.pages) this.items.push(new FoldableItem(itemOrder++, 'Pages', String(merged.pages), 'Number of pages'));
 
@@ -234,16 +237,37 @@ export class ISBNType extends GenericIdentifierType {
 export { DEFAULT_ISBN_SOURCE_PRIORITY };
 
 /**
- * Normalizes a publication date into an ISO 8601/RFC 3339 form that the date
- * subcomponent can detect: keeps year-only and already-ISO inputs as-is,
- * converts human-readable month names to YYYY-MM-DD, and falls back to the
- * raw string when it cannot be parsed.
+ * Normalizes a publication date into a value the date subcomponent can
+ * render, or undefined when the value is not a usable date:
+ * - year-only (YYYY) stays as-is (rendered as a plain string)
+ * - year-month / year-month-unknown-day -> YYYY-MM-01
+ * - full dates and RFC 3339 datetimes -> YYYY-MM-DD
+ * - human-readable dates -> local YYYY-MM-DD (calendar date, no shift)
+ * - any other value -> undefined (callers omit the Date item)
  */
-function toIsoDate(publishDate: string): string {
-  if (!publishDate) return publishDate;
-  if (/^\d{4}$/.test(publishDate)) return publishDate;
-  if (/^\d{4}-\d{2}/.test(publishDate)) return publishDate;
-  const parsed = new Date(publishDate);
+function toIsoDate(publishDate: string): string | undefined {
+  const value = publishDate.trim();
+  if (!value) return undefined;
+
+  if (/^\d{4}$/.test(value)) return value; // year only, rendered as text
+
+  const monthDay = value.match(/^(\d{4})-(\d{2})/);
+  if (monthDay) {
+    const year = Number(monthDay[1]);
+    const month = Number(monthDay[2]);
+    if (month >= 1 && month <= 12) {
+      // Full date present -> keep it; otherwise reduce to the first of month.
+      const full = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (full) {
+        const day = Number(full[3]);
+        if (day >= 1 && day <= 31) return `${full[1]}-${full[2]}-${full[3]}`;
+      }
+      return `${monthDay[1]}-${monthDay[2]}-01`;
+    }
+    return undefined;
+  }
+
+  const parsed = new Date(value);
   if (!Number.isNaN(parsed.getTime())) {
     // Format in local components to avoid a UTC timezone shift for
     // date-only (no time) values like "Apr 02, 2017".
@@ -252,5 +276,5 @@ function toIsoDate(publishDate: string): string {
     const day = String(parsed.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   }
-  return publishDate;
+  return undefined;
 }

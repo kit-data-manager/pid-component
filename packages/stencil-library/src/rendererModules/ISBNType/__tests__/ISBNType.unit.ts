@@ -271,7 +271,7 @@ describe('ISBNType', () => {
       expect(renderer.items.find(i => i.keyTitle === 'Date')?.value).toBe('1988');
     });
 
-    it('shows the raw publication date when it cannot be parsed', async () => {
+    it('omits the Date item when the publication date cannot be parsed', async () => {
       installFetchMock(url => {
         if (url.startsWith('https://services.dnb.de/')) {
           return { ok: true, text: DNB_XML.replace('<dc:date>1995</dc:date>', '<dc:date>Undated</dc:date>') };
@@ -282,7 +282,35 @@ describe('ISBNType', () => {
       const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
       await renderer.init();
 
-      expect(renderer.items.find(i => i.keyTitle === 'Date')?.value).toBe('Undated');
+      expect(renderer.items.find(i => i.keyTitle === 'Date')).toBeUndefined();
+    });
+
+    it('reduces a year-month publication date to the first of that month', async () => {
+      installFetchMock(url => {
+        if (url.startsWith('https://services.dnb.de/')) {
+          return { ok: true, text: DNB_XML.replace('<dc:date>1995</dc:date>', '<dc:date>2008-01</dc:date>') };
+        }
+        return undefined;
+      });
+
+      const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
+      await renderer.init();
+
+      expect(renderer.items.find(i => i.keyTitle === 'Date')?.value).toBe('2008-01-01');
+    });
+
+    it('reduces an unknown-day publication date to the first of that month', async () => {
+      installFetchMock(url => {
+        if (url.startsWith('https://services.dnb.de/')) {
+          return { ok: true, text: DNB_XML.replace('<dc:date>1995</dc:date>', '<dc:date>2008-01-?</dc:date>') };
+        }
+        return undefined;
+      });
+
+      const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
+      await renderer.init();
+
+      expect(renderer.items.find(i => i.keyTitle === 'Date')?.value).toBe('2008-01-01');
     });
 
     it('creates one view action per contributing source with the primary action for the highest-priority source', async () => {
