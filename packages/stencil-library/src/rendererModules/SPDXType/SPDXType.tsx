@@ -28,9 +28,7 @@ export class SPDXType extends GenericIdentifierType {
   private static readonly URL_REGEX = /^https?:\/\/spdx\.org\/licenses\/[\w.\-+]+\/?$/i;
   private licenseData: SPDXLicense | null = null;
   private licenseId: string = '';
-  private readonly corsFallback: boolean = true;
-  private readonly corsProxy: string = 'https://corsproxy.io/?';
-  private readonly spdxBaseUrl: string = 'https://spdx.org/licenses';
+  private readonly spdxBaseUrl: string = 'https://raw.githubusercontent.com/spdx/license-list-data/refs/heads/main/json/details';
   private readonly fileFormat: string = 'json';
   private readonly requestTimeout: number = 10000; // 10 seconds
 
@@ -141,11 +139,7 @@ export class SPDXType extends GenericIdentifierType {
    * @returns The API URL
    */
   private buildLicenseApiUrl(licenseId: string): string {
-    const baseUrl = this.corsFallback
-      ? `${this.corsProxy}${encodeURIComponent(`${this.spdxBaseUrl}/${licenseId}.${this.fileFormat}`)}`
-      : `${this.spdxBaseUrl}/${licenseId}.${this.fileFormat}`;
-
-    return baseUrl;
+    return `${this.spdxBaseUrl}/${licenseId}.${this.fileFormat}`;
   }
 
   /**
@@ -252,7 +246,7 @@ export class SPDXType extends GenericIdentifierType {
 
     // Find the most official looking URL to use as a direct link
     const officialUrl = this.findOfficialUrl(this.licenseData.seeAlso) || this.licenseData.seeAlso[0];
-    this.actions.push(new FoldableAction(30, 'View Official License', officialUrl, 'secondary'));
+    this.actions.push(new FoldableAction(30, 'View license website', officialUrl, 'secondary'));
   }
 
   /**
@@ -276,18 +270,7 @@ export class SPDXType extends GenericIdentifierType {
    */
   private handleInitError(error: { message: string }): void {
     // Add meaningful error information
-    if (error.message && error.message.includes('CORS')) {
-      this.items.push(
-        new FoldableItem(
-          0,
-          'Error',
-          `CORS error: Cannot access SPDX API due to cross-origin restrictions. The proxy service may be unavailable.`,
-          'This is a browser security restriction. Try again later or use a different browser.',
-        ),
-      );
-    } else {
-      this.items.push(new FoldableItem(0, 'Error', `Failed to fetch data from SPDX API: ${error.message}`));
-    }
+    this.items.push(new FoldableItem(0, 'Error', `Failed to fetch data from SPDX API: ${error.message}`));
 
     this.addBasicErrorInfo();
     this.addNetworkIssueInfo();

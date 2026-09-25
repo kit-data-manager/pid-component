@@ -120,6 +120,46 @@ describe('SPDXType', () => {
 
       expect(result).toBe(true);
     });
+
+    it('fetches license details directly from the raw GitHub host', async () => {
+      (global.fetch as any).mockResolvedValue({
+        ok: true,
+        json: vi.fn().mockResolvedValue(spdxLicenseResponse),
+      });
+
+      const st = new SPDXType(SPDX_examples.APACHE_2_0_BARE);
+      await st.hasMeaningfulInformation();
+
+      const calledUrl = (global.fetch as any).mock.calls[0][0];
+      expect(calledUrl).toMatch(/^https:\/\/raw\.githubusercontent\.com\/spdx\/license-list-data\/.+\.json$/);
+    });
+
+    it('does not wrap the fetch URL in a CORS proxy', async () => {
+      (global.fetch as any).mockResolvedValue({
+        ok: true,
+        json: vi.fn().mockResolvedValue(spdxLicenseResponse),
+      });
+
+      const st = new SPDXType(SPDX_examples.APACHE_2_0_BARE);
+      await st.hasMeaningfulInformation();
+
+      const calledUrl = (global.fetch as any).mock.calls[0][0];
+      expect(calledUrl).not.toContain('corsproxy');
+      expect(calledUrl.startsWith('https://raw.githubusercontent.com/spdx/license-list-data')).toBe(true);
+    });
+
+    it('returns false when API returns 404', async () => {
+      (global.fetch as any).mockResolvedValue({
+        ok: false,
+        status: 404,
+        json: vi.fn(),
+      });
+
+      const st = new SPDXType('MIT');
+      const result = await st.hasMeaningfulInformation();
+
+      expect(result).toBe(false);
+    });
   });
 
   describe('init()', () => {

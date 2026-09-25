@@ -8,6 +8,8 @@ import * as SPDXStories from './SPDX.stories';
 
 The SPDX renderer recognizes SPDX license identifiers (e.g., `Apache-2.0`) or URLs. It validates the license against the SPDX database/API and provides links to the full license text and details.
 
+License details are fetched directly from the open-source [spdx/license-list-data](https://github.com/spdx/license-list-data) repository (raw `json/details/{ID}.json` from `raw.githubusercontent.com`). This source is CORS-friendly and requires no API key or server-side proxy.
+
 ## Settings
 
 - **`ttl`** (`number`, default: `86400000`): Time-to-live for cached license data
