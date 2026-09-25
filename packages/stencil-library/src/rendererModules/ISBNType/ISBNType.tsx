@@ -253,7 +253,6 @@ function toIsoDate(publishDate: string): string | undefined {
 
   const monthDay = value.match(/^(\d{4})-(\d{2})/);
   if (monthDay) {
-    const year = Number(monthDay[1]);
     const month = Number(monthDay[2]);
     if (month >= 1 && month <= 12) {
       // Full date present -> keep it; otherwise reduce to the first of month.
