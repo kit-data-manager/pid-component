@@ -1,7 +1,7 @@
 {
   "name": "pid-component",
   "private": true,
-  "version": "0.4.5",
+  "version": "0.5.0",
   "workspaces": [
     "packages/*"
   ],
@@ -27,7 +27,7 @@
     "@vitest/coverage-v8": "^4.1.11",
     "@vitest/coverage-istanbul": "^4.1.11",
     "ajv": "^8.20.0",
-    "chromatic": "^18.9.4",
+    "chromatic": "^18.9.5",
     "concurrently": "^10.0.5",
     "eslint-plugin-storybook": "^10.6.0",
     "lerna": "^10.0.1",
@@ -80,6 +80,7 @@
     "storybook:children": "concurrently \"npm run storybook --workspace=packages/react-library\" \"npm run storybook --workspace=packages/vue-library\" \"npm run storybook --workspace=packages/angular-library\" \"npm run storybook --workspace=packages/nextjs-app\"",
     "storybook:composed": "wait-on http://localhost:6007 http://localhost:6008 http://localhost:6009 http://localhost:6010 && storybook dev -p 6006",
     "storybook:all": "concurrently \"npm run storybook:children\" \"npm run storybook:composed\"",
+    "serve-storybook": "npm run build && npm run build-storybook && npx serve storybook-static",
     "upgrade-storybook": "npx storybook@latest upgrade"
   },
   "description": "Monorepo for the PID Component and related packages",
