@@ -13,6 +13,11 @@ interface WikidataClaimEntity {
   entities?: Record<string, { labels?: Record<string, { value?: string }>; claims?: Record<string, WikidataClaim[]> }>;
 }
 
+// Required so anonymous browser requests receive CORS headers (
+// Access-Control-Allow-Origin). Without it, fetch() from a page origin
+// fails silently and the provider is dropped.
+const ORIGIN_PARAM = '&origin=*';
+
 interface WikidataClaim {
   mainsnak?: {
     datavalue?: {
@@ -56,7 +61,7 @@ export class WikidataProvider implements ISBNSourceProvider {
 
   private async fetchByIsbn(property: string, isbn: string): Promise<Partial<ISBNMetadata> | null> {
     try {
-      const searchUrl = `https://www.wikidata.org/w/api.php?action=query&format=json&list=search&srsearch=${encodeURIComponent(`haswbstatement:${property}=${isbn}`)}&srlimit=1`;
+      const searchUrl = `https://www.wikidata.org/w/api.php?action=query&format=json&list=search&srsearch=${encodeURIComponent(`haswbstatement:${property}=${isbn}`)}&srlimit=1${ORIGIN_PARAM}`;
       const response = await fetchWithTimeout(searchUrl, { headers: this.headers });
       if (!response.ok) return null;
       const payload = (await response.json()) as WikidataSearchResponse;
@@ -84,7 +89,7 @@ export class WikidataProvider implements ISBNSourceProvider {
   private async fetchEntity(qid: string): Promise<{ labels?: Record<string, { value?: string }>; claims?: Record<string, WikidataClaim[]> } | null> {
     try {
       const response = await fetchWithTimeout(
-        `https://www.wikidata.org/w/api.php?action=wbgetentities&format=json&ids=${encodeURIComponent(qid)}&props=labels|claims&languages=en`,
+        `https://www.wikidata.org/w/api.php?action=wbgetentities&format=json&ids=${encodeURIComponent(qid)}&props=labels|claims&languages=en${ORIGIN_PARAM}`,
         {
           headers: this.headers,
         },
@@ -108,7 +113,7 @@ export class WikidataProvider implements ISBNSourceProvider {
     if (authorIds.length === 0) return [];
     try {
       const response = await fetchWithTimeout(
-        `https://www.wikidata.org/w/api.php?action=wbgetentities&format=json&ids=${encodeURIComponent(authorIds.join('|'))}&props=labels&languages=en`,
+        `https://www.wikidata.org/w/api.php?action=wbgetentities&format=json&ids=${encodeURIComponent(authorIds.join('|'))}&props=labels&languages=en${ORIGIN_PARAM}`,
         { headers: this.headers },
       );
       if (!response.ok) return [];

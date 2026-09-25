@@ -47,9 +47,13 @@ describe('WikidataProvider', () => {
     expect(metadata?.title).toBe('The Art of Computer Programming');
     expect(metadata?.authors).toEqual([{ givenName: 'Donald', familyName: 'Knuth', fullName: 'Donald Knuth' }]);
 
-    // Author resolution is a single batched request.
+    // Author resolution is a single batched request, and every api.php call
+    // carries origin=* so the browser receives CORS headers.
     const authorUrls = mock.mock.calls.map(call => String(call[0])).filter(url => url.includes('props=labels&'));
     expect(authorUrls).toHaveLength(1);
+    expect(authorUrls[0]).toContain('origin=*');
+    const bookEntityUrl = mock.mock.calls.map(call => String(call[0])).find(url => url.includes('props=labels|claims'));
+    expect(bookEntityUrl).toContain('origin=*');
   });
 
   it('omits authors when the book entity has no P50 claims', async () => {
@@ -76,6 +80,7 @@ describe('WikidataProvider', () => {
 
     const searchUrl = String(mock.mock.calls[0][0]);
     expect(searchUrl).toContain(encodeURIComponent('haswbstatement:P957=0-262-03384-4'));
+    expect(searchUrl).toContain('origin=*');
   });
 
   it('tries the plain ISBN after the hyphenated form misses', async () => {
