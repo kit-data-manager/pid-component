@@ -26,7 +26,7 @@ describe('OpenLibraryProvider', () => {
       pages: OPENLIBRARY_EDITION.number_of_pages,
       sourceUrl: 'https://openlibrary.org/isbn/9781449373320',
       coverUrl: 'https://covers.openlibrary.org/b/id/8434671-M.jpg',
-      authors: ['Martin Kleppmann'],
+      authors: [{ givenName: 'Martin', familyName: 'Kleppmann', fullName: 'Martin Kleppmann' }],
       description: 'A practical guide to modern data systems.',
     });
   });
@@ -98,7 +98,7 @@ describe('OpenLibraryProvider', () => {
 
     const metadata = await new OpenLibraryProvider().fetch({ isbn: '9781449373320' });
 
-    expect(metadata?.authors).toEqual(['Martin Kleppmann']);
+    expect(metadata?.authors).toEqual([{ givenName: 'Martin', familyName: 'Kleppmann', fullName: 'Martin Kleppmann' }]);
     expect(metadata?.description).toBeUndefined();
   });
 
@@ -156,7 +156,7 @@ describe('OpenLibraryProvider', () => {
     expect(metadata).toEqual({
       title: 'Bare Edition',
       sourceUrl: 'https://openlibrary.org/isbn/9781449373320',
-      authors: ['Some Author'],
+      authors: [{ givenName: 'Some', familyName: 'Author', fullName: 'Some Author' }],
     });
   });
 });

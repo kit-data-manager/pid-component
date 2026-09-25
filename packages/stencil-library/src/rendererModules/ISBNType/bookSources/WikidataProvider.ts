@@ -83,9 +83,12 @@ export class WikidataProvider implements BookSourceProvider {
 
   private async fetchEntity(qid: string): Promise<{ labels?: Record<string, { value?: string }>; claims?: Record<string, WikidataClaim[]> } | null> {
     try {
-      const response = await fetchWithTimeout(`https://www.wikidata.org/w/api.php?action=wbgetentities&format=json&ids=${encodeURIComponent(qid)}&props=labels|claims&languages=en`, {
-        headers: this.headers,
-      });
+      const response = await fetchWithTimeout(
+        `https://www.wikidata.org/w/api.php?action=wbgetentities&format=json&ids=${encodeURIComponent(qid)}&props=labels|claims&languages=en`,
+        {
+          headers: this.headers,
+        },
+      );
       if (!response.ok) return null;
       const payload = (await response.json()) as WikidataClaimEntity;
       return payload.entities?.[qid] || null;

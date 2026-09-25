@@ -19,7 +19,7 @@ describe('GoogleBooksProvider', () => {
     expect(metadata).toEqual({
       title: 'Designing Data-Intensive Applications',
       subtitle: 'The Big Ideas Behind Reliable, Scalable, and Maintainable Systems',
-      authors: ['Martin Kleppmann'],
+      authors: [{ givenName: 'Martin', familyName: 'Kleppmann', fullName: 'Martin Kleppmann' }],
       publishers: ["O'Reilly Media"],
       publishDate: '2017-04-02',
       description: 'A practical guide to modern data systems.',

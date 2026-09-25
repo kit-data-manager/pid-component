@@ -11,7 +11,7 @@ function provider(name: string, fetchImpl: BookSourceProvider['fetch']): BookSou
 describe('aggregateBookMetadata', () => {
   it('merges with field priority and fills gaps from lower-priority sources', async () => {
     const providers = [
-      provider('OpenLibrary', async () => ({ title: 'OL Title', pages: 624, authors: ['Martin Kleppmann'] })),
+      provider('OpenLibrary', async () => ({ title: 'OL Title', pages: 624, authors: [{ givenName: 'Martin', familyName: 'Kleppmann' }] })),
       provider('Google Books', async () => ({
         title: 'GB Title',
         subtitle: 'GB Subtitle',
@@ -27,7 +27,7 @@ describe('aggregateBookMetadata', () => {
     expect(result?.merged).toEqual({
       title: 'OL Title',
       pages: 624,
-      authors: ['Martin Kleppmann'],
+      authors: [{ givenName: 'Martin', familyName: 'Kleppmann' }],
       subtitle: 'GB Subtitle',
       publishers: ["O'Reilly Media"],
       description: 'GB description',
@@ -79,13 +79,22 @@ describe('aggregateBookMetadata', () => {
 
   it('merges list fields without duplicates, case-insensitively', async () => {
     const providers = [
-      provider('OpenLibrary', async () => ({ authors: ['Martin Kleppmann'], publishers: ['O Reilly'] })),
-      provider('Google Books', async () => ({ authors: ['martin kleppmann', 'Someone Else'], publishers: ['o reilly', 'Springer'] })),
+      provider('OpenLibrary', async () => ({ authors: [{ givenName: 'Martin', familyName: 'Kleppmann' }], publishers: ['O Reilly'] })),
+      provider('Google Books', async () => ({
+        authors: [
+          { givenName: 'martin', familyName: 'kleppmann' },
+          { givenName: 'Someone', familyName: 'Else' },
+        ],
+        publishers: ['o reilly', 'Springer'],
+      })),
     ];
 
     const result = await aggregateBookMetadata(LOOKUP, providers);
 
-    expect(result?.merged.authors).toEqual(['Martin Kleppmann', 'Someone Else']);
+    expect(result?.merged.authors).toEqual([
+      { givenName: 'Martin', familyName: 'Kleppmann' },
+      { givenName: 'Someone', familyName: 'Else' },
+    ]);
     expect(result?.merged.publishers).toEqual(['O Reilly', 'Springer']);
   });
 

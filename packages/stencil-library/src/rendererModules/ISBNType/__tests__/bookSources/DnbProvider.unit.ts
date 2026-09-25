@@ -1,6 +1,24 @@
 import { describe, expect, it } from 'vitest';
-import { DnbProvider, parseDnbOaiDc } from '../../bookSources/DnbProvider';
+import { DnbProvider, normalizeDnbCreator, parseDnbOaiDc } from '../../bookSources/DnbProvider';
 import { DNB_EMPTY_XML, DNB_XML, installDnbSuccess, installFetchMock, useFailingFetchInTests } from './bookSourcesTestUtils';
+
+describe('normalizeDnbCreator', () => {
+  it('strips a bracketed role marker', () => {
+    expect(normalizeDnbCreator('Knuth, Donald [Verfasser]')).toBe('Knuth, Donald');
+  });
+
+  it('strips a stray trailing role marker without opening bracket', () => {
+    expect(normalizeDnbCreator('Ritchie, Dennis Verfasser]')).toBe('Ritchie, Dennis');
+  });
+
+  it('strips an unbalanced opening bracket', () => {
+    expect(normalizeDnbCreator('[Kernighan, Brian W. [Verfasser]')).toBe('Kernighan, Brian W.');
+  });
+
+  it('collapses repeated whitespace', () => {
+    expect(normalizeDnbCreator('Knuth,  Donald ')).toBe('Knuth, Donald');
+  });
+});
 
 describe('DnbProvider', () => {
   useFailingFetchInTests();
@@ -18,7 +36,10 @@ describe('DnbProvider', () => {
 
     expect(metadata).toEqual({
       title: 'Homöopathische Hausapotheke : alternative Heilmethoden',
-      authors: ['Panos, Maesimund B.', 'Heimlich, Jane'],
+      authors: [
+        { givenName: 'Maesimund B.', familyName: 'Panos', fullName: 'Panos, Maesimund B.' },
+        { givenName: 'Jane', familyName: 'Heimlich', fullName: 'Heimlich, Jane' },
+      ],
       publishers: ['München : Heyne'],
       publishDate: '1995',
       subjects: ['33 Medizin'],

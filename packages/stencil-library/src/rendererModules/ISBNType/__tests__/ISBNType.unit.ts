@@ -54,6 +54,17 @@ describe('ISBNType', () => {
       const renderer = new ISBNType(ISBN_examples.INVALID_NOT_ISBN);
       expect(renderer.quickCheck()).toBe(false);
     });
+
+    it('accepts compact, hyphenated, and arbitrarily hyphenated forms of a valid ISBN (isbn3)', () => {
+      expect(new ISBNType(ISBN_examples.VALID_13_HYPHENATED).quickCheck()).toBe(true);
+      expect(new ISBNType(ISBN_examples.VALID_13_COMPACT).quickCheck()).toBe(true);
+      expect(new ISBNType('978-1449373320').quickCheck()).toBe(true);
+      expect(new ISBNType(ISBN_examples.VALID_13_PREFIXED).quickCheck()).toBe(true);
+    });
+
+    it('accepts a valid ISBN-10 via isbn3', () => {
+      expect(new ISBNType(ISBN_examples.VALID_10).quickCheck()).toBe(true);
+    });
   });
 
   describe('getSettingsKey()', () => {
@@ -134,7 +145,7 @@ describe('ISBNType', () => {
       expect(urls.some(url => url.startsWith('https://services.dnb.de/'))).toBe(true);
     });
 
-    it('passes the hyphenated ISBN from the raw value to the sources', async () => {
+    it('passes the hyphenated ISBN derived from the raw value to the sources', async () => {
       const mock = installFetchMock(openLibraryOnly());
 
       const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
@@ -144,14 +155,24 @@ describe('ISBNType', () => {
       expect(wikidataUrls[0]).toContain(encodeURIComponent('P212=978-1-4493-7332-0'));
     });
 
-    it('does not pass a hyphenated hint when the raw value has no hyphens', async () => {
+    it('computes a canonical hyphenated ISBN for compact input', async () => {
       const mock = installFetchMock(openLibraryOnly());
 
       const renderer = new ISBNType(ISBN_examples.VALID_13_COMPACT);
       await renderer.hasMeaningfulInformation();
 
       const wikidataUrls = mock.mock.calls.map(call => String(call[0])).filter(url => url.includes('haswbstatement'));
-      expect(wikidataUrls[0]).toContain(encodeURIComponent('P212=9781449373320'));
+      expect(wikidataUrls[0]).toContain(encodeURIComponent('P212=978-1-4493-7332-0'));
+    });
+
+    it('computes a canonical hyphenated ISBN for arbitrarily hyphenated input', async () => {
+      const mock = installFetchMock(openLibraryOnly());
+
+      const renderer = new ISBNType('ISBN 978-1449373320');
+      await renderer.hasMeaningfulInformation();
+
+      const wikidataUrls = mock.mock.calls.map(call => String(call[0])).filter(url => url.includes('haswbstatement'));
+      expect(wikidataUrls[0]).toContain(encodeURIComponent('P212=978-1-4493-7332-0'));
     });
 
     it('honors the isbnSources setting to restrict providers', async () => {

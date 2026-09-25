@@ -38,7 +38,9 @@ export function parseDnbOaiDc(xml: string): Partial<BookMetadata> {
   const [title] = extract('title');
   if (title) metadata.title = title;
 
-  const creators = extract('creator').map(normalizeDnbCreator).filter((name): name is string => Boolean(name));
+  const creators = extract('creator')
+    .map(normalizeDnbCreator)
+    .filter((name): name is string => Boolean(name));
   if (creators.length > 0) metadata.authors = creators.map(parseFullName);
 
   const publishers = extract('publisher');

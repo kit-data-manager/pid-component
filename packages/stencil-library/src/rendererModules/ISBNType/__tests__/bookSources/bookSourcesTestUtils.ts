@@ -127,6 +127,25 @@ export const WIKIDATA_ENTITY_PAYLOAD = {
   },
 };
 
+/** Book entity with P50 author claims (Q17457 = Donald Knuth). */
+export const WIKIDATA_ENTITY_WITH_AUTHORS = {
+  entities: {
+    Q110418801: {
+      labels: { en: { value: 'The Art of Computer Programming' } },
+      claims: {
+        P50: [{ mainsnak: { datavalue: { value: { id: 'Q17457' } } } }],
+      },
+    },
+  },
+};
+
+/** Author entity labels resolved for the batched wbgetentities call. */
+export const WIKIDATA_AUTHOR_NAMES = {
+  entities: {
+    Q17457: { labels: { en: { value: 'Donald Knuth' } } },
+  },
+};
+
 export const DNB_XML = `<?xml version="1.0" encoding="UTF-8"?>
 <searchRetrieveResponse xmlns="http://www.loc.gov/zing/srw/">
   <numberOfRecords>1</numberOfRecords>
