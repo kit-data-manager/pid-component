@@ -29,17 +29,19 @@ export interface DOIProviderInfo {
 }
 
 /**
- * Slim description of a DOI metadata provider. Everything that can be derived
- * from a provider's `name` (settings key, metadata action title) is computed
- * rather than stored redundantly.
+ * Slim description of a DOI metadata provider.
  */
 export interface DOIProvider {
   /** The unique identifier, also used as the settings key. */
   id: string;
   /** Human-readable provider name used to derive labels and action titles. */
   name: string;
+  /** Link shown in the "Metadata Source" item. */
+  metadataSourceLink: string;
   /** Branded provider logo rendered in the preview. */
-  logo: () => any;
+  logo: typeof DataCiteLogo;
+  /** Builds the provider's metadata API URL for a DOI, honoring funder/work differentiation. */
+  metadataApiUrl(doi: DOI, info: DOIProviderInfo | null): string;
   /** Fetches metadata for a DOI, returning null when nothing meaningful is found. */
   fetch(doi: DOI): Promise<DOIProviderInfo | null>;
   /** Restores a provider info from cached serialized data. */
@@ -51,7 +53,9 @@ export interface DOIProvider {
 export const dataCiteProvider: DOIProvider = {
   id: 'DataCiteDOIType',
   name: 'DataCite',
+  metadataSourceLink: 'https://datacite.org',
   logo: DataCiteLogo,
+  metadataApiUrl: (doi) => `https://api.datacite.org/dois/${encodeURIComponent(doi.toString())}`,
   fetch: (doi) => DataCiteInfo.fetch(doi),
   fromObject: (doi, obj) =>
     DataCiteInfo.fromObject(doi, { doi: obj.doi, rawMetadata: obj.rawMetadata }),
@@ -60,7 +64,12 @@ export const dataCiteProvider: DOIProvider = {
 export const crossRefProvider: DOIProvider = {
   id: 'CrossRefDOIType',
   name: 'CrossRef',
+  metadataSourceLink: 'https://www.crossref.org',
   logo: CrossRefLogo,
+  metadataApiUrl: (doi, info) =>
+    info?.type === 'funder'
+      ? `https://api.crossref.org/funders/${doi.toString()}`
+      : `https://api.crossref.org/works/${doi.toString()}`,
   fetch: (doi) => CrossRefInfo.fetch(doi),
   fromObject: (doi, obj) =>
     CrossRefInfo.fromObject(doi, {
@@ -143,9 +152,9 @@ export abstract class DOIType extends GenericIdentifierType {
       new FoldableItem(
         1,
         'Metadata Source',
-        this.metadataSourceLabel,
-        `Metadata provided by ${this._provider.name}`,
-        this.metadataSourceLink,
+        this._provider.name,
+        `The metadata in this record was provided by ${this._provider.name}`,
+        this._provider.metadataSourceLink,
       ),
     );
 
@@ -157,7 +166,7 @@ export abstract class DOIType extends GenericIdentifierType {
     }
 
     this.actions.push(new FoldableAction(1, 'Resolve DOI', this.doi.toURL(), 'secondary'));
-    this.actions.push(new FoldableAction(2, this.metadataActionTitle, this.metadataApiUrl, 'secondary'));
+    this.actions.push(new FoldableAction(2, `View ${this._provider.name} Metadata`, this._provider.metadataApiUrl(this.doi, this._info), 'secondary'));
   }
 
   isResolvable(): boolean {
@@ -197,32 +206,5 @@ export abstract class DOIType extends GenericIdentifierType {
 
   getSettingsKey(): string {
     return this._provider.id;
-  }
-
-  private get metadataSourceLabel(): string {
-    if (this._provider.isFunder?.(this._info)) {
-      return `${this._provider.name} (Funder)`;
-    }
-    return this._provider.name;
-  }
-
-  private get metadataSourceLink(): string {
-    return this._provider.name === 'CrossRef'
-      ? 'https://www.crossref.org'
-      : `https://${this._provider.name.toLowerCase()}.org`;
-  }
-
-  private get metadataActionTitle(): string {
-    return `View ${this._provider.name} Metadata`;
-  }
-
-  private get metadataApiUrl(): string {
-    const doi = this.doi.toString();
-    if (this._provider.name === 'CrossRef') {
-      return this._provider.isFunder?.(this._info)
-        ? `https://api.crossref.org/funders/${doi}`
-        : `https://api.crossref.org/works/${doi}`;
-    }
-    return `https://api.datacite.org/dois/${encodeURIComponent(doi)}`;
   }
 }

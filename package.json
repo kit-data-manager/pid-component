@@ -80,6 +80,7 @@
     "storybook:children": "concurrently \"npm run storybook --workspace=packages/react-library\" \"npm run storybook --workspace=packages/vue-library\" \"npm run storybook --workspace=packages/angular-library\" \"npm run storybook --workspace=packages/nextjs-app\"",
     "storybook:composed": "wait-on http://localhost:6007 http://localhost:6008 http://localhost:6009 http://localhost:6010 && storybook dev -p 6006",
     "storybook:all": "concurrently \"npm run storybook:children\" \"npm run storybook:composed\"",
+    "serve-storybook": "npm run build && npm run build-storybook && npx serve storybook-static",
     "upgrade-storybook": "npx storybook@latest upgrade"
   },
   "description": "Monorepo for the PID Component and related packages",
