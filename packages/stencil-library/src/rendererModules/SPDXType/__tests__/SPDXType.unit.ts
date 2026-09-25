@@ -223,14 +223,46 @@ describe('SPDXType', () => {
       expect(viewAction).toBeDefined();
     });
 
-    it('handles fetch error gracefully', async () => {
+    it('rejects init() when the fetch fails so the caller can fall back', async () => {
       (global.fetch as any).mockRejectedValue(new Error('Network error'));
 
       const st = new SPDXType('MIT');
-      await st.init();
+      await expect(st.init()).rejects.toThrow('Failed to fetch SPDX license data');
+      expect(st.isResolvable()).toBe(false);
+    });
+  });
 
-      const errorItem = st.items.find(i => i.keyTitle === 'Error');
-      expect(errorItem).toBeDefined();
+  describe('isResolvable()', () => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+      global.fetch = vi.fn() as any;
+    });
+
+    afterEach(() => {
+      delete (global as any).fetch;
+    });
+
+    it('returns false when no license data has been fetched', () => {
+      const st = new SPDXType('MIT');
+      expect(st.isResolvable()).toBe(false);
+    });
+
+    it('returns true after a successful fetch', async () => {
+      (global.fetch as any).mockResolvedValue({
+        ok: true,
+        json: vi.fn().mockResolvedValue({
+          licenseId: 'Apache-2.0',
+          name: 'Apache License 2.0',
+          seeAlso: ['https://www.apache.org/licenses/LICENSE-2.0'],
+          isOsiApproved: true,
+          isFsfLibre: true,
+          isDeprecatedLicenseId: false,
+        }),
+      });
+
+      const st = new SPDXType('Apache-2.0');
+      await st.hasMeaningfulInformation();
+      expect(st.isResolvable()).toBe(true);
     });
   });
 });
