@@ -166,7 +166,7 @@ export class ISBNType extends GenericIdentifierType {
     const setting = this.settings.find(entry => entry.name === 'isbnSources');
     const value = setting?.value;
     if (Array.isArray(value)) {
-      const names = value.filter((name): name is string => typeof name === 'string');
+      const names = value.filter((name): name is string => typeof name === 'string' && name.trim().length > 0);
       if (names.length > 0) return names;
     }
     if (typeof value === 'string' && value.trim().length > 0) {

@@ -1,85 +1,16 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { ISBNType } from '../ISBNType';
 import { ISBN_examples } from '../../../../../../examples';
-import { aggregateBookMetadata, createDefaultIsbnProviders, parseDnbOaiDc, selectIsbnProviders, type BookSourceProvider } from '../bookSources';
-
-const DNB_XML = `<?xml version="1.0" encoding="UTF-8"?>
-<searchRetrieveResponse xmlns="http://www.loc.gov/zing/srw/">
-  <numberOfRecords>1</numberOfRecords>
-  <records><record><recordData>
-    <dc xmlns:dnb="http://d-nb.de/standards/dnbterms" xmlns:dc="http://purl.org/dc/elements/1.1/">
-      <dc:title>Homöopathische Hausapotheke : alternative Heilmethoden</dc:title>
-      <dc:creator>Panos, Maesimund B.</dc:creator>
-      <dc:creator>Heimlich, Jane</dc:creator>
-      <dc:publisher>München : Heyne</dc:publisher>
-      <dc:date>1995</dc:date>
-      <dc:subject>33 Medizin</dc:subject>
-      <dc:format>318 S.</dc:format>
-      <dc:identifier xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="dnb:IDN">944033466</dc:identifier>
-    </dc>
-  </recordData></record></records>
-</searchRetrieveResponse>`;
-
-const OPENLIBRARY_EDITION = {
-  title: 'Designing Data-Intensive Applications',
-  publishers: ["O'Reilly Media"],
-  publish_date: 'Apr 02, 2017',
-  number_of_pages: 624,
-  covers: [8434671],
-  authors: [{ key: '/authors/OL7477772A' }],
-  works: [{ key: '/works/OL19293745W' }],
-};
-
-const GOOGLE_BOOKS_PAYLOAD = {
-  totalItems: 1,
-  items: [
-    {
-      volumeInfo: {
-        title: 'Designing Data-Intensive Applications',
-        subtitle: 'The Big Ideas Behind Reliable, Scalable, and Maintainable Systems',
-        authors: ['Martin Kleppmann'],
-        publisher: "O'Reilly Media",
-        publishedDate: '2017-04-02',
-        description: 'A practical guide to modern data systems.',
-        pageCount: 616,
-        language: 'en',
-        categories: ['Computer Science'],
-        infoLink: 'https://books.google.com/books?id=example',
-        imageLinks: { thumbnail: 'http://books.google.com/books/content?id=example&zoom=1' },
-      },
-    },
-  ],
-};
-
-const WIKIDATA_SEARCH_PAYLOAD = {
-  query: {
-    search: [{ title: 'Q110418801' }],
-  },
-};
-
-const WIKIDATA_ENTITY_PAYLOAD = {
-  entities: {
-    Q110418801: { labels: { en: { value: 'Introduction to Algorithms' } } },
-  },
-};
-
-type FetchHandler = (url: string) => { ok: boolean; body?: unknown; text?: string } | undefined;
-
-function installFetchMock(handler: FetchHandler): ReturnType<typeof vi.fn> {
-  const mock = vi.fn(async (input: RequestInfo | URL) => {
-    const url = String(input);
-    const result = handler(url);
-    if (!result) return { ok: false, status: 404, json: vi.fn().mockResolvedValue({}), text: vi.fn().mockResolvedValue('') };
-    return {
-      ok: result.ok,
-      status: result.ok ? 200 : 404,
-      json: vi.fn().mockResolvedValue(result.body ?? {}),
-      text: vi.fn().mockResolvedValue(result.text ?? ''),
-    };
-  });
-  global.fetch = mock as unknown as typeof fetch;
-  return mock;
-}
+import {
+  DNB_XML,
+  GOOGLE_BOOKS_PAYLOAD,
+  OPENLIBRARY_EDITION,
+  WIKIDATA_ENTITY_PAYLOAD,
+  WIKIDATA_SEARCH_PAYLOAD,
+  installFetchMock,
+  useFailingFetchInTests,
+  type FetchHandler,
+} from './bookSources/bookSourcesTestUtils';
 
 function openLibraryOnly(handler?: FetchHandler): FetchHandler {
   return (url: string) => {
@@ -91,14 +22,7 @@ function openLibraryOnly(handler?: FetchHandler): FetchHandler {
 }
 
 describe('ISBNType', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    installFetchMock(() => undefined);
-  });
-
-  afterEach(() => {
-    delete (global as { fetch?: typeof fetch }).fetch;
-  });
+  useFailingFetchInTests();
 
   describe('quickCheck()', () => {
     it('returns true for valid ISBN-13 with hyphens', () => {
@@ -118,6 +42,11 @@ describe('ISBNType', () => {
 
     it('returns false for ISBN with invalid checksum', () => {
       const renderer = new ISBNType(ISBN_examples.INVALID_13_CHECKSUM);
+      expect(renderer.quickCheck()).toBe(false);
+    });
+
+    it('returns false for a 13-digit number with a non-book EAN prefix', () => {
+      const renderer = new ISBNType('9771234567890');
       expect(renderer.quickCheck()).toBe(false);
     });
 
@@ -156,7 +85,28 @@ describe('ISBNType', () => {
       expect(result).toBe(true);
     });
 
+    it('returns false without network access for syntactically invalid values', async () => {
+      const renderer = new ISBNType(ISBN_examples.INVALID_NOT_ISBN);
+      const result = await renderer.hasMeaningfulInformation();
+
+      expect(result).toBe(false);
+    });
+
     it('returns false when all sources fail', async () => {
+      const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
+      const result = await renderer.hasMeaningfulInformation();
+
+      expect(result).toBe(false);
+    });
+
+    it('returns false when sources only provide non-useful fields like a cover URL', async () => {
+      installFetchMock(url => {
+        if (url.startsWith('https://www.googleapis.com/books/')) {
+          return { ok: true, body: { items: [{ volumeInfo: { imageLinks: { thumbnail: 'https://books.google.com/cover.jpg' } } }] } };
+        }
+        return undefined;
+      });
+
       const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
       const result = await renderer.hasMeaningfulInformation();
 
@@ -184,6 +134,26 @@ describe('ISBNType', () => {
       expect(urls.some(url => url.startsWith('https://services.dnb.de/'))).toBe(true);
     });
 
+    it('passes the hyphenated ISBN from the raw value to the sources', async () => {
+      const mock = installFetchMock(openLibraryOnly());
+
+      const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
+      await renderer.hasMeaningfulInformation();
+
+      const wikidataUrls = mock.mock.calls.map(call => String(call[0])).filter(url => url.includes('haswbstatement'));
+      expect(wikidataUrls[0]).toContain(encodeURIComponent('P212=978-1-4493-7332-0'));
+    });
+
+    it('does not pass a hyphenated hint when the raw value has no hyphens', async () => {
+      const mock = installFetchMock(openLibraryOnly());
+
+      const renderer = new ISBNType(ISBN_examples.VALID_13_COMPACT);
+      await renderer.hasMeaningfulInformation();
+
+      const wikidataUrls = mock.mock.calls.map(call => String(call[0])).filter(url => url.includes('haswbstatement'));
+      expect(wikidataUrls[0]).toContain(encodeURIComponent('P212=9781449373320'));
+    });
+
     it('honors the isbnSources setting to restrict providers', async () => {
       const mock = installFetchMock(openLibraryOnly());
 
@@ -194,6 +164,34 @@ describe('ISBNType', () => {
       expect(urls.some(url => url.startsWith('https://openlibrary.org/isbn/'))).toBe(true);
       expect(urls.some(url => url.startsWith('https://www.googleapis.com/books/'))).toBe(false);
       expect(urls.some(url => url.startsWith('https://www.wikidata.org/w/api.php'))).toBe(false);
+    });
+
+    it('accepts the isbnSources setting as a comma-separated string', async () => {
+      const mock = installFetchMock(openLibraryOnly());
+
+      const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED, [{ name: 'isbnSources', value: ' OpenLibrary , DNB ' }]);
+      await renderer.hasMeaningfulInformation();
+
+      const urls = mock.mock.calls.map(call => String(call[0]));
+      expect(urls.some(url => url.startsWith('https://openlibrary.org/isbn/'))).toBe(true);
+      expect(urls.some(url => url.startsWith('https://services.dnb.de/'))).toBe(true);
+      expect(urls.some(url => url.startsWith('https://www.googleapis.com/books/'))).toBe(false);
+    });
+
+    it('falls back to all providers for empty or malformed isbnSources settings', async () => {
+      for (const value of [[], [''], [42], '  ', 42, '']) {
+        const mock = installFetchMock(
+          openLibraryOnly(url => {
+            if (url.startsWith('https://www.googleapis.com/books/')) return { ok: true, body: GOOGLE_BOOKS_PAYLOAD };
+            return undefined;
+          }),
+        );
+        const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED, [{ name: 'isbnSources', value }]);
+        await renderer.hasMeaningfulInformation();
+
+        const urls = mock.mock.calls.map(call => String(call[0]));
+        expect(urls.some(url => url.startsWith('https://www.googleapis.com/books/'))).toBe(true);
+      }
     });
   });
 
@@ -217,6 +215,20 @@ describe('ISBNType', () => {
       expect(renderer.items.find(i => i.keyTitle === 'Author')?.value).toContain('Martin Kleppmann');
       expect(renderer.items.find(i => i.keyTitle === 'Pages')?.value).toBe('624');
       expect(renderer.items.find(i => i.keyTitle === 'Abstract')?.value).toBe('A practical guide to modern data systems.');
+    });
+
+    it('shows the raw publication date when it cannot be parsed', async () => {
+      installFetchMock(url => {
+        if (url.startsWith('https://services.dnb.de/')) {
+          return { ok: true, text: DNB_XML.replace('<dc:date>1995</dc:date>', '<dc:date>Undated</dc:date>') };
+        }
+        return undefined;
+      });
+
+      const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
+      await renderer.init();
+
+      expect(renderer.items.find(i => i.keyTitle === 'Date')?.value).toBe('Undated');
     });
 
     it('creates one view action per contributing source with the primary action for the highest-priority source', async () => {
@@ -269,18 +281,73 @@ describe('ISBNType', () => {
       expect(googleAction?.link).toBe(GOOGLE_BOOKS_PAYLOAD.items[0].volumeInfo.infoLink);
     });
 
-    it('populates nothing when no source returns data', async () => {
-      const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
-      await renderer.init();
+    it('skips actions for unknown sources without any URL', async () => {
+      installFetchMock(() => undefined);
 
-      expect(renderer.items.length).toBe(0);
-      expect(renderer.actions.length).toBe(0);
+      const cached = JSON.stringify({
+        isbn: '9781449373320',
+        aggregated: {
+          merged: { title: 'Unknown Source Book' },
+          sources: [{ name: 'UnknownSource', actionLabel: '', actionUrl: '', url: undefined, metadata: {} }],
+        },
+      });
+
+      const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
+      await renderer.init(cached);
+
+      expect(renderer.items.find(i => i.keyTitle === 'Title')?.value).toBe('Unknown Source Book');
+      expect(renderer.items.find(i => i.keyTitle === 'Metadata Source')?.value).toBe('UnknownSource');
+      expect(renderer.actions).toHaveLength(0);
+    });
+
+    it('uses a generic action label for unknown sources with a URL', async () => {
+      installFetchMock(() => undefined);
+
+      const cached = JSON.stringify({
+        isbn: '9781449373320',
+        aggregated: {
+          merged: { title: 'Unknown Source Book' },
+          sources: [{ name: 'UnknownSource', actionLabel: '', actionUrl: '', url: 'https://example.com/book', metadata: {} }],
+        },
+      });
+
+      const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
+      await renderer.init(cached);
+
+      expect(renderer.actions[0]?.title).toBe('View on UnknownSource');
+      expect(renderer.actions[0]?.link).toBe('https://example.com/book');
+    });
+
+    it('populates nothing when no source returns data', async () => {
+      const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => undefined);
+      try {
+        const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
+        await renderer.init();
+
+        expect(renderer.items.length).toBe(0);
+        expect(renderer.actions.length).toBe(0);
+        expect(renderer.isResolvable()).toBe(false);
+        expect(consoleSpy).toHaveBeenCalled();
+      } finally {
+        consoleSpy.mockRestore();
+      }
     });
   });
 
   describe('render methods', () => {
-    it('returns a preview component', () => {
+    it('returns a preview component with the raw value fallback before init', () => {
       const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
+      const preview = renderer.renderPreview();
+      expect(preview).toBeTruthy();
+      expect(renderer.isResolvable()).toBe(false);
+    });
+
+    it('renders the book title in the preview after init', async () => {
+      installFetchMock(openLibraryOnly());
+
+      const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
+      await renderer.init();
+
       expect(renderer.renderPreview()).toBeTruthy();
     });
 
@@ -320,6 +387,13 @@ describe('ISBNType', () => {
       expect(parsed.aggregated.sources.map((source: { name: string }) => source.name)).toContain('OpenLibrary');
     });
 
+    it('serializes without aggregated data before init', () => {
+      const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
+      const parsed = JSON.parse(renderer.data);
+      expect(parsed.isbn).toBe('');
+      expect(parsed.aggregated).toBeUndefined();
+    });
+
     it('restores metadata from cache without network access', async () => {
       const mock = installFetchMock(() => undefined);
 
@@ -340,6 +414,23 @@ describe('ISBNType', () => {
       expect(mock).not.toHaveBeenCalled();
     });
 
+    it('normalizes the ISBN from the raw value when the cache has none', async () => {
+      installFetchMock(() => undefined);
+
+      const cached = JSON.stringify({
+        aggregated: {
+          merged: { title: 'Cached Book' },
+          sources: [{ name: 'OpenLibrary', actionLabel: 'View on OpenLibrary', actionUrl: 'https://openlibrary.org/isbn/9781449373320', metadata: {} }],
+        },
+      });
+
+      const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
+      await renderer.init(cached);
+
+      expect(renderer.items.find(i => i.keyTitle === 'ISBN')?.value).toBe('9781449373320');
+      expect(renderer.actions.find(a => a.title === 'View on OpenLibrary')?.link).toBe('https://openlibrary.org/isbn/9781449373320');
+    });
+
     it('still loads legacy cache entries with bookData', async () => {
       installFetchMock(() => undefined);
 
@@ -354,92 +445,24 @@ describe('ISBNType', () => {
       expect(renderer.isResolvable()).toBe(true);
       expect(renderer.items.find(i => i.keyTitle === 'Title')?.value).toBe('Legacy Title');
     });
-  });
 
-  describe('bookSources', () => {
-    it('merges metadata with field priority and gap-filling', async () => {
-      const providers: BookSourceProvider[] = [
-        {
-          name: 'OpenLibrary',
-          actionLabel: 'View on OpenLibrary',
-          isbnUrl: () => 'https://openlibrary.org/isbn/x',
-          fetch: async () => ({ title: 'OL Title', pages: 624, authors: ['Martin Kleppmann'] }),
-        },
-        {
-          name: 'Google Books',
-          actionLabel: 'View on Google Books',
-          isbnUrl: () => 'https://www.google.com/search?tbm=bks&q=isbn:x',
-          fetch: async () => ({
-            title: 'GB Title',
-            subtitle: 'GB Subtitle',
-            publishers: ["O'Reilly Media"],
-          }),
-        },
-      ];
+    it('falls back to the raw value when the cache is invalid JSON', async () => {
+      installFetchMock(() => undefined);
 
-      const result = await aggregateBookMetadata({ isbn: '9781449373320' }, providers);
+      const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
+      await renderer.init('not valid json');
 
-      expect(result?.merged.title).toBe('OL Title');
-      expect(result?.merged.pages).toBe(624);
-      expect(result?.merged.subtitle).toBe('GB Subtitle');
-      expect(result?.merged.publishers).toEqual(["O'Reilly Media"]);
-      expect(result?.merged.authors).toEqual(['Martin Kleppmann']);
+      expect(renderer.isResolvable()).toBe(false);
+      expect(renderer.items.length).toBe(0);
     });
 
-    it('returns null when no provider has data', async () => {
-      const providers: BookSourceProvider[] = [
-        { name: 'OpenLibrary', actionLabel: 'View on OpenLibrary', isbnUrl: () => '', fetch: async () => null },
-        {
-          name: 'Google Books',
-          actionLabel: 'View on Google Books',
-          isbnUrl: () => '',
-          fetch: async () => {
-            throw new Error('network down');
-          },
-        },
-      ];
+    it('ignores cache entries without aggregated data or bookData', async () => {
+      installFetchMock(() => undefined);
 
-      const result = await aggregateBookMetadata({ isbn: '9781449373320' }, providers);
-      expect(result).toBeNull();
-    });
+      const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
+      await renderer.init(JSON.stringify({ isbn: '9781449373320' }));
 
-    it('merges list fields without duplicates, case-insensitively', async () => {
-      const providers: BookSourceProvider[] = [
-        { name: 'OpenLibrary', actionLabel: 'View on OpenLibrary', isbnUrl: () => '', fetch: async () => ({ authors: ['Martin Kleppmann'] }) },
-        { name: 'Google Books', actionLabel: 'View on Google Books', isbnUrl: () => '', fetch: async () => ({ authors: ['martin kleppmann', 'Someone Else'] }) },
-      ];
-
-      const result = await aggregateBookMetadata({ isbn: '9781449373320' }, providers);
-      expect(result?.merged.authors).toEqual(['Martin Kleppmann', 'Someone Else']);
-    });
-
-    it('parses DNB oai_dc XML', () => {
-      const metadata = parseDnbOaiDc(DNB_XML);
-
-      expect(metadata.title).toBe('Homöopathische Hausapotheke : alternative Heilmethoden');
-      expect(metadata.authors).toEqual(['Panos, Maesimund B.', 'Heimlich, Jane']);
-      expect(metadata.publishers).toEqual(['München : Heyne']);
-      expect(metadata.publishDate).toBe('1995');
-      expect(metadata.pages).toBe(318);
-      expect(metadata.subjects).toEqual(['33 Medizin']);
-      expect(metadata.sourceUrl).toBe('https://d-nb.info/944033466');
-    });
-
-    it('creates the default providers in priority order', () => {
-      const providers = createDefaultIsbnProviders();
-      expect(providers.map(provider => provider.name)).toEqual(['OpenLibrary', 'Google Books', 'DNB', 'Wikidata']);
-    });
-
-    it('selects only enabled providers', () => {
-      const providers = createDefaultIsbnProviders();
-      const selected = selectIsbnProviders(providers, ['DNB', 'Wikidata']);
-      expect(selected.map(provider => provider.name)).toEqual(['DNB', 'Wikidata']);
-    });
-
-    it('returns all providers when enabled list is empty', () => {
-      const providers = createDefaultIsbnProviders();
-      expect(selectIsbnProviders(providers, undefined)).toHaveLength(4);
-      expect(selectIsbnProviders(providers, [])).toHaveLength(4);
+      expect(renderer.isResolvable()).toBe(false);
     });
   });
 });
