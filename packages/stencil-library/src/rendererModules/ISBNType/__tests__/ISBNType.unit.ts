@@ -3,7 +3,6 @@ import { ISBNType } from '../ISBNType';
 import { ISBN_examples } from '../../../../../../examples';
 import {
   DNB_XML,
-  GOOGLE_BOOKS_PAYLOAD,
   OPENLIBRARY_EDITION,
   WIKIDATA_ENTITY_PAYLOAD,
   WIKIDATA_SEARCH_PAYLOAD,
@@ -86,7 +85,7 @@ describe('ISBNType', () => {
 
     it('returns true when only a secondary source provides data', async () => {
       installFetchMock(url => {
-        if (url.startsWith('https://www.googleapis.com/books/')) return { ok: true, body: GOOGLE_BOOKS_PAYLOAD };
+        if (url.startsWith('https://services.dnb.de/')) return { ok: true, text: DNB_XML };
         return undefined;
       });
 
@@ -112,9 +111,8 @@ describe('ISBNType', () => {
 
     it('returns false when sources only provide non-useful fields like a cover URL', async () => {
       installFetchMock(url => {
-        if (url.startsWith('https://www.googleapis.com/books/')) {
-          return { ok: true, body: { items: [{ volumeInfo: { imageLinks: { thumbnail: 'https://books.google.com/cover.jpg' } } }] } };
-        }
+        // OpenLibrary returns an edition with only a cover (no title/authors/date).
+        if (url.startsWith('https://openlibrary.org/isbn/')) return { ok: true, body: { covers: [123] } };
         return undefined;
       });
 
@@ -127,7 +125,6 @@ describe('ISBNType', () => {
     it('queries all sources in parallel', async () => {
       const mock = installFetchMock(
         openLibraryOnly(url => {
-          if (url.startsWith('https://www.googleapis.com/books/')) return { ok: true, body: GOOGLE_BOOKS_PAYLOAD };
           if (url.startsWith('https://www.wikidata.org/w/api.php?action=query')) return { ok: true, body: WIKIDATA_SEARCH_PAYLOAD };
           if (url.startsWith('https://www.wikidata.org/w/api.php?action=wbgetentities')) return { ok: true, body: WIKIDATA_ENTITY_PAYLOAD };
           if (url.startsWith('https://services.dnb.de/')) return { ok: true, text: DNB_XML };
@@ -140,7 +137,6 @@ describe('ISBNType', () => {
 
       const urls = mock.mock.calls.map(call => String(call[0]));
       expect(urls.some(url => url.startsWith('https://openlibrary.org/isbn/'))).toBe(true);
-      expect(urls.some(url => url.startsWith('https://www.googleapis.com/books/'))).toBe(true);
       expect(urls.some(url => url.startsWith('https://www.wikidata.org/w/api.php'))).toBe(true);
       expect(urls.some(url => url.startsWith('https://services.dnb.de/'))).toBe(true);
     });
@@ -183,7 +179,7 @@ describe('ISBNType', () => {
 
       const urls = mock.mock.calls.map(call => String(call[0]));
       expect(urls.some(url => url.startsWith('https://openlibrary.org/isbn/'))).toBe(true);
-      expect(urls.some(url => url.startsWith('https://www.googleapis.com/books/'))).toBe(false);
+      expect(urls.some(url => url.startsWith('https://services.dnb.de/'))).toBe(false);
       expect(urls.some(url => url.startsWith('https://www.wikidata.org/w/api.php'))).toBe(false);
     });
 
@@ -196,14 +192,14 @@ describe('ISBNType', () => {
       const urls = mock.mock.calls.map(call => String(call[0]));
       expect(urls.some(url => url.startsWith('https://openlibrary.org/isbn/'))).toBe(true);
       expect(urls.some(url => url.startsWith('https://services.dnb.de/'))).toBe(true);
-      expect(urls.some(url => url.startsWith('https://www.googleapis.com/books/'))).toBe(false);
+      expect(urls.some(url => url.startsWith('https://www.wikidata.org/w/api.php'))).toBe(false);
     });
 
     it('falls back to all providers for empty or malformed isbnSources settings', async () => {
       for (const value of [[], [''], [42], '  ', 42, '']) {
         const mock = installFetchMock(
           openLibraryOnly(url => {
-            if (url.startsWith('https://www.googleapis.com/books/')) return { ok: true, body: GOOGLE_BOOKS_PAYLOAD };
+            if (url.startsWith('https://services.dnb.de/')) return { ok: true, text: DNB_XML };
             return undefined;
           }),
         );
@@ -211,7 +207,7 @@ describe('ISBNType', () => {
         await renderer.hasMeaningfulInformation();
 
         const urls = mock.mock.calls.map(call => String(call[0]));
-        expect(urls.some(url => url.startsWith('https://www.googleapis.com/books/'))).toBe(true);
+        expect(urls.some(url => url.startsWith('https://services.dnb.de/'))).toBe(true);
       }
     });
   });
@@ -220,7 +216,7 @@ describe('ISBNType', () => {
     it('creates foldable items for merged metadata and one metadata source item per contributing provider', async () => {
       installFetchMock(
         openLibraryOnly(url => {
-          if (url.startsWith('https://www.googleapis.com/books/')) return { ok: true, body: GOOGLE_BOOKS_PAYLOAD };
+          if (url.startsWith('https://services.dnb.de/')) return { ok: true, text: DNB_XML };
           return undefined;
         }),
       );
@@ -229,11 +225,11 @@ describe('ISBNType', () => {
       await renderer.init();
 
       const sourceItems = renderer.items.filter(i => i.keyTitle === 'Metadata Source');
-      expect(sourceItems.map(item => item.value)).toEqual(expect.arrayContaining(['OpenLibrary', 'Google Books']));
+      expect(sourceItems.map(item => item.value)).toEqual(expect.arrayContaining(['OpenLibrary', 'DNB']));
 
       expect(renderer.items.find(i => i.keyTitle === 'Title')?.value).toBe('Designing Data-Intensive Applications');
-      expect(renderer.items.find(i => i.keyTitle === 'Subtitle')?.value).toBe(GOOGLE_BOOKS_PAYLOAD.items[0].volumeInfo.subtitle);
-      expect(renderer.items.find(i => i.keyTitle === 'Author')?.value).toContain('Martin Kleppmann');
+      const authorRows = renderer.items.filter(i => i.keyTitle === 'Author').map(item => item.value);
+      expect(authorRows).toEqual(expect.arrayContaining(['Martin Kleppmann']));
       expect(renderer.items.find(i => i.keyTitle === 'Pages')?.value).toBe('624');
       expect(renderer.items.find(i => i.keyTitle === 'Abstract')?.value).toBe('A practical guide to modern data systems.');
     });
@@ -331,12 +327,8 @@ describe('ISBNType', () => {
       expect(renderer.actions.find(a => a.title === 'View on Wikidata')).toBeDefined();
     });
 
-    it('opens the ISBN in sources that do not provide a deep link', async () => {
+    it('opens the ISBN via the deep link returned by a source', async () => {
       installFetchMock(url => {
-        if (url.startsWith('https://www.googleapis.com/books/')) {
-          const payload = { items: [{ volumeInfo: { title: 'No Deep Link Book', publisher: "O'Reilly Media" } }] };
-          return { ok: true, body: payload };
-        }
         if (url.startsWith('https://services.dnb.de/')) return { ok: true, text: DNB_XML };
         return undefined;
       });
@@ -344,23 +336,8 @@ describe('ISBNType', () => {
       const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
       await renderer.init();
 
-      const googleAction = renderer.actions.find(a => a.title === 'View on Google Books');
-      expect(googleAction?.link).toBe('https://www.google.com/search?tbm=bks&q=isbn:9781449373320');
       const dnbAction = renderer.actions.find(a => a.title === 'View in DNB catalog');
       expect(dnbAction?.link).toBe('https://d-nb.info/944033466');
-    });
-
-    it('prefers the deep link returned by a source over the ISBN-based URL', async () => {
-      installFetchMock(url => {
-        if (url.startsWith('https://www.googleapis.com/books/')) return { ok: true, body: GOOGLE_BOOKS_PAYLOAD };
-        return undefined;
-      });
-
-      const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
-      await renderer.init();
-
-      const googleAction = renderer.actions.find(a => a.title === 'View on Google Books');
-      expect(googleAction?.link).toBe(GOOGLE_BOOKS_PAYLOAD.items[0].volumeInfo.infoLink);
     });
 
     it('skips actions for unknown sources without any URL', async () => {
@@ -443,10 +420,7 @@ describe('ISBNType', () => {
 
     it('returns no body component without cover image', async () => {
       installFetchMock(url => {
-        if (url.startsWith('https://www.googleapis.com/books/')) {
-          const payload = { items: [{ volumeInfo: { title: 'No Cover Book' } }] };
-          return { ok: true, body: payload };
-        }
+        if (url.startsWith('https://services.dnb.de/')) return { ok: true, text: DNB_XML };
         return undefined;
       });
 

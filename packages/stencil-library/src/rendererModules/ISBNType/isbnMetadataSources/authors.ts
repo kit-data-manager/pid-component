@@ -126,7 +126,7 @@ export function sortAuthorsAlphabetically(authors: BookAuthor[]): BookAuthor[] {
  * Ordering authority used to break ties when two sources list the same number
  * of authors (higher = stronger).
  */
-const ORDER_AUTHORITY = ['DNB', 'Wikidata', 'Google Books', 'OpenLibrary'];
+const ORDER_AUTHORITY = ['DNB', 'Wikidata', 'OpenLibrary'];
 
 /**
  * Reduces a pool of author candidates (from various sources) to distinct

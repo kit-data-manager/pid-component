@@ -12,11 +12,11 @@ describe('aggregateISBNMetadata', () => {
   it('merges with field priority and fills gaps from lower-priority sources', async () => {
     const providers = [
       provider('OpenLibrary', async () => ({ title: 'OL Title', pages: 624, authors: [{ givenName: 'Martin', familyName: 'Kleppmann' }] })),
-      provider('Google Books', async () => ({
-        title: 'GB Title',
-        subtitle: 'GB Subtitle',
+      provider('DNB', async () => ({
+        title: 'DNB Title',
+        subtitle: 'DNB Subtitle',
         publishers: ["O'Reilly Media"],
-        description: 'GB description',
+        description: 'DNB description',
         language: 'en',
         subjects: ['CS'],
       })),
@@ -28,9 +28,9 @@ describe('aggregateISBNMetadata', () => {
       title: 'OL Title',
       pages: 624,
       authors: [{ givenName: 'Martin', familyName: 'Kleppmann' }],
-      subtitle: 'GB Subtitle',
+      subtitle: 'DNB Subtitle',
       publishers: ["O'Reilly Media"],
-      description: 'GB description',
+      description: 'DNB description',
       language: 'en',
       subjects: ['CS'],
       sourceUrl: undefined,
@@ -41,19 +41,19 @@ describe('aggregateISBNMetadata', () => {
   it('keeps the highest-priority sourceUrl and coverUrl', async () => {
     const providers = [
       provider('OpenLibrary', async () => ({ title: 'OL Title', sourceUrl: 'https://openlibrary.org/isbn/9781449373320' })),
-      provider('Google Books', async () => ({ title: 'GB Title', sourceUrl: 'https://books.google.com/deep-link', coverUrl: 'https://books.google.com/cover.jpg' })),
+      provider('DNB', async () => ({ title: 'DNB Title', sourceUrl: 'https://d-nb.info/123', coverUrl: 'https://d-nb.info/cover.jpg' })),
     ];
 
     const result = await aggregateISBNMetadata(LOOKUP, providers);
 
     expect(result?.merged.sourceUrl).toBe('https://openlibrary.org/isbn/9781449373320');
-    expect(result?.merged.coverUrl).toBe('https://books.google.com/cover.jpg');
+    expect(result?.merged.coverUrl).toBe('https://d-nb.info/cover.jpg');
   });
 
   it('returns null when no provider has data', async () => {
     const providers = [
       provider('OpenLibrary', async () => null),
-      provider('Google Books', async () => {
+      provider('DNB', async () => {
         throw new Error('network down');
       }),
     ];
@@ -68,19 +68,19 @@ describe('aggregateISBNMetadata', () => {
       provider('OpenLibrary', async () => {
         throw new Error('network down');
       }),
-      provider('Google Books', async () => ({ title: 'GB Title' })),
+      provider('DNB', async () => ({ title: 'DNB Title' })),
     ];
 
     const result = await aggregateISBNMetadata(LOOKUP, providers);
 
-    expect(result?.merged.title).toBe('GB Title');
-    expect(result?.sources.map(source => source.name)).toEqual(['Google Books']);
+    expect(result?.merged.title).toBe('DNB Title');
+    expect(result?.sources.map(source => source.name)).toEqual(['DNB']);
   });
 
   it('merges list fields without duplicates, case-insensitively', async () => {
     const providers = [
       provider('OpenLibrary', async () => ({ authors: [{ givenName: 'Martin', familyName: 'Kleppmann' }], publishers: ['O Reilly'] })),
-      provider('Google Books', async () => ({
+      provider('DNB', async () => ({
         authors: [
           { givenName: 'martin', familyName: 'kleppmann' },
           { givenName: 'Someone', familyName: 'Else' },
@@ -114,7 +114,7 @@ describe('aggregateISBNMetadata', () => {
   it('builds actionUrl from the deep link when available and from isbnUrl otherwise', async () => {
     const providers = [
       provider('OpenLibrary', async () => ({ title: 'OL Title', sourceUrl: 'https://openlibrary.org/isbn/9781449373320' })),
-      provider('Google Books', async () => ({ title: 'GB Title' })),
+      provider('DNB', async () => ({ title: 'DNB Title' })),
     ];
 
     const result = await aggregateISBNMetadata(LOOKUP, providers);
@@ -122,9 +122,9 @@ describe('aggregateISBNMetadata', () => {
     const openLibrary = result?.sources.find(source => source.name === 'OpenLibrary');
     expect(openLibrary?.actionUrl).toBe('https://openlibrary.org/isbn/9781449373320');
     expect(openLibrary?.actionLabel).toBe('View on OpenLibrary');
-    const googleBooks = result?.sources.find(source => source.name === 'Google Books');
-    expect(googleBooks?.actionUrl).toBe('https://example.com/Google Books');
-    expect(googleBooks?.actionLabel).toBe('View on Google Books');
+    const dnb = result?.sources.find(source => source.name === 'DNB');
+    expect(dnb?.actionUrl).toBe('https://example.com/DNB');
+    expect(dnb?.actionLabel).toBe('View on DNB');
   });
 
   it('removes empty list fields from the merged result', async () => {
@@ -139,16 +139,11 @@ describe('aggregateISBNMetadata', () => {
 });
 
 describe('selectIsbnProviders', () => {
-  const providers = [
-    provider('OpenLibrary', async () => null),
-    provider('Google Books', async () => null),
-    provider('DNB', async () => null),
-    provider('Wikidata', async () => null),
-  ];
+  const providers = [provider('OpenLibrary', async () => null), provider('DNB', async () => null), provider('Wikidata', async () => null)];
 
   it('returns all providers when enabled is undefined or empty', () => {
-    expect(selectIsbnProviders(providers, undefined)).toHaveLength(4);
-    expect(selectIsbnProviders(providers, [])).toHaveLength(4);
+    expect(selectIsbnProviders(providers, undefined)).toHaveLength(3);
+    expect(selectIsbnProviders(providers, [])).toHaveLength(3);
   });
 
   it('returns only the enabled providers', () => {
@@ -163,7 +158,7 @@ describe('selectIsbnProviders', () => {
 
 describe('DEFAULT_ISBN_SOURCE_PRIORITY', () => {
   it('lists all default providers', () => {
-    expect(DEFAULT_ISBN_SOURCE_PRIORITY).toEqual(['OpenLibrary', 'Google Books', 'DNB', 'Wikidata']);
+    expect(DEFAULT_ISBN_SOURCE_PRIORITY).toEqual(['OpenLibrary', 'DNB', 'Wikidata']);
   });
 });
 

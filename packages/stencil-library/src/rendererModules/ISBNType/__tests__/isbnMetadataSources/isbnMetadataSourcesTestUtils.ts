@@ -58,14 +58,6 @@ export function installOpenLibrarySuccess(): ReturnType<typeof vi.fn> {
   });
 }
 
-/** Installs a mock that succeeds for the Google Books API. */
-export function installGoogleBooksSuccess(): ReturnType<typeof vi.fn> {
-  return installFetchMock(url => {
-    if (url.startsWith('https://www.googleapis.com/books/')) return { ok: true, body: GOOGLE_BOOKS_PAYLOAD };
-    return undefined;
-  });
-}
-
 /** Installs a mock that succeeds for the Wikidata search + label APIs. */
 export function installWikidataSuccess(): ReturnType<typeof vi.fn> {
   return installFetchMock(url => {
@@ -92,27 +84,6 @@ export const OPENLIBRARY_EDITION = {
   covers: [8434671],
   authors: [{ key: '/authors/OL7477772A' }],
   works: [{ key: '/works/OL19293745W' }],
-};
-
-export const GOOGLE_BOOKS_PAYLOAD = {
-  totalItems: 1,
-  items: [
-    {
-      volumeInfo: {
-        title: 'Designing Data-Intensive Applications',
-        subtitle: 'The Big Ideas Behind Reliable, Scalable, and Maintainable Systems',
-        authors: ['Martin Kleppmann'],
-        publisher: "O'Reilly Media",
-        publishedDate: '2017-04-02',
-        description: 'A practical guide to modern data systems.',
-        pageCount: 616,
-        language: 'en',
-        categories: ['Computer Science'],
-        infoLink: 'https://books.google.com/books?id=example',
-        imageLinks: { thumbnail: 'http://books.google.com/books/content?id=example&zoom=1' },
-      },
-    },
-  ],
 };
 
 export const WIKIDATA_SEARCH_PAYLOAD = {

@@ -119,7 +119,7 @@ describe('orderAuthors', () => {
 
   it('(b) orders by the source listing the most authors', () => {
     const result = orderAuthors({
-      GoogleBooks: [{ givenName: 'Dennis', familyName: 'Ritchie' }],
+      DNB: [{ givenName: 'Dennis', familyName: 'Ritchie' }],
       OpenLibrary: [
         { givenName: 'Brian', familyName: 'Kernighan' },
         { givenName: 'Dennis', familyName: 'Ritchie' },
@@ -128,13 +128,13 @@ describe('orderAuthors', () => {
     expect(result.map(a => `${a.givenName} ${a.familyName}`)).toEqual(['Brian Kernighan', 'Dennis Ritchie']);
   });
 
-  it('(b) breaks ties using DNB > Wikidata > Google Books > OpenLibrary', () => {
+  it('(b) breaks ties using DNB > Wikidata > OpenLibrary', () => {
     // All sources list the same two authors (Ada, Grace) but disagree on order.
     const ada = () => ({ givenName: 'Ada', familyName: 'Byrona' });
     const grace = () => ({ givenName: 'Grace', familyName: 'Hopper' });
     const result = orderAuthors({
       OpenLibrary: [grace(), ada()],
-      GoogleBooks: [ada(), grace()],
+      Wikidata: [ada(), grace()],
       DNB: [ada(), grace()],
     });
     // DNB is the strongest authority; its order wins the tie.

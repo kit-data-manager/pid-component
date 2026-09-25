@@ -8,9 +8,6 @@ import { aggregateISBNMetadata, createDefaultIsbnProviders } from '../isbnMetada
  * 'integration' vitest project, which is not part of the default
  * `npm test` run, so they only execute when run explicitly via:
  *   npm run test:integration
- *
- * Google Books anonymous quota may be exhausted at times; that provider's
- * test tolerates a quota failure.
  */
 const CLRS_ISBN = '9780262033848';
 const CLRS_ISBN_HYPHENATED = '978-0-262-03384-8';
@@ -37,17 +34,6 @@ describe('ISBN book source integration', () => {
       expect(metadata?.sourceUrl).toBe(`https://openlibrary.org/isbn/${CLRS_ISBN}`);
     });
 
-    it('Google Books returns metadata or fails gracefully on quota exhaustion', { timeout: 30000 }, async () => {
-      const provider = createDefaultIsbnProviders().find(p => p.name === 'Google Books');
-      const metadata = await provider?.fetch({ isbn: CLRS_ISBN });
-
-      if (metadata) {
-        expect(metadata.title).toBeTruthy();
-      } else {
-        expect(metadata).toBeNull();
-      }
-    });
-
     it('Wikidata resolves a hyphenated ISBN to an entity', { timeout: 30000 }, async () => {
       const provider = createDefaultIsbnProviders().find(p => p.name === 'Wikidata');
       const metadata = await provider?.fetch({ isbn: CLRS_ISBN, hyphenated: CLRS_ISBN_HYPHENATED });
@@ -69,13 +55,7 @@ describe('ISBN book source integration', () => {
       for (const provider of createDefaultIsbnProviders()) {
         const url = provider.isbnUrl(CLRS_ISBN);
         const response = await fetch(url, { redirect: 'follow' });
-        // Google Books search may answer 429 under heavy anonymous quota use;
-        // every other source must resolve.
-        if (provider.name === 'Google Books') {
-          expect([200, 301, 302, 429]).toContain(response.status);
-        } else {
-          expect(response.ok).toBe(true);
-        }
+        expect(response.ok).toBe(true);
       }
     });
 
@@ -86,9 +66,7 @@ describe('ISBN book source integration', () => {
       for (const source of result?.sources ?? []) {
         expect(source.actionUrl).toBeTruthy();
         const response = await fetch(source.actionUrl, { redirect: 'follow' });
-        if (source.name !== 'Google Books') {
-          expect(response.ok).toBe(true);
-        }
+        expect(response.ok).toBe(true);
       }
     });
   });

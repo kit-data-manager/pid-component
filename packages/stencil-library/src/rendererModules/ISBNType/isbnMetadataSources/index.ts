@@ -1,5 +1,4 @@
 import { DnbProvider, normalizeDnbCreator, parseDnbOaiDc } from './DnbProvider';
-import { GoogleBooksProvider } from './GoogleBooksProvider';
 import { OpenLibraryProvider } from './OpenLibraryProvider';
 import { WikidataProvider } from './WikidataProvider';
 import { formatAuthor, parseFullName } from './authors';
@@ -12,7 +11,7 @@ export { parseDnbOaiDc, normalizeDnbCreator };
 export { formatAuthor, parseFullName };
 
 export function createDefaultIsbnProviders(): ISBNSourceProvider[] {
-  return [new OpenLibraryProvider(), new GoogleBooksProvider(), new DnbProvider(), new WikidataProvider()];
+  return [new OpenLibraryProvider(), new DnbProvider(), new WikidataProvider()];
 }
 
 /**

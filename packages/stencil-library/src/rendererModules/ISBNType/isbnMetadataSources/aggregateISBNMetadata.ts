@@ -1,7 +1,7 @@
 import { BookAuthor, orderAuthors } from './authors';
 import { AggregatedISBNMetadata, ISBNMetadata, ISBNSourceProvider, ISBNSourceResult, ISBNLookup } from './isbnMetadata';
 
-export const DEFAULT_ISBN_SOURCE_PRIORITY = ['OpenLibrary', 'Google Books', 'DNB', 'Wikidata'] as const;
+export const DEFAULT_ISBN_SOURCE_PRIORITY = ['OpenLibrary', 'DNB', 'Wikidata'] as const;
 
 /**
  * Queries all providers in parallel and merges their results field-wise.
