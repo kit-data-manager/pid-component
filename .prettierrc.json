@@ -1,7 +1,7 @@
 {
   "arrowParens": "avoid",
   "bracketSpacing": true,
-  "jsxBracketSameLine": false,
+  "bracketSameLine": false,
   "jsxSingleQuote": false,
   "quoteProps": "consistent",
   "printWidth": 180,
@@ -13,5 +13,5 @@
   "plugins": [
     "prettier-plugin-tailwindcss"
   ],
-  "tailwindConfig": "./tailwind.config.ts"
+  "tailwindStylesheet": "./packages/stencil-library/src/tailwind.css"
 }

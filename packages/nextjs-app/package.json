@@ -1,6 +1,6 @@
 {
   "name": "@kit-data-manager/nextjs-pid-component-demo",
-  "version": "0.4.4",
+  "version": "0.5.0",
   "private": true,
   "description": "Next.js demo app and Storybook for the PID Component (not published)",
   "type": "module",
@@ -13,12 +13,12 @@
     "build-storybook": "storybook build -o storybook-static"
   },
   "dependencies": {
-    "@kit-data-manager/pid-component": "^0.4.4",
-    "@kit-data-manager/react-pid-component": "^0.4.4",
+    "@kit-data-manager/pid-component": "^0.5.0",
+    "@kit-data-manager/react-pid-component": "^0.5.0",
     "@tailwindcss/postcss": "^4.3.3",
-    "next": "^16.3.1",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "next": "^16.3.5",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
   },
   "devDependencies": {
     "@radix-ui/react-avatar": "^1.2.6",
@@ -26,20 +26,20 @@
     "@radix-ui/react-slot": "^1.3.3",
     "@radix-ui/react-tabs": "^1.1.21",
     "@radix-ui/react-tooltip": "^1.2.16",
-    "@storybook/addon-a11y": "^10.5.10",
-    "@storybook/addon-docs": "^10.5.10",
-    "@storybook/nextjs-vite": "^10.5.10",
-    "@types/react": "19.2.18",
-    "autoprefixer": "^10.5.4",
+    "@storybook/addon-a11y": "^10.6.0",
+    "@storybook/addon-docs": "^10.6.0",
+    "@storybook/nextjs-vite": "^10.6.0",
+    "@types/react": "19.3.0",
+    "autoprefixer": "^10.6.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^1.33.0",
-    "postcss": "^8.5.26",
-    "storybook": "^10.5.10",
-    "tailwind-merge": "^3.6.0",
+    "lucide-react": "^1.47.0",
+    "postcss": "^8.5.28",
+    "storybook": "^10.6.0",
+    "tailwind-merge": "^3.7.0",
     "tailwindcss": "^4.3.3",
-    "typescript": "^6.0.3",
-    "vite": "^8.2.2",
-    "@storybook/addon-mcp": "^0.7.0"
+    "typescript": "^7.0.2",
+    "vite": "^8.3.0",
+    "@storybook/addon-mcp": "^10.6.0"
   }
 }

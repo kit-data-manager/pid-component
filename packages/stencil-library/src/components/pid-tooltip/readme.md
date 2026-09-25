@@ -25,8 +25,9 @@
 ## Slots
 
 | Slot        | Description |
-|-------------|-------------|
+| ----------- | ----------- |
 | `"trigger"` |             |
+
 
 ## Dependencies
 

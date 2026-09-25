@@ -1,6 +1,6 @@
 {
   "name": "@kit-data-manager/angular-pid-component",
-  "version": "0.4.3",
+  "version": "0.5.0",
   "description": "Angular wrapper for the package @kit-data-manager/pid-component",
   "author": {
     "name": "Maximilian Inckmann",
@@ -27,7 +27,7 @@
     "url": "https://github.com/kit-data-manager/pid-component"
   },
   "scripts": {
-    "build": "tsc -p . --outDir ./dist",
+    "build": "ngc -p tsconfig.json --outDir ./dist",
     "storybook": "ng run angular-pid-component:storybook --no-open",
     "build-storybook": "ng run angular-pid-component:build-storybook"
   },
@@ -38,35 +38,35 @@
     "access": "public"
   },
   "dependencies": {
-    "@angular/cdk": "^21.2.14",
-    "@angular/forms": "^21.2.19",
-    "@angular/material": "^21.2.14",
-    "@kit-data-manager/pid-component": "^0.4.4",
-    "@stencil/angular-output-target": "^1.4.1"
+    "@angular/cdk": "^22.1.7",
+    "@angular/forms": "^22.1.7",
+    "@angular/material": "^22.1.7",
+    "@kit-data-manager/pid-component": "^0.5.0",
+    "@stencil/angular-output-target": "^1.5.0"
   },
   "devDependencies": {
-    "@angular/animations": "^21.2.19",
-    "@angular/cli": "^21.2.20",
-    "@angular/common": "^21.2.19",
-    "@angular/compiler": "^21.2.19",
-    "@angular/compiler-cli": "^21.2.19",
-    "@angular/core": "^21.2.19",
-    "@angular/platform-browser": "^21.2.19",
-    "@angular/platform-browser-dynamic": "^21.2.19",
-    "@storybook/addon-a11y": "^10.5.10",
-    "@storybook/addon-docs": "^10.5.10",
-    "@storybook/angular": "^10.5.10",
+    "@angular/animations": "^22.1.7",
+    "@angular/cli": "^22.1.8",
+    "@angular/common": "^22.1.7",
+    "@angular/compiler": "^22.1.7",
+    "@angular/compiler-cli": "^22.1.7",
+    "@angular/core": "^22.1.7",
+    "@angular/platform-browser": "^22.1.7",
+    "@angular/platform-browser-dynamic": "^22.1.7",
+    "@storybook/addon-a11y": "^10.6.0",
+    "@storybook/addon-docs": "^10.6.0",
+    "@storybook/angular": "^10.6.0",
     "@tailwindcss/postcss": "^4.3.3",
     "ajv": "^8.20.0",
-    "postcss": "^8.5.26",
-    "storybook": "^10.5.10",
+    "postcss": "^8.5.28",
+    "storybook": "^10.6.0",
     "tailwindcss": "^4.3.3",
-    "typescript": "^6.0.3",
-    "zone.js": "^0.16.2",
-    "@storybook/addon-mcp": "^0.7.0"
+    "typescript": "~6.0.3",
+    "zone.js": "^0.16.3",
+    "@storybook/addon-mcp": "^10.6.0"
   },
   "peerDependencies": {
-    "@angular/core": ">=16.0.0"
+    "@angular/core": ">=22.0.0"
   },
   "keywords": [
     "angular",
