@@ -131,7 +131,7 @@ describe('DOIType subclass behavior preservation', () => {
       await type.init();
 
       const source = type.items.find(i => i.keyTitle === 'Metadata Source');
-      expect(source?.value).toBe('CrossRef (Funder)');
+      expect(source?.value).toBe('CrossRef');
 
       const metadataAction = type.actions.find(a => a.title === 'View CrossRef Metadata');
       expect(metadataAction).toBeDefined();

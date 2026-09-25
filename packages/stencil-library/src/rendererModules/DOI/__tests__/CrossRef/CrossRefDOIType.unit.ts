@@ -153,7 +153,7 @@ describe('CrossRefDOIType', () => {
       await type.init();
 
       const metadataSource = type.items.find(i => i.keyTitle === 'Metadata Source');
-      expect(metadataSource?.value).toBe('CrossRef (Funder)');
+      expect(metadataSource?.value).toBe('CrossRef');
     });
 
     it('returns early when info is null', async () => {
