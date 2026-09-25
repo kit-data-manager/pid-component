@@ -1,14 +1,14 @@
 import { describe, expect, it, vi } from 'vitest';
-import { DEFAULT_ISBN_SOURCE_PRIORITY, aggregateBookMetadata, selectIsbnProviders } from '../../bookSources/aggregateBookMetadata';
-import type { BookSourceProvider, IsbnLookup } from '../../bookSources/BookMetadata';
+import { DEFAULT_ISBN_SOURCE_PRIORITY, aggregateISBNMetadata, selectIsbnProviders } from '../../isbnMetadataSources/aggregateISBNMetadata';
+import type { ISBNSourceProvider, ISBNLookup } from '../../isbnMetadataSources/isbnMetadata';
 
-const LOOKUP: IsbnLookup = { isbn: '9781449373320' };
+const LOOKUP: ISBNLookup = { isbn: '9781449373320' };
 
-function provider(name: string, fetchImpl: BookSourceProvider['fetch']): BookSourceProvider {
+function provider(name: string, fetchImpl: ISBNSourceProvider['fetch']): ISBNSourceProvider {
   return { name, actionLabel: `View on ${name}`, isbnUrl: () => `https://example.com/${name}`, fetch: fetchImpl };
 }
 
-describe('aggregateBookMetadata', () => {
+describe('aggregateISBNMetadata', () => {
   it('merges with field priority and fills gaps from lower-priority sources', async () => {
     const providers = [
       provider('OpenLibrary', async () => ({ title: 'OL Title', pages: 624, authors: [{ givenName: 'Martin', familyName: 'Kleppmann' }] })),
@@ -22,7 +22,7 @@ describe('aggregateBookMetadata', () => {
       })),
     ];
 
-    const result = await aggregateBookMetadata(LOOKUP, providers);
+    const result = await aggregateISBNMetadata(LOOKUP, providers);
 
     expect(result?.merged).toEqual({
       title: 'OL Title',
@@ -44,7 +44,7 @@ describe('aggregateBookMetadata', () => {
       provider('Google Books', async () => ({ title: 'GB Title', sourceUrl: 'https://books.google.com/deep-link', coverUrl: 'https://books.google.com/cover.jpg' })),
     ];
 
-    const result = await aggregateBookMetadata(LOOKUP, providers);
+    const result = await aggregateISBNMetadata(LOOKUP, providers);
 
     expect(result?.merged.sourceUrl).toBe('https://openlibrary.org/isbn/9781449373320');
     expect(result?.merged.coverUrl).toBe('https://books.google.com/cover.jpg');
@@ -58,7 +58,7 @@ describe('aggregateBookMetadata', () => {
       }),
     ];
 
-    const result = await aggregateBookMetadata(LOOKUP, providers);
+    const result = await aggregateISBNMetadata(LOOKUP, providers);
 
     expect(result).toBeNull();
   });
@@ -71,7 +71,7 @@ describe('aggregateBookMetadata', () => {
       provider('Google Books', async () => ({ title: 'GB Title' })),
     ];
 
-    const result = await aggregateBookMetadata(LOOKUP, providers);
+    const result = await aggregateISBNMetadata(LOOKUP, providers);
 
     expect(result?.merged.title).toBe('GB Title');
     expect(result?.sources.map(source => source.name)).toEqual(['Google Books']);
@@ -89,7 +89,7 @@ describe('aggregateBookMetadata', () => {
       })),
     ];
 
-    const result = await aggregateBookMetadata(LOOKUP, providers);
+    const result = await aggregateISBNMetadata(LOOKUP, providers);
 
     expect(result?.merged.authors).toEqual([
       { givenName: 'Martin', familyName: 'Kleppmann' },
@@ -105,7 +105,7 @@ describe('aggregateBookMetadata', () => {
       provider('OpenLibrary', async () => ({ title: 'OL Title' })),
     ];
 
-    const result = await aggregateBookMetadata(LOOKUP, providers);
+    const result = await aggregateISBNMetadata(LOOKUP, providers);
 
     expect(result?.sources.map(source => source.name)).toEqual(['OpenLibrary', 'Wikidata', 'Custom']);
     expect(result?.merged.title).toBe('OL Title');
@@ -117,7 +117,7 @@ describe('aggregateBookMetadata', () => {
       provider('Google Books', async () => ({ title: 'GB Title' })),
     ];
 
-    const result = await aggregateBookMetadata(LOOKUP, providers);
+    const result = await aggregateISBNMetadata(LOOKUP, providers);
 
     const openLibrary = result?.sources.find(source => source.name === 'OpenLibrary');
     expect(openLibrary?.actionUrl).toBe('https://openlibrary.org/isbn/9781449373320');
@@ -130,7 +130,7 @@ describe('aggregateBookMetadata', () => {
   it('removes empty list fields from the merged result', async () => {
     const providers = [provider('OpenLibrary', async () => ({ title: 'OL Title' }))];
 
-    const result = await aggregateBookMetadata(LOOKUP, providers);
+    const result = await aggregateISBNMetadata(LOOKUP, providers);
 
     expect(result?.merged.authors).toBeUndefined();
     expect(result?.merged.publishers).toBeUndefined();
@@ -171,7 +171,7 @@ describe('fetchWithTimeout aborts hanging requests', () => {
   it('aborts after the timeout', async () => {
     vi.useFakeTimers();
     try {
-      const { fetchWithTimeout } = await import('../../bookSources/BookMetadata');
+      const { fetchWithTimeout } = await import('../../isbnMetadataSources/isbnMetadata');
       const pending = fetchWithTimeout('https://example.com/hanging');
       const expectation = expect(pending).rejects.toThrow();
       await vi.advanceTimersByTimeAsync(5000);

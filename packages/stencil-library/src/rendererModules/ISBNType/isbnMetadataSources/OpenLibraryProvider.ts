@@ -1,7 +1,7 @@
 import { BookAuthor, parseFullName } from './authors';
-import { BookMetadata, BookSourceProvider, IsbnLookup, fetchWithTimeout, hasAnyField } from './BookMetadata';
+import { ISBNMetadata, ISBNSourceProvider, ISBNLookup, fetchWithTimeout, hasAnyField } from './isbnMetadata';
 
-export class OpenLibraryProvider implements BookSourceProvider {
+export class OpenLibraryProvider implements ISBNSourceProvider {
   readonly name = 'OpenLibrary';
   readonly actionLabel = 'View on OpenLibrary';
 
@@ -9,14 +9,14 @@ export class OpenLibraryProvider implements BookSourceProvider {
     return `https://openlibrary.org/isbn/${isbn}`;
   }
 
-  async fetch(lookup: IsbnLookup): Promise<Partial<BookMetadata> | null> {
+  async fetch(lookup: ISBNLookup): Promise<Partial<ISBNMetadata> | null> {
     const { isbn } = lookup;
     try {
       const response = await fetchWithTimeout(`https://openlibrary.org/isbn/${encodeURIComponent(isbn)}.json`);
       if (!response.ok) return null;
       const edition = (await response.json()) as Record<string, unknown>;
 
-      const metadata: Partial<BookMetadata> = {
+      const metadata: Partial<ISBNMetadata> = {
         title: typeof edition.title === 'string' ? edition.title : undefined,
         subtitle: typeof edition.subtitle === 'string' ? edition.subtitle : undefined,
         publishers: Array.isArray(edition.publishers) ? ((edition.publishers as unknown[]).filter(p => typeof p === 'string') as string[]) : undefined,

@@ -4,23 +4,23 @@ import { FoldableItem } from '../../utils/FoldableItem';
 import { FoldableAction } from '../../utils/FoldableAction';
 import { hyphenate, parse } from 'isbn3';
 import {
-  AggregatedBookMetadata,
-  BookSourceResult,
+  AggregatedISBNMetadata,
+  ISBNSourceResult,
   DEFAULT_ISBN_SOURCE_PRIORITY,
-  aggregateBookMetadata,
+  aggregateISBNMetadata,
   createDefaultIsbnProviders,
   formatAuthor,
   getProviderAction,
   selectIsbnProviders,
-} from './bookSources';
+} from './isbnMetadataSources';
 
 interface ISBNCachedData {
   isbn?: string;
+  hyphenatedIsbn?: string;
   aggregated?: {
-    merged: AggregatedBookMetadata['merged'];
-    sources: BookSourceResult[];
+    merged: AggregatedISBNMetadata['merged'];
+    sources: ISBNSourceResult[];
   };
-  bookData?: AggregatedBookMetadata['merged'];
 }
 
 /**
@@ -31,11 +31,13 @@ export class ISBNType extends GenericIdentifierType {
   private static readonly NOISE_REGEX = /[\s-]+/g;
 
   private normalizedIsbn: string = '';
-  private aggregated: AggregatedBookMetadata | null = null;
+  private hyphenatedIsbn: string = '';
+  private aggregated: AggregatedISBNMetadata | null = null;
 
   get data(): string {
     return JSON.stringify({
       isbn: this.normalizedIsbn,
+      hyphenatedIsbn: this.hyphenatedIsbn,
       aggregated: this.aggregated
         ? {
             merged: this.aggregated.merged,
@@ -59,12 +61,13 @@ export class ISBNType extends GenericIdentifierType {
     if (!this.isValid(normalized)) return false;
 
     this.normalizedIsbn = normalized;
+    this.hyphenatedIsbn = hyphenate(normalized) || normalized;
     const allProviders = createDefaultIsbnProviders();
     const enabled = this.getEnabledSourceNames();
     const providers = selectIsbnProviders(allProviders, enabled);
-    const aggregated = await aggregateBookMetadata({ isbn: normalized, hyphenated: hyphenate(normalized) || undefined }, providers);
+    const aggregated = await aggregateISBNMetadata({ isbn: normalized, hyphenated: this.hyphenatedIsbn }, providers);
     if (!aggregated) return false;
-    if (!this.hasUsefulBookMetadata(aggregated.merged)) return false;
+    if (!this.hasUsefulISBNMetadata(aggregated.merged)) return false;
 
     this.aggregated = aggregated;
 
@@ -146,7 +149,7 @@ export class ISBNType extends GenericIdentifierType {
     return undefined;
   }
 
-  private hasUsefulBookMetadata(merged: AggregatedBookMetadata['merged']): boolean {
+  private hasUsefulISBNMetadata(merged: AggregatedISBNMetadata['merged']): boolean {
     return Boolean(merged.title || merged.publishDate || (merged.authors && merged.authors.length > 0) || (merged.publishers && merged.publishers.length > 0));
   }
 
@@ -154,21 +157,13 @@ export class ISBNType extends GenericIdentifierType {
     try {
       const parsed = JSON.parse(data) as ISBNCachedData;
       this.normalizedIsbn = parsed.isbn || this.normalizeInput(this.value);
+      this.hyphenatedIsbn = parsed.hyphenatedIsbn || hyphenate(this.normalizedIsbn) || this.normalizedIsbn;
       if (parsed.aggregated && parsed.aggregated.sources.length > 0) {
         this.aggregated = { merged: parsed.aggregated.merged, sources: parsed.aggregated.sources };
-      } else if (parsed.bookData) {
-        const source: BookSourceResult = {
-          name: 'OpenLibrary',
-          actionLabel: '',
-          actionUrl: '',
-          url: parsed.bookData.sourceUrl,
-          metadata: parsed.bookData,
-        };
-        const action = this.resolveSourceAction(source);
-        this.aggregated = { merged: parsed.bookData, sources: [{ ...source, ...action }] };
       }
     } catch {
       this.normalizedIsbn = this.normalizeInput(this.value);
+      this.hyphenatedIsbn = hyphenate(this.normalizedIsbn) || this.normalizedIsbn;
     }
   }
 
@@ -177,7 +172,7 @@ export class ISBNType extends GenericIdentifierType {
    * written before action labels/URLs existed fall back to the provider
    * registry.
    */
-  private resolveSourceAction(source: BookSourceResult): { actionLabel: string; actionUrl: string } {
+  private resolveSourceAction(source: ISBNSourceResult): { actionLabel: string; actionUrl: string } {
     const fallback = getProviderAction(source.name, this.normalizedIsbn);
     return {
       actionLabel: source.actionLabel || fallback?.actionLabel || `View on ${source.name}`,
@@ -193,7 +188,7 @@ export class ISBNType extends GenericIdentifierType {
       new FoldableItem(
         0,
         'ISBN',
-        this.normalizedIsbn,
+        this.hyphenatedIsbn || this.normalizedIsbn,
         'International Standard Book Number used to identify this publication',
         'https://en.wikipedia.org/wiki/ISBN',
         undefined,
@@ -210,9 +205,7 @@ export class ISBNType extends GenericIdentifierType {
     if (merged.title) this.items.push(new FoldableItem(itemOrder++, 'Title', merged.title, 'Title of the publication'));
     if (merged.subtitle) this.items.push(new FoldableItem(itemOrder++, 'Subtitle', merged.subtitle, 'Subtitle of the publication'));
     if (merged.publishDate) {
-      const parsedDate = new Date(merged.publishDate);
-      const displayDate = Number.isNaN(parsedDate.getTime()) ? merged.publishDate : parsedDate.toDateString();
-      this.items.push(new FoldableItem(itemOrder++, 'Date', displayDate, 'Publication date'));
+      this.items.push(new FoldableItem(itemOrder++, 'Date', toIsoDate(merged.publishDate), 'Publication date'));
     }
     if (merged.pages) this.items.push(new FoldableItem(itemOrder++, 'Pages', String(merged.pages), 'Number of pages'));
 
@@ -239,3 +232,25 @@ export class ISBNType extends GenericIdentifierType {
 }
 
 export { DEFAULT_ISBN_SOURCE_PRIORITY };
+
+/**
+ * Normalizes a publication date into an ISO 8601/RFC 3339 form that the date
+ * subcomponent can detect: keeps year-only and already-ISO inputs as-is,
+ * converts human-readable month names to YYYY-MM-DD, and falls back to the
+ * raw string when it cannot be parsed.
+ */
+function toIsoDate(publishDate: string): string {
+  if (!publishDate) return publishDate;
+  if (/^\d{4}$/.test(publishDate)) return publishDate;
+  if (/^\d{4}-\d{2}/.test(publishDate)) return publishDate;
+  const parsed = new Date(publishDate);
+  if (!Number.isNaN(parsed.getTime())) {
+    // Format in local components to avoid a UTC timezone shift for
+    // date-only (no time) values like "Apr 02, 2017".
+    const year = parsed.getFullYear();
+    const month = String(parsed.getMonth() + 1).padStart(2, '0');
+    const day = String(parsed.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+  return publishDate;
+}

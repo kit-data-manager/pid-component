@@ -1,5 +1,5 @@
 import { BookAuthor, parseFullName } from './authors';
-import { BookMetadata, BookSourceProvider, IsbnLookup, fetchWithTimeout, hasAnyField, hyphenateForSearch } from './BookMetadata';
+import { ISBNMetadata, ISBNSourceProvider, ISBNLookup, fetchWithTimeout, hasAnyField, hyphenateForSearch } from './isbnMetadata';
 
 interface WikidataSearchResponse {
   query?: {
@@ -32,7 +32,7 @@ interface WikidataClaim {
  * Author extraction uses the book entity's P50 claims, resolved through a
  * single batched entity request.
  */
-export class WikidataProvider implements BookSourceProvider {
+export class WikidataProvider implements ISBNSourceProvider {
   readonly name = 'Wikidata';
   readonly actionLabel = 'View on Wikidata';
 
@@ -42,7 +42,7 @@ export class WikidataProvider implements BookSourceProvider {
     return `https://www.wikidata.org/w/index.php?search=${encodeURIComponent(`haswbstatement:P212=${hyphenateForSearch(isbn)}`)}`;
   }
 
-  async fetch(lookup: IsbnLookup): Promise<Partial<BookMetadata> | null> {
+  async fetch(lookup: ISBNLookup): Promise<Partial<ISBNMetadata> | null> {
     // ISBN-13 is stored as P212, ISBN-10 as P957.
     const property = lookup.isbn.length === 13 ? 'P212' : 'P957';
     const candidates = [lookup.hyphenated, lookup.isbn].filter((value): value is string => Boolean(value));
@@ -54,7 +54,7 @@ export class WikidataProvider implements BookSourceProvider {
     return null;
   }
 
-  private async fetchByIsbn(property: string, isbn: string): Promise<Partial<BookMetadata> | null> {
+  private async fetchByIsbn(property: string, isbn: string): Promise<Partial<ISBNMetadata> | null> {
     try {
       const searchUrl = `https://www.wikidata.org/w/api.php?action=query&format=json&list=search&srsearch=${encodeURIComponent(`haswbstatement:${property}=${isbn}`)}&srlimit=1`;
       const response = await fetchWithTimeout(searchUrl, { headers: this.headers });
@@ -66,7 +66,7 @@ export class WikidataProvider implements BookSourceProvider {
       const entity = await this.fetchEntity(qid);
       if (!entity) return null;
 
-      const metadata: Partial<BookMetadata> = {
+      const metadata: Partial<ISBNMetadata> = {
         title: entity.labels?.en?.value || undefined,
         sourceUrl: `https://www.wikidata.org/entity/${qid}`,
       };

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { OpenLibraryProvider } from '../../bookSources/OpenLibraryProvider';
-import { OPENLIBRARY_EDITION, installOpenLibrarySuccess, installFetchMock, useFailingFetchInTests } from './bookSourcesTestUtils';
+import { OpenLibraryProvider } from '../../isbnMetadataSources/OpenLibraryProvider';
+import { OPENLIBRARY_EDITION, installOpenLibrarySuccess, installFetchMock, useFailingFetchInTests } from './isbnMetadataSourcesTestUtils';
 
 describe('OpenLibraryProvider', () => {
   useFailingFetchInTests();

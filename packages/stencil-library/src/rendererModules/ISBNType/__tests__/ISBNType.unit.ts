@@ -10,7 +10,7 @@ import {
   installFetchMock,
   useFailingFetchInTests,
   type FetchHandler,
-} from './bookSources/bookSourcesTestUtils';
+} from './isbnMetadataSources/isbnMetadataSourcesTestUtils';
 
 function openLibraryOnly(handler?: FetchHandler): FetchHandler {
   return (url: string) => {
@@ -238,6 +238,39 @@ describe('ISBNType', () => {
       expect(renderer.items.find(i => i.keyTitle === 'Abstract')?.value).toBe('A practical guide to modern data systems.');
     });
 
+    it('shows the hyphenated ISBN in the ISBN foldable item', async () => {
+      installFetchMock(openLibraryOnly());
+
+      const renderer = new ISBNType(ISBN_examples.VALID_13_COMPACT);
+      await renderer.init();
+
+      expect(renderer.items.find(i => i.keyTitle === 'ISBN')?.value).toBe('978-1-4493-7332-0');
+    });
+
+    it('renders the publication date in ISO 8601 form', async () => {
+      installFetchMock(openLibraryOnly());
+
+      const renderer = new ISBNType(ISBN_examples.VALID_13_COMPACT);
+      await renderer.init();
+
+      // OPENLIBRARY_EDITION.publish_date is "Apr 02, 2017" -> ISO date only.
+      expect(renderer.items.find(i => i.keyTitle === 'Date')?.value).toBe('2017-04-02');
+    });
+
+    it('keeps a year-only publication date as-is', async () => {
+      installFetchMock(url => {
+        if (url.startsWith('https://services.dnb.de/')) {
+          return { ok: true, text: DNB_XML.replace('<dc:date>1995</dc:date>', '<dc:date>1988</dc:date>') };
+        }
+        return undefined;
+      });
+
+      const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
+      await renderer.init();
+
+      expect(renderer.items.find(i => i.keyTitle === 'Date')?.value).toBe('1988');
+    });
+
     it('shows the raw publication date when it cannot be parsed', async () => {
       installFetchMock(url => {
         if (url.startsWith('https://services.dnb.de/')) {
@@ -448,23 +481,8 @@ describe('ISBNType', () => {
       const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
       await renderer.init(cached);
 
-      expect(renderer.items.find(i => i.keyTitle === 'ISBN')?.value).toBe('9781449373320');
+      expect(renderer.items.find(i => i.keyTitle === 'ISBN')?.value).toBe('978-1-4493-7332-0');
       expect(renderer.actions.find(a => a.title === 'View on OpenLibrary')?.link).toBe('https://openlibrary.org/isbn/9781449373320');
-    });
-
-    it('still loads legacy cache entries with bookData', async () => {
-      installFetchMock(() => undefined);
-
-      const legacy = JSON.stringify({
-        isbn: '9781449373320',
-        bookData: { title: 'Legacy Title', authors: ['Legacy Author'] },
-      });
-
-      const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);
-      await renderer.init(legacy);
-
-      expect(renderer.isResolvable()).toBe(true);
-      expect(renderer.items.find(i => i.keyTitle === 'Title')?.value).toBe('Legacy Title');
     });
 
     it('falls back to the raw value when the cache is invalid JSON', async () => {
@@ -477,7 +495,7 @@ describe('ISBNType', () => {
       expect(renderer.items.length).toBe(0);
     });
 
-    it('ignores cache entries without aggregated data or bookData', async () => {
+    it('ignores cache entries without aggregated data', async () => {
       installFetchMock(() => undefined);
 
       const renderer = new ISBNType(ISBN_examples.VALID_13_HYPHENATED);

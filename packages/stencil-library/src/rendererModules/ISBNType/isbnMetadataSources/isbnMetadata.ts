@@ -4,7 +4,7 @@
 
 import type { BookAuthor } from './authors';
 
-export interface BookMetadata {
+export interface ISBNMetadata {
   title?: string;
   subtitle?: string;
   authors?: BookAuthor[];
@@ -25,33 +25,33 @@ export interface BookMetadata {
  *   available. Some sources (notably Wikidata) store ISBNs in their
  *   hyphenated form and cannot be queried with plain digits.
  */
-export interface IsbnLookup {
+export interface ISBNLookup {
   isbn: string;
   hyphenated?: string;
 }
 
-export interface BookSourceProvider {
+export interface ISBNSourceProvider {
   readonly name: string;
   /** Label for the action that opens this ISBN in the source's UI. */
   readonly actionLabel: string;
   /** URL that opens the given ISBN in the source's catalog/UI. */
   isbnUrl(isbn: string): string;
-  fetch(lookup: IsbnLookup): Promise<Partial<BookMetadata> | null>;
+  fetch(lookup: ISBNLookup): Promise<Partial<ISBNMetadata> | null>;
 }
 
-export interface BookSourceResult {
+export interface ISBNSourceResult {
   name: string;
   /** Label for the action that opens this ISBN in the source's UI. */
   actionLabel: string;
   /** URL that opens this ISBN in the source (deep link if known, ISBN-based otherwise). */
   actionUrl: string;
   url?: string;
-  metadata: Partial<BookMetadata>;
+  metadata: Partial<ISBNMetadata>;
 }
 
-export interface AggregatedBookMetadata {
-  merged: BookMetadata;
-  sources: BookSourceResult[];
+export interface AggregatedISBNMetadata {
+  merged: ISBNMetadata;
+  sources: ISBNSourceResult[];
 }
 
 const FETCH_TIMEOUT_MS = 5000;
@@ -70,7 +70,7 @@ export function toHttps(url: string): string {
   return url.replace(/^http:\/\//i, 'https://');
 }
 
-export function hasAnyField(metadata: Partial<BookMetadata>): boolean {
+export function hasAnyField(metadata: Partial<ISBNMetadata>): boolean {
   return Boolean(
     metadata.title ||
     metadata.subtitle ||

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { DnbProvider, normalizeDnbCreator, parseDnbOaiDc } from '../../bookSources/DnbProvider';
-import { DNB_EMPTY_XML, DNB_XML, installDnbSuccess, installFetchMock, useFailingFetchInTests } from './bookSourcesTestUtils';
+import { DnbProvider, normalizeDnbCreator, parseDnbOaiDc } from '../../isbnMetadataSources/DnbProvider';
+import { DNB_EMPTY_XML, DNB_XML, installDnbSuccess, installFetchMock, useFailingFetchInTests } from './isbnMetadataSourcesTestUtils';
 
 describe('normalizeDnbCreator', () => {
   it('strips a bracketed role marker', () => {

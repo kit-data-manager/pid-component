@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { WikidataProvider } from '../../bookSources/WikidataProvider';
+import { WikidataProvider } from '../../isbnMetadataSources/WikidataProvider';
 import {
   WIKIDATA_AUTHOR_NAMES,
   WIKIDATA_ENTITY_PAYLOAD,
@@ -8,7 +8,7 @@ import {
   installFetchMock,
   installWikidataSuccess,
   useFailingFetchInTests,
-} from './bookSourcesTestUtils';
+} from './isbnMetadataSourcesTestUtils';
 
 describe('WikidataProvider', () => {
   useFailingFetchInTests();

@@ -1,7 +1,7 @@
 import { parseFullName } from './authors';
-import { BookMetadata, BookSourceProvider, IsbnLookup, decodeXmlEntities, fetchWithTimeout, hasAnyField } from './BookMetadata';
+import { ISBNMetadata, ISBNSourceProvider, ISBNLookup, decodeXmlEntities, fetchWithTimeout, hasAnyField } from './isbnMetadata';
 
-export class DnbProvider implements BookSourceProvider {
+export class DnbProvider implements ISBNSourceProvider {
   readonly name = 'DNB';
   readonly actionLabel = 'View in DNB catalog';
 
@@ -9,7 +9,7 @@ export class DnbProvider implements BookSourceProvider {
     return `https://portal.dnb.de/opac.htm?query=isbn:${isbn}`;
   }
 
-  async fetch(lookup: IsbnLookup): Promise<Partial<BookMetadata> | null> {
+  async fetch(lookup: ISBNLookup): Promise<Partial<ISBNMetadata> | null> {
     // DNB normalizes hyphens itself, any ISBN spelling works.
     const url = `https://services.dnb.de/sru/dnb?version=1.1&operation=searchRetrieve&query=${encodeURIComponent(`isbn=${lookup.isbn}`)}&recordSchema=oai_dc&maximumRecords=1`;
     try {
@@ -24,14 +24,14 @@ export class DnbProvider implements BookSourceProvider {
   }
 }
 
-export function parseDnbOaiDc(xml: string): Partial<BookMetadata> {
+export function parseDnbOaiDc(xml: string): Partial<ISBNMetadata> {
   const extract = (tag: string): string[] => {
     const matches = xml.matchAll(new RegExp(`<dc:${tag}[^>]*>([\\s\\S]*?)</dc:${tag}>`, 'g'));
     return Array.from(matches, match => decodeXmlEntities(match[1].trim())).filter(Boolean);
   };
 
   const idn = xml.match(/xsi:type="dnb:IDN"[^>]*>([^<]+)</)?.[1];
-  const metadata: Partial<BookMetadata> = {
+  const metadata: Partial<ISBNMetadata> = {
     sourceUrl: idn ? `https://d-nb.info/${idn.trim()}` : undefined,
   };
 
@@ -66,7 +66,9 @@ export function parseDnbOaiDc(xml: string): Partial<BookMetadata> {
  */
 export function normalizeDnbCreator(raw: string): string {
   return raw
-    .replace(/[\[\]()]/g, '')
+    .replace(/\[/g, '')
+    .replace(/\]/g, '')
+    .replace(/[()]/g, '')
     .replace(/\s*(Verfasser|Herausgeber|Autor)\b.*$/i, '')
     .replace(/\s\s+/g, ' ')
     .trim();

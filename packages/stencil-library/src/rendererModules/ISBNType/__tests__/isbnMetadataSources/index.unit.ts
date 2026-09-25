@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { createDefaultIsbnProviders, getProviderAction } from '../../bookSources';
-import { DEFAULT_ISBN_SOURCE_PRIORITY } from '../../bookSources/aggregateBookMetadata';
+import { createDefaultIsbnProviders, getProviderAction } from '../../isbnMetadataSources';
+import { DEFAULT_ISBN_SOURCE_PRIORITY } from '../../isbnMetadataSources/aggregateISBNMetadata';
 
 describe('createDefaultIsbnProviders', () => {
   it('creates all default providers in priority order', () => {

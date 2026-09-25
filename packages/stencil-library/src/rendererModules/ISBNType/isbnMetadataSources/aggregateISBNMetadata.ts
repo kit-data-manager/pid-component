@@ -1,5 +1,5 @@
 import { BookAuthor, orderAuthors } from './authors';
-import { AggregatedBookMetadata, BookMetadata, BookSourceProvider, BookSourceResult, IsbnLookup } from './BookMetadata';
+import { AggregatedISBNMetadata, ISBNMetadata, ISBNSourceProvider, ISBNSourceResult, ISBNLookup } from './isbnMetadata';
 
 export const DEFAULT_ISBN_SOURCE_PRIORITY = ['OpenLibrary', 'Google Books', 'DNB', 'Wikidata'] as const;
 
@@ -10,10 +10,10 @@ export const DEFAULT_ISBN_SOURCE_PRIORITY = ['OpenLibrary', 'Google Books', 'DNB
  * Authors are deduplicated across sources and ordered deterministically (see
  * orderAuthors).
  */
-export async function aggregateBookMetadata(lookup: IsbnLookup, providers: BookSourceProvider[]): Promise<AggregatedBookMetadata | null> {
+export async function aggregateISBNMetadata(lookup: ISBNLookup, providers: ISBNSourceProvider[]): Promise<AggregatedISBNMetadata | null> {
   const ordered = [...providers].sort(byPriority);
   const results = await Promise.all(
-    ordered.map(async (provider): Promise<BookSourceResult | null> => {
+    ordered.map(async (provider): Promise<ISBNSourceResult | null> => {
       try {
         const metadata = await provider.fetch(lookup);
         if (!metadata) return null;
@@ -32,10 +32,10 @@ export async function aggregateBookMetadata(lookup: IsbnLookup, providers: BookS
     }),
   );
 
-  const sources = results.filter((result): result is BookSourceResult => result !== null);
+  const sources = results.filter((result): result is ISBNSourceResult => result !== null);
   if (sources.length === 0) return null;
 
-  const merged: BookMetadata = {
+  const merged: ISBNMetadata = {
     publishers: [],
     subjects: [],
   };
@@ -57,7 +57,7 @@ export async function aggregateBookMetadata(lookup: IsbnLookup, providers: BookS
   return { merged, sources };
 }
 
-function byPriority(a: BookSourceProvider, b: BookSourceProvider): number {
+function byPriority(a: ISBNSourceProvider, b: ISBNSourceProvider): number {
   const priorities = DEFAULT_ISBN_SOURCE_PRIORITY as readonly string[];
   const indexA = priorities.indexOf(a.name);
   const indexB = priorities.indexOf(b.name);
@@ -66,7 +66,7 @@ function byPriority(a: BookSourceProvider, b: BookSourceProvider): number {
   return valueA - valueB;
 }
 
-function mergeMetadata(merged: BookMetadata, addition: Partial<BookMetadata>): void {
+function mergeMetadata(merged: ISBNMetadata, addition: Partial<ISBNMetadata>): void {
   if (!merged.title && addition.title) merged.title = addition.title;
   if (!merged.subtitle && addition.subtitle) merged.subtitle = addition.subtitle;
   if (!merged.publishDate && addition.publishDate) merged.publishDate = addition.publishDate;
@@ -79,7 +79,7 @@ function mergeMetadata(merged: BookMetadata, addition: Partial<BookMetadata>): v
   mergeList(merged, 'subjects', addition.subjects);
 }
 
-function mergeList(merged: BookMetadata, key: 'publishers' | 'subjects', addition: string[] | undefined): void {
+function mergeList(merged: ISBNMetadata, key: 'publishers' | 'subjects', addition: string[] | undefined): void {
   if (!addition || addition.length === 0) return;
   const existing = merged[key] || [];
   for (const value of addition) {
@@ -90,7 +90,7 @@ function mergeList(merged: BookMetadata, key: 'publishers' | 'subjects', additio
   merged[key] = existing;
 }
 
-export function selectIsbnProviders(providers: BookSourceProvider[], enabled: string[] | undefined): BookSourceProvider[] {
+export function selectIsbnProviders(providers: ISBNSourceProvider[], enabled: string[] | undefined): ISBNSourceProvider[] {
   if (!enabled || enabled.length === 0) return providers;
   return providers.filter(provider => enabled.includes(provider.name));
 }

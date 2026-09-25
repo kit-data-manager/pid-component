@@ -1,5 +1,5 @@
 import { parseFullName } from './authors';
-import { BookMetadata, BookSourceProvider, IsbnLookup, fetchWithTimeout, hasAnyField, toHttps } from './BookMetadata';
+import { ISBNMetadata, ISBNSourceProvider, ISBNLookup, fetchWithTimeout, hasAnyField, toHttps } from './isbnMetadata';
 
 interface GoogleBooksVolume {
   volumeInfo?: {
@@ -17,7 +17,7 @@ interface GoogleBooksVolume {
   };
 }
 
-export class GoogleBooksProvider implements BookSourceProvider {
+export class GoogleBooksProvider implements ISBNSourceProvider {
   readonly name = 'Google Books';
   readonly actionLabel = 'View on Google Books';
 
@@ -25,7 +25,7 @@ export class GoogleBooksProvider implements BookSourceProvider {
     return `https://www.google.com/search?tbm=bks&q=isbn:${isbn}`;
   }
 
-  async fetch(lookup: IsbnLookup): Promise<Partial<BookMetadata> | null> {
+  async fetch(lookup: ISBNLookup): Promise<Partial<ISBNMetadata> | null> {
     try {
       const response = await fetchWithTimeout(`https://www.googleapis.com/books/v1/volumes?q=isbn:${encodeURIComponent(lookup.isbn)}`);
       if (!response.ok) return null;
@@ -33,7 +33,7 @@ export class GoogleBooksProvider implements BookSourceProvider {
       const info = payload.items?.[0]?.volumeInfo;
       if (!info) return null;
 
-      const metadata: Partial<BookMetadata> = {
+      const metadata: Partial<ISBNMetadata> = {
         title: info.title,
         subtitle: info.subtitle,
         authors: info.authors && info.authors.length > 0 ? info.authors.map(parseFullName) : undefined,

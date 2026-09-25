@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { GoogleBooksProvider } from '../../bookSources/GoogleBooksProvider';
-import { GOOGLE_BOOKS_PAYLOAD, installFetchMock, installGoogleBooksSuccess, useFailingFetchInTests } from './bookSourcesTestUtils';
+import { GoogleBooksProvider } from '../../isbnMetadataSources/GoogleBooksProvider';
+import { GOOGLE_BOOKS_PAYLOAD, installFetchMock, installGoogleBooksSuccess, useFailingFetchInTests } from './isbnMetadataSourcesTestUtils';
 
 describe('GoogleBooksProvider', () => {
   useFailingFetchInTests();
@@ -107,7 +107,7 @@ describe('GoogleBooksProvider', () => {
   });
 
   it('queries the API with the normalized ISBN', async () => {
-    const { installFetchMock: install } = await import('./bookSourcesTestUtils');
+    const { installFetchMock: install } = await import('./isbnMetadataSourcesTestUtils');
     const mock = install(url => {
       if (url.startsWith('https://www.googleapis.com/books/')) return { ok: true, body: GOOGLE_BOOKS_PAYLOAD };
       return undefined;

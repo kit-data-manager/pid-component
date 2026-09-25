@@ -4,14 +4,14 @@ import { OpenLibraryProvider } from './OpenLibraryProvider';
 import { WikidataProvider } from './WikidataProvider';
 import { formatAuthor, parseFullName } from './authors';
 import type { BookAuthor } from './authors';
-import type { AggregatedBookMetadata, BookMetadata, BookSourceProvider, BookSourceResult, IsbnLookup } from './BookMetadata';
+import type { AggregatedISBNMetadata, ISBNMetadata, ISBNSourceProvider, ISBNSourceResult, ISBNLookup } from './isbnMetadata';
 
-export type { AggregatedBookMetadata, BookMetadata, BookSourceProvider, BookSourceResult, IsbnLookup, BookAuthor };
-export { DEFAULT_ISBN_SOURCE_PRIORITY, aggregateBookMetadata, selectIsbnProviders } from './aggregateBookMetadata';
+export type { AggregatedISBNMetadata, ISBNMetadata, ISBNSourceProvider, ISBNSourceResult, ISBNLookup, BookAuthor };
+export { DEFAULT_ISBN_SOURCE_PRIORITY, aggregateISBNMetadata, selectIsbnProviders } from './aggregateISBNMetadata';
 export { parseDnbOaiDc, normalizeDnbCreator };
 export { formatAuthor, parseFullName };
 
-export function createDefaultIsbnProviders(): BookSourceProvider[] {
+export function createDefaultIsbnProviders(): ISBNSourceProvider[] {
   return [new OpenLibraryProvider(), new GoogleBooksProvider(), new DnbProvider(), new WikidataProvider()];
 }
 

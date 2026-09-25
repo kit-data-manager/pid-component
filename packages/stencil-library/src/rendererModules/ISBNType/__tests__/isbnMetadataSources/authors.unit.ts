@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseFullName, formatAuthor, sameAuthor, preferDetailedAuthor, orderAuthors, sortAuthorsAlphabetically } from '../../bookSources/authors';
+import { parseFullName, formatAuthor, sameAuthor, preferDetailedAuthor, orderAuthors, sortAuthorsAlphabetically } from '../../isbnMetadataSources/authors';
 
 describe('parseFullName', () => {
   it('parses "Given Family"', () => {
