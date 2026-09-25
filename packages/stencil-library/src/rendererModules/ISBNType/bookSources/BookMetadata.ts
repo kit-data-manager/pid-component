@@ -2,10 +2,12 @@
  * Shared types and helpers for the ISBN book metadata providers.
  */
 
+import type { BookAuthor } from './authors';
+
 export interface BookMetadata {
   title?: string;
   subtitle?: string;
-  authors?: string[];
+  authors?: BookAuthor[];
   publishers?: string[];
   publishDate?: string;
   pages?: number;

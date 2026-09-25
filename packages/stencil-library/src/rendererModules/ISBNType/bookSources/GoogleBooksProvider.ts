@@ -1,3 +1,4 @@
+import { parseFullName } from './authors';
 import { BookMetadata, BookSourceProvider, IsbnLookup, fetchWithTimeout, hasAnyField, toHttps } from './BookMetadata';
 
 interface GoogleBooksVolume {
@@ -35,7 +36,7 @@ export class GoogleBooksProvider implements BookSourceProvider {
       const metadata: Partial<BookMetadata> = {
         title: info.title,
         subtitle: info.subtitle,
-        authors: info.authors && info.authors.length > 0 ? info.authors : undefined,
+        authors: info.authors && info.authors.length > 0 ? info.authors.map(parseFullName) : undefined,
         publishers: info.publisher ? [info.publisher] : undefined,
         publishDate: info.publishedDate,
         description: info.description,

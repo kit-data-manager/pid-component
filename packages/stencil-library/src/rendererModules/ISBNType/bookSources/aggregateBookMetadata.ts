@@ -1,3 +1,4 @@
+import { BookAuthor, orderAuthors } from './authors';
 import { AggregatedBookMetadata, BookMetadata, BookSourceProvider, BookSourceResult, IsbnLookup } from './BookMetadata';
 
 export const DEFAULT_ISBN_SOURCE_PRIORITY = ['OpenLibrary', 'Google Books', 'DNB', 'Wikidata'] as const;
@@ -6,6 +7,8 @@ export const DEFAULT_ISBN_SOURCE_PRIORITY = ['OpenLibrary', 'Google Books', 'DNB
  * Queries all providers in parallel and merges their results field-wise.
  * For each field, the value of the highest-priority provider that supplied
  * a non-empty value wins; remaining gaps are filled by lower-priority sources.
+ * Authors are deduplicated across sources and ordered deterministically (see
+ * orderAuthors).
  */
 export async function aggregateBookMetadata(lookup: IsbnLookup, providers: BookSourceProvider[]): Promise<AggregatedBookMetadata | null> {
   const ordered = [...providers].sort(byPriority);
@@ -33,14 +36,21 @@ export async function aggregateBookMetadata(lookup: IsbnLookup, providers: BookS
   if (sources.length === 0) return null;
 
   const merged: BookMetadata = {
-    authors: [],
     publishers: [],
     subjects: [],
   };
+
+  const sourceAuthorLists: Record<string, BookAuthor[]> = {};
   for (const source of sources) {
     mergeMetadata(merged, source.metadata);
+    if (source.metadata.authors && source.metadata.authors.length > 0) {
+      sourceAuthorLists[source.name] = source.metadata.authors;
+    }
   }
-  if (merged.authors && merged.authors.length === 0) delete merged.authors;
+
+  const authors = orderAuthors(sourceAuthorLists);
+  if (authors.length > 0) merged.authors = authors;
+
   if (merged.publishers && merged.publishers.length === 0) delete merged.publishers;
   if (merged.subjects && merged.subjects.length === 0) delete merged.subjects;
 
@@ -65,12 +75,11 @@ function mergeMetadata(merged: BookMetadata, addition: Partial<BookMetadata>): v
   if (!merged.coverUrl && addition.coverUrl) merged.coverUrl = addition.coverUrl;
   if (!merged.sourceUrl && addition.sourceUrl) merged.sourceUrl = addition.sourceUrl;
   if (!merged.language && addition.language) merged.language = addition.language;
-  mergeList(merged, 'authors', addition.authors);
   mergeList(merged, 'publishers', addition.publishers);
   mergeList(merged, 'subjects', addition.subjects);
 }
 
-function mergeList(merged: BookMetadata, key: 'authors' | 'publishers' | 'subjects', addition: string[] | undefined): void {
+function mergeList(merged: BookMetadata, key: 'publishers' | 'subjects', addition: string[] | undefined): void {
   if (!addition || addition.length === 0) return;
   const existing = merged[key] || [];
   for (const value of addition) {

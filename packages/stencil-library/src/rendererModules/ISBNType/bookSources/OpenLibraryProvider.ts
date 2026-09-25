@@ -1,3 +1,4 @@
+import { BookAuthor, parseFullName } from './authors';
 import { BookMetadata, BookSourceProvider, IsbnLookup, fetchWithTimeout, hasAnyField } from './BookMetadata';
 
 export class OpenLibraryProvider implements BookSourceProvider {
@@ -42,8 +43,8 @@ export class OpenLibraryProvider implements BookSourceProvider {
     }
   }
 
-  private async fetchAuthorNames(authorKeys: { key?: string }[]): Promise<string[]> {
-    const names = await Promise.all(
+  private async fetchAuthorNames(authorKeys: { key?: string }[]): Promise<BookAuthor[]> {
+    const authors = await Promise.all(
       authorKeys
         .map(author => author.key)
         .filter((key): key is string => Boolean(key))
@@ -52,13 +53,13 @@ export class OpenLibraryProvider implements BookSourceProvider {
             const response = await fetchWithTimeout(`https://openlibrary.org${key}.json`);
             if (!response.ok) return null;
             const author = (await response.json()) as { name?: string };
-            return typeof author.name === 'string' ? author.name : null;
+            return typeof author.name === 'string' ? parseFullName(author.name) : null;
           } catch {
             return null;
           }
         }),
     );
-    return names.filter((name): name is string => Boolean(name));
+    return authors.filter((author): author is BookAuthor => Boolean(author));
   }
 
   private async fetchWorkDescription(edition: Record<string, unknown>): Promise<string | null> {

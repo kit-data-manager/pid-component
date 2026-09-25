@@ -2,12 +2,14 @@ import { FunctionalComponent, h } from '@stencil/core';
 import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
 import { FoldableItem } from '../../utils/FoldableItem';
 import { FoldableAction } from '../../utils/FoldableAction';
+import { hyphenate, parse } from 'isbn3';
 import {
   AggregatedBookMetadata,
   BookSourceResult,
   DEFAULT_ISBN_SOURCE_PRIORITY,
   aggregateBookMetadata,
   createDefaultIsbnProviders,
+  formatAuthor,
   getProviderAction,
   selectIsbnProviders,
 } from './bookSources';
@@ -27,8 +29,6 @@ interface ISBNCachedData {
 export class ISBNType extends GenericIdentifierType {
   private static readonly PREFIX_REGEX = /^ISBN(?:-1[03])?:?\s*/i;
   private static readonly NOISE_REGEX = /[\s-]+/g;
-  private static readonly ISBN10_FORMAT = /^\d{9}[\dX]$/;
-  private static readonly ISBN13_FORMAT = /^\d{13}$/;
 
   private normalizedIsbn: string = '';
   private aggregated: AggregatedBookMetadata | null = null;
@@ -62,7 +62,7 @@ export class ISBNType extends GenericIdentifierType {
     const allProviders = createDefaultIsbnProviders();
     const enabled = this.getEnabledSourceNames();
     const providers = selectIsbnProviders(allProviders, enabled);
-    const aggregated = await aggregateBookMetadata({ isbn: normalized, hyphenated: this.extractHyphenatedForm(normalized) }, providers);
+    const aggregated = await aggregateBookMetadata({ isbn: normalized, hyphenated: hyphenate(normalized) || undefined }, providers);
     if (!aggregated) return false;
     if (!this.hasUsefulBookMetadata(aggregated.merged)) return false;
 
@@ -122,44 +122,12 @@ export class ISBNType extends GenericIdentifierType {
   }
 
   /**
-   * Extracts the hyphenated form of the identifier from the raw input value,
-   * e.g. "978-0-262-03384-8" from "ISBN 978-0-262-03384-8". Returns undefined
-   * if the raw value contains no hyphens or does not match the normalized ISBN.
+   * Validates a normalized (separators removed) ISBN-10 or ISBN-13 using the
+   * authoritative isbn3 parser. Returns true only for ISBNs whose checksum is
+   * valid AND which fall within a registered group/registrant range.
    */
-  private extractHyphenatedForm(normalized: string): string | undefined {
-    const raw = this.value.trim().replace(ISBNType.PREFIX_REGEX, '').replace(/\s+/g, '').toUpperCase();
-    if (!raw.includes('-')) return undefined;
-    if (raw.replace(ISBNType.NOISE_REGEX, '') !== normalized) return undefined;
-    return raw;
-  }
-
   private isValid(normalized: string): boolean {
-    if (ISBNType.ISBN10_FORMAT.test(normalized)) return this.isValidIsbn10(normalized);
-    if (ISBNType.ISBN13_FORMAT.test(normalized)) return this.isValidIsbn13(normalized);
-    return false;
-  }
-
-  private isValidIsbn10(isbn: string): boolean {
-    let sum = 0;
-    for (let i = 0; i < 10; i++) {
-      const char = isbn[i];
-      const digit = i === 9 && char === 'X' ? 10 : Number(char);
-      if (!Number.isInteger(digit)) return false;
-      sum += (10 - i) * digit;
-    }
-    return sum % 11 === 0;
-  }
-
-  private isValidIsbn13(isbn: string): boolean {
-    if (!isbn.startsWith('978') && !isbn.startsWith('979')) return false;
-    let sum = 0;
-    for (let i = 0; i < 12; i++) {
-      const digit = Number(isbn[i]);
-      if (!Number.isInteger(digit)) return false;
-      sum += digit * (i % 2 === 0 ? 1 : 3);
-    }
-    const checksum = (10 - (sum % 10)) % 10;
-    return checksum === Number(isbn[12]);
+    return parse(normalized) !== null;
   }
 
   private getEnabledSourceNames(): string[] | undefined {
@@ -248,7 +216,7 @@ export class ISBNType extends GenericIdentifierType {
     }
     if (merged.pages) this.items.push(new FoldableItem(itemOrder++, 'Pages', String(merged.pages), 'Number of pages'));
 
-    (merged.authors || []).forEach(name => this.items.push(new FoldableItem(itemOrder, 'Author', name)));
+    (merged.authors || []).forEach(author => this.items.push(new FoldableItem(itemOrder, 'Author', formatAuthor(author))));
     if (merged.authors && merged.authors.length > 0) itemOrder++;
 
     if (merged.publishers && merged.publishers.length > 0) {

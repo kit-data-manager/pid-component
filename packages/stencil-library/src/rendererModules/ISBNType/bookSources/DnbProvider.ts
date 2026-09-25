@@ -1,3 +1,4 @@
+import { parseFullName } from './authors';
 import { BookMetadata, BookSourceProvider, IsbnLookup, decodeXmlEntities, fetchWithTimeout, hasAnyField } from './BookMetadata';
 
 export class DnbProvider implements BookSourceProvider {
@@ -37,8 +38,8 @@ export function parseDnbOaiDc(xml: string): Partial<BookMetadata> {
   const [title] = extract('title');
   if (title) metadata.title = title;
 
-  const creators = extract('creator');
-  if (creators.length > 0) metadata.authors = creators;
+  const creators = extract('creator').map(normalizeDnbCreator).filter((name): name is string => Boolean(name));
+  if (creators.length > 0) metadata.authors = creators.map(parseFullName);
 
   const publishers = extract('publisher');
   if (publishers.length > 0) metadata.publishers = publishers;
@@ -54,4 +55,17 @@ export function parseDnbOaiDc(xml: string): Partial<BookMetadata> {
   if (pages) metadata.pages = Number(pages);
 
   return metadata;
+}
+
+/**
+ * Cleans a DNB creator string by stripping role markers and stray brackets,
+ * e.g. "Knuth, Donald [Verfasser]", "Ritchie, Dennis Verfasser]",
+ * "[Kernighan, Brian W. [Verfasser]".
+ */
+export function normalizeDnbCreator(raw: string): string {
+  return raw
+    .replace(/[\[\]()]/g, '')
+    .replace(/\s*(Verfasser|Herausgeber|Autor)\b.*$/i, '')
+    .replace(/\s\s+/g, ' ')
+    .trim();
 }
