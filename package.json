@@ -14,7 +14,7 @@
     "@storybook/addon-vitest": "^10.6.0",
     "@storybook/angular": "^10.6.0",
     "@storybook/web-components-vite": "^10.6.0",
-    "@angular-devkit/build-angular": "22.1.8",
+    "@angular-devkit/build-angular": "22.2.0",
     "@angular/core": "22.1.7",
     "@angular/forms": "22.1.7",
     "@angular/common": "22.1.7",
