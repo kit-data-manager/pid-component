@@ -258,8 +258,10 @@ function toIsoDate(publishDate: string): string | undefined {
       // Full date present -> keep it; otherwise reduce to the first of month.
       const full = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
       if (full) {
+        const year = Number(full[1]);
         const day = Number(full[3]);
-        if (day >= 1 && day <= 31) return `${full[1]}-${full[2]}-${full[3]}`;
+        const lastDay = new Date(year, month, 0).getDate();
+        if (day >= 1 && day <= lastDay) return `${full[1]}-${full[2]}-${full[3]}`;
       }
       return `${monthDay[1]}-${monthDay[2]}-01`;
     }
