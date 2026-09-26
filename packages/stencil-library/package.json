@@ -113,6 +113,7 @@
     "test:spec": "stencil-test --project spec",
     "test:integration": "stencil-test --project unit SPDXType.integration",
     "test:e2e": "stencil-test --project browser",
+    "test:integration": "vitest run --config vitest.integration.config.mts",
     "generate": "stencil generate",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
@@ -122,6 +123,7 @@
   "dependencies": {
     "@stencil/core": "^4.45.0",
     "@tempfix/idb": "^8.0.3",
+    "isbn3": "^2.0.11",
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {

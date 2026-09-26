@@ -19,8 +19,18 @@ describe('DateType', () => {
       expect(dt.quickCheck()).toBe(true);
     });
 
-    it('returns false for plain date without time', () => {
+    it('returns true for a plain date without time', () => {
       const dt = new DateType(DATE_examples.DATE_ONLY);
+      expect(dt.quickCheck()).toBe(true);
+    });
+
+    it('returns false for a year-only value', () => {
+      const dt = new DateType('1988');
+      expect(dt.quickCheck()).toBe(false);
+    });
+
+    it('returns false for a year-month value', () => {
+      const dt = new DateType('2024-06');
       expect(dt.quickCheck()).toBe(false);
     });
 
@@ -67,6 +77,15 @@ describe('DateType', () => {
     it('completes without error for a valid date', async () => {
       const dt = new DateType(DATE_examples.ISO_8601_ALT);
       await expect(dt.init()).resolves.toBeUndefined();
+    });
+
+    it('parses a date-only value as a calendar date without timezone shift', async () => {
+      const dt = new DateType(DATE_examples.DATE_ONLY);
+      await dt.init();
+      expect(dt.renderPreview()).toBeTruthy();
+      // The underlying date keeps the exact calendar day in local time.
+      const d = dt as unknown as { _date: Date };
+      expect([d._date.getFullYear(), d._date.getMonth() + 1, d._date.getDate()]).toEqual([2024, 6, 15]);
     });
   });
 

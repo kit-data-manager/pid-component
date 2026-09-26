@@ -2,44 +2,25 @@ import { FunctionalComponent, h } from '@stencil/core';
 import { GenericIdentifierType } from '../../utils/GenericIdentifierType';
 import { FoldableItem } from '../../utils/FoldableItem';
 import { FoldableAction } from '../../utils/FoldableAction';
-
-interface OpenLibraryPerson {
-  name?: string;
-}
-
-interface OpenLibraryTextObject {
-  value?: string;
-}
-
-interface OpenLibraryExcerpt {
-  text?: string;
-}
-
-interface OpenLibraryBookData {
-  title?: string;
-  subtitle?: string;
-  authors?: OpenLibraryPerson[];
-  publish_date?: string;
-  publishers?: OpenLibraryPerson[];
-  number_of_pages?: number;
-  identifiers?: Record<string, string[]>;
-  url?: string;
-  info_url?: string;
-  preview_url?: string;
-  thumbnail_url?: string;
-  cover?: {
-    small?: string;
-    medium?: string;
-    large?: string;
-  };
-  notes?: string | OpenLibraryTextObject;
-  description?: string | OpenLibraryTextObject;
-  excerpts?: OpenLibraryExcerpt[];
-}
+import { hyphenate, parse } from 'isbn3';
+import {
+  AggregatedISBNMetadata,
+  ISBNSourceResult,
+  DEFAULT_ISBN_SOURCE_PRIORITY,
+  aggregateISBNMetadata,
+  createDefaultIsbnProviders,
+  formatAuthor,
+  getProviderAction,
+  selectIsbnProviders,
+} from './isbnMetadataSources';
 
 interface ISBNCachedData {
   isbn?: string;
-  bookData?: OpenLibraryBookData;
+  hyphenatedIsbn?: string;
+  aggregated?: {
+    merged: AggregatedISBNMetadata['merged'];
+    sources: ISBNSourceResult[];
+  };
 }
 
 /**
@@ -48,16 +29,21 @@ interface ISBNCachedData {
 export class ISBNType extends GenericIdentifierType {
   private static readonly PREFIX_REGEX = /^ISBN(?:-1[03])?:?\s*/i;
   private static readonly NOISE_REGEX = /[\s-]+/g;
-  private static readonly ISBN10_FORMAT = /^\d{9}[\dX]$/;
-  private static readonly ISBN13_FORMAT = /^\d{13}$/;
 
   private normalizedIsbn: string = '';
-  private bookData: OpenLibraryBookData | null = null;
+  private hyphenatedIsbn: string = '';
+  private aggregated: AggregatedISBNMetadata | null = null;
 
   get data(): string {
     return JSON.stringify({
       isbn: this.normalizedIsbn,
-      bookData: this.bookData ?? {},
+      hyphenatedIsbn: this.hyphenatedIsbn,
+      aggregated: this.aggregated
+        ? {
+            merged: this.aggregated.merged,
+            sources: this.aggregated.sources,
+          }
+        : undefined,
     });
   }
 
@@ -67,9 +53,7 @@ export class ISBNType extends GenericIdentifierType {
 
   quickCheck(): boolean {
     const normalized = this.normalizeInput(this.value);
-    if (ISBNType.ISBN10_FORMAT.test(normalized)) return this.isValidIsbn10(normalized);
-    if (ISBNType.ISBN13_FORMAT.test(normalized)) return this.isValidIsbn13(normalized);
-    return false;
+    return this.isValid(normalized);
   }
 
   async hasMeaningfulInformation(): Promise<boolean> {
@@ -77,22 +61,17 @@ export class ISBNType extends GenericIdentifierType {
     if (!this.isValid(normalized)) return false;
 
     this.normalizedIsbn = normalized;
-    const apiUrl = `https://openlibrary.org/api/books?bibkeys=ISBN:${encodeURIComponent(normalized)}&format=json&jscmd=data`;
+    this.hyphenatedIsbn = hyphenate(normalized) || normalized;
+    const allProviders = createDefaultIsbnProviders();
+    const enabled = this.getEnabledSourceNames();
+    const providers = selectIsbnProviders(allProviders, enabled);
+    const aggregated = await aggregateISBNMetadata({ isbn: normalized, hyphenated: this.hyphenatedIsbn }, providers);
+    if (!aggregated) return false;
+    if (!this.hasUsefulISBNMetadata(aggregated.merged)) return false;
 
-    try {
-      const response = await fetch(apiUrl);
-      if (!response.ok) return false;
-      const payload = (await response.json()) as Record<string, OpenLibraryBookData | undefined>;
-      const book = payload[`ISBN:${normalized}`];
-      if (!book) return false;
-      if (!this.hasUsefulBookMetadata(book)) return false;
+    this.aggregated = aggregated;
 
-      this.bookData = book;
-
-      return true;
-    } catch {
-      return false;
-    }
+    return true;
   }
 
   async init(data?: string): Promise<void> {
@@ -100,7 +79,7 @@ export class ISBNType extends GenericIdentifierType {
       this.loadFromCache(data);
     }
 
-    if (!this.bookData) {
+    if (!this.aggregated) {
       const success = await this.hasMeaningfulInformation();
       if (!success) {
         console.info(`ISBNType: No meaningful data found for ISBN ${this.normalizedIsbn}.`);
@@ -113,29 +92,27 @@ export class ISBNType extends GenericIdentifierType {
   }
 
   isResolvable(): boolean {
-    return this.bookData !== null;
+    return this.aggregated !== null;
   }
 
   renderPreview(): FunctionalComponent {
     return (
-      <span class={`inline-flex flex-nowrap items-baseline font-mono min-w-0 max-w-full ${this.isDarkMode ? 'text-gray-200' : ''}`}>
+      <span class={`inline-flex max-w-full min-w-0 flex-nowrap items-baseline font-mono ${this.isDarkMode ? 'text-gray-200' : ''}`}>
         <span class={'flex-none pr-2'}>📚</span>
-        <span class={'min-w-0 overflow-hidden text-ellipsis whitespace-nowrap'}>
-          {this.bookData?.title || `ISBN ${this.normalizedIsbn || this.value}`}
-        </span>
+        <span class={'min-w-0 overflow-hidden text-ellipsis whitespace-nowrap'}>{this.aggregated?.merged.title || `ISBN ${this.normalizedIsbn || this.value}`}</span>
       </span>
     );
   }
 
   renderBody(): FunctionalComponent | undefined {
-    const coverUrl = this.bookData?.cover?.medium || this.bookData?.cover?.small || this.bookData?.thumbnail_url;
+    const coverUrl = this.aggregated?.merged.coverUrl;
     if (!coverUrl) return undefined;
 
     return (
       <div class="flex w-full justify-center">
         <img
           src={coverUrl}
-          alt={`Cover preview for ${this.bookData?.title || this.normalizedIsbn}`}
+          alt={`Cover preview for ${this.aggregated?.merged.title || this.normalizedIsbn}`}
           class="max-h-64 rounded border border-gray-200 object-contain"
           loading="lazy"
         />
@@ -147,107 +124,158 @@ export class ISBNType extends GenericIdentifierType {
     return value.trim().replace(ISBNType.PREFIX_REGEX, '').replace(ISBNType.NOISE_REGEX, '').toUpperCase();
   }
 
+  /**
+   * Validates a normalized (separators removed) ISBN-10 or ISBN-13 using the
+   * authoritative isbn3 parser. Returns true only for ISBNs whose checksum is
+   * valid AND which fall within a registered group/registrant range.
+   */
   private isValid(normalized: string): boolean {
-    if (ISBNType.ISBN10_FORMAT.test(normalized)) return this.isValidIsbn10(normalized);
-    if (ISBNType.ISBN13_FORMAT.test(normalized)) return this.isValidIsbn13(normalized);
-    return false;
+    return parse(normalized) !== null;
   }
 
-  private isValidIsbn10(isbn: string): boolean {
-    let sum = 0;
-    for (let i = 0; i < 10; i++) {
-      const char = isbn[i];
-      const digit = i === 9 && char === 'X' ? 10 : Number(char);
-      if (!Number.isInteger(digit)) return false;
-      sum += (10 - i) * digit;
+  private getEnabledSourceNames(): string[] | undefined {
+    const setting = this.settings.find(entry => entry.name === 'isbnSources');
+    const value = setting?.value;
+    if (Array.isArray(value)) {
+      const names = value.filter((name): name is string => typeof name === 'string' && name.trim().length > 0);
+      if (names.length > 0) return names;
     }
-    return sum % 11 === 0;
-  }
-
-  private isValidIsbn13(isbn: string): boolean {
-    if (!isbn.startsWith('978') && !isbn.startsWith('979')) return false;
-    let sum = 0;
-    for (let i = 0; i < 12; i++) {
-      const digit = Number(isbn[i]);
-      if (!Number.isInteger(digit)) return false;
-      sum += digit * (i % 2 === 0 ? 1 : 3);
+    if (typeof value === 'string' && value.trim().length > 0) {
+      return value
+        .split(',')
+        .map(name => name.trim())
+        .filter(Boolean);
     }
-    const checksum = (10 - (sum % 10)) % 10;
-    return checksum === Number(isbn[12]);
+    return undefined;
   }
 
-  private hasUsefulBookMetadata(book: OpenLibraryBookData): boolean {
-    return Boolean(
-      book.title ||
-      book.publish_date ||
-      (book.authors && book.authors.length > 0) ||
-      (book.publishers && book.publishers.length > 0),
-    );
+  private hasUsefulISBNMetadata(merged: AggregatedISBNMetadata['merged']): boolean {
+    return Boolean(merged.title || merged.publishDate || (merged.authors && merged.authors.length > 0) || (merged.publishers && merged.publishers.length > 0));
   }
 
   private loadFromCache(data: string): void {
     try {
       const parsed = JSON.parse(data) as ISBNCachedData;
       this.normalizedIsbn = parsed.isbn || this.normalizeInput(this.value);
-      this.bookData = parsed.bookData || null;
+      this.hyphenatedIsbn = parsed.hyphenatedIsbn || hyphenate(this.normalizedIsbn) || this.normalizedIsbn;
+      if (parsed.aggregated && parsed.aggregated.sources.length > 0) {
+        this.aggregated = { merged: parsed.aggregated.merged, sources: parsed.aggregated.sources };
+      }
     } catch {
       this.normalizedIsbn = this.normalizeInput(this.value);
+      this.hyphenatedIsbn = hyphenate(this.normalizedIsbn) || this.normalizedIsbn;
     }
+  }
+
+  /**
+   * Resolves the action label and ISBN-based URL for a source. Cache entries
+   * written before action labels/URLs existed fall back to the provider
+   * registry.
+   */
+  private resolveSourceAction(source: ISBNSourceResult): { actionLabel: string; actionUrl: string } {
+    const fallback = getProviderAction(source.name, this.normalizedIsbn);
+    return {
+      actionLabel: source.actionLabel || fallback?.actionLabel || `View on ${source.name}`,
+      actionUrl: source.actionUrl || fallback?.actionUrl || source.url || '',
+    };
   }
 
   private populateItems(): void {
-    if (!this.bookData) return;
+    const merged = this.aggregated?.merged;
+    if (!merged) return;
 
     this.items.push(
-      new FoldableItem(0, 'ISBN', this.normalizedIsbn, 'International Standard Book Number used to identify this publication', 'https://en.wikipedia.org/wiki/ISBN', undefined, false),
+      new FoldableItem(
+        0,
+        'ISBN',
+        this.hyphenatedIsbn || this.normalizedIsbn,
+        'International Standard Book Number used to identify this publication',
+        'https://en.wikipedia.org/wiki/ISBN',
+        undefined,
+        false,
+      ),
     );
-    this.items.push(new FoldableItem(1, 'Metadata Source', 'OpenLibrary', 'Metadata provided by OpenLibrary', 'https://openlibrary.org/developers/api'));
 
-    if (this.bookData.title) this.items.push(new FoldableItem(2, 'Title', this.bookData.title, 'Title of the publication'));
-    if (this.bookData.subtitle) this.items.push(new FoldableItem(3, 'Subtitle', this.bookData.subtitle, 'Subtitle of the publication'));
-    if (this.bookData.publish_date) this.items.push(new FoldableItem(4, 'Date', new Date(this.bookData.publish_date).toDateString(), 'Publication date'));
-    if (this.bookData.number_of_pages) this.items.push(new FoldableItem(5, 'Pages', String(this.bookData.number_of_pages), 'Number of pages'));
+    this.aggregated.sources.forEach((source, index) => {
+      const { actionUrl } = this.resolveSourceAction(source);
+      this.items.push(new FoldableItem(1 + index, 'Metadata Source', source.name, `Metadata fields provided by ${source.name}`, actionUrl || undefined));
+    });
+    let itemOrder = 1 + this.aggregated.sources.length;
 
-    (this.bookData.authors || [])
-      .map(author => author.name)
-      .filter((name): name is string => Boolean(name))
-      .map(name => new FoldableItem(6, 'Author', name))
-      .forEach((item) => this.items.push(item));
+    if (merged.title) this.items.push(new FoldableItem(itemOrder++, 'Title', merged.title, 'Title of the publication'));
+    if (merged.subtitle) this.items.push(new FoldableItem(itemOrder++, 'Subtitle', merged.subtitle, 'Subtitle of the publication'));
+    if (merged.publishDate) {
+      const isoDate = toIsoDate(merged.publishDate);
+      if (isoDate) {
+        this.items.push(new FoldableItem(itemOrder++, 'Date', isoDate, 'Publication date'));
+      }
+    }
+    if (merged.pages) this.items.push(new FoldableItem(itemOrder++, 'Pages', String(merged.pages), 'Number of pages'));
 
-    const publisherNames = (this.bookData.publishers || []).map(publisher => publisher.name).filter((name): name is string => Boolean(name));
-    if (publisherNames.length > 0) this.items.push(new FoldableItem(7, 'Publisher', publisherNames.join(', '), 'Publisher(s) of the publication'));
+    (merged.authors || []).forEach(author => this.items.push(new FoldableItem(itemOrder, 'Author', formatAuthor(author))));
+    if (merged.authors && merged.authors.length > 0) itemOrder++;
 
-    const summary = this.extractSummary();
-    if (summary) this.items.push(new FoldableItem(8, 'Abstract', summary, 'Brief description of the publication', undefined, undefined, false));
+    if (merged.publishers && merged.publishers.length > 0) {
+      this.items.push(new FoldableItem(itemOrder++, 'Publisher', merged.publishers.join(', '), 'Publisher(s) of the publication'));
+    }
+
+    if (merged.description) this.items.push(new FoldableItem(itemOrder, 'Abstract', merged.description, 'Brief description of the publication', undefined, undefined, false));
   }
 
   private populateActions(): void {
-    if (!this.bookData) return;
+    if (!this.aggregated) return;
 
-    const openLibraryUrl = this.bookData.url ? this.bookData.url : `https://openlibrary.org/isbn/${this.normalizedIsbn}`;
-    this.actions.push(new FoldableAction(0, 'View on OpenLibrary', openLibraryUrl, 'primary'));
+    this.aggregated.sources.forEach((source, index) => {
+      const { actionLabel, actionUrl } = this.resolveSourceAction(source);
+      if (actionUrl) {
+        this.actions.push(new FoldableAction(index, actionLabel, actionUrl, index === 0 ? 'primary' : 'secondary'));
+      }
+    });
+  }
+}
 
-    if (this.bookData.preview_url) {
-      this.actions.push(new FoldableAction(2, 'Open Preview', this.bookData.preview_url, 'secondary'));
+export { DEFAULT_ISBN_SOURCE_PRIORITY };
+
+/**
+ * Normalizes a publication date into a value the date subcomponent can
+ * render, or undefined when the value is not a usable date:
+ * - year-only (YYYY) stays as-is (rendered as a plain string)
+ * - year-month / year-month-unknown-day -> YYYY-MM-01
+ * - full dates and RFC 3339 datetimes -> YYYY-MM-DD
+ * - human-readable dates -> local YYYY-MM-DD (calendar date, no shift)
+ * - any other value -> undefined (callers omit the Date item)
+ */
+function toIsoDate(publishDate: string): string | undefined {
+  const value = publishDate.trim();
+  if (!value) return undefined;
+
+  if (/^\d{4}$/.test(value)) return value; // year only, rendered as text
+
+  const monthDay = value.match(/^(\d{4})-(\d{2})/);
+  if (monthDay) {
+    const month = Number(monthDay[2]);
+    if (month >= 1 && month <= 12) {
+      // Full date present -> keep it; otherwise reduce to the first of month.
+      const full = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (full) {
+        const year = Number(full[1]);
+        const day = Number(full[3]);
+        const lastDay = new Date(year, month, 0).getDate();
+        if (day >= 1 && day <= lastDay) return `${full[1]}-${full[2]}-${full[3]}`;
+      }
+      return `${monthDay[1]}-${monthDay[2]}-01`;
     }
+    return undefined;
   }
 
-  private extractSummary(): string | null {
-    if (!this.bookData) return null;
-
-    const fromDescription = this.extractText(this.bookData.description);
-    if (fromDescription) return fromDescription;
-
-    const fromNotes = this.extractText(this.bookData.notes);
-    if (fromNotes) return fromNotes;
-
-    const excerpt = this.bookData.excerpts?.find(item => item.text)?.text;
-    return excerpt || null;
+  const parsed = new Date(value);
+  if (!Number.isNaN(parsed.getTime())) {
+    // Format in local components to avoid a UTC timezone shift for
+    // date-only (no time) values like "Apr 02, 2017".
+    const year = parsed.getFullYear();
+    const month = String(parsed.getMonth() + 1).padStart(2, '0');
+    const day = String(parsed.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
-
-  private extractText(value: string | OpenLibraryTextObject | undefined): string | null {
-    if (!value) return null;
-    if (typeof value === 'string') return value;
-    return value.value || null;
-  }
+  return undefined;
 }

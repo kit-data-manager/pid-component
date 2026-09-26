@@ -1,0 +1,75 @@
+import { parseFullName } from './authors';
+import { ISBNMetadata, ISBNSourceProvider, ISBNLookup, decodeXmlEntities, fetchWithTimeout, hasAnyField } from './isbnMetadata';
+
+export class DnbProvider implements ISBNSourceProvider {
+  readonly name = 'DNB';
+  readonly actionLabel = 'View in DNB catalog';
+
+  isbnUrl(isbn: string): string {
+    return `https://portal.dnb.de/opac.htm?query=isbn:${isbn}`;
+  }
+
+  async fetch(lookup: ISBNLookup): Promise<Partial<ISBNMetadata> | null> {
+    // DNB normalizes hyphens itself, any ISBN spelling works.
+    const url = `https://services.dnb.de/sru/dnb?version=1.1&operation=searchRetrieve&query=${encodeURIComponent(`isbn=${lookup.isbn}`)}&recordSchema=oai_dc&maximumRecords=1`;
+    try {
+      const response = await fetchWithTimeout(url);
+      if (!response.ok) return null;
+      const xml = await response.text();
+      const metadata = parseDnbOaiDc(xml);
+      return hasAnyField(metadata) ? metadata : null;
+    } catch {
+      return null;
+    }
+  }
+}
+
+export function parseDnbOaiDc(xml: string): Partial<ISBNMetadata> {
+  const extract = (tag: string): string[] => {
+    const matches = xml.matchAll(new RegExp(`<dc:${tag}[^>]*>([\\s\\S]*?)</dc:${tag}>`, 'g'));
+    return Array.from(matches, match => decodeXmlEntities(match[1].trim())).filter(Boolean);
+  };
+
+  const idn = xml.match(/xsi:type="dnb:IDN"[^>]*>([^<]+)</)?.[1];
+  const metadata: Partial<ISBNMetadata> = {
+    sourceUrl: idn ? `https://d-nb.info/${idn.trim()}` : undefined,
+  };
+
+  const [title] = extract('title');
+  if (title) metadata.title = title;
+
+  const creators = extract('creator')
+    .map(normalizeDnbCreator)
+    .filter((name): name is string => Boolean(name));
+  if (creators.length > 0) metadata.authors = creators.map(parseFullName);
+
+  const publishers = extract('publisher');
+  if (publishers.length > 0) metadata.publishers = publishers;
+
+  const [date] = extract('date');
+  if (date) metadata.publishDate = date;
+
+  const subjects = extract('subject');
+  if (subjects.length > 0) metadata.subjects = subjects;
+
+  const [format] = extract('format');
+  const pages = format?.match(/(\d+)\s*[SpP]\b/)?.[1];
+  if (pages) metadata.pages = Number(pages);
+
+  return metadata;
+}
+
+/**
+ * Cleans a DNB creator string by stripping role markers and stray brackets,
+ * e.g. "Knuth, Donald [Verfasser]", "Ritchie, Dennis Verfasser]",
+ * "[Kernighan, Brian W. [Verfasser]".
+ */
+export function normalizeDnbCreator(raw: string): string {
+  return raw
+    .replace(/\[/g, '')
+    .replace(/\]/g, '')
+    .replace(/[()]/g, '')
+    .replace(/\s*(Verfasser|Herausgeber|Autor)\b.*$/i, '')
+    .replace(/\s\s+/g, ' ')
+    .trim();
+}
