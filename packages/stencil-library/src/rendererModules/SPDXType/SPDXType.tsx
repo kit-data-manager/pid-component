@@ -28,9 +28,7 @@ export class SPDXType extends GenericIdentifierType {
   private static readonly URL_REGEX = /^https?:\/\/spdx\.org\/licenses\/[\w.\-+]+\/?$/i;
   private licenseData: SPDXLicense | null = null;
   private licenseId: string = '';
-  private readonly corsFallback: boolean = true;
-  private readonly corsProxy: string = 'https://corsproxy.io/?';
-  private readonly spdxBaseUrl: string = 'https://spdx.org/licenses';
+  private readonly spdxBaseUrl: string = 'https://raw.githubusercontent.com/spdx/license-list-data/refs/heads/main/json/details';
   private readonly fileFormat: string = 'json';
   private readonly requestTimeout: number = 10000; // 10 seconds
 
@@ -97,12 +95,22 @@ export class SPDXType extends GenericIdentifierType {
     if (!this.licenseData) {
       const success = await this.hasMeaningfulInformation();
       if (!success) {
-        this.handleInitError(new Error('Failed to fetch SPDX license data'));
-        return;
+        // Fail so the caller can fall back to another renderer instead of
+        // showing a degraded view with a network warning.
+        throw new Error('Failed to fetch SPDX license data');
       }
     }
     this.populateLicenseData();
     this.addActionButtons();
+  }
+
+  /**
+   * SPDX is only resolvable once license details have actually been fetched.
+   * This prevents a failed probe/init from being cached in IndexedDB.
+   * @returns {boolean} Whether license data was successfully fetched.
+   */
+  isResolvable(): boolean {
+    return this.licenseData !== null;
   }
 
   /**
@@ -141,11 +149,7 @@ export class SPDXType extends GenericIdentifierType {
    * @returns The API URL
    */
   private buildLicenseApiUrl(licenseId: string): string {
-    const baseUrl = this.corsFallback
-      ? `${this.corsProxy}${encodeURIComponent(`${this.spdxBaseUrl}/${licenseId}.${this.fileFormat}`)}`
-      : `${this.spdxBaseUrl}/${licenseId}.${this.fileFormat}`;
-
-    return baseUrl;
+    return `${this.spdxBaseUrl}/${licenseId}.${this.fileFormat}`;
   }
 
   /**
@@ -252,7 +256,7 @@ export class SPDXType extends GenericIdentifierType {
 
     // Find the most official looking URL to use as a direct link
     const officialUrl = this.findOfficialUrl(this.licenseData.seeAlso) || this.licenseData.seeAlso[0];
-    this.actions.push(new FoldableAction(30, 'View Official License', officialUrl, 'secondary'));
+    this.actions.push(new FoldableAction(30, 'View license website', officialUrl, 'secondary'));
   }
 
   /**
@@ -271,60 +275,4 @@ export class SPDXType extends GenericIdentifierType {
     });
   }
 
-  /**
-   * Handles initialization errors
-   */
-  private handleInitError(error: { message: string }): void {
-    // Add meaningful error information
-    if (error.message && error.message.includes('CORS')) {
-      this.items.push(
-        new FoldableItem(
-          0,
-          'Error',
-          `CORS error: Cannot access SPDX API due to cross-origin restrictions. The proxy service may be unavailable.`,
-          'This is a browser security restriction. Try again later or use a different browser.',
-        ),
-      );
-    } else {
-      this.items.push(new FoldableItem(0, 'Error', `Failed to fetch data from SPDX API: ${error.message}`));
-    }
-
-    this.addBasicErrorInfo();
-    this.addNetworkIssueInfo();
-
-    // Create minimal fallback data structure for render functions
-    this.licenseData = {
-      licenseId: this.licenseId,
-      name: this.licenseId,
-    };
-  }
-
-  /**
-   * Adds basic error information
-   */
-  private addBasicErrorInfo(): void {
-    if (this.licenseId) {
-      this.items.push(new FoldableItem(10, 'License ID', this.licenseId, 'The license identifier that was detected'));
-      // Try to add a meaningful action even in error case
-      this.actions.push(new FoldableAction(10, 'View on SPDX', `https://spdx.org/licenses/${this.licenseId}`, 'primary'));
-    } else {
-      this.licenseId = this.value.replace(/^https?:\/\/spdx\.org\/licenses\//i, '').replace(/\/$/, '');
-      this.items.push(new FoldableItem(10, 'Possible License ID', this.licenseId, 'Extracted from the input value'));
-      this.actions.push(new FoldableAction(10, 'Search on SPDX', 'https://spdx.org/licenses/', 'primary'));
-    }
-  }
-
-  /**
-   * Adds network issue information
-   */
-  private addNetworkIssueInfo(): void {
-    this.items.push(
-      new FoldableItem(
-        20,
-        'Network Issue',
-        'The SPDX API could not be reached. This may be due to network connectivity issues or the SPDX service being unavailable.',
-        'Try again when you have internet connectivity',
-      ),
-    );
-  }
 }

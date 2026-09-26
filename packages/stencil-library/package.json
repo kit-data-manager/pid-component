@@ -111,6 +111,7 @@
     "test": "stencil-test --coverage",
     "test:watch": "stencil-test --watch",
     "test:spec": "stencil-test --project spec",
+    "test:integration": "stencil-test --project unit SPDXType.integration",
     "test:e2e": "stencil-test --project browser",
     "test:integration": "vitest run --config vitest.integration.config.mts",
     "generate": "stencil generate",

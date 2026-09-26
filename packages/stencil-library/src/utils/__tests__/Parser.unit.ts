@@ -265,6 +265,28 @@ describe('Parser', () => {
       expect(result).toBeNull();
     });
 
+    it('lets another renderer take the value when an uncertain renderer fails its API check (e.g. SPDX network failure)', async () => {
+      // Simulate SPDX: uncertain quick check, but no meaningful info because the
+      // network/API check failed. A fallback renderer remains meaningful.
+      mockRenderers.forEach(r => {
+        r.constructor = createMockConstructor({ key: r.key, quickResult: false, meaningfulInfoResult: false });
+      });
+      mockRenderers[2].constructor = createMockConstructor({
+        key: 'SPDXType',
+        quickResult: undefined,
+        meaningfulInfoResult: false, // API/network check failed
+      });
+      mockRenderers[4].constructor = createMockConstructor({
+        key: 'FallbackType',
+        quickResult: true,
+        meaningfulInfoResult: true,
+      });
+
+      const result = await Parser.getBestFit('Apache-2.0', emptySettings);
+      expect(result).not.toBeNull();
+      expect(result!.getSettingsKey()).toBe('FallbackType');
+    });
+
     it('in ordered mode, uses hasMeaningfulInformation when quickCheck is undefined', async () => {
       // DOIType: quickResult=undefined, asyncResult=true
       const result = await Parser.getBestFit('value', emptySettings, ['DOIType'], false);
