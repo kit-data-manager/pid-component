@@ -66,3 +66,42 @@ export const ISBN_3: Story = {
     value: ISBN_examples.VALID_13_ISBN_3,
   },
 };
+
+/**
+ * Demonstrates multi-source aggregation: the ISBN is resolved in parallel
+ * from Open Library, Wikidata, and DNB and merged field-wise. Each
+ * contributing source appears as a "Metadata source" row with its own
+ * "View on …" action; authors are deduplicated across sources and ordered
+ * deterministically.
+ */
+export const AggregatedMultiSource: Story = {
+  name: 'Aggregated from multiple sources (K&R C)',
+  args: {
+    value: ISBN_examples.AGGREGATED_MULTI_SOURCE,
+    openByDefault: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Resolved in parallel from Open Library, Wikidata, and DNB, then merged field-wise. Each contributing source appears as a "Metadata source" row with its own "View on …" action; authors are deduplicated across sources and ordered deterministically.',
+      },
+    },
+  },
+};
+
+export const AggregatedMultiSourceTAOCP: Story = {
+  name: 'Aggregated from multiple sources (TAOCP v1)',
+  args: {
+    value: ISBN_examples.TAOCP_AGGREGATED_MULTI_SOURCE,
+    openByDefault: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Resolved in parallel from Open Library, Wikidata, and DNB, then merged field-wise. Each contributing source appears as a "Metadata source" row with its own "View on …" action; authors are deduplicated across sources and ordered deterministically.',
+      },
+    },
+  },
+};
