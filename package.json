@@ -60,7 +60,7 @@
     "pacote": "21.5.1",
     "smol-toml": "1.9.0",
     "ip-address": "10.7.2",
-    "@hono/node-server": "2.1.0",
+    "@hono/node-server": "2.1.1",
     "undici": "7.29.1",
     "nx": {
       "brace-expansion": "5.0.9"
