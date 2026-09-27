@@ -28,6 +28,7 @@
   },
   "scripts": {
     "build": "ngc -p tsconfig.json --outDir ./dist",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
     "storybook": "ng run angular-pid-component:storybook --no-open",
     "build-storybook": "ng run angular-pid-component:build-storybook"
   },

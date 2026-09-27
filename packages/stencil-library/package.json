@@ -109,6 +109,7 @@
     "buildWatch": "stencil build --docs --watch",
     "start": "stencil build --dev --watch --serve",
     "test": "stencil-test --coverage",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
     "test:watch": "stencil-test --watch",
     "test:spec": "stencil-test --project spec",
     "test:integration": "vitest run --config vitest.integration.config.mts",

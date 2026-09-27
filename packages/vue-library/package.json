@@ -28,6 +28,7 @@
   },
   "scripts": {
     "build": "tsc -p . --outDir ./dist",
+    "typecheck": "tsc -p . --noEmit",
     "storybook": "storybook dev -p 6008 --no-open",
     "build-storybook": "storybook build -o storybook-static"
   },
