@@ -80,7 +80,7 @@ export class JSONType extends GenericIdentifierType {
     );
   }
 
-  renderBody(): FunctionalComponent<never> {
+  renderBody(): FunctionalComponent<unknown> {
     const { data: parsedData, error } = this.getParsedJson();
     const darkModeValue = (this.settings?.find(setting => setting.name === 'darkMode')?.value as 'light' | 'dark' | 'system') || 'system';
 

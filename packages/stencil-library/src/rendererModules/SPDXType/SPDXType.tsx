@@ -116,7 +116,7 @@ export class SPDXType extends GenericIdentifierType {
   /**
    * Renders a preview of the SPDX license
    */
-  renderPreview(): FunctionalComponent {
+  renderPreview(): FunctionalComponent<unknown> {
     // If data is not yet loaded, show the SPDX ID
     if (!this.licenseData) {
       return <span class={`font-mono text-sm`}>SPDX: {this.licenseId || this.value}</span>;

@@ -24,7 +24,7 @@ export class URLType extends GenericIdentifierType {
     return Promise.resolve();
   }
 
-  renderPreview(): FunctionalComponent {
+  renderPreview(): FunctionalComponent<unknown> {
     return (
       <a href={this.value} target="_blank" rel={'noopener noreferrer'} class={`font-mono text-sm text-blue-400`}>
         {this.value}
