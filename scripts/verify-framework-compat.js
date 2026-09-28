@@ -16,8 +16,15 @@
  *   node scripts/verify-framework-compat.js react 18   # run a single leg
  *
  * Environment:
- *   KEEP_TMP=1  keep the temporary consumer directory for inspection
- *   TS_VERSION  override the TypeScript version used by the consumer
+ *   KEEP_TMP=1          keep the temporary consumer directory for inspection
+ *   TS_VERSION          override the TypeScript version used by every leg
+ *   PREBUILT_TARBALLS   directory containing pre-packed tarballs (used by CI to
+ *                       skip the `npm pack` step in the split build/verify jobs)
+ *
+ * The consumer project is type-checked with full checking (no skipLibCheck) so
+ * that errors inside published .d.ts files surface. Angular < 22 requires TS <
+ * 6.0, so those legs use an in-range TS by default (see TS_BY_LEG); everything
+ * else uses the current latest.
  *
  * Prerequisite: `npm run build` must have been run so that
  * `packages/stencil-library/dist` and `packages/*-library/dist` exist.
@@ -32,8 +39,10 @@ const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..');
 
 const STENCIL_PKG = 'packages/stencil-library';
+const STENCIL_PACKAGE_NAME = '@kit-data-manager/pid-component';
 
-// framework legs derived from the peer ranges in each wrapper package.json.
+// Default legs, used when no framework/version arguments are passed. The CI
+// workflow (framework-compat.yml) declares the same legs inline in its matrix.
 const LEGS = [
   { framework: 'angular', consumer: '20' },
   { framework: 'angular', consumer: '21' },
@@ -42,6 +51,22 @@ const LEGS = [
   { framework: 'react', consumer: '19' },
   { framework: 'vue', consumer: '3' },
 ];
+
+// Default TypeScript version per leg. Angular < 22 only supports TS < 6.0
+// (see @angular/compiler-cli peer ranges), so we pin an in-range TS for those
+// legs to reflect the pairing a real consumer can actually use. Everything else
+// uses the current latest, and TS_VERSION overrides everything.
+const DEFAULT_TS = '6.0.3';
+const TS_BY_LEG = {
+  'angular@20': '~5.8',
+  'angular@21': '~5.9',
+  'angular@22': '~6.0',
+};
+
+function tsForLeg(leg) {
+  const key = `${leg.framework}@${leg.consumer}`;
+  return process.env.TS_VERSION || TS_BY_LEG[key] || DEFAULT_TS;
+}
 
 const WRAPPERS = {
   angular: {
@@ -56,7 +81,7 @@ import { PidComponent } from '@kit-data-manager/angular-pid-component';
 @Component({
   selector: 'compat-consumer',
   imports: [PidComponent],
-  template: '<pid-component pid="10.5072/12345"></pid-component>',
+  template: '<pid-component value="10.5072/12345"></pid-component>',
 })
 export class ConsumerComponent {}
 `,
@@ -70,14 +95,14 @@ export class ConsumerComponent {}
 import { PidComponent } from '@kit-data-manager/react-pid-component';
 
 export function Consumer() {
-  return <PidComponent pid="10.5072/12345" />;
+  return <PidComponent value="10.5072/12345" />;
 }
 `,
   },
   vue: {
     dir: 'packages/vue-library',
     packageName: '@kit-data-manager/vue-pid-component',
-    deps: () => ['vue@^3.0.0'],
+    deps: () => ['vue@^3.0.0', 'vue-router@^4'],
     source: 'consumer.ts',
     sourceText: `
 import { defineComponent } from 'vue';
@@ -86,7 +111,7 @@ import { PidComponent } from '@kit-data-manager/vue-pid-component';
 export const Consumer = defineComponent({
   name: 'compat-consumer',
   components: { PidComponent },
-  template: '<pid-component pid="10.5072/12345"></pid-component>',
+  template: '<pid-component value="10.5072/12345"></pid-component>',
 });
 `,
   },
@@ -101,7 +126,19 @@ function run(cmd, args, opts = {}) {
   });
 }
 
-function pack(dir, dest) {
+// Returns the packed tarball path for a package dir. When PREBUILT_TARBALLS is
+// set (CI split build/verify), it reuses a tarball packed by the earlier build
+// job instead of packing again, so the verify job does not need the monorepo.
+function pack(dir, dest, packageName) {
+  const prebuiltDir = process.env.PREBUILT_TARBALLS;
+  if (prebuiltDir) {
+    const name = packageName.replace('@', '').replace('/', '-');
+    const tarball = fs.readdirSync(prebuiltDir).find(f => f.startsWith(name) && f.endsWith('.tgz'));
+    if (!tarball) {
+      throw new Error(`No prebuilt tarball for ${packageName} in ${prebuiltDir}`);
+    }
+    return path.join(prebuiltDir, tarball);
+  }
   const stdout = run('npm', ['pack', path.join(ROOT, dir), '--pack-destination', dest], { cwd: ROOT });
   const lines = stdout.trim().split('\n');
   const filename = lines[lines.length - 1].trim();
@@ -137,7 +174,6 @@ function consumerProject(tmp, leg) {
           jsx: wrapper.source.endsWith('.tsx') ? 'react-jsx' : undefined,
           experimentalDecorators: wrapper.framework === 'angular',
           strict: true,
-          skipLibCheck: true,
           noEmit: true,
           forceConsistentCasingInFileNames: true,
         },
@@ -149,8 +185,8 @@ function consumerProject(tmp, leg) {
   );
 }
 
-function install(tmp, tarballs, deps) {
-  const args = ['install', '--prefix', tmp, '--no-audit', '--no-fund', '--ignore-scripts', ...tarballs, ...deps, `typescript@${process.env.TS_VERSION || '6.0.3'}`];
+function install(tmp, tarballs, deps, tsVersion) {
+  const args = ['install', '--prefix', tmp, '--no-audit', '--no-fund', '--ignore-scripts', ...tarballs, ...deps, `typescript@${tsVersion}`];
   return run('npm', args, { cwd: tmp });
 }
 
@@ -164,6 +200,7 @@ function typeCheck(tmp) {
 
 function verifyLeg(leg, keep) {
   const label = `${leg.framework}@${leg.consumer}`;
+  const tsVersion = tsForLeg(leg);
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), `pid-compat-${label.replace('/', '-')}-`));
   try {
     const wrapper = WRAPPERS[leg.framework];
@@ -171,12 +208,12 @@ function verifyLeg(leg, keep) {
     fs.mkdirSync(packs, { recursive: true });
 
     console.log(`  packing stencil + ${leg.framework} wrapper...`);
-    const stencilTarball = pack(STENCIL_PKG, packs);
-    const wrapperTarball = pack(wrapper.dir, packs);
+    const stencilTarball = pack(STENCIL_PKG, packs, STENCIL_PACKAGE_NAME);
+    const wrapperTarball = pack(wrapper.dir, packs, wrapper.packageName);
 
-    console.log(`  installing consumer with ${wrapper.packageName} + ${label}...`);
+    console.log(`  installing consumer with ${wrapper.packageName} + ${label} (TS ${tsVersion})...`);
     consumerProject(tmp, leg);
-    install(tmp, [stencilTarball, wrapperTarball], wrapper.deps(leg.consumer));
+    install(tmp, [stencilTarball, wrapperTarball], wrapper.deps(leg.consumer), tsVersion);
 
     console.log(`  type-checking consumer project (tsc --noEmit)...`);
     typeCheck(tmp);
@@ -213,7 +250,7 @@ function main() {
     process.exit(2);
   }
 
-  console.log(`Verifying framework compatibility (TypeScript ${process.env.TS_VERSION || '6.0.3'})`);
+  console.log(`Verifying framework compatibility (TypeScript per leg; override with TS_VERSION)`);
   let failures = 0;
   for (const leg of legs) {
     if (!verifyLeg(leg, keep)) failures++;
