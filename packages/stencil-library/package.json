@@ -89,6 +89,11 @@
       "require": "./dist/index.cjs.js",
       "default": "./dist/index.js"
     },
+    "./dist/components": {
+      "types": "./dist/types/components.d.ts",
+      "import": "./dist/components/index.js",
+      "default": "./dist/components/index.js"
+    },
     "./dist/*": {
       "import": "./dist/*",
       "types": "./dist/*"
