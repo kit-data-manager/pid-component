@@ -66,7 +66,7 @@ describe('SPDX license API (integration)', () => {
     const meaningful = await st.hasMeaningfulInformation();
 
     expect(meaningful).toBe(true);
-    expect(st.licenseId).toBe('Apache-2.0');
+    expect(st.data?.licenseId).toBe('Apache-2.0');
     expect(st.data?.name).toBe('Apache License 2.0');
     expect(st.data?.licenseId).toBe('Apache-2.0');
   }, PER_TEST_TIMEOUT);
