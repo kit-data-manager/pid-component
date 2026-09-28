@@ -36,11 +36,16 @@
   "scripts": {
     "build": "npm run tsc",
     "tsc": "tsc -p . --outDir ./dist",
+    "typecheck": "tsc -p . --noEmit",
     "storybook": "storybook dev -p 6007 --no-open",
     "build-storybook": "storybook build -o storybook-static"
   },
   "bugs": {
     "url": "https://github.com/kit-data-manager/pid-component/issues"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
   },
   "publishConfig": {
     "access": "public"

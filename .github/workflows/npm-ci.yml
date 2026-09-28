@@ -32,6 +32,8 @@ jobs:
         run: npm run build-storybook
       - name: Lint code
         run: npm run lint
+      - name: Type-check packages
+        run: npm run typecheck
       - name: Run all tests (Stencil spec + E2E + Storybook)
         id: test
         run: npm test

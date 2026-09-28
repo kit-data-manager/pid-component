@@ -4,7 +4,7 @@ import { FunctionalComponent, h } from '@stencil/core';
  * Maps DataCite resource types to icons and display names
  */
 export interface ResourceTypeInfo {
-  icon: FunctionalComponent;
+  icon: FunctionalComponent<unknown>;
   displayName: string;
 }
 

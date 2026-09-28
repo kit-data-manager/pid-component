@@ -105,7 +105,7 @@ export class HandleType extends GenericIdentifierType {
     return this._pidRecord.values.length > 0;
   }
 
-  renderPreview(): FunctionalComponent {
+  renderPreview(): FunctionalComponent<unknown> {
     return (
       <span class={'font-mono font-bold align-baseline'}>
         {this._parts.map(element => {

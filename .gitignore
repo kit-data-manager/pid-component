@@ -10,6 +10,24 @@ packages/examples
 packages/stencil-library/test-results.junit.xml
 packages/vue-library/.output
 
+# Collocated TypeScript/stencil emit artifacts.
+# Regenerated on `npm run build` / a stray `tsc -p` without --outDir; never commit.
+# Scoped to source/sample dirs so the legitimate *.config.js files at package
+# roots (postcss.config.js, eslint.config.js, ...) stay tracked.
+**/*.js.map
+**/src/**/*.js
+**/src/**/*.d.ts
+**/lib/**/*.js
+**/lib/**/*.d.ts
+**/demo/**/*.js
+**/demo/**/*.d.ts
+**/stories/**/*.js
+**/stories/**/*.d.ts
+**/examples/**/*.js
+**/examples/**/*.d.ts
+**/app/**/*.js
+**/app/**/*.d.ts
+
 *~
 *.sw[mnpcod]
 *.log

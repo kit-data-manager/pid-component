@@ -89,6 +89,11 @@
       "require": "./dist/index.cjs.js",
       "default": "./dist/index.js"
     },
+    "./dist/components": {
+      "types": "./dist/types/components.d.ts",
+      "import": "./dist/components/index.js",
+      "default": "./dist/components/index.js"
+    },
     "./dist/*": {
       "import": "./dist/*",
       "types": "./dist/*"
@@ -109,11 +114,11 @@
     "buildWatch": "stencil build --docs --watch",
     "start": "stencil build --dev --watch --serve",
     "test": "stencil-test --coverage",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
     "test:watch": "stencil-test --watch",
     "test:spec": "stencil-test --project spec",
-    "test:integration": "stencil-test --project unit SPDXType.integration",
-    "test:e2e": "stencil-test --project browser",
     "test:integration": "vitest run --config vitest.integration.config.mts",
+    "test:e2e": "stencil-test --project browser",
     "generate": "stencil generate",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
