@@ -137,7 +137,10 @@ function pack(dir, dest, packageName) {
     if (!tarball) {
       throw new Error(`No prebuilt tarball for ${packageName} in ${prebuiltDir}`);
     }
-    return path.join(prebuiltDir, tarball);
+    // Resolve to an absolute path: npm is later invoked with --prefix pointing at
+    // a temp dir, so a relative tarball path would be resolved against that dir and
+    // mistakenly interpreted as a git spec (e.g. tarballs/foo.tgz -> github...).
+    return path.resolve(prebuiltDir, tarball);
   }
   const stdout = run('npm', ['pack', path.join(ROOT, dir), '--pack-destination', dest], { cwd: ROOT });
   const lines = stdout.trim().split('\n');
