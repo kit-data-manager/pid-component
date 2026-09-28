@@ -26,6 +26,17 @@ export default defineVitestConfig({
         },
       },
       {
+        // Live-API integration tests (SPDX, ISBN). Included by default so the
+        // real services are exercised on every run; can be run in isolation via
+        // `npm run test:integration`.
+        test: {
+          name: 'integration',
+          include: ['src/**/*.integration.ts'],
+          environment: 'node',
+          testTimeout: 120000,
+        },
+      },
+      {
         oxc: {
           jsx: { runtime: 'classic', pragma: 'h', pragmaFrag: 'Fragment' },
         },
@@ -83,6 +94,7 @@ export default defineVitestConfig({
         'src/**/*.spec.tsx',
         'src/**/*.test.tsx',
         'src/**/*.source.spec.tsx',
+        'src/**/*.integration.tsx',
         'src/**/__tests__/**',
         'src/components.d.ts',
         'src/utils/__tests__/axe-helper.ts',
