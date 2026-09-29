@@ -43,16 +43,24 @@ export interface DurationParts {
   hasTime: boolean;
 }
 
-/** Matches a full calendar date with time (timezone optional). */
+/**
+ * Matches a full calendar date (optionally with a time and timezone).
+ * Non-capturing inner groups keep the capture indices predictable:
+ *   [1] date  [2] hour  [3] minute  [4] seconds(+fraction)  [5] timezone
+ */
 const DATETIME_REGEX =
-  /^(?<year>[0-9]{4})-(?<month>0[1-9]|1[0-2])-(?<day>0[1-9]|[12][0-9]|3[01])(T(?<hour>[01][0-9]|2[0-3]):(?<minute>[0-5][0-9]):(?<second>[0-5][0-9]|60)(?<fraction>\.\d+)?(?<tz>[zZ]|[+-]([01][0-9]|2[0-3]):?[0-5][0-9])?)?$/;
+  /^(\d{4}-\d{2}-\d{2})(?:T(\d{2}):(\d{2}):(\d{2}(?:\.\d+)?|60(?:\.\d+)?)(?:([zZ]|[+-]\d{2}(?::?\d{2})?))?)?$/;
 
-/** Matches a reduced-precision date (YYYY or YYYY-MM). */
-const REDUCED_DATE_REGEX = /^(?<year>[0-9]{4})(?<month>-0[1-9]|-1[0-2])?$/;
+/** Matches a reduced-precision date (YYYY or YYYY-MM). [1] year [2] month(-MM). */
+const REDUCED_DATE_REGEX = /^(\d{4})(?:-(0[1-9]|1[0-2]))?$/;
 
-/** Matches an ISO 8601 duration (calendar + clock, or week-only form). */
+/**
+ * Matches an ISO 8601 duration (calendar + clock, or week-only form).
+ * Non-capturing inner groups keep the capture indices predictable:
+ *   [1] years  [2] months  [3] weeks  [4] days  [5] hours  [6] minutes  [7] seconds
+ */
 const DURATION_REGEX =
-  /^P(?:(?<years>\d+(?:\.\d+)?)Y)?(?:(?<months>\d+(?:\.\d+)?)M)?(?:(?<weeks>\d+(?:\.\d+)?)W)?(?:(?<days>\d+(?:\.\d+)?)D)?(?:T(?:(?<hours>\d+(?:\.\d+)?)H)?(?:(?<minutes>\d+(?:\.\d+)?)M)?(?:(?<seconds>\d+(?:\.\d+)?)S)?)?$/;
+  /^P(?:(\d+(?:\.\d+)?)Y)?(?:(\d+(?:\.\d+)?)M)?(?:(\d+(?:\.\d+)?)W)?(?:(\d+(?:\.\d+)?)D)?(?:T(?:(\d+(?:\.\d+)?)H)?(?:(\d+(?:\.\d+)?)M)?(?:(\d+(?:\.\d+)?)S)?)?$/;
 
 /** Day-of-month limits per month, accounting for leap years. */
 function daysInMonth(year: number, month: number): number {
@@ -65,14 +73,13 @@ function daysInMonth(year: number, month: number): number {
  */
 export function parseReducedDate(value: string): DateTimeParts | null {
   const m = REDUCED_DATE_REGEX.exec(value);
-  if (!m || !m.groups) return null;
-  const { year: gYear, month: gMonth } = m.groups;
-  const year = Number(gYear);
+  if (!m) return null;
+  const year = Number(m[1]);
   if (year < 0 || year > 9999) return null;
-  if (!gMonth) {
+  if (!m[2]) {
     return { date: value, year, hasTime: false, isReduced: true };
   }
-  const month = Number(gMonth.slice(1));
+  const month = Number(m[2]);
   return {
     date: value,
     year,
@@ -90,35 +97,39 @@ export function parseReducedDate(value: string): DateTimeParts | null {
  */
 export function parseDatetime(value: string): DateTimeParts | null {
   const m = DATETIME_REGEX.exec(value);
-  if (!m || !m.groups) return null;
-  const g = m.groups;
+  if (!m) return null;
 
-  const year = Number(g.year);
-  const month = Number(g.month);
-  const day = Number(g.day);
-  if (year < 0 || year > 9999) return null;
+  // Date part is always `YYYY-MM-DD`.
+  const dateComponents = m[1].split('-').map(Number);
+  const year = dateComponents[0];
+  const month = dateComponents[1];
+  const day = dateComponents[2];
+  if (month < 1 || month > 12) return null;
   if (day > daysInMonth(year, month)) return null;
 
-  const hasTime = g.hour !== undefined;
+  const hasTime = m[2] !== undefined;
 
   let time: string | undefined;
   let timezoneOffsetMinutes: number | undefined;
 
   if (hasTime) {
-    const hour = Number(g.hour);
-    const minute = Number(g.minute);
-    let second: number;
-    if (g.second === '60') {
-      if (!(hour === 23 && minute === 59)) return null;
-      second = 60;
-    } else {
-      second = Number(g.second);
+    const hour = Number(m[2]);
+    const minute = Number(m[3]);
+    if (hour > 23 || minute > 59) return null;
+
+    const secondToken = String(m[4]);
+    let second: string;
+    const secNum = Number(secondToken);
+    if (secNum > 59) {
+      // 60 is only permitted as a leap second at 23:59 UTC.
+      if (!(secNum === 60 && hour === 23 && minute === 59)) return null;
     }
+    // `secondToken` is already `\d{2}(?:\.\d+)?`, so use it directly.
+    second = secondToken;
 
-    const frac = g.fraction ?? '';
-    time = `${g.hour}:${g.minute}:${g.second}${frac}`;
+    time = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:${second}`;
 
-    const tz = g.tz;
+    const tz = m[5];
     if (tz !== undefined) {
       if (/^[zZ]$/.test(tz)) {
         timezoneOffsetMinutes = 0;
@@ -133,9 +144,7 @@ export function parseDatetime(value: string): DateTimeParts | null {
     }
   }
 
-  const date = `${String(year).padStart(4, '0')}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-
-  return { date, year, month, day, time, timezoneOffsetMinutes, hasTime, isReduced: false };
+  return { date: m[1], year, month, day, time, timezoneOffsetMinutes, hasTime, isReduced: false };
 }
 
 /**
@@ -144,16 +153,15 @@ export function parseDatetime(value: string): DateTimeParts | null {
  */
 export function parseDuration(value: string): DurationParts | null {
   const m = DURATION_REGEX.exec(value);
-  if (!m || !m.groups) return null;
-  const g = m.groups;
+  if (!m) return null;
 
-  const years = g.years !== undefined ? Number(g.years) : 0;
-  const months = g.months !== undefined ? Number(g.months) : 0;
-  const weeks = g.weeks !== undefined ? Number(g.weeks) : 0;
-  const days = g.days !== undefined ? Number(g.days) : 0;
-  const hours = g.hours !== undefined ? Number(g.hours) : 0;
-  const minutes = g.minutes !== undefined ? Number(g.minutes) : 0;
-  const seconds = g.seconds !== undefined ? Number(g.seconds) : 0;
+  const years = m[1] !== undefined ? Number(m[1]) : 0;
+  const months = m[2] !== undefined ? Number(m[2]) : 0;
+  const weeks = m[3] !== undefined ? Number(m[3]) : 0;
+  const days = m[4] !== undefined ? Number(m[4]) : 0;
+  const hours = m[5] !== undefined ? Number(m[5]) : 0;
+  const minutes = m[6] !== undefined ? Number(m[6]) : 0;
+  const seconds = m[7] !== undefined ? Number(m[7]) : 0;
 
   const hasAny =
     years > 0 || months > 0 || weeks > 0 || days > 0 || hours > 0 || minutes > 0 || seconds > 0;

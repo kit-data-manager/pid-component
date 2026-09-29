@@ -39,9 +39,9 @@ describe('DateType', () => {
       expect(dt.quickCheck()).toBe(false);
     });
 
-    it('returns false for date with time but no timezone', () => {
-      const dt = new DateType(DATE_examples.INVALID_NO_TIMEZONE);
-      expect(dt.quickCheck()).toBe(false);
+    it('returns true for date with time but no timezone (local datetime)', () => {
+      const dt = new DateType(DATE_examples.DATETIME_LOCAL);
+      expect(dt.quickCheck()).toBe(true);
     });
 
     it('returns false for empty string', () => {
@@ -86,6 +86,13 @@ describe('DateType', () => {
       // The underlying date keeps the exact calendar day in local time.
       const d = dt as unknown as { _date: Date };
       expect([d._date.getFullYear(), d._date.getMonth() + 1, d._date.getDate()]).toEqual([2024, 6, 15]);
+    });
+
+    it('treats a local datetime without timezone as local wall-clock time', async () => {
+      const dt = new DateType(DATE_examples.DATETIME_LOCAL);
+      await dt.init();
+      const d = dt as unknown as { _date: Date };
+      expect([d._date.getFullYear(), d._date.getMonth() + 1, d._date.getDate(), d._date.getHours(), d._date.getMinutes()]).toEqual([2024, 6, 15, 9, 30]);
     });
   });
 

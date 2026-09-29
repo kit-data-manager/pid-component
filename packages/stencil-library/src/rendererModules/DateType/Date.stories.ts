@@ -47,6 +47,13 @@ export const DateTimeShort: Story = {
   },
 };
 
+export const DateTimeLocal: Story = {
+  name: 'DateTime Local (no timezone)',
+  args: {
+    value: DATE_examples.DATETIME_LOCAL,
+  },
+};
+
 export const DarkMode: Story = {
   name: 'Dark Mode',
   args: {

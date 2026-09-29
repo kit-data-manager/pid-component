@@ -13,6 +13,10 @@ The Date renderer detects ISO 8601 date strings and renders them in a user-frien
 - Full ISO 8601: `2022-11-11T08:01:20.557+00:00`
 - Date only: `2024-06-15`
 - Date with time: `2024-06-15T09:30:00.000+02:00`
+- Local date with time (no timezone): `2024-06-15T09:30:00`
+
+Reduced-precision dates (`2023`, `2023-01`) are handled by the `ReducedDateType` renderer,
+and ISO 8601 durations (e.g. `P7DT2H`) by the `DurationType` renderer.
 
 ## Settings
 
@@ -39,6 +43,10 @@ No additional settings are required. The renderer uses the browser's locale defa
 ### DateTime Short
 
 <Canvas of={DateStories.DateTimeShort} />
+
+### DateTime Local (no timezone)
+
+<Canvas of={DateStories.DateTimeLocal} />
 
 ### Dark Mode
 
