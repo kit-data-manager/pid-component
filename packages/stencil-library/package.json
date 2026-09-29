@@ -126,6 +126,7 @@
     "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,md,mdx}\""
   },
   "dependencies": {
+    "@js-temporal/polyfill": "^0.4.4",
     "@stencil/core": "^4.45.0",
     "@tempfix/idb": "^8.0.3",
     "isbn3": "^2.0.11",
