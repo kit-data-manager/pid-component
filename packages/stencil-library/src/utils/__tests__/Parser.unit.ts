@@ -294,6 +294,74 @@ describe('Parser', () => {
       expect(result!.getSettingsKey()).toBe('DOIType');
     });
 
+    it('in ordered mode, does NOT commit a fully-quick renderer when its probe fails', async () => {
+      // ORCIDType matches format (quickResult=true) but the network/API probe
+      // fails. With fallbackToAll=false the lookup must not commit it.
+      mockRenderers[1].constructor = createMockConstructor({
+        key: 'ORCIDType',
+        quickResult: true,
+        meaningfulInfoResult: false,
+      });
+
+      const result = await Parser.getBestFit('value', emptySettings, ['ORCIDType'], false);
+      expect(result).toBeNull();
+    });
+
+    it('in ordered mode, falls through to the next listed renderer when the probe fails', async () => {
+      // First listed renderer matches format but its probe fails; the next one
+      // matches and resolves. The first must not win on a bare format match.
+      mockRenderers[1].constructor = createMockConstructor({
+        key: 'ORCIDType',
+        quickResult: true,
+        meaningfulInfoResult: false,
+      });
+      mockRenderers[4].constructor = createMockConstructor({
+        key: 'FallbackType',
+        quickResult: true,
+        meaningfulInfoResult: true,
+      });
+
+      const result = await Parser.getBestFit('value', emptySettings, ['ORCIDType', 'FallbackType'], false);
+      expect(result).not.toBeNull();
+      expect(result!.getSettingsKey()).toBe('FallbackType');
+    });
+
+    it('in ordered mode with fallbackToAll=true falls back to the full registry when a listed probe fails', async () => {
+      // ORCIDType is listed and quick-matches, but its probe fails. With
+      // fallback the full registry is retried and the highest-priority
+      // meaningful candidate (DOIType) wins.
+      mockRenderers[1].constructor = createMockConstructor({
+        key: 'ORCIDType',
+        quickResult: true,
+        meaningfulInfoResult: false,
+      });
+
+      const result = await Parser.getBestFit('value', emptySettings, ['ORCIDType'], true);
+      expect(result).not.toBeNull();
+      expect(result!.getSettingsKey()).toBe('DOIType');
+    });
+
+    it('in ordered mode, a renderer whose init() rejects does not abort the lookup', async () => {
+      // Simulate the reviewer's literal concern: a fully-quick renderer probes
+      // successfully but then throws during init(). This must not propagate.
+      const throwingInit = vi.fn().mockImplementation(function(value: string) {
+        return {
+          value,
+          quickCheck: vi.fn().mockReturnValue(true),
+          hasMeaningfulInformation: vi.fn().mockResolvedValue(true),
+          init: vi.fn().mockRejectedValue(new Error('boom')),
+          getSettingsKey: vi.fn().mockReturnValue('ORCIDType'),
+          settings: undefined as unknown,
+          items: [],
+          actions: [],
+        };
+      });
+      mockRenderers[1].constructor = throwingInit;
+
+      // The rejection must be swallowed rather than aborting the lookup.
+      await expect(Parser.getBestFit('value', emptySettings, ['ORCIDType'], false)).resolves.toBeNull();
+    });
+
     it('warns on settings error but still returns the renderer', async () => {
       const badConstructor = vi.fn().mockImplementation(function(value: string) {
         return {
@@ -331,10 +399,26 @@ describe('Parser', () => {
       expect(priority).toBe(1);
     });
 
-    it('returns 0 when the first renderer matches', async () => {
-      mockRenderers[0].constructor = createMockConstructor({ key: 'DateType', quickResult: true });
+    it('returns 0 when the first renderer matches and resolves', async () => {
+      mockRenderers[0].constructor = createMockConstructor({
+        key: 'DateType',
+        quickResult: true,
+        meaningfulInfoResult: true,
+      });
       const priority = await Parser.getEstimatedPriority('value');
       expect(priority).toBe(0);
+    });
+
+    it('skips a quick-match renderer whose network probe fails', async () => {
+      // DateType (0) matches format but its probe fails; ORCIDType (1)
+      // matches format and resolves. A format match alone must not win.
+      mockRenderers[0].constructor = createMockConstructor({
+        key: 'DateType',
+        quickResult: true,
+        meaningfulInfoResult: false,
+      });
+      const priority = await Parser.getEstimatedPriority('value');
+      expect(priority).toBe(1);
     });
 
     it('falls back to async check when quick returns undefined', async () => {
