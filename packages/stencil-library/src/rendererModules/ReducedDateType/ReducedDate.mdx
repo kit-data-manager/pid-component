@@ -6,8 +6,10 @@ import * as ReducedDateStories from './ReducedDate.stories';
 
 # Reduced Date
 
-The Reduced Date renderer detects reduced-precision ISO 8601 dates: a year-only value
-(`2023`) or a year-month value (`2023-01`).
+The Reduced Date renderer handles **ISO 8601 reduced-precision dates**: a year-only
+value (`2023`) or a year-month value (`2023-01`). It rounds out the component's ISO
+8601-compliant date handling alongside `DateType` (full datetimes) and `DurationType`
+(ISO 8601 durations).
 
 > **Note:** This renderer is **not** auto-discovered by default. A bare year such as `2023`
 > can appear frequently as ordinary text and would be easy to mistake for a date during DOM

@@ -85,8 +85,7 @@ describe('DurationType', () => {
     it('returns a calculator after init', async () => {
       const dt = new DurationType('P7DT2H');
       await dt.init();
-      const body = dt.renderBody();
-      expect(body).toBeTruthy();
+      expect(dt.renderBody()).toBeTruthy();
     });
   });
 

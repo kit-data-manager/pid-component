@@ -6,12 +6,15 @@ import * as DurationStories from './Duration.stories';
 
 # Duration
 
-The Duration renderer detects ISO 8601 durations (e.g. `P7DT2H`), shows a humanized
-summary (e.g. "7 days, 2 hours"), and renders an interactive end-datetime calculator.
-Enter a start datetime and the component computes and displays the corresponding end
-datetime.
+The Duration renderer detects **ISO 8601 durations** (e.g. `P7DT2H`) as part of the
+component's ISO 8601-compliant date handling. It shows a humanized summary (e.g.
+"7 days, 2 hours"), and an interactive **end-datetime calculator**: enter a start
+datetime and the component computes and displays the corresponding end datetime using
+calendar-accurate Temporal arithmetic.
 
 ## Supported Formats
+
+ISO 8601 duration notation (`PnYnMnDTnHnMnS`):
 
 - Date + time: `P7DT2H`, `P1Y2M3DT4H5M6S`
 - Week form: `P2W`

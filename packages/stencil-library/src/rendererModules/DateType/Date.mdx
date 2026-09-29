@@ -6,7 +6,10 @@ import * as DateStories from './Date.stories';
 
 # Date
 
-The Date renderer detects ISO 8601 date strings and renders them in a user-friendly, locale-aware format. Dates are simple types with no expandable details.
+The Date renderer is fully **ISO 8601 / RFC 3339** compliant. It detects date and
+datetime strings and renders them in a user-friendly, locale-aware format. This includes
+incomplete forms such as a local datetime without a timezone (`2023-01-18T09:21:00`).
+Dates are simple types with no expandable details.
 
 ## Supported Formats
 
