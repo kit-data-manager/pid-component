@@ -25,7 +25,7 @@ export class EmailType extends GenericIdentifierType {
     return Promise.resolve();
   }
 
-  renderPreview(): FunctionalComponent {
+  renderPreview(): FunctionalComponent<unknown> {
     // mail icon from: https://heroicons.com/ (MIT license)
     return (
       <span class={`inline-flex gap-2 font-mono text-sm text-blue-400 hover:text-blue-500`}>

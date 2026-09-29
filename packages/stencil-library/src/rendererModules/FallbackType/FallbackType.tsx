@@ -18,7 +18,7 @@ export class FallbackType extends GenericIdentifierType {
     return Promise.resolve();
   }
 
-  renderPreview(): FunctionalComponent {
+  renderPreview(): FunctionalComponent<unknown> {
     return <span>{this.value}</span>;
   }
 

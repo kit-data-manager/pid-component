@@ -95,7 +95,7 @@ export class ISBNType extends GenericIdentifierType {
     return this.aggregated !== null;
   }
 
-  renderPreview(): FunctionalComponent {
+  renderPreview(): FunctionalComponent<unknown> {
     return (
       <span class={`inline-flex max-w-full min-w-0 flex-nowrap items-baseline font-mono ${this.isDarkMode ? 'text-gray-200' : ''}`}>
         <span class={'flex-none pr-2'}>📚</span>
@@ -104,7 +104,7 @@ export class ISBNType extends GenericIdentifierType {
     );
   }
 
-  renderBody(): FunctionalComponent | undefined {
+  renderBody(): FunctionalComponent<unknown> | undefined {
     const coverUrl = this.aggregated?.merged.coverUrl;
     if (!coverUrl) return undefined;
 

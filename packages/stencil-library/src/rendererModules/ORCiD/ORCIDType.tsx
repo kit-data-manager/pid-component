@@ -175,7 +175,7 @@ export class ORCIDType extends GenericIdentifierType {
     return this._orcidInfo.ORCiDJSON !== undefined;
   }
 
-  renderPreview(): FunctionalComponent {
+  renderPreview(): FunctionalComponent<unknown> {
     return (
       <span
         class={`inline-flex flex-nowrap items-baseline font-mono min-w-0 max-w-full ${this.isDarkMode ? 'text-gray-200' : ''}`}>

@@ -120,6 +120,13 @@ You can customize the behavior of specific renderers by passing a JSON configura
   - Options: `light`, `dark`, `system`.
   - Default: `system`.
 
+**SPDXType**
+
+- `requestTimeout` (number): Timeout in milliseconds for the SPDX license-detail fetch.
+  - Default: `10000`.
+- License details are fetched directly from the [spdx/license-list-data](https://github.com/spdx/license-list-data) raw JSON
+  (`json/details/{ID}.json` on `raw.githubusercontent.com`). This is necessary since SPDX.org does not ship CORS headers.
+
 ### Example Configuration
 
 ```html

@@ -201,7 +201,7 @@ export class RORType extends GenericIdentifierType {
    * Renders a preview of the ROR organization
    * @returns {FunctionalComponent} The preview component
    */
-  renderPreview(): FunctionalComponent {
+  renderPreview(): FunctionalComponent<unknown> {
     // If data is not yet loaded, show the ROR ID
     if (!this.rorData) {
       return <span class={`font-mono text-sm`}>Loading ROR: {this.value}...</span>;

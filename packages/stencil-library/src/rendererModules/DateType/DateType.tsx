@@ -43,7 +43,7 @@ export class DateType extends GenericIdentifierType {
     return Promise.resolve();
   }
 
-  renderPreview(): FunctionalComponent {
+  renderPreview(): FunctionalComponent<unknown> {
     return <span>{this._date.toLocaleString()}</span>;
   }
 }
