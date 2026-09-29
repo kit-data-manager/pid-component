@@ -214,12 +214,24 @@ export class Database {
     }
 
     renderer.settings = settings.find(value => value.type === renderer.getSettingsKey())?.values;
-    await renderer.init();
 
-    // Only cache in IndexedDB if the renderer resolved successfully.
-    // This prevents false positives (e.g. SPDX regex matching a random word)
-    // from being persisted and polluting the cache.
-    if (renderer.isResolvable()) {
+    // Guard init() so a renderer that throws during a fresh fetch (e.g. a
+    // timeout surfacing mid-render) cannot propagate up to the component and
+    // blank the whole view. We still return the renderer so the identifier
+    // stays visible (its preview renders from the probe data) rather than
+    // being treated as unmatched/hidden; we simply skip caching it.
+    let initOk = true;
+    try {
+      await renderer.init();
+    } catch (error) {
+      initOk = false;
+      console.error('Could not initialize renderer', renderer.getSettingsKey(), error);
+    }
+
+    // Only cache in IndexedDB if the renderer initialized without throwing and
+    // resolved successfully. This prevents false positives (e.g. SPDX regex
+    // matching a random word) from being persisted and polluting the cache.
+    if (initOk && renderer.isResolvable()) {
       await this.addEntity(renderer, orderedRendererKeys);
       console.debug('added entity to db', value, renderer);
     } else {

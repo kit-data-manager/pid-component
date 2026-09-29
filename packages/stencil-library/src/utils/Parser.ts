@@ -196,7 +196,12 @@ export class Parser {
 
     Parser.applySettings(best, settings);
 
-    await best.init();
+    // Guard init() so a renderer that throws after a successful probe (e.g.
+    // a timeout surfacing mid-render) cannot abort the whole lookup. Unlike
+    // the ordered branch (where we fall through to the next candidate), here
+    // we still return the best candidate so the view stays populated rather
+    // than being blanked/hidden.
+    await this.tryInit(best);
     return best;
   }
 
