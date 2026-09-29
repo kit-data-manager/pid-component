@@ -34,8 +34,7 @@ export class DurationCalculator {
     this.error = null;
   }
 
-  private calculate(event: Event): void {
-    event.preventDefault();
+  private calculate(): void {
     const parts = this.parts;
     if (!parts) {
       this.error = 'Invalid ISO 8601 duration.';
@@ -65,23 +64,22 @@ export class DurationCalculator {
     return (
       <div class="duration-calculator">
         <p class="humanized">{formatDurationParts(parts)}</p>
-        <form onSubmit={e => this.calculate(e)}>
-          <label htmlFor="start-input">Start datetime</label>
-          <input
-            id="start-input"
-            type="datetime-local"
-            step="1"
-            value={this.startValue}
-            onInput={e => this.handleInput(e)}
-            style={{ display: 'block', margin: '0.25rem 0', padding: '0.25rem', border: '1px solid #999', borderRadius: '4px' }}
-          />
-          <button
-            type="submit"
-            style={{ marginTop: '0.25rem', padding: '0.35rem 0.75rem', border: '1px solid #999', borderRadius: '4px', cursor: 'pointer' }}
-          >
-            Calculate end datetime
-          </button>
-        </form>
+        <label htmlFor="start-input">Start datetime</label>
+        <input
+          id="start-input"
+          type="datetime-local"
+          step="1"
+          value={this.startValue}
+          onInput={e => this.handleInput(e)}
+          style={{ display: 'block', margin: '0.25rem 0', padding: '0.25rem', border: '1px solid #999', borderRadius: '4px' }}
+        />
+        <button
+          type="button"
+          onClick={() => this.calculate()}
+          style={{ marginTop: '0.25rem', padding: '0.35rem 0.75rem', border: '1px solid #999', borderRadius: '4px', cursor: 'pointer' }}
+        >
+          Calculate end datetime
+        </button>
         {this.error ? <p style={{ color: '#c53030', marginTop: '0.5rem' }}>{this.error}</p> : null}
         {this.endValue ? (
           <p style={{ marginTop: '0.5rem' }}>
