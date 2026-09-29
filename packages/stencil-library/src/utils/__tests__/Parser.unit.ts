@@ -399,10 +399,26 @@ describe('Parser', () => {
       expect(priority).toBe(1);
     });
 
-    it('returns 0 when the first renderer matches', async () => {
-      mockRenderers[0].constructor = createMockConstructor({ key: 'DateType', quickResult: true });
+    it('returns 0 when the first renderer matches and resolves', async () => {
+      mockRenderers[0].constructor = createMockConstructor({
+        key: 'DateType',
+        quickResult: true,
+        meaningfulInfoResult: true,
+      });
       const priority = await Parser.getEstimatedPriority('value');
       expect(priority).toBe(0);
+    });
+
+    it('skips a quick-match renderer whose network probe fails', async () => {
+      // DateType (0) matches format but its probe fails; ORCIDType (1)
+      // matches format and resolves. A format match alone must not win.
+      mockRenderers[0].constructor = createMockConstructor({
+        key: 'DateType',
+        quickResult: true,
+        meaningfulInfoResult: false,
+      });
+      const priority = await Parser.getEstimatedPriority('value');
+      expect(priority).toBe(1);
     });
 
     it('falls back to async check when quick returns undefined', async () => {

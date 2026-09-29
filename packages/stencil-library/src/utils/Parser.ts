@@ -38,7 +38,10 @@ export class Parser {
       const obj = new renderers[i].constructor(value);
       const quickResult = obj.quickCheck();
       if (quickResult === true) {
-        return i;
+        const hasMeaningful = await obj.hasMeaningfulInformation();
+        if (hasMeaningful) {
+          return i;
+        }
       }
       if (quickResult === undefined) {
         const hasMeaningful = await obj.hasMeaningfulInformation();
