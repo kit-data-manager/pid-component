@@ -15,6 +15,7 @@ import { type PidCollapsibleCustomEvent, type PidDataTableCustomEvent, type PidP
 import type { Components } from "@kit-data-manager/pid-component/dist/components";
 import { ColorHighlight as ColorHighlightElement, defineCustomElement as defineColorHighlight } from "@kit-data-manager/pid-component/dist/components/color-highlight.js";
 import { CopyButton as CopyButtonElement, defineCustomElement as defineCopyButton } from "@kit-data-manager/pid-component/dist/components/copy-button.js";
+import { DurationCalculator as DurationCalculatorElement, defineCustomElement as defineDurationCalculator } from "@kit-data-manager/pid-component/dist/components/duration-calculator.js";
 import { JsonViewer as JsonViewerElement, defineCustomElement as defineJsonViewer } from "@kit-data-manager/pid-component/dist/components/json-viewer.js";
 import { LocaleVisualization as LocaleVisualizationElement, defineCustomElement as defineLocaleVisualization } from "@kit-data-manager/pid-component/dist/components/locale-visualization.js";
 import { PidActions as PidActionsElement, defineCustomElement as definePidActions } from "@kit-data-manager/pid-component/dist/components/pid-actions.js";
@@ -44,6 +45,17 @@ export const CopyButton: StencilReactComponent<CopyButtonElement, CopyButtonEven
     react: React,
     events: {} as CopyButtonEvents,
     defineCustomElement: defineCopyButton
+});
+
+export type DurationCalculatorEvents = NonNullable<unknown>;
+
+export const DurationCalculator: StencilReactComponent<DurationCalculatorElement, DurationCalculatorEvents, Components.DurationCalculator> = /*@__PURE__*/ createComponent<DurationCalculatorElement, DurationCalculatorEvents, Components.DurationCalculator>({
+    tagName: 'duration-calculator',
+    elementClass: DurationCalculatorElement,
+    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+    react: React,
+    events: {} as DurationCalculatorEvents,
+    defineCustomElement: defineDurationCalculator
 });
 
 export type JsonViewerEvents = NonNullable<unknown>;

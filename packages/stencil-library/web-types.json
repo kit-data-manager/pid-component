@@ -65,6 +65,27 @@
           "css": {}
         },
         {
+          "name": "duration-calculator",
+          "deprecated": false,
+          "description": "An interactive end-datetime calculator for ISO 8601 durations.\n\nIt accepts an ISO duration string (e.g. `P7DT2H`), lets a user enter a start\ndatetime via a native `<input type=\"datetime-local\">`, and on demand computes\nand displays the corresponding end datetime, start plus the duration.",
+          "source": {
+            "module": "src/components/duration-calculator/duration-calculator.tsx",
+            "symbol": "DurationCalculator"
+          },
+          "attributes": [
+            {
+              "name": "iso-duration",
+              "deprecated": false,
+              "description": "The ISO 8601 duration, e.g. \"P7DT2H\".",
+              "required": false,
+              "default": "",
+              "priority": "high"
+            }
+          ],
+          "slots": [],
+          "css": {}
+        },
+        {
           "name": "json-viewer",
           "deprecated": false,
           "description": "",
@@ -617,6 +638,9 @@
           "events": []
         },
         {
+          "events": []
+        },
+        {
           "events": [
             {
               "name": "collapsibleToggle",
@@ -682,6 +706,13 @@
             },
             {
               "name": "darkMode"
+            }
+          ]
+        },
+        {
+          "properties": [
+            {
+              "name": "isoDuration"
             }
           ]
         },
