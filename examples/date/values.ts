@@ -4,9 +4,14 @@ export const DATE_examples = {
   DATE_ONLY: '2024-06-15',
   DATETIME_SHORT: '2023-11-20T00:00:00.000+01:00',
   DATETIME_LOCAL: '2024-06-15T09:30:00',
+  REDUCED_YEAR: '2023',
+  REDUCED_MONTH: '2023-01',
   INVALID_DATE_ONLY: '06-15',
   INVALID_NOT_A_DATE: 'not-a-date',
   INVALID_EMPTY: '',
+  DURATION_7D_2H: 'P7DT2H',
+  DURATION_2W: 'P2W',
+  DURATION_T2H30M: 'PT2H30M',
 } as const;
 
 export type DATE_example = typeof DATE_examples[keyof typeof DATE_examples];

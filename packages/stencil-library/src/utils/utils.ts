@@ -6,6 +6,7 @@ import { HandleType } from '../rendererModules/Handle/HandleType';
 import { DataCiteDOIType } from '../rendererModules/DOI/DataCite/DataCiteDOIType';
 import { CrossRefDOIType } from '../rendererModules/DOI/CrossRef/CrossRefDOIType';
 import { DateType } from '../rendererModules/DateType/DateType';
+import { ReducedDateType } from '../rendererModules/ReducedDateType/ReducedDateType';
 import { RORType } from '../rendererModules/RORType/RORType';
 import { SPDXType } from '../rendererModules/SPDXType/SPDXType';
 import { EmailType } from '../rendererModules/EmailType/EmailType';
@@ -38,6 +39,12 @@ export const renderers: {
     key: 'DateType',
     constructor: DateType,
     autoDiscoverableByDefault: true,
+  },
+  {
+    priority: 2,
+    key: 'ReducedDateType',
+    constructor: ReducedDateType,
+    autoDiscoverableByDefault: false,
   },
   {
     priority: 1,

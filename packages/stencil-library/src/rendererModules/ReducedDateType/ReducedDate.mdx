@@ -1,0 +1,42 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+
+import * as ReducedDateStories from './ReducedDate.stories';
+
+<Meta of={ReducedDateStories} />
+
+# Reduced Date
+
+The Reduced Date renderer detects reduced-precision ISO 8601 dates: a year-only value
+(`2023`) or a year-month value (`2023-01`).
+
+> **Note:** This renderer is **not** auto-discovered by default. A bare year such as `2023`
+> can appear frequently as ordinary text and would be easy to mistake for a date during DOM
+> auto-detection. Use it explicitly (e.g. via a `renderers` list) when you need reduced
+> dates detected.
+
+## Supported Formats
+
+- Year only: `2023`
+- Year month: `2023-01`
+
+Full dates (`2024-06-15`) and datetimes are handled by the [Date renderer](./Date) instead.
+
+## Controls
+
+<Controls />
+
+## Examples
+
+### Year Only
+
+<Canvas of={ReducedDateStories.YearOnly} />
+
+### Year Month
+
+<Canvas of={ReducedDateStories.YearMonth} />
+
+## Usage
+
+```html
+<pid-component value="2023-01" renderers='["ReducedDateType"]'></pid-component>
+```
