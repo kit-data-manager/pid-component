@@ -1,0 +1,48 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+
+import * as DurationStories from './Duration.stories';
+
+<Meta of={DurationStories} />
+
+# Duration
+
+The Duration renderer detects ISO 8601 durations (e.g. `P7DT2H`), shows a humanized
+summary (e.g. "7 days, 2 hours"), and renders an interactive end-datetime calculator.
+Enter a start datetime and the component computes and displays the corresponding end
+datetime.
+
+## Supported Formats
+
+- Date + time: `P7DT2H`, `P1Y2M3DT4H5M6S`
+- Week form: `P2W`
+- Time only: `PT2H30M`, `PT1.5H`
+
+## End-Datetime Calculator
+
+When expanded, the renderer displays the duration breakdown (years/months/days/hours/…)
+in the data table and an interactive calculator. Enter a start datetime and press
+**Calculate end datetime** to view the result.
+
+## Controls
+
+<Controls />
+
+## Examples
+
+### Date + Time
+
+<Canvas of={DurationStories.DateAndTime} />
+
+### Weeks
+
+<Canvas of={DurationStories.Weeks} />
+
+### Time Only
+
+<Canvas of={DurationStories.TimeOnly} />
+
+## Usage
+
+```html
+<pid-component value="P7DT2H"></pid-component>
+```
