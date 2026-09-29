@@ -14,6 +14,7 @@ import {
 } from '../../../../../examples';
 
 vi.mock('../../components/json-viewer/json-viewer', () => ({}));
+vi.mock('../../components/duration-calculator/duration-calculator', () => ({}));
 
 describe('detection-registry', () => {
   // ─── sanitizeToken() ───────────────────────────────────────────────

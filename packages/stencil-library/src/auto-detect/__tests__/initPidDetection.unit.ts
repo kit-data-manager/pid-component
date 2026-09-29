@@ -33,6 +33,7 @@ vi.mock('../../auto-detect/detection-registry', () => ({
 }));
 
 vi.mock('../../components/json-viewer/json-viewer', () => ({}));
+vi.mock('../../components/duration-calculator/duration-calculator', () => ({}));
 
 describe('initPidDetection', () => {
   beforeEach(() => {
