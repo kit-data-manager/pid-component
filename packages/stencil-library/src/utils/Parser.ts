@@ -122,16 +122,23 @@ export class Parser {
         const quickResult = obj.quickCheck();
 
         if (quickResult === true) {
-          Parser.applySettings(obj, settings);
-          await obj.init();
-          return obj;
+          if (await obj.hasMeaningfulInformation()) {
+            Parser.applySettings(obj, settings);
+            if (await this.tryInit(obj)) {
+              return obj;
+            }
+            continue;
+          }
+          continue;
         }
 
         if (quickResult === undefined || !quickResult) {
           if (await obj.hasMeaningfulInformation()) {
             Parser.applySettings(obj, settings);
-            await obj.init();
-            return obj;
+            if (await this.tryInit(obj)) {
+              return obj;
+            }
+            continue;
           }
         }
       }
@@ -207,6 +214,23 @@ export class Parser {
     const actionScore = obj.actions.length * actionWeight;
 
     return priorityScore + itemScore + actionScore;
+  }
+
+  /**
+   * Runs a renderer's init() defensively so that a thrown error inside a
+   * renderer after a successful probe cannot abort the whole detection.
+   * Returns true if init() completed without throwing, false otherwise.
+   * @param obj The renderer instance to initialize
+   * @returns {Promise<boolean>} Whether initialization completed without throwing
+   */
+  private static async tryInit(obj: GenericIdentifierType): Promise<boolean> {
+    try {
+      await obj.init();
+      return true;
+    } catch (e) {
+      console.error('Renderer init() failed, skipping:', e);
+      return false;
+    }
   }
 
   /**
