@@ -118,16 +118,13 @@ export function parseDatetime(value: string): DateTimeParts | null {
     if (hour > 23 || minute > 59) return null;
 
     const secondToken = String(m[4]);
-    let second: string;
     const secNum = Number(secondToken);
     if (secNum > 59) {
       // 60 is only permitted as a leap second at 23:59 UTC.
       if (!(secNum === 60 && hour === 23 && minute === 59)) return null;
     }
-    // `secondToken` is already `\d{2}(?:\.\d+)?`, so use it directly.
-    second = secondToken;
 
-    time = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:${second}`;
+    time = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:${secondToken}`;
 
     const tz = m[5];
     if (tz !== undefined) {
