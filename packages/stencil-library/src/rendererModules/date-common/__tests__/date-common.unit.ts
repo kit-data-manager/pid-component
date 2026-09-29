@@ -159,4 +159,16 @@ describe('addDurationToIso', () => {
     const end = addDurationToIso('2024-01-31T00:00:00', parseDuration('P1M')!);
     expect(end).toMatch(/^2024-02-29/);
   });
+
+  it('treats a local datetime without a timezone via the Plain path', () => {
+    // The date portion contains a dash followed by digits, which must NOT be
+    // mistaken for a trailing timezone offset.
+    const end = addDurationToIso('2024-01-08T02:00:00', parseDuration('P7DT2H')!);
+    expect(end).toMatch(/^2024-01-15T04:00:00/);
+  });
+
+  it('handles a datetime with a trailing timezone offset via the Zoned path', () => {
+    const end = addDurationToIso('2024-01-01T00:00:00+02:00', parseDuration('P1D')!);
+    expect(end).toMatch(/^2024-01-02T00:00:00\+02:00/);
+  });
 });

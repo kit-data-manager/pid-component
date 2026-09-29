@@ -87,12 +87,18 @@ export function addDurationToIso(startIso: string, duration: DurationParts): str
       duration.seconds,
     );
 
-    // Determine whether the start has a timezone. `Temporal.Instant` is used to
-    // validate. If the string is a full datetime with offset, use ZonedDateTime;
-    // otherwise parse as a local (Plain) datetime.
-    if (Temporal.ZonedDateTime !== undefined && /[zZ]|[+-]\d{2}:?\d{2}/.test(startIso)) {
-      const zoned = Temporal.ZonedDateTime.from(startIso);
-      return zoned.add(durationObj).toString();
+    // Determine whether the start has a trailing timezone designator (an ISO
+    // string that ends in Z or ±HH(:MM)). A datetime-local value never has one.
+    const TZ_SUFFIX = /[zZ]|[+-]\d{2}(?::?\d{2})$/;
+    if (Temporal.ZonedDateTime !== undefined && TZ_SUFFIX.test(startIso)) {
+      const absolute = Temporal.Instant.from(startIso);
+      const offset = extractTrailingOffset(startIso);
+      // `ZonedDateTime.from()` requires a bracketed IANA time zone ID; a fixed
+      // offset is applied via `toZonedDateTimeISO(offset)` instead.
+      const zoned = absolute.toZonedDateTimeISO(offset).add(durationObj).toString();
+      // `ZonedDateTime.toString()` appends a bracketed time zone ID, so strip it
+      // to return plain ISO 8601 with the offset preserved.
+      return zoned.replace(/\[[^\]]*\]$/, '');
     }
 
     const plain = Temporal.PlainDateTime.from(startIso);
@@ -100,4 +106,13 @@ export function addDurationToIso(startIso: string, duration: DurationParts): str
   } catch {
     return null;
   }
+}
+
+/** Extracts the trailing UTC offset (e.g. '+02:00', '-05:00', or 'Z') from an ISO string. */
+function extractTrailingOffset(iso: string): string {
+  const tail = iso.slice(iso.indexOf('T') + 1);
+  const match = /([zZ]|[+-]\d{2}(?::?\d{2})?)$/.exec(tail);
+  if (!match) return 'UTC';
+  const offset = match[1];
+  return offset === 'Z' ? 'UTC' : offset;
 }
