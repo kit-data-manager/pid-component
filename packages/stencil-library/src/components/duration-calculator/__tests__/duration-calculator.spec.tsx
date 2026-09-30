@@ -71,6 +71,12 @@ describe('duration-calculator', () => {
   it('shows an error when computing end without a start', async () => {
     const { root, waitForChanges } = await render(<duration-calculator iso-duration="P7DT2H"></duration-calculator>);
     const shadowRoot = root.shadowRoot as ShadowRoot;
+    const inputs = shadowRoot.querySelectorAll('input[type="datetime-local"]');
+    const [startInput] = inputs as unknown as HTMLInputElement[];
+    // Clear the pre-filled default so the error path is exercised.
+    startInput.value = '';
+    startInput.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+    await waitForChanges();
     (shadowRoot.querySelectorAll('button')[0] as HTMLButtonElement).click();
     await waitForChanges();
     expect(shadowRoot.textContent).toContain('Please enter a start datetime.');
@@ -79,9 +85,38 @@ describe('duration-calculator', () => {
   it('shows an error when computing start without an end', async () => {
     const { root, waitForChanges } = await render(<duration-calculator iso-duration="P7DT2H"></duration-calculator>);
     const shadowRoot = root.shadowRoot as ShadowRoot;
+    const inputs = shadowRoot.querySelectorAll('input[type="datetime-local"]');
+    const [, endInput] = inputs as unknown as HTMLInputElement[];
+    // Clear the pre-filled default so the error path is exercised.
+    endInput.value = '';
+    endInput.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+    await waitForChanges();
     (shadowRoot.querySelectorAll('button')[1] as HTMLButtonElement).click();
     await waitForChanges();
     expect(shadowRoot.textContent).toContain('Please enter an end datetime.');
+  });
+
+  it('pre-fills start and end datetimes so the calculator works immediately', async () => {
+    const { root } = await render(<duration-calculator iso-duration="P7DT2H"></duration-calculator>);
+    const shadowRoot = root.shadowRoot as ShadowRoot;
+    const inputs = shadowRoot.querySelectorAll('input[type="datetime-local"]');
+    const [startInput, endInput] = inputs as unknown as HTMLInputElement[];
+    // The defaults come from Date.now(), so both inputs should be non-empty.
+    expect(startInput.value).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/);
+    expect(endInput.value).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/);
+  });
+
+  it('computed inputs are accessible with aria labels and a group description', async () => {
+    const { root } = await render(<duration-calculator iso-duration="P7DT2H"></duration-calculator>);
+    const shadowRoot = root.shadowRoot as ShadowRoot;
+    const wrapper = shadowRoot.querySelector('[role="group"]');
+    expect(wrapper).toBeTruthy();
+    const inputs = shadowRoot.querySelectorAll('input[type="datetime-local"]');
+    const [startInput, endInput] = inputs as unknown as HTMLInputElement[];
+    expect(startInput.getAttribute('aria-label')).toBe('Start datetime');
+    expect(endInput.getAttribute('aria-label')).toBe('End datetime');
+    expect(startInput.getAttribute('aria-describedby')).toBeTruthy();
+    expect(endInput.getAttribute('aria-describedby')).toBeTruthy();
   });
 
   it('reports an invalid duration gracefully', async () => {

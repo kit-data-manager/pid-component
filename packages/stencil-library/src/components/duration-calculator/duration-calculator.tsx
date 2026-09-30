@@ -35,6 +35,24 @@ export class DurationCalculator {
     return parseDuration(this.isoDuration);
   }
 
+  /**
+   * Pre-fill both datetime inputs so the calculator is usable immediately
+   * without the user having to enter a value first. Start defaults to now; end
+   * defaults to now plus the duration so both arrows already produce a result.
+   */
+  componentWillLoad() {
+    const now = new Date();
+    const nowValue = toDateTimeLocal(now);
+    this.startValue = nowValue;
+    const parts = this.parts;
+    if (parts) {
+      const end = addDurationToIso(toIsoInput(nowValue), parts);
+      this.endValue = end ? toInputValue(end) : nowValue;
+    } else {
+      this.endValue = nowValue;
+    }
+  }
+
   private handleStartInput(event: Event): void {
     this.startValue = (event.target as HTMLInputElement).value;
     this.highlight = null;
@@ -128,7 +146,19 @@ export class DurationCalculator {
     } as const;
 
     return (
-      <div class="duration-calculator">
+      <div
+        class="duration-calculator"
+        role="group"
+        aria-label="Duration calculator"
+        style={{ padding: '0.75rem', display: 'flex', flexDirection: 'column' }}
+      >
+        <span
+          id="duration-calculator-arrow-instruction"
+          style={{ position: 'absolute', width: '1px', height: '1px', margin: '-1px', padding: '0', overflow: 'hidden', clip: 'rect(0 0 0 0)', clipPath: 'inset(50%)', whiteSpace: 'nowrap', border: '0' }}
+        >
+          Use the right arrow to compute the end datetime from the start datetime, or the left
+          arrow to compute the start datetime from the end datetime.
+        </span>
         <div
           style={{
             display: 'flex',
@@ -141,6 +171,8 @@ export class DurationCalculator {
             type="datetime-local"
             step="1"
             aria-label="Start datetime"
+            aria-describedby="duration-calculator-arrow-instruction"
+            title="Start datetime (default: now)"
             value={this.startValue}
             onInput={e => this.handleStartInput(e)}
             style={inputStyle(this.highlight === 'start')}
@@ -170,12 +202,16 @@ export class DurationCalculator {
             type="datetime-local"
             step="1"
             aria-label="End datetime"
+            aria-describedby="duration-calculator-arrow-instruction"
+            title="End datetime (default: now plus the duration)"
             value={this.endValue}
             onInput={e => this.handleEndInput(e)}
             style={inputStyle(this.highlight === 'end')}
           />
         </div>
-        {this.error ? <p role="alert" style={errorStyle}>{this.error}</p> : null}
+        {this.error ? (
+          <p role="alert" aria-live="polite" style={errorStyle}>{this.error}</p>
+        ) : null}
       </div>
     );
   }
@@ -193,4 +229,10 @@ function toInputValue(iso: string): string {
   // value reads as clean minutes (matching what a user would type).
   const cleaned = iso.replace(/\.\d+$/, '');
   return cleaned.replace(/:(\d{2}):00$/, ':$1');
+}
+
+/** Formats a Date as a datetime-local input value (YYYY-MM-DDTHH:MM, local time). */
+function toDateTimeLocal(date: Date): string {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
