@@ -454,6 +454,14 @@ export class PidComponent {
       }
 
       this.identifierObject = result;
+
+      // Some renderers (e.g. DurationType) provide interactive body content that
+      // should be immediately visible rather than hidden behind the collapsed
+      // summary. Honor their request unless the consumer explicitly opted in to
+      // a collapsed state via openByDefault=false.
+      if (!this.openByDefault && this.identifierObject.opensByDefault()) {
+        this.isExpanded = true;
+      }
     } catch (e) {
       console.error('Failed to get entity from db', e);
       this.displayStatus = 'error';
@@ -671,6 +679,7 @@ export class PidComponent {
   }
 
   private renderCollapsedPreviewContent() {
+    const previewTextColor = this.isDarkMode ? 'text-gray-100' : 'text-gray-900';
     return (
       <span
         class={this.getPreviewClasses()}
@@ -680,7 +689,7 @@ export class PidComponent {
         aria-expanded={this.isExpanded}
       >
         <span
-          class={`inline-block font-mono font-medium select-all ${this.isExpanded ? 'text-xs' : 'text-sm'} ${this.isExpanded ? 'max-w-[60vw] overflow-x-auto whitespace-nowrap' : 'max-w-full truncate'}`}
+          class={`inline-block font-mono font-medium select-all ${previewTextColor} ${this.isExpanded ? 'text-xs' : 'text-sm'} ${this.isExpanded ? 'max-w-[60vw] overflow-x-auto whitespace-nowrap' : 'max-w-full truncate'}`}
         >
           {this.identifierObject?.renderPreview()}
         </span>

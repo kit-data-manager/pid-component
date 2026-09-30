@@ -204,6 +204,19 @@ export abstract class GenericIdentifierType {
   }
 
   /**
+   * Determines whether this renderer's component should be expanded (unfolded)
+   * by default when rendered, revealing its body (e.g. tabs, calculators, or
+   * other interactive detail views) without requiring the user to expand it.
+   *
+   * Subclasses that render important interactive content in `renderBody()`
+   * SHOULD override this to return `true` so that content is immediately visible.
+   * @returns {boolean} Whether the component should start expanded.
+   */
+  opensByDefault(): boolean {
+    return false;
+  }
+
+  /**
    * Updates the dark mode state based on settings
    * This method is called automatically when settings are updated
    */
