@@ -6,6 +6,12 @@ import { DOI_examples } from '../../../../../examples';
 void h;
 
 vi.mock('../../components/json-viewer/json-viewer', () => ({}));
+// DurationType (registered in the detection registry via utils.ts) imports the
+// real duration-calculator web component, which uses the @Component decorator.
+// That decorator only exists at compile time, so the plain browser test must
+// mock it out (mirroring the json-viewer mock above) to avoid importing
+// non-runtime @stencil/core bindings such as Component.
+vi.mock('../../components/duration-calculator/duration-calculator', () => ({}));
 
 describe('auto-detect e2e', () => {
   it('creates pid-components for detected PIDs in text', async () => {
