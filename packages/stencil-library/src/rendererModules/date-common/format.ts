@@ -30,6 +30,11 @@ export function formatDurationParts(parts: DurationParts): string {
  * string form), used for display and tooltips.
  */
 export function formatDurationPartsIso(parts: DurationParts): string {
+  // ISO 8601's week form (PnW) is exclusive: weeks cannot be combined with any
+  // other component. A week-only duration round-trips as PnW.
+  if (parts.weeks > 0) {
+    return `P${parts.weeks}W`;
+  }
   const datePart =
     `${parts.years > 0 ? parts.years + 'Y' : ''}` +
     `${parts.months > 0 ? parts.months + 'M' : ''}` +

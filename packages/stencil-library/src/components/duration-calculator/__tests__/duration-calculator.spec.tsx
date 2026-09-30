@@ -124,4 +124,15 @@ describe('duration-calculator', () => {
     const shadowRoot = root.shadowRoot as ShadowRoot;
     expect(shadowRoot.textContent).toContain('Invalid duration');
   });
+
+  it('supports a week-only duration', async () => {
+    const { root } = await render(<duration-calculator iso-duration="P2W"></duration-calculator>);
+    const shadowRoot = root.shadowRoot as ShadowRoot;
+    // A valid week duration must not be reported as invalid.
+    expect(shadowRoot.textContent).not.toContain('Invalid duration');
+    const inputs = shadowRoot.querySelectorAll('input[type="datetime-local"]');
+    const [startInput, endInput] = inputs as unknown as HTMLInputElement[];
+    expect(startInput.value).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/);
+    expect(endInput.value).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/);
+  });
 });

@@ -129,6 +129,16 @@ describe('formatDurationPartsIso', () => {
     const parts = parseDuration('P7DT2H')!;
     expect(formatDurationPartsIso(parts)).toBe('P7DT2H');
   });
+
+  it('round-trips a week-only duration', () => {
+    const parts = parseDuration('P2W')!;
+    expect(formatDurationPartsIso(parts)).toBe('P2W');
+  });
+
+  it('round-trips a time-only duration', () => {
+    const parts = parseDuration('PT2H30M')!;
+    expect(formatDurationPartsIso(parts)).toBe('PT2H30M');
+  });
 });
 
 describe('formatDatetimeIso', () => {
