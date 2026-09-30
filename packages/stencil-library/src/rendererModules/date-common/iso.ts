@@ -56,11 +56,13 @@ const REDUCED_DATE_REGEX = /^(\d{4})(?:-(0[1-9]|1[0-2]))?$/;
 
 /**
  * Matches an ISO 8601 duration (calendar + clock, or week-only form).
- * Non-capturing inner groups keep the capture indices predictable:
+ * Calendar components (Y/M/W/D) must be integers (Temporal.Duration only
+ * accepts fractional time units), while time components (H/M/S) may carry a
+ * fraction. Non-capturing inner groups keep the capture indices predictable:
  *   [1] years  [2] months  [3] weeks  [4] days  [5] hours  [6] minutes  [7] seconds
  */
 const DURATION_REGEX =
-  /^P(?:(\d+(?:\.\d+)?)Y)?(?:(\d+(?:\.\d+)?)M)?(?:(\d+(?:\.\d+)?)W)?(?:(\d+(?:\.\d+)?)D)?(?:T(?:(\d+(?:\.\d+)?)H)?(?:(\d+(?:\.\d+)?)M)?(?:(\d+(?:\.\d+)?)S)?)?$/;
+  /^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?:(\d+(?:\.\d+)?)H)?(?:(\d+(?:\.\d+)?)M)?(?:(\d+(?:\.\d+)?)S)?)?$/;
 
 /** Day-of-month limits per month, accounting for leap years. */
 function daysInMonth(year: number, month: number): number {

@@ -97,6 +97,13 @@ describe('parseDuration', () => {
     expect(parts.hours).toBe(1.5);
   });
 
+  it('rejects fractional calendar units (only time units may be fractional)', () => {
+    expect(parseDuration('P1.5M')).toBeNull();
+    expect(parseDuration('P0.5Y')).toBeNull();
+    expect(parseDuration('P1.5W')).toBeNull();
+    expect(parseDuration('P1.5D')).toBeNull();
+  });
+
   it('parses a time-only duration', () => {
     const parts = parseDuration('PT2H30M')!;
     expect(parts.hours).toBe(2);
