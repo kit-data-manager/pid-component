@@ -22,7 +22,8 @@ export const CopyButton: StencilVueComponent<JSX.CopyButton> = /*@__PURE__*/ def
 
 
 export const DurationCalculator: StencilVueComponent<JSX.DurationCalculator> = /*@__PURE__*/ defineContainer<JSX.DurationCalculator>('duration-calculator', undefined, [
-  'isoDuration'
+  'isoDuration',
+  'darkMode'
 ]);
 
 

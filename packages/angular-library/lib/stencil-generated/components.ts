@@ -65,14 +65,14 @@ export declare interface CopyButton extends Components.CopyButton {}
 
 @ProxyCmp({
   defineCustomElementFn: defineDurationCalculator,
-  inputs: ['isoDuration']
+  inputs: ['darkMode', 'isoDuration']
 })
 @Component({
   selector: 'duration-calculator',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['isoDuration'],
+  inputs: ['darkMode', 'isoDuration'],
 })
 export class DurationCalculator {
   protected el: HTMLDurationCalculatorElement;

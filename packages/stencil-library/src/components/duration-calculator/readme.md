@@ -15,9 +15,10 @@ and displays the corresponding end datetime, start plus the duration.
 
 ## Properties
 
-| Property      | Attribute      | Description                           | Type     | Default     |
-| ------------- | -------------- | ------------------------------------- | -------- | ----------- |
-| `isoDuration` | `iso-duration` | The ISO 8601 duration, e.g. "P7DT2H". | `string` | `undefined` |
+| Property      | Attribute      | Description                                          | Type      | Default     |
+| ------------- | -------------- | ---------------------------------------------------- | --------- | ----------- |
+| `darkMode`    | `dark-mode`    | Whether the calculator should use dark-mode styling. | `boolean` | `false`     |
+| `isoDuration` | `iso-duration` | The ISO 8601 duration, e.g. "P7DT2H".                | `string`  | `undefined` |
 
 
 ----------------------------------------------

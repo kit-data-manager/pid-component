@@ -76,6 +76,13 @@ describe('DurationType', () => {
     });
   });
 
+  describe('opensByDefault()', () => {
+    it('returns true so the calculator is visible without expanding', () => {
+      const dt = new DurationType('P7DT2H');
+      expect(dt.opensByDefault()).toBe(true);
+    });
+  });
+
   describe('renderBody()', () => {
     it('returns undefined before init', () => {
       const dt = new DurationType('P7DT2H');

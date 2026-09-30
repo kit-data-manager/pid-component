@@ -17,6 +17,9 @@ export class DurationCalculator {
   /** The ISO 8601 duration, e.g. "P7DT2H". */
   @Prop() isoDuration: string;
 
+  /** Whether the calculator should use dark-mode styling. */
+  @Prop() darkMode: boolean = false;
+
   /** The start datetime entered by the user (local wall-clock). */
   @State() startValue: string = '';
   @State() endValue: string | null = null;
@@ -61,6 +64,17 @@ export class DurationCalculator {
       return <div>Invalid duration</div>;
     }
 
+    const inputStyle = this.darkMode
+      ? { display: 'block' as const, margin: '0.25rem 0' as const, padding: '0.35rem' as const, border: '1px solid #4b5563' as const, borderRadius: '4px' as const, background: '#1f2937' as const, color: '#f9fafb' as const }
+      : { display: 'block' as const, margin: '0.25rem 0' as const, padding: '0.35rem' as const, border: '1px solid #9ca3af' as const, borderRadius: '4px' as const };
+    const buttonStyle = this.darkMode
+      ? { marginTop: '0.25rem' as const, padding: '0.35rem 0.75rem' as const, border: '1px solid #4b5563' as const, borderRadius: '4px' as const, cursor: 'pointer' as const, background: '#1f2937' as const, color: '#f9fafb' as const }
+      : { marginTop: '0.25rem' as const, padding: '0.35rem 0.75rem' as const, border: '1px solid #6b7280' as const, borderRadius: '4px' as const, cursor: 'pointer' as const };
+    const errorStyle = this.darkMode
+      ? { color: '#fc8181' as const, marginTop: '0.5rem' as const }
+      : { color: '#c53030' as const, marginTop: '0.5rem' as const };
+    const resultStyle = { marginTop: '0.5rem' as const };
+
     return (
       <div class="duration-calculator">
         <p class="humanized">{formatDurationParts(parts)}</p>
@@ -71,18 +85,18 @@ export class DurationCalculator {
           step="1"
           value={this.startValue}
           onInput={e => this.handleInput(e)}
-          style={{ display: 'block', margin: '0.25rem 0', padding: '0.25rem', border: '1px solid #999', borderRadius: '4px' }}
+          style={inputStyle}
         />
         <button
           type="button"
           onClick={() => this.calculate()}
-          style={{ marginTop: '0.25rem', padding: '0.35rem 0.75rem', border: '1px solid #999', borderRadius: '4px', cursor: 'pointer' }}
+          style={buttonStyle}
         >
           Calculate end datetime
         </button>
-        {this.error ? <p style={{ color: '#c53030', marginTop: '0.5rem' }}>{this.error}</p> : null}
+        {this.error ? <p style={errorStyle}>{this.error}</p> : null}
         {this.endValue ? (
-          <p style={{ marginTop: '0.5rem' }}>
+          <p style={resultStyle}>
             <strong>End datetime:</strong> {this.startValue}
             {' → '}
             {new Date(this.endValue).toLocaleString()}

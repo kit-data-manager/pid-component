@@ -56,7 +56,10 @@ export type DurationCalculatorEvents = NonNullable<unknown>;
 
 export const DurationCalculator: StencilReactComponent<DurationCalculatorElement, DurationCalculatorEvents, Components.DurationCalculator> = /*@__PURE__*/ createComponent<DurationCalculatorElement, DurationCalculatorEvents, Components.DurationCalculator>({
     tagName: 'duration-calculator',
-    properties: { isoDuration: 'iso-duration' },
+    properties: {
+        isoDuration: 'iso-duration',
+        darkMode: 'dark-mode'
+    },
     hydrateModule: typeof window === 'undefined' ? (import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>) : undefined,
     clientModule: clientComponents.DurationCalculator as StencilReactComponent<DurationCalculatorElement, DurationCalculatorEvents, Components.DurationCalculator>,
     serializeShadowRoot

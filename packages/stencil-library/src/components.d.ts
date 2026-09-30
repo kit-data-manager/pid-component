@@ -46,6 +46,11 @@ export namespace Components {
      */
     interface DurationCalculator {
         /**
+          * Whether the calculator should use dark-mode styling.
+          * @default false
+         */
+        "darkMode": boolean;
+        /**
           * The ISO 8601 duration, e.g. "P7DT2H".
          */
         "isoDuration": string;
@@ -569,6 +574,11 @@ declare namespace LocalJSX {
      */
     interface DurationCalculator {
         /**
+          * Whether the calculator should use dark-mode styling.
+          * @default false
+         */
+        "darkMode"?: boolean;
+        /**
           * The ISO 8601 duration, e.g. "P7DT2H".
          */
         "isoDuration"?: string;
@@ -925,6 +935,7 @@ declare namespace LocalJSX {
     }
     interface DurationCalculatorAttributes {
         "isoDuration": string;
+        "darkMode": boolean;
     }
     interface JsonViewerAttributes {
         "data": string | object;

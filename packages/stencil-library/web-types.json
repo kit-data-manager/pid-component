@@ -80,6 +80,14 @@
               "required": false,
               "default": "",
               "priority": "high"
+            },
+            {
+              "name": "dark-mode",
+              "deprecated": false,
+              "description": "Whether the calculator should use dark-mode styling.",
+              "required": false,
+              "default": "false",
+              "priority": "high"
             }
           ],
           "slots": [],
@@ -713,6 +721,9 @@
           "properties": [
             {
               "name": "isoDuration"
+            },
+            {
+              "name": "darkMode"
             }
           ]
         },

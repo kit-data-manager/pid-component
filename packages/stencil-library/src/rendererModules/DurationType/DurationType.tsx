@@ -48,7 +48,16 @@ export class DurationType extends GenericIdentifierType {
     if (!this._parts) {
       return undefined;
     }
-    return <duration-calculator iso-duration={formatDurationPartsIso(this._parts)} />;
+    return <duration-calculator iso-duration={formatDurationPartsIso(this._parts)} dark-mode={this.isDarkMode} />;
+  }
+
+  /**
+   * The duration calculator in `renderBody()` is an interactive tool the user
+   * needs to see, so expand the component by default rather than hiding it
+   * behind the collapsed summary.
+   */
+  opensByDefault(): boolean {
+    return true;
   }
 
   private populateItems(): void {
