@@ -39,10 +39,13 @@ export namespace Components {
         "value": string;
     }
     /**
-     * An interactive end-datetime calculator for ISO 8601 durations.
-     * It accepts an ISO duration string (e.g. `P7DT2H`), lets a user enter a start
-     * datetime via a native `<input type="datetime-local">`, and on demand computes
-     * and displays the corresponding end datetime, start plus the duration.
+     * A compact end-datetime calculator for ISO 8601 durations.
+     * It accepts an ISO duration string (e.g. `P7DT2H`) and shows a single row with
+     * a start datetime input on the left, two direction arrow buttons in the middle,
+     * and an end datetime input on the right. Clicking the right arrow (→) computes
+     * the end datetime from the start; clicking the left arrow (←) computes the
+     * start datetime from the end. The computed input is highlighted with a green
+     * border so the result stands out.
      */
     interface DurationCalculator {
         /**
@@ -411,10 +414,13 @@ declare global {
         new (): HTMLCopyButtonElement;
     };
     /**
-     * An interactive end-datetime calculator for ISO 8601 durations.
-     * It accepts an ISO duration string (e.g. `P7DT2H`), lets a user enter a start
-     * datetime via a native `<input type="datetime-local">`, and on demand computes
-     * and displays the corresponding end datetime, start plus the duration.
+     * A compact end-datetime calculator for ISO 8601 durations.
+     * It accepts an ISO duration string (e.g. `P7DT2H`) and shows a single row with
+     * a start datetime input on the left, two direction arrow buttons in the middle,
+     * and an end datetime input on the right. Clicking the right arrow (→) computes
+     * the end datetime from the start; clicking the left arrow (←) computes the
+     * start datetime from the end. The computed input is highlighted with a green
+     * border so the result stands out.
      */
     interface HTMLDurationCalculatorElement extends Components.DurationCalculator, HTMLStencilElement {
     }
@@ -567,10 +573,13 @@ declare namespace LocalJSX {
         "value": string;
     }
     /**
-     * An interactive end-datetime calculator for ISO 8601 durations.
-     * It accepts an ISO duration string (e.g. `P7DT2H`), lets a user enter a start
-     * datetime via a native `<input type="datetime-local">`, and on demand computes
-     * and displays the corresponding end datetime, start plus the duration.
+     * A compact end-datetime calculator for ISO 8601 durations.
+     * It accepts an ISO duration string (e.g. `P7DT2H`) and shows a single row with
+     * a start datetime input on the left, two direction arrow buttons in the middle,
+     * and an end datetime input on the right. Clicking the right arrow (→) computes
+     * the end datetime from the start; clicking the left arrow (←) computes the
+     * start datetime from the end. The computed input is highlighted with a green
+     * border so the result stands out.
      */
     interface DurationCalculator {
         /**
@@ -1028,10 +1037,13 @@ declare module "@stencil/core" {
             "color-highlight": LocalJSX.IntrinsicElements["color-highlight"] & JSXBase.HTMLAttributes<HTMLColorHighlightElement>;
             "copy-button": LocalJSX.IntrinsicElements["copy-button"] & JSXBase.HTMLAttributes<HTMLCopyButtonElement>;
             /**
-             * An interactive end-datetime calculator for ISO 8601 durations.
-             * It accepts an ISO duration string (e.g. `P7DT2H`), lets a user enter a start
-             * datetime via a native `<input type="datetime-local">`, and on demand computes
-             * and displays the corresponding end datetime, start plus the duration.
+             * A compact end-datetime calculator for ISO 8601 durations.
+             * It accepts an ISO duration string (e.g. `P7DT2H`) and shows a single row with
+             * a start datetime input on the left, two direction arrow buttons in the middle,
+             * and an end datetime input on the right. Clicking the right arrow (→) computes
+             * the end datetime from the start; clicking the left arrow (←) computes the
+             * start datetime from the end. The computed input is highlighted with a green
+             * border so the result stands out.
              */
             "duration-calculator": LocalJSX.IntrinsicElements["duration-calculator"] & JSXBase.HTMLAttributes<HTMLDurationCalculatorElement>;
             "json-viewer": LocalJSX.IntrinsicElements["json-viewer"] & JSXBase.HTMLAttributes<HTMLJsonViewerElement>;

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { parseDatetime, parseDuration, parseReducedDate } from '../iso';
-import { addDurationToIso, formatDurationParts, formatDurationPartsIso, formatDatetimeIso } from '../format';
+import { addDurationToIso, formatDurationParts, formatDurationPartsIso, formatDatetimeIso, subtractDurationFromIso } from '../format';
 
 describe('parseDatetime', () => {
   it('parses a full datetime with timezone', () => {
@@ -170,5 +170,29 @@ describe('addDurationToIso', () => {
   it('handles a datetime with a trailing timezone offset via the Zoned path', () => {
     const end = addDurationToIso('2024-01-01T00:00:00+02:00', parseDuration('P1D')!);
     expect(end).toMatch(/^2024-01-02T00:00:00\+02:00/);
+  });
+});
+
+describe('subtractDurationFromIso', () => {
+  it('subtracts a duration from a local datetime', () => {
+    const start = subtractDurationFromIso('2024-01-08T02:00:00', parseDuration('P7DT2H')!);
+    expect(start).toBe('2024-01-01T00:00:00');
+  });
+
+  it('handles month underflow (calendar-accurate)', () => {
+    const start = subtractDurationFromIso('2024-03-01T00:00:00', parseDuration('P1D')!);
+    expect(start).toBe('2024-02-29T00:00:00');
+  });
+
+  it('is the inverse of adding the same duration', () => {
+    const start = '2024-06-15T09:30:00';
+    const duration = parseDuration('P1Y2M3DT4H5M6S')!;
+    const end = addDurationToIso(start, duration)!;
+    const backAgain = subtractDurationFromIso(end, duration)!;
+    expect(backAgain.startsWith('2024-06-15T09:30:00')).toBe(true);
+  });
+
+  it('returns null for an unparseable value', () => {
+    expect(subtractDurationFromIso('not-a-date', parseDuration('P1D')!)).toBeNull();
   });
 });

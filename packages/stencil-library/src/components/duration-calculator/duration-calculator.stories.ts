@@ -2,8 +2,11 @@ import { Meta, StoryObj } from '@storybook/web-components-vite';
 
 /**
  * The duration-calculator component turns an ISO 8601 duration (e.g. `P7DT2H`)
- * into an interactive tool: it shows a humanized breakdown and lets a user enter
- * a start datetime to compute the corresponding end datetime.
+ * into a compact single-row calculator. It shows a start datetime input on the
+ * left and an end datetime input on the right with two direction arrows between
+ * them. The right arrow (→) computes the end datetime from the start; the left
+ * arrow (←) computes the start datetime from the end. The computed input is
+ * highlighted with a green border.
  *
  * It is used by the Duration renderer's body, but can also be used standalone.
  */
@@ -56,7 +59,8 @@ function renderDurationCalculator(args: Record<string, unknown>) {
 }
 
 /**
- * Default calculator: enter a start datetime and press "Calculate end datetime".
+ * Default calculator: enter a start datetime and press the → arrow to compute
+ * the end datetime (or enter an end and press ← to go the other way).
  */
 export const Default: Story = {
   id: 'duration-calculator-default',
@@ -65,7 +69,7 @@ export const Default: Story = {
     docs: {
       source: {
         code: `
-<!-- Enter a start datetime, then click "Calculate end datetime". -->
+<!-- Enter a start datetime, then press the → arrow to compute the end datetime. -->
 <duration-calculator iso-duration="P7DT2H"></duration-calculator>
         `,
       },

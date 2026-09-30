@@ -76,6 +76,24 @@ export function formatDatetimeIso(parts: DateTimeParts): string {
  *          parsed.
  */
 export function addDurationToIso(startIso: string, duration: DurationParts): string | null {
+  return applyDurationToIso(startIso, duration, 1);
+}
+
+/**
+ * Calculates the start datetime for an end datetime minus a duration, using
+ * calendar-accurate Temporal arithmetic.
+ *
+ * @param endIso ISO 8601 datetime string (may be local, without timezone).
+ * @param duration The parsed duration to subtract.
+ * @returns The start datetime as an ISO string, or null if the end cannot be
+ *          parsed.
+ */
+export function subtractDurationFromIso(endIso: string, duration: DurationParts): string | null {
+  return applyDurationToIso(endIso, duration, -1);
+}
+
+/** Shared add/subtract arithmetic; sign is +1 to add, -1 to subtract. */
+function applyDurationToIso(valueIso: string, duration: DurationParts, sign: 1 | -1): string | null {
   try {
     const durationObj = new Temporal.Duration(
       duration.years,
@@ -86,23 +104,25 @@ export function addDurationToIso(startIso: string, duration: DurationParts): str
       duration.minutes,
       duration.seconds,
     );
+    // Subtract is implemented as adding the negated duration.
+    const effective = sign === 1 ? durationObj : durationObj.negated();
 
-    // Determine whether the start has a trailing timezone designator (an ISO
+    // Determine whether the value has a trailing timezone designator (an ISO
     // string that ends in Z or ±HH(:MM)). A datetime-local value never has one.
     const TZ_SUFFIX = /[zZ]|[+-]\d{2}(?::?\d{2})$/;
-    if (Temporal.ZonedDateTime !== undefined && TZ_SUFFIX.test(startIso)) {
-      const absolute = Temporal.Instant.from(startIso);
-      const offset = extractTrailingOffset(startIso);
+    if (Temporal.ZonedDateTime !== undefined && TZ_SUFFIX.test(valueIso)) {
+      const absolute = Temporal.Instant.from(valueIso);
+      const offset = extractTrailingOffset(valueIso);
       // `ZonedDateTime.from()` requires a bracketed IANA time zone ID; a fixed
       // offset is applied via `toZonedDateTimeISO(offset)` instead.
-      const zoned = absolute.toZonedDateTimeISO(offset).add(durationObj).toString();
+      const zoned = absolute.toZonedDateTimeISO(offset).add(effective).toString();
       // `ZonedDateTime.toString()` appends a bracketed time zone ID, so strip it
       // to return plain ISO 8601 with the offset preserved.
       return zoned.replace(/\[[^\]]*\]$/, '');
     }
 
-    const plain = Temporal.PlainDateTime.from(startIso);
-    return plain.add(durationObj).toString();
+    const plain = Temporal.PlainDateTime.from(valueIso);
+    return plain.add(effective).toString();
   } catch {
     return null;
   }

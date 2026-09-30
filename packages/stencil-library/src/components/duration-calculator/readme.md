@@ -7,11 +7,14 @@
 
 ## Overview
 
-An interactive end-datetime calculator for ISO 8601 durations.
+A compact end-datetime calculator for ISO 8601 durations.
 
-It accepts an ISO duration string (e.g. `P7DT2H`), lets a user enter a start
-datetime via a native `<input type="datetime-local">`, and on demand computes
-and displays the corresponding end datetime, start plus the duration.
+It accepts an ISO duration string (e.g. `P7DT2H`) and shows a single row with
+a start datetime input on the left, two direction arrow buttons in the middle,
+and an end datetime input on the right. Clicking the right arrow (→) computes
+the end datetime from the start; clicking the left arrow (←) computes the
+start datetime from the end. The computed input is highlighted with a green
+border so the result stands out.
 
 ## Properties
 
