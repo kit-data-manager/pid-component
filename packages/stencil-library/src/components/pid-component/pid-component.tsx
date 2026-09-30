@@ -458,8 +458,10 @@ export class PidComponent {
       // Some renderers (e.g. DurationType) provide interactive body content that
       // should be immediately visible rather than hidden behind the collapsed
       // summary. Honor their request unless the consumer explicitly opted in to
-      // a collapsed state via openByDefault=false.
-      if (!this.openByDefault && this.identifierObject.opensByDefault()) {
+      // a collapsed state via openByDefault=false. Only apply the renderer's
+      // default when the consumer did not provide the prop at all (undefined),
+      // since an explicit false is falsy too and must keep the component collapsed.
+      if (this.openByDefault === undefined && this.identifierObject.opensByDefault()) {
         this.isExpanded = true;
       }
     } catch (e) {
