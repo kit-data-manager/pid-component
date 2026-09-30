@@ -12,6 +12,9 @@ import {
   defineCustomElement as defineJsonViewer,
 } from '@kit-data-manager/pid-component/dist/components/json-viewer.js';
 import {
+  defineCustomElement as defineDurationCalculator,
+} from '@kit-data-manager/pid-component/dist/components/duration-calculator.js';
+import {
   defineCustomElement as definePidActions,
 } from '@kit-data-manager/pid-component/dist/components/pid-actions.js';
 import {
@@ -36,6 +39,7 @@ import {
 definePidComponent();
 defineCopyButton();
 defineJsonViewer();
+defineDurationCalculator();
 definePidActions();
 definePidCollapsible();
 definePidDataTable();

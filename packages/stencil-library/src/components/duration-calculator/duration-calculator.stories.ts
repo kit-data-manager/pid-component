@@ -45,8 +45,8 @@ function renderDurationCalculator(args: Record<string, unknown>) {
   if (args.isoDuration) {
     calculator.setAttribute('iso-duration', args.isoDuration as string);
   }
-  if (args.darkMode !== undefined) {
-    calculator.setAttribute('dark-mode', String(!!args.darkMode));
+  if (args.darkMode) {
+    calculator.setAttribute('dark-mode', '');
   }
 
   const container = document.createElement('div');

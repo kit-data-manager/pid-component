@@ -4,6 +4,9 @@ import {
 } from '../packages/stencil-library/dist/components/pid-component.js';
 import { defineCustomElement as defineCopyButton } from '../packages/stencil-library/dist/components/copy-button.js';
 import { defineCustomElement as defineJsonViewer } from '../packages/stencil-library/dist/components/json-viewer.js';
+import {
+  defineCustomElement as defineDurationCalculator,
+} from '../packages/stencil-library/dist/components/duration-calculator.js';
 import { defineCustomElement as definePidActions } from '../packages/stencil-library/dist/components/pid-actions.js';
 import {
   defineCustomElement as definePidCollapsible,
@@ -28,6 +31,7 @@ import {
 definePidComponent();
 defineCopyButton();
 defineJsonViewer();
+defineDurationCalculator();
 definePidActions();
 definePidCollapsible();
 definePidDataTable();
