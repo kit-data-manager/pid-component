@@ -30,20 +30,60 @@ export function formatDurationParts(parts: DurationParts): string {
  * string form), used for display and tooltips.
  */
 export function formatDurationPartsIso(parts: DurationParts): string {
-  // ISO 8601's week form (PnW) is exclusive: weeks cannot be combined with any
-  // other component. A week-only duration round-trips as PnW.
-  if (parts.weeks > 0) {
-    return `P${parts.weeks}W`;
+  return durationToIso(parts);
+}
+
+/**
+ * Serializes parsed duration parts back to ISO 8601 notation.
+ *
+ * Fractional components are carried down into smaller units (e.g. `1.5H` →
+ * `1H30M`) so that only the smallest unit can carry a fraction. This matches
+ * what `Temporal.Duration.from()` accepts, while the `Temporal.Duration`
+ * constructor would reject any fractional value.
+ */
+export function durationToIso(parts: DurationParts): string {
+  let { years, months, weeks, days, hours, minutes, seconds } = parts;
+
+  // Carry fractional values down to the smallest unit in each group so that
+  // only the smallest unit carries a fraction (required by Duration.from()).
+  // Weeks are kept as their own component and can combine with other calendar
+  // units (e.g. P1W1D), matching how the preview/calculator interpret them.
+  if (!Number.isInteger(years)) {
+    months += (years - Math.floor(years)) * 12;
+    years = Math.floor(years);
   }
+  if (!Number.isInteger(weeks)) {
+    days += (weeks - Math.floor(weeks)) * 7;
+    weeks = Math.floor(weeks);
+  }
+  if (!Number.isInteger(days)) {
+    hours += (days - Math.floor(days)) * 24;
+    days = Math.floor(days);
+  }
+  if (!Number.isInteger(hours)) {
+    minutes += (hours - Math.floor(hours)) * 60;
+    hours = Math.floor(hours);
+  }
+  if (!Number.isInteger(minutes)) {
+    seconds += (minutes - Math.floor(minutes)) * 60;
+    minutes = Math.floor(minutes);
+  }
+
   const datePart =
-    `${parts.years > 0 ? parts.years + 'Y' : ''}` +
-    `${parts.months > 0 ? parts.months + 'M' : ''}` +
-    `${parts.days > 0 ? parts.days + 'D' : ''}`;
+    `${years > 0 ? formatUnit(years) + 'Y' : ''}` +
+    `${months > 0 ? formatUnit(months) + 'M' : ''}` +
+    `${weeks > 0 ? formatUnit(weeks) + 'W' : ''}` +
+    `${days > 0 ? formatUnit(days) + 'D' : ''}`;
   const timePart =
-    `${parts.hours > 0 ? parts.hours + 'H' : ''}` +
-    `${parts.minutes > 0 ? parts.minutes + 'M' : ''}` +
-    `${parts.seconds > 0 ? parts.seconds + 'S' : ''}`;
+    `${hours > 0 ? formatUnit(hours) + 'H' : ''}` +
+    `${minutes > 0 ? formatUnit(minutes) + 'M' : ''}` +
+    `${seconds > 0 ? formatUnit(seconds) + 'S' : ''}`;
   return `P${datePart}${timePart.length > 0 ? 'T' + timePart : ''}`;
+}
+
+/** Formats a numeric component, preserving a fractional part when present. */
+function formatUnit(value: number): string {
+  return Number.isInteger(value) ? String(value) : String(parseFloat(value.toFixed(9)));
 }
 
 /**
@@ -100,15 +140,12 @@ export function subtractDurationFromIso(endIso: string, duration: DurationParts)
 /** Shared add/subtract arithmetic; sign is +1 to add, -1 to subtract. */
 function applyDurationToIso(valueIso: string, duration: DurationParts, sign: 1 | -1): string | null {
   try {
-    const durationObj = new Temporal.Duration(
-      duration.years,
-      duration.months,
-      duration.weeks,
-      duration.days,
-      duration.hours,
-      duration.minutes,
-      duration.seconds,
-    );
+    // Build the ISO 8601 representation from the parsed parts and construct the
+    // Duration from it. The `Temporal.Duration` constructor requires integer
+    // values, which would throw for fractional inputs such as `PT1.5H`.
+    // `Temporal.Duration.from()` accepts the full ISO duration grammar and
+    // normalizes fractional units internally.
+    const durationObj = Temporal.Duration.from(durationToIso(duration));
     // Subtract is implemented as adding the negated duration.
     const effective = sign === 1 ? durationObj : durationObj.negated();
 

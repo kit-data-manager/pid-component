@@ -105,7 +105,9 @@ export function parseDatetime(value: string): DateTimeParts | null {
   const month = dateComponents[1];
   const day = dateComponents[2];
   if (month < 1 || month > 12) return null;
-  if (day > daysInMonth(year, month)) return null;
+  // Reject day zero (e.g. `2024-01-00`), which the Date constructor would
+  // otherwise normalize to the previous month instead of being invalid.
+  if (day < 1 || day > daysInMonth(year, month)) return null;
 
   const hasTime = m[2] !== undefined;
 

@@ -39,6 +39,11 @@ describe('parseDatetime', () => {
     expect(parseDatetime('2024-02-30')).toBeNull();
   });
 
+  it('rejects a zero day rather than normalizing to the previous month', () => {
+    expect(parseDatetime('2024-01-00')).toBeNull();
+    expect(parseDatetime('2024-06-00')).toBeNull();
+  });
+
   it('rejects datetime with hour 24', () => {
     expect(parseDatetime('2024-01-01T24:00:00')).toBeNull();
   });
@@ -102,6 +107,15 @@ describe('parseDuration', () => {
     expect(parseDuration('P')).toBeNull();
   });
 
+  it('parses a week form combined with other components', () => {
+    expect(parseDuration('P1W1D')).not.toBeNull();
+    expect(parseDuration('P1Y1W')).not.toBeNull();
+  });
+
+  it('accepts a standalone week form', () => {
+    expect(parseDuration('P2W')).not.toBeNull();
+  });
+
   it('rejects random text', () => {
     expect(parseDuration('7 days')).toBeNull();
   });
@@ -135,9 +149,29 @@ describe('formatDurationPartsIso', () => {
     expect(formatDurationPartsIso(parts)).toBe('P2W');
   });
 
+  it('round-trips a week combined with another component (kept consistent)', () => {
+    const parts = parseDuration('P1W1D')!;
+    expect(formatDurationPartsIso(parts)).toBe('P1W1D');
+  });
+
   it('round-trips a time-only duration', () => {
     const parts = parseDuration('PT2H30M')!;
     expect(formatDurationPartsIso(parts)).toBe('PT2H30M');
+  });
+
+  it('normalizes a fractional hour for Duration.from consumption', () => {
+    const parts = parseDuration('PT1.5H')!;
+    expect(formatDurationPartsIso(parts)).toBe('PT1H30M');
+  });
+
+  it('normalizes a fractional minute down to seconds', () => {
+    const parts = parseDuration('PT2H30.5M')!;
+    expect(formatDurationPartsIso(parts)).toBe('PT2H30M30S');
+  });
+
+  it('keeps a fractional second as the smallest unit', () => {
+    const parts = parseDuration('PT0.5S')!;
+    expect(formatDurationPartsIso(parts)).toBe('PT0.5S');
   });
 });
 
@@ -181,6 +215,17 @@ describe('addDurationToIso', () => {
     const end = addDurationToIso('2024-01-01T00:00:00+02:00', parseDuration('P1D')!);
     expect(end).toMatch(/^2024-01-02T00:00:00\+02:00/);
   });
+
+  it('adds a fractional-hour duration (does not throw)', () => {
+    const end = addDurationToIso('2024-01-01T00:00:00', parseDuration('PT1.5H')!);
+    expect(end).toMatch(/^2024-01-01T01:30:00/);
+  });
+
+  it('adds a week combined with days as the total (preview/calculator consistent)', () => {
+    // Preview reports weeks*7 + days = 8 days; the arithmetic must agree.
+    const end = addDurationToIso('2024-01-01T00:00:00', parseDuration('P1W1D')!);
+    expect(end).toMatch(/^2024-01-09T00:00:00/);
+  });
 });
 
 describe('subtractDurationFromIso', () => {
@@ -204,5 +249,10 @@ describe('subtractDurationFromIso', () => {
 
   it('returns null for an unparseable value', () => {
     expect(subtractDurationFromIso('not-a-date', parseDuration('P1D')!)).toBeNull();
+  });
+
+  it('subtracts a fractional-hour duration (does not throw)', () => {
+    const start = subtractDurationFromIso('2024-01-01T01:30:00', parseDuration('PT1.5H')!);
+    expect(start).toBe('2024-01-01T00:00:00');
   });
 });
