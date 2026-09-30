@@ -21,6 +21,11 @@ ISO 8601 duration notation (`PnYnMnDTnHnMnS`):
 - Week form: `P2W`
 - Time only: `PT2H30M`, `PT1.5H`
 
+The week designator (e.g. `W`) may combine with other calendar units — `P1W1D` is
+accepted and read as 8 days, and the same total is used by the preview, the ISO
+output and the calculator. Fractional values are allowed for **time** units only
+(e.g. `PT1.5H`); calendar units (years/months/weeks/days) must be whole numbers.
+
 ## End-Datetime Calculator
 
 The renderer displays the duration breakdown (years/months/days/hours/…) in the data table
