@@ -44,6 +44,15 @@ describe('parseDatetime', () => {
     expect(parseDatetime('2024-06-00')).toBeNull();
   });
 
+  it('parses a datetime with a basic-form (colon-less) timezone offset', () => {
+    const parts = parseDatetime('2024-06-15T09:30:00+0230')!;
+    expect(parts.timezoneOffsetMinutes).toBe(150);
+  });
+
+  it('rejects a timezone offset with out-of-range minutes', () => {
+    expect(parseDatetime('2024-06-15T09:30:00+02:99')).toBeNull();
+  });
+
   it('rejects datetime with hour 24', () => {
     expect(parseDatetime('2024-01-01T24:00:00')).toBeNull();
   });

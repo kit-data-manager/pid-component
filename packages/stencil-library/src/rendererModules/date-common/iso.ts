@@ -136,10 +136,15 @@ export function parseDatetime(value: string): DateTimeParts | null {
         timezoneOffsetMinutes = 0;
       } else {
         const sign = tz[0] === '-' ? -1 : 1;
-        const tzBody = tz.slice(1);
-        const tzHour = Number(tzBody.slice(0, 2));
-        const tzMinute = tzBody.length > 2 ? Number(tzBody.slice(3)) : 0;
+        // The offset may be extended (+02:30) or basic (+0230); normalize the
+        // optional colon so both forms parse the minutes identically.
+        const raw = tz.slice(1);
+        const normalized = raw.includes(':') ? raw : raw.slice(0, 2) + ':' + raw.slice(2);
+        const tzHour = Number(normalized.slice(0, 2));
+        const tzMinute = Number(normalized.slice(3));
         if (tzHour > 14 || (tzHour === 14 && tzMinute !== 0)) return null;
+        // Range-check the minutes so invalid values like `+02:99` are rejected.
+        if (tzMinute > 59) return null;
         timezoneOffsetMinutes = sign * (tzHour * 60 + tzMinute);
       }
     }
