@@ -14,6 +14,7 @@ import { type PidCollapsibleCustomEvent, type PidDataTableCustomEvent, type PidP
 import type { Components } from "@kit-data-manager/pid-component/dist/components";
 import { ColorHighlight as ColorHighlightElement } from "@kit-data-manager/pid-component/dist/components/color-highlight.js";
 import { CopyButton as CopyButtonElement } from "@kit-data-manager/pid-component/dist/components/copy-button.js";
+import { DurationCalculator as DurationCalculatorElement } from "@kit-data-manager/pid-component/dist/components/duration-calculator.js";
 import { JsonViewer as JsonViewerElement } from "@kit-data-manager/pid-component/dist/components/json-viewer.js";
 import { LocaleVisualization as LocaleVisualizationElement } from "@kit-data-manager/pid-component/dist/components/locale-visualization.js";
 import { PidActions as PidActionsElement } from "@kit-data-manager/pid-component/dist/components/pid-actions.js";
@@ -48,6 +49,19 @@ export const CopyButton: StencilReactComponent<CopyButtonElement, CopyButtonEven
     },
     hydrateModule: typeof window === 'undefined' ? (import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>) : undefined,
     clientModule: clientComponents.CopyButton as StencilReactComponent<CopyButtonElement, CopyButtonEvents, Components.CopyButton, 'value'>,
+    serializeShadowRoot
+});
+
+export type DurationCalculatorEvents = NonNullable<unknown>;
+
+export const DurationCalculator: StencilReactComponent<DurationCalculatorElement, DurationCalculatorEvents, Components.DurationCalculator> = /*@__PURE__*/ createComponent<DurationCalculatorElement, DurationCalculatorEvents, Components.DurationCalculator>({
+    tagName: 'duration-calculator',
+    properties: {
+        isoDuration: 'iso-duration',
+        darkMode: 'dark-mode'
+    },
+    hydrateModule: typeof window === 'undefined' ? (import('@kit-data-manager/pid-component/hydrate') as Promise<HydrateModule>) : undefined,
+    clientModule: clientComponents.DurationCalculator as StencilReactComponent<DurationCalculatorElement, DurationCalculatorEvents, Components.DurationCalculator>,
     serializeShadowRoot
 });
 

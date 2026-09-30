@@ -63,17 +63,20 @@ export interface PidDetectionConfig {
    *
    * If set, only these renderers are used during scanning, in the specified
    * order. This allows activating renderers that are not auto-discoverable
-   * by default (e.g. `EmailType`, `URLType`, `LocaleType`, `JSONType`),
+   * by default (e.g. `ReducedDateType`, `LocaleType`, `FallbackType`),
    * or restricting detection to a specific subset.
    *
    * If not set, only renderers with `autoDiscoverableByDefault: true` in the
-   * renderer registry participate (currently: `DateType`, `ORCIDType`,
-   * `DOIType`, `HandleType`, `RORType`, `SPDXType`).
+   * renderer registry participate (currently: `DurationType`, `DateType`,
+   * `ORCIDType`, `DataCiteDOIType`, `CrossRefDOIType`, `HandleType`,
+   * `RORType`, `SPDXType`, `ISBNType`, `EmailType`, `URLType`, `JSONType`).
    *
-   * Available keys: `DateType`, `ORCIDType`, `DOIType`, `HandleType`,
-   * `RORType`, `SPDXType`, `EmailType`, `URLType`, `LocaleType`, `JSONType`.
+   * Available keys: `DurationType`, `DateType`, `ReducedDateType`,
+   * `ORCIDType`, `DataCiteDOIType`, `CrossRefDOIType`, `HandleType`,
+   * `RORType`, `SPDXType`, `ISBNType`, `EmailType`, `URLType`, `LocaleType`,
+   * `JSONType`, `FallbackType`.
    *
-   * Example: ["DOIType", "ORCIDType", "HandleType", "EmailType"]
+   * Example: ["DataCiteDOIType", "ORCIDType", "HandleType", "EmailType"]
    */
   renderers?: string[];
 

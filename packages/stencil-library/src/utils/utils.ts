@@ -6,6 +6,8 @@ import { HandleType } from '../rendererModules/Handle/HandleType';
 import { DataCiteDOIType } from '../rendererModules/DOI/DataCite/DataCiteDOIType';
 import { CrossRefDOIType } from '../rendererModules/DOI/CrossRef/CrossRefDOIType';
 import { DateType } from '../rendererModules/DateType/DateType';
+import { ReducedDateType } from '../rendererModules/ReducedDateType/ReducedDateType';
+import { DurationType } from '../rendererModules/DurationType/DurationType';
 import { RORType } from '../rendererModules/RORType/RORType';
 import { SPDXType } from '../rendererModules/SPDXType/SPDXType';
 import { EmailType } from '../rendererModules/EmailType/EmailType';
@@ -35,72 +37,84 @@ export const renderers: {
 }[] = [
   {
     priority: 0,
+    key: 'DurationType',
+    constructor: DurationType,
+    autoDiscoverableByDefault: true,
+  },
+  {
+    priority: 1,
     key: 'DateType',
     constructor: DateType,
     autoDiscoverableByDefault: true,
   },
   {
-    priority: 1,
+    priority: 2,
+    key: 'ReducedDateType',
+    constructor: ReducedDateType,
+    autoDiscoverableByDefault: false,
+  },
+  {
+    priority: 3,
     key: 'ORCIDType',
     constructor: ORCIDType,
     autoDiscoverableByDefault: true,
   },
   {
-    priority: 2,
+    priority: 4,
     key: 'DataCiteDOIType',
     constructor: DataCiteDOIType,
     autoDiscoverableByDefault: true,
   },
   {
-    priority: 2,
+    priority: 4,
     key: 'CrossRefDOIType',
     constructor: CrossRefDOIType,
     autoDiscoverableByDefault: true,
   },
   {
-    priority: 3,
+    priority: 5,
     key: 'HandleType',
     constructor: HandleType,
     autoDiscoverableByDefault: true,
   },
   {
-    priority: 4,
+    priority: 6,
     key: 'RORType',
     constructor: RORType,
     autoDiscoverableByDefault: true,
   },
   {
-    priority: 5,
+    priority: 7,
     key: 'SPDXType',
     constructor: SPDXType,
     autoDiscoverableByDefault: true,
   },
   {
-    priority: 5.5,
+    priority: 8,
     key: 'ISBNType',
     constructor: ISBNType,
     autoDiscoverableByDefault: true,
   },
   {
-    priority: 6,
+    priority: 9,
     key: 'EmailType',
     constructor: EmailType,
     autoDiscoverableByDefault: true,
   },
   {
-    priority: 7,
+    priority: 10,
     key: 'URLType',
     constructor: URLType,
     autoDiscoverableByDefault: true,
   },
   {
-    priority: 8,
+    priority: 11,
     key: 'LocaleType',
     constructor: LocaleType,
     autoDiscoverableByDefault: false,
   },
   {
-    priority: 9,
+    priority: 12,
     key: 'JSONType',
     constructor: JSONType,
     autoDiscoverableByDefault: true,

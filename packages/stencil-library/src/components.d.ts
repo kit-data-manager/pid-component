@@ -38,6 +38,26 @@ export namespace Components {
          */
         "value": string;
     }
+    /**
+     * A compact end-datetime calculator for ISO 8601 durations.
+     * It accepts an ISO duration string (e.g. `P7DT2H`) and shows a single row with
+     * a start datetime input on the left, two direction arrow buttons in the middle,
+     * and an end datetime input on the right. Clicking the right arrow (→) computes
+     * the end datetime from the start; clicking the left arrow (←) computes the
+     * start datetime from the end. The computed input is highlighted with a green
+     * border so the result stands out.
+     */
+    interface DurationCalculator {
+        /**
+          * Whether the calculator should use dark-mode styling.
+          * @default false
+         */
+        "darkMode": boolean;
+        /**
+          * The ISO 8601 duration, e.g. "P7DT2H".
+         */
+        "isoDuration": string;
+    }
     interface JsonViewer {
         /**
           * Collapse all nodes in the tree view
@@ -393,6 +413,21 @@ declare global {
         prototype: HTMLCopyButtonElement;
         new (): HTMLCopyButtonElement;
     };
+    /**
+     * A compact end-datetime calculator for ISO 8601 durations.
+     * It accepts an ISO duration string (e.g. `P7DT2H`) and shows a single row with
+     * a start datetime input on the left, two direction arrow buttons in the middle,
+     * and an end datetime input on the right. Clicking the right arrow (→) computes
+     * the end datetime from the start; clicking the left arrow (←) computes the
+     * start datetime from the end. The computed input is highlighted with a green
+     * border so the result stands out.
+     */
+    interface HTMLDurationCalculatorElement extends Components.DurationCalculator, HTMLStencilElement {
+    }
+    var HTMLDurationCalculatorElement: {
+        prototype: HTMLDurationCalculatorElement;
+        new (): HTMLDurationCalculatorElement;
+    };
     interface HTMLJsonViewerElement extends Components.JsonViewer, HTMLStencilElement {
     }
     var HTMLJsonViewerElement: {
@@ -495,6 +530,7 @@ declare global {
     interface HTMLElementTagNameMap {
         "color-highlight": HTMLColorHighlightElement;
         "copy-button": HTMLCopyButtonElement;
+        "duration-calculator": HTMLDurationCalculatorElement;
         "json-viewer": HTMLJsonViewerElement;
         "locale-visualization": HTMLLocaleVisualizationElement;
         "pid-actions": HTMLPidActionsElement;
@@ -535,6 +571,26 @@ declare namespace LocalJSX {
           * @public
          */
         "value": string;
+    }
+    /**
+     * A compact end-datetime calculator for ISO 8601 durations.
+     * It accepts an ISO duration string (e.g. `P7DT2H`) and shows a single row with
+     * a start datetime input on the left, two direction arrow buttons in the middle,
+     * and an end datetime input on the right. Clicking the right arrow (→) computes
+     * the end datetime from the start; clicking the left arrow (←) computes the
+     * start datetime from the end. The computed input is highlighted with a green
+     * border so the result stands out.
+     */
+    interface DurationCalculator {
+        /**
+          * Whether the calculator should use dark-mode styling.
+          * @default false
+         */
+        "darkMode"?: boolean;
+        /**
+          * The ISO 8601 duration, e.g. "P7DT2H".
+         */
+        "isoDuration"?: string;
     }
     interface JsonViewer {
         /**
@@ -886,6 +942,10 @@ declare namespace LocalJSX {
         "label": string;
         "darkMode": 'light' | 'dark' | 'system';
     }
+    interface DurationCalculatorAttributes {
+        "isoDuration": string;
+        "darkMode": boolean;
+    }
     interface JsonViewerAttributes {
         "data": string | object;
         "viewMode": 'tree' | 'code';
@@ -959,6 +1019,7 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "color-highlight": Omit<ColorHighlight, keyof ColorHighlightAttributes> & { [K in keyof ColorHighlight & keyof ColorHighlightAttributes]?: ColorHighlight[K] } & { [K in keyof ColorHighlight & keyof ColorHighlightAttributes as `attr:${K}`]?: ColorHighlightAttributes[K] } & { [K in keyof ColorHighlight & keyof ColorHighlightAttributes as `prop:${K}`]?: ColorHighlight[K] } & OneOf<"text", ColorHighlight["text"], ColorHighlightAttributes["text"]>;
         "copy-button": Omit<CopyButton, keyof CopyButtonAttributes> & { [K in keyof CopyButton & keyof CopyButtonAttributes]?: CopyButton[K] } & { [K in keyof CopyButton & keyof CopyButtonAttributes as `attr:${K}`]?: CopyButtonAttributes[K] } & { [K in keyof CopyButton & keyof CopyButtonAttributes as `prop:${K}`]?: CopyButton[K] } & OneOf<"value", CopyButton["value"], CopyButtonAttributes["value"]>;
+        "duration-calculator": Omit<DurationCalculator, keyof DurationCalculatorAttributes> & { [K in keyof DurationCalculator & keyof DurationCalculatorAttributes]?: DurationCalculator[K] } & { [K in keyof DurationCalculator & keyof DurationCalculatorAttributes as `attr:${K}`]?: DurationCalculatorAttributes[K] } & { [K in keyof DurationCalculator & keyof DurationCalculatorAttributes as `prop:${K}`]?: DurationCalculator[K] };
         "json-viewer": Omit<JsonViewer, keyof JsonViewerAttributes> & { [K in keyof JsonViewer & keyof JsonViewerAttributes]?: JsonViewer[K] } & { [K in keyof JsonViewer & keyof JsonViewerAttributes as `attr:${K}`]?: JsonViewerAttributes[K] } & { [K in keyof JsonViewer & keyof JsonViewerAttributes as `prop:${K}`]?: JsonViewer[K] };
         "locale-visualization": Omit<LocaleVisualization, keyof LocaleVisualizationAttributes> & { [K in keyof LocaleVisualization & keyof LocaleVisualizationAttributes]?: LocaleVisualization[K] } & { [K in keyof LocaleVisualization & keyof LocaleVisualizationAttributes as `attr:${K}`]?: LocaleVisualizationAttributes[K] } & { [K in keyof LocaleVisualization & keyof LocaleVisualizationAttributes as `prop:${K}`]?: LocaleVisualization[K] } & OneOf<"locale", LocaleVisualization["locale"], LocaleVisualizationAttributes["locale"]>;
         "pid-actions": Omit<PidActions, keyof PidActionsAttributes> & { [K in keyof PidActions & keyof PidActionsAttributes]?: PidActions[K] } & { [K in keyof PidActions & keyof PidActionsAttributes as `attr:${K}`]?: PidActionsAttributes[K] } & { [K in keyof PidActions & keyof PidActionsAttributes as `prop:${K}`]?: PidActions[K] };
@@ -975,6 +1036,16 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "color-highlight": LocalJSX.IntrinsicElements["color-highlight"] & JSXBase.HTMLAttributes<HTMLColorHighlightElement>;
             "copy-button": LocalJSX.IntrinsicElements["copy-button"] & JSXBase.HTMLAttributes<HTMLCopyButtonElement>;
+            /**
+             * A compact end-datetime calculator for ISO 8601 durations.
+             * It accepts an ISO duration string (e.g. `P7DT2H`) and shows a single row with
+             * a start datetime input on the left, two direction arrow buttons in the middle,
+             * and an end datetime input on the right. Clicking the right arrow (→) computes
+             * the end datetime from the start; clicking the left arrow (←) computes the
+             * start datetime from the end. The computed input is highlighted with a green
+             * border so the result stands out.
+             */
+            "duration-calculator": LocalJSX.IntrinsicElements["duration-calculator"] & JSXBase.HTMLAttributes<HTMLDurationCalculatorElement>;
             "json-viewer": LocalJSX.IntrinsicElements["json-viewer"] & JSXBase.HTMLAttributes<HTMLJsonViewerElement>;
             "locale-visualization": LocalJSX.IntrinsicElements["locale-visualization"] & JSXBase.HTMLAttributes<HTMLLocaleVisualizationElement>;
             "pid-actions": LocalJSX.IntrinsicElements["pid-actions"] & JSXBase.HTMLAttributes<HTMLPidActionsElement>;

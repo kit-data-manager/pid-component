@@ -190,6 +190,15 @@ describe('GenericIdentifierType', () => {
     });
   });
 
+  // ─── opensByDefault() ───────────────────────────────────────────────
+
+  describe('opensByDefault()', () => {
+    it('returns false by default (collapse unless a renderer opts in)', () => {
+      const renderer = new TestRenderer('val');
+      expect(renderer.opensByDefault()).toBe(false);
+    });
+  });
+
   // ─── abstract method implementations (via TestRenderer) ───────────
 
   describe('abstract methods (TestRenderer stubs)', () => {

@@ -51,11 +51,30 @@ describe('ISBN book source integration', () => {
   });
 
   describe('action links resolve', () => {
+    // These hit live third-party URLs. A 429 (too many requests) is a normal
+    // anonymous-quota state for these services rather than a broken link, so it
+    // is tolerated here (the original suite did the same for Google Books).
+    // Anything else non-2xx is a genuine drift in a provider's endpoint and
+    // still hard-fails, with the URL and status surfaced so it is obvious which
+    // source broke. One retry smooths transient network blips.
+    async function resolveOnce(url: string): Promise<Response> {
+      try {
+        return await fetch(url, { redirect: 'follow' });
+      } catch {
+        return fetch(url, { redirect: 'follow' });
+      }
+    }
+
+    async function expectResolves(url: string): Promise<void> {
+      const response = await resolveOnce(url);
+      if (response.status === 429) return;
+      expect(response.ok, `expected ${url} to resolve (got HTTP ${response.status})`).toBe(true);
+    }
+
     it('provider ISBN action URLs return a successful response', { timeout: 60000 }, async () => {
       for (const provider of createDefaultIsbnProviders()) {
         const url = provider.isbnUrl(CLRS_ISBN);
-        const response = await fetch(url, { redirect: 'follow' });
-        expect(response.ok).toBe(true);
+        await expectResolves(url);
       }
     });
 
@@ -65,8 +84,7 @@ describe('ISBN book source integration', () => {
 
       for (const source of result?.sources ?? []) {
         expect(source.actionUrl).toBeTruthy();
-        const response = await fetch(source.actionUrl, { redirect: 'follow' });
-        expect(response.ok).toBe(true);
+        await expectResolves(source.actionUrl);
       }
     });
   });

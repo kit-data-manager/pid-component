@@ -6,6 +6,7 @@ import * as DataCache from '../DataCache';
 // Avoid pulling the Stencil custom-element runtime (json-viewer uses @Prop)
 // into the node unit environment.
 vi.mock('../../components/json-viewer/json-viewer', () => ({}));
+vi.mock('../../components/duration-calculator/duration-calculator', () => ({}));
 
 const validPid = '21.T11148/abc-123';
 const typeRegistryUrl = 'https://api.github.com/repos/ThomasJejkal/simple-type-registry/git/trees/main?recursive=1';

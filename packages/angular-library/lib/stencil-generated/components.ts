@@ -8,6 +8,7 @@ import type { Components } from '@kit-data-manager/pid-component/components';
 
 import { defineCustomElement as defineColorHighlight } from '@kit-data-manager/pid-component/components/color-highlight.js';
 import { defineCustomElement as defineCopyButton } from '@kit-data-manager/pid-component/components/copy-button.js';
+import { defineCustomElement as defineDurationCalculator } from '@kit-data-manager/pid-component/components/duration-calculator.js';
 import { defineCustomElement as defineJsonViewer } from '@kit-data-manager/pid-component/components/json-viewer.js';
 import { defineCustomElement as defineLocaleVisualization } from '@kit-data-manager/pid-component/components/locale-visualization.js';
 import { defineCustomElement as definePidActions } from '@kit-data-manager/pid-component/components/pid-actions.js';
@@ -60,6 +61,29 @@ export class CopyButton {
 
 
 export declare interface CopyButton extends Components.CopyButton {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineDurationCalculator,
+  inputs: ['darkMode', 'isoDuration']
+})
+@Component({
+  selector: 'duration-calculator',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['darkMode', 'isoDuration'],
+})
+export class DurationCalculator {
+  protected el: HTMLDurationCalculatorElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface DurationCalculator extends Components.DurationCalculator {}
 
 
 @ProxyCmp({

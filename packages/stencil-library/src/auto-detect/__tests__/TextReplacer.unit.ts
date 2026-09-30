@@ -6,6 +6,7 @@ import { DOI_examples } from '../../../../../examples';
 vi.mock('../../components/json-viewer/json-viewer', () => ({
   default: { render: vi.fn() },
 }));
+vi.mock('../../components/duration-calculator/duration-calculator', () => ({}));
 
 function createMockElement(tagName: string): any {
   const elem: any = {

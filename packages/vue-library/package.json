@@ -44,18 +44,18 @@
   },
   "devDependencies": {
     "@mdi/font": "^7.4.47",
-    "@storybook/addon-a11y": "^10.6.0",
-    "@storybook/addon-docs": "^10.6.0",
-    "@storybook/vue3-vite": "^10.6.0",
+    "@storybook/addon-a11y": "^10.6.1",
+    "@storybook/addon-docs": "^10.6.1",
+    "@storybook/vue3-vite": "^10.6.1",
     "@vitejs/plugin-vue": "^6.0.9",
     "@vue/server-renderer": "^3.5.43",
     "ast-types": "^0.16.3",
-    "storybook": "^10.6.0",
+    "storybook": "^10.6.1",
     "typescript": "^7.0.2",
     "vite": "^8.3.0",
     "vue": "^3.5.43",
     "vuetify": "^4.2.1",
-    "@storybook/addon-mcp": "^10.6.0"
+    "@storybook/addon-mcp": "^10.6.1"
   },
   "peerDependencies": {
     "vue": "^3.0.0"

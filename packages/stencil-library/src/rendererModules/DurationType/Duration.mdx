@@ -1,0 +1,58 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+
+import * as DurationStories from './Duration.stories';
+
+<Meta of={DurationStories} />
+
+# Duration
+
+The Duration renderer detects **ISO 8601 durations** (e.g. `P7DT2H`) as part of the
+component's ISO 8601-compliant date handling. It shows a humanized summary (e.g.
+"7 days, 2 hours"), and a compact **end-datetime calculator**: a start and an end
+datetime input with two direction arrows in between, using calendar-accurate
+Temporal arithmetic. Press **→** to compute the end datetime from the start (or
+**←** to compute the start from the end); the computed input is highlighted green.
+
+## Supported Formats
+
+ISO 8601 duration notation (`PnYnMnDTnHnMnS`):
+
+- Date + time: `P7DT2H`, `P1Y2M3DT4H5M6S`
+- Week form: `P2W`
+- Time only: `PT2H30M`, `PT1.5H`
+
+The week designator (e.g. `W`) may combine with other calendar units — `P1W1D` is
+accepted and read as 8 days, and the same total is used by the preview, the ISO
+output and the calculator. Fractional values are allowed for **time** units only
+(e.g. `PT1.5H`); calendar units (years/months/weeks/days) must be whole numbers.
+
+## End-Datetime Calculator
+
+The renderer displays the duration breakdown (years/months/days/hours/…) in the data table
+and a compact calculator. It expands by default so the calculator is immediately visible:
+enter a start datetime and press **→** to compute the end datetime (or enter an end
+and press **←** to compute the start).
+
+## Controls
+
+<Controls />
+
+## Examples
+
+### Date + Time
+
+<Canvas of={DurationStories.DateAndTime} />
+
+### Weeks
+
+<Canvas of={DurationStories.Weeks} />
+
+### Time Only
+
+<Canvas of={DurationStories.TimeOnly} />
+
+## Usage
+
+```html
+<pid-component value="P7DT2H"></pid-component>
+```

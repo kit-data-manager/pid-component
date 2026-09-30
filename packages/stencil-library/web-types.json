@@ -65,6 +65,35 @@
           "css": {}
         },
         {
+          "name": "duration-calculator",
+          "deprecated": false,
+          "description": "A compact end-datetime calculator for ISO 8601 durations.\n\nIt accepts an ISO duration string (e.g. `P7DT2H`) and shows a single row with\na start datetime input on the left, two direction arrow buttons in the middle,\nand an end datetime input on the right. Clicking the right arrow (→) computes\nthe end datetime from the start; clicking the left arrow (←) computes the\nstart datetime from the end. The computed input is highlighted with a green\nborder so the result stands out.",
+          "source": {
+            "module": "src/components/duration-calculator/duration-calculator.tsx",
+            "symbol": "DurationCalculator"
+          },
+          "attributes": [
+            {
+              "name": "iso-duration",
+              "deprecated": false,
+              "description": "The ISO 8601 duration, e.g. \"P7DT2H\".",
+              "required": false,
+              "default": "",
+              "priority": "high"
+            },
+            {
+              "name": "dark-mode",
+              "deprecated": false,
+              "description": "Whether the calculator should use dark-mode styling.",
+              "required": false,
+              "default": "false",
+              "priority": "high"
+            }
+          ],
+          "slots": [],
+          "css": {}
+        },
+        {
           "name": "json-viewer",
           "deprecated": false,
           "description": "",
@@ -617,6 +646,9 @@
           "events": []
         },
         {
+          "events": []
+        },
+        {
           "events": [
             {
               "name": "collapsibleToggle",
@@ -679,6 +711,16 @@
             },
             {
               "name": "label"
+            },
+            {
+              "name": "darkMode"
+            }
+          ]
+        },
+        {
+          "properties": [
+            {
+              "name": "isoDuration"
             },
             {
               "name": "darkMode"
