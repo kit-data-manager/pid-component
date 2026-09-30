@@ -6,10 +6,12 @@ import * as DateStories from './Date.stories';
 
 # Date
 
-The Date renderer is fully **ISO 8601 / RFC 3339** compliant. It detects date and
-datetime strings and renders them in a user-friendly, locale-aware format. This includes
-incomplete forms such as a local datetime without a timezone (`2023-01-18T09:21:00`).
-Dates are simple types with no expandable details.
+The Date renderer detects an **ISO 8601 subset**: full extended-form calendar dates
+(`YYYY-MM-DD`) and RFC 3339 datetimes, with or without a trailing timezone offset.
+It renders dates in a user-friendly, locale-aware format. Basic, ordinal, and
+week-date calendar forms are not supported, and a datetime without a timezone
+(such as `2023-01-18T09:21:00`) is treated as local time rather than as a
+timezone-qualified RFC 3339 timestamp. Dates are simple types with no expandable details.
 
 ## Supported Formats
 
