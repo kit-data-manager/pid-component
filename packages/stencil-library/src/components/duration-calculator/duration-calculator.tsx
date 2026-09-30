@@ -1,6 +1,7 @@
 import { Component, h, Prop, State } from '@stencil/core';
 import { parseDuration } from '../../rendererModules/date-common/iso';
 import { addDurationToIso, subtractDurationFromIso } from '../../rendererModules/date-common/format';
+import { toDateTimeLocal, toInputValue, toIsoInput } from './duration-calculator-utils';
 
 /**
  * A compact end-datetime calculator for ISO 8601 durations.
@@ -217,22 +218,3 @@ export class DurationCalculator {
   }
 }
 
-/** Normalizes a datetime-local input value into a parseable ISO local datetime. */
-function toIsoInput(value: string): string {
-  // A datetime-local value of the form YYYY-MM-DDTHH:MM has no seconds.
-  return value.length === 16 ? value + ':00' : value;
-}
-
-/** Formats a computed ISO local datetime for display in a datetime-local input. */
-function toInputValue(iso: string): string {
-  // Drop fractional seconds, then a trailing ':00' seconds if present so the
-  // value reads as clean minutes (matching what a user would type).
-  const cleaned = iso.replace(/\.\d+$/, '');
-  return cleaned.replace(/:(\d{2}):00$/, ':$1');
-}
-
-/** Formats a Date as a datetime-local input value (YYYY-MM-DDTHH:MM, local time). */
-function toDateTimeLocal(date: Date): string {
-  const pad = (n: number) => String(n).padStart(2, '0');
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
-}
