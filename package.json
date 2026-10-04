@@ -21,7 +21,7 @@
     "@angular/compiler-cli": "22.2.1",
     "@angular/compiler": "22.2.1",
     "@angular/animations": "22.2.1",
-    "@types/node": "^26.6.3",
+    "@types/node": "^26.6.4",
     "@vitest/browser-playwright": "^4.1.11",
     "@vitest/coverage-v8": "^4.1.11",
     "@vitest/coverage-istanbul": "^4.1.11",
@@ -35,7 +35,7 @@
     "storybook": "^10.6.1",
     "typescript": "~6.0.3",
     "vitest": "^4.1.11",
-    "wait-on": "^9.1.0"
+    "wait-on": "^9.5.1"
   },
   "dependencies": {
     "vite": "^8.3.1"
