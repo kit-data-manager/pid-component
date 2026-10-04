@@ -19,7 +19,7 @@
     "@angular/forms": "22.2.0",
     "@angular/common": "22.2.1",
     "@angular/compiler-cli": "22.2.0",
-    "@angular/compiler": "22.2.0",
+    "@angular/compiler": "22.2.1",
     "@angular/animations": "22.2.0",
     "@types/node": "^26.6.3",
     "@vitest/browser-playwright": "^4.1.11",
@@ -43,7 +43,7 @@
   "overrides": {
     "@angular/core": "22.2.0",
     "@angular/common": "22.2.1",
-    "@angular/compiler": "22.2.0",
+    "@angular/compiler": "22.2.1",
     "@angular/forms": "22.2.0",
     "@angular/platform-browser": "22.2.0",
     "@angular/compiler-cli": "22.2.0",
