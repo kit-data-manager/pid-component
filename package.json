@@ -15,7 +15,7 @@
     "@storybook/angular": "^10.6.1",
     "@storybook/web-components-vite": "^10.6.1",
     "@angular-devkit/build-angular": "22.2.1",
-    "@angular/core": "22.2.0",
+    "@angular/core": "22.2.1",
     "@angular/forms": "22.2.0",
     "@angular/common": "22.2.1",
     "@angular/compiler-cli": "22.2.0",
@@ -41,7 +41,7 @@
     "vite": "^8.3.1"
   },
   "overrides": {
-    "@angular/core": "22.2.0",
+    "@angular/core": "22.2.1",
     "@angular/common": "22.2.1",
     "@angular/compiler": "22.2.0",
     "@angular/forms": "22.2.0",
