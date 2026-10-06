@@ -49,7 +49,7 @@
     "@angular/compiler-cli": "22.2.1",
     "@angular/animations": "22.2.1",
     "tar": "7.5.22",
-    "js-yaml": "4.3.2",
+    "js-yaml": "5.4.3",
     "hono": "^4.13.8",
     "postcss": "8.5.28",
     "less": "4.9.1",
