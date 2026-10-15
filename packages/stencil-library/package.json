@@ -150,7 +150,7 @@
     "@typescript-eslint/parser": "^8.71.0",
     "@vitest/browser-playwright": "^4.1.11",
     "@vitest/coverage-istanbul": "^4.1.11",
-    "@vitest/ui": "^4.1.11",
+    "@vitest/ui": "^5.0.0",
     "autoprefixer": "^10.6.1",
     "axe-core": "^4.13.0",
     "cssnano": "^9.1.1",
