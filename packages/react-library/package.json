@@ -59,6 +59,7 @@
     "@mantine/hooks": "^9.6.2",
     "@storybook/addon-a11y": "^10.6.1",
     "@storybook/addon-docs": "^10.6.1",
+    "@storybook/addon-mcp": "^10.6.2",
     "@storybook/react-vite": "^10.6.1",
     "@tabler/icons-react": "^3.47.0",
     "@tailwindcss/postcss": "^4.3.3",
@@ -70,8 +71,7 @@
     "storybook": "^10.6.1",
     "tailwindcss": "^4.3.3",
     "typescript": "^7.0.2",
-    "vite": "^8.3.0",
-    "@storybook/addon-mcp": "^10.6.1"
+    "vite": "^8.3.0"
   },
   "keywords": [
     "react",

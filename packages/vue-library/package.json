@@ -46,6 +46,7 @@
     "@mdi/font": "^7.4.47",
     "@storybook/addon-a11y": "^10.6.1",
     "@storybook/addon-docs": "^10.6.1",
+    "@storybook/addon-mcp": "^10.6.2",
     "@storybook/vue3-vite": "^10.6.1",
     "@vitejs/plugin-vue": "^6.0.9",
     "@vue/server-renderer": "^3.5.43",
@@ -54,8 +55,7 @@
     "typescript": "^7.0.2",
     "vite": "^8.3.0",
     "vue": "^3.5.43",
-    "vuetify": "^4.2.1",
-    "@storybook/addon-mcp": "^10.6.1"
+    "vuetify": "^4.2.1"
   },
   "peerDependencies": {
     "vue": "^3.0.0"
