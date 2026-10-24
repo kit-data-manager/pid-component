@@ -28,6 +28,7 @@
     "@radix-ui/react-tooltip": "^1.2.16",
     "@storybook/addon-a11y": "^10.6.1",
     "@storybook/addon-docs": "^10.6.1",
+    "@storybook/addon-mcp": "^10.6.2",
     "@storybook/nextjs-vite": "^10.6.1",
     "@types/react": "19.3.0",
     "autoprefixer": "^10.6.1",
@@ -39,7 +40,6 @@
     "tailwind-merge": "^3.7.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^7.0.2",
-    "vite": "^8.3.0",
-    "@storybook/addon-mcp": "^10.6.1"
+    "vite": "^8.3.0"
   }
 }
